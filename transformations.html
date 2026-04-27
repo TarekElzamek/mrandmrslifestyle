@@ -240,6 +240,6 @@ document.getElementById('lbx').onclick=()=>{vis=[...document.querySelectorAll('.
 lb.addEventListener('click',e=>{if(e.target===lb){lb.classList.remove('open');document.body.style.overflow='';}});
 document.addEventListener('keydown',e=>{if(!lb.classList.contains('open'))return;if(e.key==='Escape'){lb.classList.remove('open');document.body.style.overflow='';}if(e.key==='ArrowLeft')document.getElementById('lbp').click();if(e.key==='ArrowRight')document.getElementById('lbx').click();});
 </script>
-<script src="js/shared.js"></script>
+<script src="shared.js"></script>
 </body>
 </html>
