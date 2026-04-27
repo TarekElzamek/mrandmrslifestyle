@@ -2004,6 +2004,13 @@
     el.style.transform = 'translateY(20px)';
     el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
     observer.observe(el);
+
+    setTimeout(() => {
+    document.querySelectorAll('.transform-card, .pkg-card, .why-card, .coach-card, .testi-card').forEach(el => {
+      el.style.opacity = '1';
+      el.style.transform = 'translateY(0)';
+    });
+  }, 1000);
   });
 </script>
 
