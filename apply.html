@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Apply for Online Coaching | Mr & Mrs Lifestyle</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --gold: #C9A84C;
+  --gold-light: #E8D08A;
+  --black: #0A0A0A;
+  --charcoal: #131313;
+  --card: #1A1A1A;
+  --card2: #1F1F1F;
+  --white: #FFFFFF;
+  --muted: rgba(255,255,255,0.5);
+  --red: #e74c3c;
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-body: 'DM Sans', sans-serif;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-body);
+  background: var(--black);
+  color: var(--white);
+  overflow-x: hidden;
+}
+
+/* TOP WARNING */
+.top-bar {
+  background: #1a0a0a;
+  border-bottom: 1px solid rgba(231,76,60,0.3);
+  color: rgba(255,255,255,0.85);
+  text-align: center;
+  padding: 0.65rem 1rem;
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+}
+.top-bar strong { color: var(--red); }
+
+/* NAV */
+nav {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 1.25rem 4rem;
+  border-bottom: 1px solid rgba(201,168,76,0.1);
+}
+.nav-logo {
+  font-family: var(--font-display);
+  font-size: 1.1rem; font-weight: 700;
+  color: var(--gold); text-decoration: none;
+}
+.nav-back {
+  font-size: 0.8rem; color: var(--muted); text-decoration: none;
+  display: flex; align-items: center; gap: 0.4rem;
+  transition: color 0.2s;
+}
+.nav-back:hover { color: var(--gold); }
+
+/* HERO */
+.hero {
+  padding: 5rem 4rem 4rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 70% 60% at 50% 0%, rgba(201,168,76,0.07) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.spots-badge {
+  display: inline-flex; align-items: center; gap: 0.6rem;
+  background: rgba(231,76,60,0.1);
+  border: 1px solid rgba(231,76,60,0.35);
+  color: #ff6b5b;
+  font-size: 0.72rem; font-weight: 700;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  padding: 0.45rem 1.1rem; border-radius: 20px;
+  margin-bottom: 2rem;
+  animation: pulse 2.5s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(231,76,60,0.3); }
+  50% { box-shadow: 0 0 0 6px rgba(231,76,60,0); }
+}
+.spots-badge::before { content: '●'; font-size: 0.5rem; animation: blink 1.5s ease-in-out infinite; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+.hero h1 {
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 5vw, 4.2rem);
+  font-weight: 900;
+  line-height: 1.05;
+  max-width: 750px;
+  margin: 0 auto 1.5rem;
+}
+.hero h1 em { font-style: italic; color: var(--gold); }
+
+.hero-sub {
+  font-size: 1.05rem;
+  color: var(--muted);
+  max-width: 520px;
+  margin: 0 auto 3rem;
+  line-height: 1.75;
+}
+
+/* PROCESS STEPS */
+.process-strip {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  max-width: 700px;
+  margin: 0 auto 1rem;
+  flex-wrap: wrap;
+}
+.process-step {
+  display: flex; align-items: center; gap: 0.65rem;
+  padding: 0.75rem 1.25rem;
+}
+.step-circle {
+  width: 32px; height: 32px; border-radius: 50%;
+  background: rgba(201,168,76,0.12);
+  border: 1px solid rgba(201,168,76,0.35);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.7rem; font-weight: 700; color: var(--gold);
+  flex-shrink: 0;
+}
+.process-step.active .step-circle {
+  background: var(--gold);
+  color: var(--black);
+  border-color: var(--gold);
+}
+.step-label { font-size: 0.78rem; color: var(--muted); letter-spacing: 0.04em; }
+.process-step.active .step-label { color: var(--white); font-weight: 600; }
+.step-arrow { color: rgba(255,255,255,0.2); font-size: 0.8rem; padding: 0 0.25rem; }
+
+/* MAIN LAYOUT */
+.main-layout {
+  display: grid;
+  grid-template-columns: 1fr 440px;
+  gap: 3rem;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 2rem 4rem 6rem;
+  align-items: start;
+}
+
+/* APPLICATION FORM */
+.app-form {
+  background: var(--card);
+  border: 1px solid rgba(201,168,76,0.2);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.form-header {
+  background: linear-gradient(135deg, rgba(201,168,76,0.12), rgba(201,168,76,0.04));
+  border-bottom: 1px solid rgba(201,168,76,0.15);
+  padding: 2rem 2.5rem;
+}
+.form-header h2 {
+  font-family: var(--font-display);
+  font-size: 1.6rem; font-weight: 700;
+  margin-bottom: 0.4rem;
+}
+.form-header p { font-size: 0.85rem; color: var(--muted); line-height: 1.6; }
+
+.form-body { padding: 2.5rem; }
+
+/* STEP SYSTEM */
+.step-pane { display: none; }
+.step-pane.active { display: block; }
+
+.step-indicator {
+  display: flex; align-items: center; gap: 0.5rem;
+  margin-bottom: 1.75rem;
+}
+.step-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: rgba(255,255,255,0.1);
+  transition: background 0.3s;
+}
+.step-dot.done { background: var(--gold); }
+.step-dot.active { background: var(--gold); box-shadow: 0 0 0 3px rgba(201,168,76,0.25); }
+.step-label-small {
+  font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--gold); margin-left: 0.5rem;
+}
+
+.q-group { margin-bottom: 1.5rem; }
+.q-label {
+  font-size: 0.85rem; font-weight: 600;
+  margin-bottom: 0.6rem; display: block;
+  color: rgba(255,255,255,0.85);
+}
+.q-label span { color: var(--red); }
+
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+textarea,
+select {
+  width: 100%;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 5px;
+  padding: 0.85rem 1rem;
+  color: var(--white);
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  -webkit-appearance: none;
+}
+input:focus, textarea:focus, select:focus {
+  border-color: rgba(201,168,76,0.5);
+  box-shadow: 0 0 0 3px rgba(201,168,76,0.08);
+}
+input::placeholder, textarea::placeholder { color: rgba(255,255,255,0.25); }
+textarea { resize: vertical; min-height: 90px; }
+select { appearance: none; cursor: pointer; color: rgba(255,255,255,0.7); }
+select option { background: #1a1a1a; color: var(--white); }
+
+.radio-group {
+  display: flex; flex-direction: column; gap: 0.5rem;
+}
+.radio-opt {
+  display: flex; align-items: center; gap: 0.75rem;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 5px;
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+  font-size: 0.88rem;
+}
+.radio-opt:hover { border-color: rgba(201,168,76,0.35); background: rgba(201,168,76,0.04); }
+.radio-opt.selected {
+  border-color: var(--gold);
+  background: rgba(201,168,76,0.08);
+  color: var(--white);
+}
+.radio-opt input[type="radio"] { display: none; }
+.radio-dot {
+  width: 16px; height: 16px; border-radius: 50%;
+  border: 2px solid rgba(255,255,255,0.25);
+  flex-shrink: 0; transition: border-color 0.2s;
+  display: flex; align-items: center; justify-content: center;
+}
+.radio-opt.selected .radio-dot {
+  border-color: var(--gold);
+  background: var(--gold);
+  box-shadow: inset 0 0 0 3px var(--card);
+}
+
+.btn-next, .btn-prev {
+  padding: 0.9rem 1.75rem;
+  border-radius: 5px;
+  font-family: var(--font-body);
+  font-size: 0.85rem; font-weight: 700;
+  letter-spacing: 0.07em; text-transform: uppercase;
+  cursor: pointer; border: none;
+  transition: background 0.2s, transform 0.15s;
+}
+.btn-next {
+  background: var(--gold); color: var(--black);
+  width: 100%;
+}
+.btn-next:hover { background: var(--gold-light); transform: translateY(-1px); }
+.btn-prev {
+  background: transparent;
+  color: var(--muted);
+  border: 1px solid rgba(255,255,255,0.12);
+  margin-bottom: 0.75rem;
+  width: 100%;
+}
+.btn-prev:hover { color: var(--white); border-color: rgba(255,255,255,0.3); }
+
+.submit-btn {
+  width: 100%;
+  background: var(--gold);
+  color: var(--black);
+  border: none;
+  border-radius: 5px;
+  padding: 1.1rem;
+  font-family: var(--font-body);
+  font-size: 0.92rem; font-weight: 700;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.15s;
+}
+.submit-btn:hover { background: var(--gold-light); transform: translateY(-1px); }
+
+/* SIDEBAR */
+.sidebar { display: flex; flex-direction: column; gap: 1.5rem; }
+
+.sidebar-card {
+  background: var(--card);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 8px;
+  padding: 1.75rem;
+}
+
+.sidebar-card.gold-border {
+  border-color: rgba(201,168,76,0.25);
+}
+
+.sidebar-card h3 {
+  font-family: var(--font-display);
+  font-size: 1.05rem; font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.what-happens-list { list-style: none; display: flex; flex-direction: column; gap: 0.85rem; }
+.what-happens-list li {
+  display: flex; gap: 0.9rem; align-items: flex-start;
+  font-size: 0.85rem; color: rgba(255,255,255,0.7); line-height: 1.6;
+}
+.wh-icon {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: rgba(201,168,76,0.1);
+  border: 1px solid rgba(201,168,76,0.25);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.75rem; flex-shrink: 0;
+  color: var(--gold); font-weight: 700;
+}
+
+.guarantee-box {
+  display: flex; gap: 1rem; align-items: flex-start;
+  background: rgba(201,168,76,0.05);
+  border: 1px solid rgba(201,168,76,0.2);
+  border-radius: 6px;
+  padding: 1.25rem;
+}
+.guarantee-icon { font-size: 1.75rem; flex-shrink: 0; }
+.guarantee-text h4 { font-size: 0.9rem; font-weight: 700; margin-bottom: 0.35rem; }
+.guarantee-text p { font-size: 0.78rem; color: var(--muted); line-height: 1.6; }
+
+.mini-testi {
+  border-top: 1px solid rgba(255,255,255,0.06);
+  padding-top: 1.25rem;
+  margin-top: 1.25rem;
+}
+.mini-testi-stars { color: var(--gold); font-size: 0.8rem; margin-bottom: 0.5rem; }
+.mini-testi-quote {
+  font-size: 0.82rem; color: rgba(255,255,255,0.65);
+  line-height: 1.65; font-style: italic; margin-bottom: 0.75rem;
+}
+.mini-testi-who { font-size: 0.75rem; color: var(--gold); font-weight: 600; }
+
+.packages-preview h3 { margin-bottom: 1rem; }
+.pkg-mini-list { display: flex; flex-direction: column; gap: 0.6rem; }
+.pkg-mini {
+  display: flex; justify-content: space-between; align-items: center;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 4px;
+  padding: 0.75rem 1rem;
+  font-size: 0.82rem;
+}
+.pkg-mini.hot { border-color: rgba(201,168,76,0.3); background: rgba(201,168,76,0.05); }
+.pkg-mini-name { font-weight: 600; }
+.pkg-mini-price { color: var(--gold); font-weight: 700; font-size: 0.85rem; }
+.pkg-mini-badge {
+  background: var(--gold); color: var(--black);
+  font-size: 0.58rem; font-weight: 800; letter-spacing: 0.1em;
+  padding: 0.15rem 0.45rem; border-radius: 2px; text-transform: uppercase;
+  margin-left: 0.4rem;
+}
+
+/* SUCCESS STATE */
+.success-screen {
+  display: none;
+  padding: 3rem 2.5rem;
+  text-align: center;
+}
+.success-screen .check-ring {
+  width: 80px; height: 80px; border-radius: 50%;
+  background: rgba(201,168,76,0.1);
+  border: 2px solid var(--gold);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 2rem;
+  margin: 0 auto 1.75rem;
+}
+.success-screen h2 {
+  font-family: var(--font-display);
+  font-size: 1.8rem; font-weight: 700;
+  margin-bottom: 0.75rem;
+  color: var(--gold);
+}
+.success-screen p {
+  font-size: 0.9rem; color: var(--muted);
+  line-height: 1.75; max-width: 340px; margin: 0 auto 2rem;
+}
+.next-steps { list-style: none; text-align: left; display: flex; flex-direction: column; gap: 0.75rem; margin-bottom: 2rem; }
+.next-steps li {
+  display: flex; align-items: flex-start; gap: 0.75rem;
+  font-size: 0.85rem; color: rgba(255,255,255,0.75); line-height: 1.5;
+}
+.ns-icon {
+  width: 22px; height: 22px; border-radius: 50%;
+  background: var(--gold); color: var(--black);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.65rem; font-weight: 700; flex-shrink: 0; margin-top: 1px;
+}
+.whatsapp-btn {
+  display: inline-flex; align-items: center; gap: 0.6rem;
+  background: #25D366; color: var(--white);
+  padding: 0.9rem 2rem; border-radius: 5px;
+  font-size: 0.88rem; font-weight: 700;
+  text-decoration: none; transition: filter 0.2s;
+}
+.whatsapp-btn:hover { filter: brightness(1.1); }
+
+/* FOOTER */
+footer {
+  background: #050505;
+  border-top: 1px solid rgba(255,255,255,0.05);
+  padding: 2rem 4rem;
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 1rem;
+}
+.foot-logo { font-family: var(--font-display); font-size: 1rem; font-weight: 700; color: var(--gold); text-decoration: none; }
+footer p { font-size: 0.73rem; color: rgba(255,255,255,0.22); }
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+  .main-layout { grid-template-columns: 1fr; padding: 1.5rem 1rem; }
+  .hero { padding: 3rem 1.2rem 2rem; }
+  nav { padding: 0.85rem 1.2rem; }
+  footer { padding: 1.5rem 1.2rem; flex-direction: column; text-align: center; }
+  .sidebar { order: -1; }
+}
+@media (max-width: 768px) {
+  .top-bar { font-size: 0.7rem; padding: 0.4rem 1rem; line-height: 1.5; text-align: center; }
+  .hero h1 { font-size: 2rem; line-height: 1.1; }
+  .hero-sub { font-size: 0.9rem; }
+  .process-strip { gap: 0.3rem; flex-wrap: wrap; justify-content: center; }
+  .step-arrow { display: none; }
+  .process-step { flex: 0 0 auto; }
+  .main-layout { padding: 1rem; gap: 1.5rem; }
+  .form-body { padding: 1.25rem 1rem; }
+  .form-header { padding: 1.25rem 1rem; }
+  .step-pane h3 { font-size: 1rem; }
+  .radio-grid { grid-template-columns: 1fr 1fr; }
+  .btn-next, .submit-btn { width: 100%; padding: 0.9rem; }
+  .sidebar { margin-top: 0; }
+  .nav-mobile-cta { display: inline-block; background: var(--gold); color: var(--black); font-size: 0.72rem; font-weight: 700; padding: 0.45rem 0.9rem; border-radius: 2px; letter-spacing: 0.05em; text-transform: uppercase; white-space: nowrap; text-decoration: none; }
+}
+@media (max-width: 480px) {
+  .radio-grid { grid-template-columns: 1fr; }
+  .hero h1 { font-size: 1.7rem; }
+  .main-layout { padding: 0.75rem; }
+}
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <strong>⚡ Only 4 coaching spots available this month.</strong> Applications close when spots are filled.
+</div>
+
+<nav style="display:flex;align-items:center;justify-content:space-between;">
+  <a href="index.html" class="nav-logo"><img src="images/logo.png" alt="Mr &amp; Mrs Lifestyle" style="height:32px;width:auto;" /></a>
+  <a href="index.html" class="nav-back" style="font-size:0.8rem;">← Back to website</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="spots-badge">4 Spots Remaining · May 2026</div>
+  <h1>Apply for <em>Elite</em><br>Online Coaching</h1>
+  <p class="hero-sub">
+    This is not a shop checkout. Tell us about you, your goals, and your lifestyle — and we'll personally review your application within 24 hours.
+  </p>
+
+  <div class="process-strip">
+    <div class="process-step active">
+      <div class="step-circle">1</div>
+      <span class="step-label">Apply</span>
+    </div>
+    <div class="step-arrow">→</div>
+    <div class="process-step">
+      <div class="step-circle">2</div>
+      <span class="step-label">Strategy Call</span>
+    </div>
+    <div class="step-arrow">→</div>
+    <div class="process-step">
+      <div class="step-circle">3</div>
+      <span class="step-label">Custom Plan</span>
+    </div>
+    <div class="step-arrow">→</div>
+    <div class="process-step">
+      <div class="step-circle">4</div>
+      <span class="step-label">Transform</span>
+    </div>
+  </div>
+</section>
+
+<!-- MAIN -->
+<div class="main-layout">
+
+  <!-- APPLICATION FORM -->
+  <div class="app-form">
+    <div class="form-header">
+      <h2>Your Coaching Application</h2>
+      <p>Takes 3 minutes · Completely free · No commitment required · We review every application personally</p>
+    </div>
+
+    <div class="form-body">
+      <!-- STEP DOTS -->
+      <div class="step-indicator" id="stepIndicator">
+        <div class="step-dot active" id="dot1"></div>
+        <div class="step-dot" id="dot2"></div>
+        <div class="step-dot" id="dot3"></div>
+        <span class="step-label-small" id="stepLabel">Step 1 of 3 — About You</span>
+      </div>
+
+      <!-- STEP 1: ABOUT YOU -->
+      <div class="step-pane active" id="step1">
+        <div class="q-group">
+          <label class="q-label" for="fn">First name <span>*</span></label>
+          <input type="text" id="fn" placeholder="Your first name">
+        </div>
+        <div class="q-group">
+          <label class="q-label" for="em">Email address <span>*</span></label>
+          <input type="email" id="em" placeholder="your@email.com">
+        </div>
+        <div class="q-group">
+          <label class="q-label" for="ph">WhatsApp number <span>*</span></label>
+          <input type="tel" id="ph" placeholder="+971 XX XXX XXXX">
+        </div>
+        <div class="q-group">
+          <label class="q-label" for="loc">Where are you based? <span>*</span></label>
+          <select id="loc">
+            <option value="" disabled selected>Select your location</option>
+            <option>Dubai, UAE</option>
+            <option>Abu Dhabi, UAE</option>
+            <option>Other UAE</option>
+            <option>Saudi Arabia</option>
+            <option>Qatar</option>
+            <option>Kuwait</option>
+            <option>Bahrain / Oman</option>
+            <option>UK</option>
+            <option>Europe</option>
+            <option>USA / Canada</option>
+            <option>Other (worldwide)</option>
+          </select>
+        </div>
+        <button class="btn-next" onclick="nextStep(1)">Continue — Step 2 →</button>
+      </div>
+
+      <!-- STEP 2: GOALS -->
+      <div class="step-pane" id="step2">
+        <div class="q-group">
+          <label class="q-label">What is your primary goal? <span>*</span></label>
+          <div class="radio-group" id="goalGroup">
+            <label class="radio-opt" onclick="selectRadio(this, 'goalGroup')">
+              <input type="radio" name="goal" value="fat-loss">
+              <div class="radio-dot"></div>
+              🔥 Lose fat & get lean
+            </label>
+            <label class="radio-opt" onclick="selectRadio(this, 'goalGroup')">
+              <input type="radio" name="goal" value="muscle">
+              <div class="radio-dot"></div>
+              💪 Build muscle & strength
+            </label>
+            <label class="radio-opt" onclick="selectRadio(this, 'goalGroup')">
+              <input type="radio" name="goal" value="recomp">
+              <div class="radio-dot"></div>
+              ⚡ Body recomposition (both)
+            </label>
+            <label class="radio-opt" onclick="selectRadio(this, 'goalGroup')">
+              <input type="radio" name="goal" value="postnatal">
+              <div class="radio-dot"></div>
+              🌸 Post-pregnancy transformation
+            </label>
+            <label class="radio-opt" onclick="selectRadio(this, 'goalGroup')">
+              <input type="radio" name="goal" value="couples">
+              <div class="radio-dot"></div>
+              👫 Couples transformation together
+            </label>
+          </div>
+        </div>
+        <div class="q-group">
+          <label class="q-label">How committed are you? <span>*</span></label>
+          <div class="radio-group" id="commitGroup">
+            <label class="radio-opt" onclick="selectRadio(this, 'commitGroup')">
+              <input type="radio" name="commit" value="all-in">
+              <div class="radio-dot"></div>
+              All-in — I'm ready to do whatever it takes
+            </label>
+            <label class="radio-opt" onclick="selectRadio(this, 'commitGroup')">
+              <input type="radio" name="commit" value="serious">
+              <div class="radio-dot"></div>
+              Very serious — just need the right plan
+            </label>
+            <label class="radio-opt" onclick="selectRadio(this, 'commitGroup')">
+              <input type="radio" name="commit" value="exploring">
+              <div class="radio-dot"></div>
+              Exploring — want to learn more first
+            </label>
+          </div>
+        </div>
+        <div class="q-group">
+          <label class="q-label">What's your main obstacle right now? <span>*</span></label>
+          <textarea id="obstacle" placeholder="e.g. I've tried before but can't stay consistent. I don't know what to eat. I don't have time to plan workouts..."></textarea>
+        </div>
+        <button class="btn-prev" onclick="prevStep(2)">← Back</button>
+        <button class="btn-next" onclick="nextStep(2)">Continue — Step 3 →</button>
+      </div>
+
+      <!-- STEP 3: FINAL -->
+      <div class="step-pane" id="step3">
+        <div class="q-group">
+          <label class="q-label">Do you have access to a gym? <span>*</span></label>
+          <div class="radio-group" id="gymGroup">
+            <label class="radio-opt" onclick="selectRadio(this, 'gymGroup')">
+              <input type="radio" name="gym" value="yes">
+              <div class="radio-dot"></div>
+              Yes — I train (or plan to train) at a gym
+            </label>
+            <label class="radio-opt" onclick="selectRadio(this, 'gymGroup')">
+              <input type="radio" name="gym" value="home">
+              <div class="radio-dot"></div>
+              I prefer home workouts / have home equipment
+            </label>
+            <label class="radio-opt" onclick="selectRadio(this, 'gymGroup')">
+              <input type="radio" name="gym" value="both">
+              <div class="radio-dot"></div>
+              Mix of both
+            </label>
+          </div>
+        </div>
+        <div class="q-group">
+          <label class="q-label">What's your monthly budget for coaching? <span>*</span></label>
+          <div class="radio-group" id="budgetGroup">
+            <label class="radio-opt" onclick="selectRadio(this, 'budgetGroup')">
+              <input type="radio" name="budget" value="entry">
+              <div class="radio-dot"></div>
+              Entry level — under AED 500/mo
+            </label>
+            <label class="radio-opt" onclick="selectRadio(this, 'budgetGroup')">
+              <input type="radio" name="budget" value="mid">
+              <div class="radio-dot"></div>
+              Mid-range — AED 500–1,500/mo
+            </label>
+            <label class="radio-opt" onclick="selectRadio(this, 'budgetGroup')">
+              <input type="radio" name="budget" value="premium">
+              <div class="radio-dot"></div>
+              Premium — AED 1,500+/mo for the best results
+            </label>
+          </div>
+        </div>
+        <div class="q-group">
+          <label class="q-label" for="extra">Anything else we should know?</label>
+          <textarea id="extra" placeholder="Injuries, medical conditions, dietary restrictions, past coaching experience, how you found us..."></textarea>
+        </div>
+        <button class="btn-prev" onclick="prevStep(3)">← Back</button>
+        <button class="submit-btn" onclick="handleSubmit()">✦ Submit My Application</button>
+        <p style="font-size:0.73rem; color:var(--muted); text-align:center; margin-top:1rem; line-height:1.5;">
+          By submitting you agree to be contacted via WhatsApp / email within 24 hours.<br>No spam. No automatic charges. No commitment required.
+        </p>
+      </div>
+
+      <!-- SUCCESS -->
+      <div class="success-screen" id="successScreen">
+        <div class="check-ring">✦</div>
+        <h2>Application Received!</h2>
+        <p>Tarek or Chloe will personally review your application and reach out within 24 hours to book your free strategy call.</p>
+        <ul class="next-steps">
+          <li><div class="ns-icon">1</div> Watch your WhatsApp — we'll message you personally</li>
+          <li><div class="ns-icon">2</div> We'll suggest a time for your free 20-min strategy call</li>
+          <li><div class="ns-icon">3</div> On the call, we'll map out exactly what your programme will look like</li>
+          <li><div class="ns-icon">4</div> You decide if it's right for you — zero pressure</li>
+        </ul>
+        <a href="https://wa.me/971507871515?text=Hi! I just submitted my coaching application." class="whatsapp-btn" target="_blank">
+          <span>💬</span> Message Us on WhatsApp Now
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+
+    <!-- What Happens Next -->
+    <div class="sidebar-card gold-border">
+      <h3>What Happens After You Apply</h3>
+      <ul class="what-happens-list">
+        <li>
+          <div class="wh-icon">24h</div>
+          We personally review your application and respond within 24 hours via WhatsApp or email.
+        </li>
+        <li>
+          <div class="wh-icon">📞</div>
+          We book a free 20-min strategy call to understand your goals in detail and answer any questions.
+        </li>
+        <li>
+          <div class="wh-icon">📋</div>
+          If it's a fit, we build your custom plan — training, nutrition, and a timeline to your goal.
+        </li>
+        <li>
+          <div class="wh-icon">🚀</div>
+          You start within 48 hours of signing up, with full coach access from day one.
+        </li>
+      </ul>
+    </div>
+
+    <!-- Guarantee -->
+    <div class="sidebar-card">
+      <div class="guarantee-box">
+        <div class="guarantee-icon">🛡️</div>
+        <div class="guarantee-text">
+          <h4>Zero Pressure Guarantee</h4>
+          <p>This application costs nothing. There's no automatic charge, no credit card needed, and zero obligation. If the call doesn't feel right, you walk away with no questions asked.</p>
+        </div>
+      </div>
+      <div class="mini-testi">
+        <div class="mini-testi-stars">★★★★★</div>
+        <p class="mini-testi-quote">"I applied not knowing what to expect. Tarek called me within a few hours and within 20 minutes I had a clear vision of my plan. I signed up immediately and haven't looked back."</p>
+        <div class="mini-testi-who">Layla H. — ↓ 11kg · Dubai · 12 Weeks</div>
+      </div>
+    </div>
+
+    <!-- Packages Preview -->
+    <div class="sidebar-card packages-preview">
+      <h3>Available Packages</h3>
+      <div class="pkg-mini-list">
+        <div class="pkg-mini">
+          <span class="pkg-mini-name">Economy Pack</span>
+          <span class="pkg-mini-price">From AED 299/mo</span>
+        </div>
+        <div class="pkg-mini hot">
+          <span class="pkg-mini-name">Elite Coaching <span class="pkg-mini-badge">Popular</span></span>
+          <span class="pkg-mini-price">AED 899/mo</span>
+        </div>
+        <div class="pkg-mini">
+          <span class="pkg-mini-name">VIP Programme</span>
+          <span class="pkg-mini-price">AED 1,999/mo</span>
+        </div>
+        <div class="pkg-mini">
+          <span class="pkg-mini-name">Couples Package</span>
+          <span class="pkg-mini-price">AED 1,499/mo</span>
+        </div>
+      </div>
+      <p style="font-size:0.75rem; color:var(--muted); margin-top:1rem; line-height:1.5;">
+        Exact package recommendation comes after your strategy call — we match you to the right level.
+      </p>
+    </div>
+
+  </div>
+</div>
+
+<footer>
+  <a href="index.html" class="foot-logo"><img src="images/logo.png" alt="Mr &amp; Mrs Lifestyle" style="height:28px;width:auto;" /></a>
+  <p>© 2026 Mr and Mrs Lifestyle · info@mrandmrslifestyle.com</p>
+  <p>Privacy Policy · Terms & Conditions</p>
+</footer>
+
+<script>
+let currentStep = 1;
+
+function nextStep(from) {
+  // Basic validation
+  if (from === 1) {
+    const fn = document.getElementById('fn').value.trim();
+    const em = document.getElementById('em').value.trim();
+    const ph = document.getElementById('ph').value.trim();
+    const loc = document.getElementById('loc').value;
+    if (!fn || !em || !ph || !loc) { alert('Please fill in all required fields.'); return; }
+    if (!em.includes('@')) { alert('Please enter a valid email address.'); return; }
+  }
+  if (from === 2) {
+    const goal = document.querySelector('input[name="goal"]:checked');
+    const commit = document.querySelector('input[name="commit"]:checked');
+    const obs = document.getElementById('obstacle').value.trim();
+    if (!goal || !commit || !obs) { alert('Please answer all questions in this step.'); return; }
+  }
+
+  document.getElementById('step' + from).classList.remove('active');
+  currentStep = from + 1;
+  document.getElementById('step' + currentStep).classList.add('active');
+  updateDots();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function prevStep(from) {
+  document.getElementById('step' + from).classList.remove('active');
+  currentStep = from - 1;
+  document.getElementById('step' + currentStep).classList.add('active');
+  updateDots();
+}
+
+function updateDots() {
+  for (let i = 1; i <= 3; i++) {
+    const dot = document.getElementById('dot' + i);
+    dot.className = 'step-dot';
+    if (i < currentStep) dot.classList.add('done');
+    else if (i === currentStep) dot.classList.add('active');
+  }
+  const labels = ['About You', 'Your Goals', 'Final Details'];
+  document.getElementById('stepLabel').textContent = `Step ${currentStep} of 3 — ${labels[currentStep - 1]}`;
+}
+
+function selectRadio(el, groupId) {
+  document.querySelectorAll('#' + groupId + ' .radio-opt').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+async function handleSubmit() {
+  const gym    = document.querySelector('input[name="gym"]:checked');
+  const budget = document.querySelector('input[name="budget"]:checked');
+  if (!gym || !budget) { alert('Please answer all required questions.'); return; }
+
+  const data = {
+    _subject:    '🔥 New Coaching Application — Mr & Mrs Lifestyle',
+    name:        document.getElementById('fn').value.trim(),
+    email:       document.getElementById('em').value.trim(),
+    phone:       document.getElementById('ph').value.trim(),
+    location:    document.getElementById('loc').value,
+    goal:        document.querySelector('input[name="goal"]:checked')?.value || '',
+    commitment:  document.querySelector('input[name="commit"]:checked')?.value || '',
+    obstacle:    document.getElementById('obstacle').value.trim(),
+    gym:         gym.value,
+    budget:      budget.value,
+    extra:       document.getElementById('extra').value.trim(),
+    source:      'Coaching Application Form',
+  };
+
+  // Uses CONFIG.formspreeApply from shared.js
+  await submitToFormspree(CONFIG.formspreeApply, data);
+
+  // Show success screen regardless
+  document.querySelectorAll('.step-pane').forEach(p => p.style.display = 'none');
+  document.querySelector('.step-indicator').style.display = 'none';
+  document.getElementById('successScreen').style.display = 'block';
+  document.querySelector('.app-form').scrollIntoView({ behavior: 'smooth' });
+}
+</script>
+<script src="js/shared.js"></script>
+</body>
+</html>

@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Dubai Transformation Blueprint | Mr & Mrs Lifestyle</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,700&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+@media print {
+  .no-print { display: none !important; }
+  .page-break { page-break-before: always; }
+  body { background: white; color: #111; }
+}
+
+:root {
+  --gold: #C9A84C;
+  --gold-light: #E8D08A;
+  --black: #0A0A0A;
+  --white: #FFFFFF;
+  --off-white: #FAF8F4;
+  --cream: #F5F0E8;
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-body: 'DM Sans', sans-serif;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: var(--font-body);
+  background: #E8E4DC;
+  color: #111;
+}
+
+/* ── PRINT BAR ── */
+.print-bar {
+  background: var(--black);
+  color: white;
+  text-align: center;
+  padding: 0.75rem 2rem;
+  font-size: 0.82rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+.print-bar a {
+  background: var(--gold);
+  color: var(--black);
+  padding: 0.4rem 1.25rem;
+  border-radius: 3px;
+  font-weight: 700;
+  font-size: 0.78rem;
+  text-decoration: none;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* ── PAGE WRAPPER ── */
+.page {
+  max-width: 800px;
+  margin: 2rem auto;
+  background: var(--off-white);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+}
+
+/* ── COVER ── */
+.cover {
+  background: var(--black);
+  padding: 0;
+  min-height: 500px;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+.cover-bg {
+  position: absolute; inset: 0;
+  background: 
+    linear-gradient(160deg, rgba(201,168,76,0.08) 0%, transparent 50%),
+    linear-gradient(to bottom, transparent 40%, rgba(10,10,10,0.95) 100%);
+}
+.cover-pattern {
+  position: absolute; inset: 0;
+  background-image: repeating-linear-gradient(
+    45deg,
+    rgba(201,168,76,0.03) 0px,
+    rgba(201,168,76,0.03) 1px,
+    transparent 1px,
+    transparent 40px
+  );
+}
+.cover-content {
+  position: relative; z-index: 2;
+  padding: 4rem;
+}
+.cover-eyebrow {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 1.5rem;
+  display: flex; align-items: center; gap: 0.75rem;
+}
+.cover-eyebrow::before {
+  content: ''; display: block;
+  width: 30px; height: 1px; background: var(--gold);
+}
+.cover h1 {
+  font-family: var(--font-display);
+  font-size: 3.2rem;
+  font-weight: 900;
+  color: var(--white);
+  line-height: 1.05;
+  margin-bottom: 1rem;
+}
+.cover h1 em { font-style: italic; color: var(--gold); }
+.cover-sub {
+  font-size: 1rem;
+  color: rgba(255,255,255,0.6);
+  line-height: 1.7;
+  max-width: 500px;
+  margin-bottom: 2rem;
+}
+.cover-authors {
+  display: flex; gap: 2rem; align-items: center;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(255,255,255,0.1);
+}
+.cover-authors-label {
+  font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase;
+  color: rgba(255,255,255,0.35);
+}
+.cover-authors-name {
+  font-family: var(--font-display);
+  font-size: 1.1rem; font-weight: 700;
+  color: var(--gold); margin-top: 0.2rem;
+}
+.cover-corner {
+  position: absolute; top: 0; right: 0;
+  background: var(--gold);
+  color: var(--black);
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 0.5rem 1rem;
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  transform: rotate(180deg);
+  height: 180px;
+  display: flex; align-items: center; justify-content: center;
+}
+
+/* ── CONTENTS PAGE ── */
+.contents-page {
+  background: var(--cream);
+  padding: 4rem;
+  border-bottom: 4px solid var(--gold);
+}
+.page-label {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 2rem;
+  display: flex; align-items: center; gap: 0.6rem;
+}
+.page-label::after {
+  content: ''; flex: 1; height: 1px; background: rgba(201,168,76,0.35);
+}
+.contents-title {
+  font-family: var(--font-display);
+  font-size: 2.2rem; font-weight: 900;
+  color: var(--black);
+  margin-bottom: 2.5rem;
+  line-height: 1.1;
+}
+.contents-title em { font-style: italic; color: var(--gold); }
+.contents-list { list-style: none; display: flex; flex-direction: column; gap: 0; }
+.contents-item {
+  display: flex; align-items: center;
+  padding: 1rem 0;
+  border-bottom: 1px solid rgba(0,0,0,0.08);
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.contents-item:hover .contents-chapter-name { color: var(--gold); }
+.contents-chapter-num {
+  font-family: var(--font-display);
+  font-size: 1.4rem; font-weight: 900;
+  color: rgba(201,168,76,0.3);
+  width: 50px; flex-shrink: 0;
+}
+.contents-chapter-name {
+  font-weight: 600; font-size: 0.95rem;
+  flex: 1; color: #222;
+  transition: color 0.2s;
+}
+.contents-chapter-desc {
+  font-size: 0.78rem; color: #888;
+  text-align: right; max-width: 200px;
+}
+
+/* ── CHAPTER PAGES ── */
+.chapter-page {
+  background: var(--off-white);
+  padding: 4rem;
+  border-bottom: 1px solid rgba(0,0,0,0.08);
+}
+
+.chapter-header {
+  display: flex; gap: 1.5rem;
+  align-items: flex-start;
+  margin-bottom: 2.5rem;
+  padding-bottom: 2rem;
+  border-bottom: 2px solid var(--gold);
+}
+.chapter-number-big {
+  font-family: var(--font-display);
+  font-size: 5rem; font-weight: 900;
+  color: rgba(201,168,76,0.15);
+  line-height: 1;
+  flex-shrink: 0;
+}
+.chapter-title-group { flex: 1; }
+.chapter-eyebrow {
+  font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 0.5rem; font-weight: 700;
+}
+.chapter-title {
+  font-family: var(--font-display);
+  font-size: 1.9rem; font-weight: 900;
+  color: var(--black); line-height: 1.1;
+}
+.chapter-title em { font-style: italic; color: var(--gold); }
+.chapter-intro {
+  font-size: 0.95rem;
+  color: #444;
+  line-height: 1.8;
+  margin-bottom: 2rem;
+}
+
+/* Content blocks */
+.gold-box {
+  background: linear-gradient(135deg, rgba(201,168,76,0.1), rgba(201,168,76,0.05));
+  border: 1px solid rgba(201,168,76,0.4);
+  border-left: 4px solid var(--gold);
+  border-radius: 4px;
+  padding: 1.5rem;
+  margin: 1.5rem 0;
+}
+.gold-box h4 {
+  font-family: var(--font-display);
+  font-size: 1rem; font-weight: 700;
+  color: #8B6914;
+  margin-bottom: 0.6rem;
+}
+.gold-box p, .gold-box li {
+  font-size: 0.88rem; color: #555; line-height: 1.7;
+}
+.gold-box ul { list-style: none; display: flex; flex-direction: column; gap: 0.35rem; }
+.gold-box ul li { display: flex; gap: 0.5rem; align-items: flex-start; }
+.gold-box ul li::before { content: '→'; color: var(--gold); font-weight: 700; flex-shrink: 0; }
+
+.dark-box {
+  background: var(--black);
+  border-radius: 4px;
+  padding: 2rem;
+  margin: 1.5rem 0;
+  color: var(--white);
+}
+.dark-box h4 {
+  font-family: var(--font-display);
+  font-size: 1.1rem; font-weight: 700;
+  color: var(--gold);
+  margin-bottom: 1rem;
+}
+.dark-box p { font-size: 0.88rem; color: rgba(255,255,255,0.7); line-height: 1.7; }
+
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin: 1.5rem 0; }
+.metric-card {
+  background: var(--cream);
+  border: 1px solid rgba(0,0,0,0.1);
+  border-radius: 4px;
+  padding: 1.25rem;
+  text-align: center;
+}
+.metric-card .metric-num {
+  font-family: var(--font-display);
+  font-size: 2rem; font-weight: 900;
+  color: var(--gold); line-height: 1;
+}
+.metric-card .metric-label {
+  font-size: 0.78rem; color: #666; margin-top: 0.3rem;
+}
+
+.checklist { list-style: none; display: flex; flex-direction: column; gap: 0.75rem; margin: 1.25rem 0; }
+.checklist li {
+  display: flex; gap: 0.85rem; align-items: flex-start;
+  font-size: 0.9rem; color: #333; line-height: 1.6;
+}
+.checklist li .check {
+  width: 20px; height: 20px; border-radius: 50%;
+  background: var(--gold); color: var(--black);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.65rem; font-weight: 800; flex-shrink: 0; margin-top: 2px;
+}
+
+h3 {
+  font-family: var(--font-display);
+  font-size: 1.25rem; font-weight: 700;
+  color: var(--black); margin: 1.75rem 0 0.75rem;
+}
+p { font-size: 0.9rem; color: #333; line-height: 1.8; margin-bottom: 0.75rem; }
+
+/* Meal plan table */
+.meal-table { width: 100%; border-collapse: collapse; margin: 1.25rem 0; font-size: 0.82rem; }
+.meal-table th {
+  background: var(--black); color: var(--gold);
+  padding: 0.6rem 0.75rem; text-align: left;
+  font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase;
+}
+.meal-table td {
+  padding: 0.65rem 0.75rem;
+  border-bottom: 1px solid rgba(0,0,0,0.08);
+  color: #333;
+  vertical-align: top;
+}
+.meal-table tr:nth-child(even) td { background: rgba(0,0,0,0.02); }
+
+/* ── CTA PAGE ── */
+.cta-page {
+  background: var(--black);
+  padding: 4rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.cta-page::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 80% 80% at 50% 50%, rgba(201,168,76,0.08) 0%, transparent 70%);
+}
+.cta-page h2 {
+  font-family: var(--font-display);
+  font-size: 2.5rem; font-weight: 900;
+  color: var(--white);
+  margin-bottom: 1rem;
+  position: relative;
+}
+.cta-page h2 em { font-style: italic; color: var(--gold); }
+.cta-page p {
+  color: rgba(255,255,255,0.6);
+  max-width: 480px; margin: 0 auto 2.5rem;
+  font-size: 0.95rem; line-height: 1.75;
+  position: relative;
+}
+.cta-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; position: relative; }
+.cta-btn-gold {
+  display: inline-block;
+  background: var(--gold); color: var(--black);
+  padding: 1rem 2.25rem;
+  border-radius: 4px;
+  font-weight: 700; font-size: 0.88rem;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  text-decoration: none;
+}
+.cta-btn-ghost {
+  display: inline-flex; align-items: center;
+  color: rgba(255,255,255,0.7);
+  font-size: 0.88rem; font-weight: 500;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(255,255,255,0.3);
+  padding-bottom: 2px;
+}
+.cta-contact {
+  position: relative;
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(255,255,255,0.1);
+}
+.cta-contact p { font-size: 0.8rem; color: rgba(255,255,255,0.35); margin-bottom: 0.35rem; }
+.cta-contact a { color: var(--gold); text-decoration: none; font-weight: 600; }
+
+/* Footer */
+.guide-footer {
+  background: #F0EBE0;
+  padding: 2rem 4rem;
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 1rem;
+  border-top: 3px solid var(--gold);
+}
+.guide-footer .logo {
+  font-family: var(--font-display);
+  font-size: 1rem; font-weight: 700; color: var(--black);
+}
+.guide-footer p { font-size: 0.72rem; color: #888; }
+</style>
+</head>
+<body>
+
+<!-- PRINT BAR -->
+<div class="print-bar no-print">
+  <span style="color:rgba(255,255,255,0.6);">💾 Save or print this guide to keep it forever</span>
+  <a href="javascript:window.print()">🖨 Print / Save as PDF</a>
+  <a href="apply.html" style="background:#333; color:white;">Apply for Coaching →</a>
+</div>
+
+<div class="page">
+
+  <!-- ══ COVER ══ -->
+  <div class="cover">
+    <div class="cover-bg"></div>
+    <div class="cover-pattern"></div>
+    <div class="cover-corner">Mr & Mrs Lifestyle · Dubai</div>
+    <div class="cover-content">
+      <div class="cover-eyebrow">Free Guide · mrandmrslifestyle.com</div>
+      <h1>The Dubai<br><em>Transformation</em><br>Blueprint</h1>
+      <p class="cover-sub">
+        The exact nutrition strategy, training framework, and mindset shifts our 500+ clients use to lose fat, build muscle, and transform their lives — designed for Dubai and beyond.
+      </p>
+      <div class="cover-authors">
+        <div>
+          <div class="cover-authors-label">Your Coaches</div>
+          <div class="cover-authors-name">Tarek & Chloe</div>
+        </div>
+        <div style="width:1px; background:rgba(255,255,255,0.1); height:40px;"></div>
+        <div>
+          <div class="cover-authors-label">Version</div>
+          <div class="cover-authors-name">2026 Edition</div>
+        </div>
+        <div style="width:1px; background:rgba(255,255,255,0.1); height:40px;"></div>
+        <div>
+          <div class="cover-authors-label">Clients Served</div>
+          <div class="cover-authors-name">500+ Worldwide</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ TABLE OF CONTENTS ══ -->
+  <div class="contents-page page-break">
+    <div class="page-label">Contents</div>
+    <h2 class="contents-title">Six Chapters.<br><em>One Big Result.</em></h2>
+    <ul class="contents-list">
+      <li class="contents-item">
+        <span class="contents-chapter-num">01</span>
+        <span class="contents-chapter-name">The Dubai Nutrition Code</span>
+        <span class="contents-chapter-desc">Eat out, iftar, travel</span>
+      </li>
+      <li class="contents-item">
+        <span class="contents-chapter-num">02</span>
+        <span class="contents-chapter-name">Macro Mastery Made Simple</span>
+        <span class="contents-chapter-desc">Your personal targets</span>
+      </li>
+      <li class="contents-item">
+        <span class="contents-chapter-num">03</span>
+        <span class="contents-chapter-name">The 7-Day Kickstart Plan</span>
+        <span class="contents-chapter-desc">Meals + training</span>
+      </li>
+      <li class="contents-item">
+        <span class="contents-chapter-num">04</span>
+        <span class="contents-chapter-name">Training That Actually Works</span>
+        <span class="contents-chapter-desc">Gym or home template</span>
+      </li>
+      <li class="contents-item">
+        <span class="contents-chapter-num">05</span>
+        <span class="contents-chapter-name">The Couples Challenge</span>
+        <span class="contents-chapter-desc">Transform together</span>
+      </li>
+      <li class="contents-item">
+        <span class="contents-chapter-num">06</span>
+        <span class="contents-chapter-name">The Mindset Shift</span>
+        <span class="contents-chapter-desc">The one belief that changes everything</span>
+      </li>
+    </ul>
+  </div>
+
+  <!-- ══ CHAPTER 1 ══ -->
+  <div class="chapter-page page-break">
+    <div class="chapter-header">
+      <div class="chapter-number-big">01</div>
+      <div class="chapter-title-group">
+        <div class="chapter-eyebrow">Chapter One</div>
+        <h2 class="chapter-title">The Dubai <em>Nutrition</em> Code</h2>
+      </div>
+    </div>
+
+    <p class="chapter-intro">
+      Living in Dubai is incredible — but it comes with unique nutritional challenges that most fitness guides completely ignore. Endless brunches. Late-night shawarma. Ramadan. Business dinners. All-inclusive resorts. If you've ever felt like your environment was working against your goals, this chapter is for you.
+    </p>
+
+    <h3>The Dubai Eating Environment</h3>
+    <p>Portion sizes in Dubai restaurants are enormous. Social eating is central to the culture. And the best-tasting food often comes with the highest calorie counts. The solution isn't to avoid it all — it's to eat smart within it.</p>
+
+    <div class="gold-box">
+      <h4>The Restaurant Strategy (Works Everywhere)</h4>
+      <ul>
+        <li>Order protein first: grilled chicken, fish, meat, eggs — make this the anchor of your meal</li>
+        <li>Ask for sauces on the side — most restaurant calories hide in dressings and sauces</li>
+        <li>Eat until 80% full, not 100% — it takes 20 minutes for fullness to register</li>
+        <li>At brunches: protein and salad first, treat dishes last — limits total intake naturally</li>
+        <li>Drink water before ordering — often hunger is thirst in disguise</li>
+      </ul>
+    </div>
+
+    <h3>Ramadan: Your Physique Is Not Doomed</h3>
+    <p>Most people either restrict too hard during Ramadan and lose muscle, or eat too freely during iftar and gain fat. Here's the approach that works:</p>
+
+    <div class="two-col">
+      <div class="metric-card">
+        <div class="metric-num">Iftar</div>
+        <div class="metric-label">Break fast with dates + water, then protein-heavy meal. Avoid overdoing carbs immediately — your digestion needs warming up.</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-num">Suhoor</div>
+        <div class="metric-label">This is your most important meal. Slow-digesting carbs (oats, whole grains) + protein + healthy fats = sustained energy through fasting hours.</div>
+      </div>
+    </div>
+
+    <div class="dark-box">
+      <h4>Coach Tarek's Ramadan Rule</h4>
+      <p>"I tell every client: Ramadan is not a reason to pause your transformation. Adjust your training to evenings after iftar, hit your protein targets in two meals instead of six, and stay hydrated between iftar and suhoor. Some of our most impressive results happen during Ramadan."</p>
+    </div>
+
+    <h3>Travel & Business Dinners</h3>
+    <p>Dubai is a hub city — many clients travel constantly. The rule here is simple: keep protein high, keep alcohol minimal, stay active wherever you are. Hotels have gyms. Walking meetings are underrated. You can do this.</p>
+  </div>
+
+  <!-- ══ CHAPTER 2 ══ -->
+  <div class="chapter-page page-break">
+    <div class="chapter-header">
+      <div class="chapter-number-big">02</div>
+      <div class="chapter-title-group">
+        <div class="chapter-eyebrow">Chapter Two</div>
+        <h2 class="chapter-title">Macro Mastery <em>Made Simple</em></h2>
+      </div>
+    </div>
+
+    <p class="chapter-intro">
+      You don't need to count every calorie forever. But understanding macros — protein, carbohydrates, and fat — is the foundation of any body transformation. This chapter gives you your starting numbers.
+    </p>
+
+    <h3>Why Macros Matter More Than "Clean Eating"</h3>
+    <p>The fitness world loves to label foods as "clean" or "dirty." But your body runs on energy and nutrients — not labels. 200 calories of chicken and 200 calories of chocolate affect your weight almost identically. What matters is totals, not individual choices.</p>
+
+    <div class="gold-box">
+      <h4>Your Starting Macro Targets</h4>
+      <ul>
+        <li><strong>Protein:</strong> 1.8–2.2g per kg of bodyweight — this is your #1 priority</li>
+        <li><strong>Fat loss:</strong> Create a 300–500 calorie deficit from your Total Daily Energy Expenditure (TDEE)</li>
+        <li><strong>Muscle gain:</strong> Eat at TDEE or 200–300 calories above it</li>
+        <li><strong>Carbs:</strong> Fill remaining calories after protein and fat are set</li>
+        <li><strong>Fat:</strong> Minimum 0.7g per kg bodyweight — important for hormones</li>
+      </ul>
+    </div>
+
+    <h3>Calculate Your TDEE (Your Calorie Baseline)</h3>
+    <p>TDEE = Basal Metabolic Rate × Activity Multiplier. Your BMR is roughly your bodyweight in kg × 22 (for women) or × 24 (for men). Then multiply by your activity level:</p>
+
+    <div class="two-col">
+      <div class="metric-card">
+        <div class="metric-num">×1.2</div>
+        <div class="metric-label">Sedentary (desk job, little exercise)</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-num">×1.55</div>
+        <div class="metric-label">Moderately active (3–5 workouts/week)</div>
+      </div>
+    </div>
+    <div class="two-col">
+      <div class="metric-card">
+        <div class="metric-num">×1.375</div>
+        <div class="metric-label">Lightly active (1–3 workouts/week)</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-num">×1.725</div>
+        <div class="metric-label">Very active (hard training 6–7 days)</div>
+      </div>
+    </div>
+
+    <div class="dark-box">
+      <h4>Example: 75kg Woman, Moderately Active</h4>
+      <p>BMR = 75 × 22 = 1,650 kcal<br>TDEE = 1,650 × 1.55 = 2,557 kcal<br>Fat loss target = 2,557 − 400 = ~2,150 kcal<br>Protein = 75 × 2.0 = 150g/day<br><br>Simple. Start here. Adjust based on results after 2–3 weeks.</p>
+    </div>
+
+    <h3>The One Metric That Changes Everything</h3>
+    <p><strong>Daily protein intake.</strong> If you hit your protein target every day, everything else becomes easier. Protein keeps you full, preserves muscle during fat loss, and drives muscle growth. Make it your non-negotiable.</p>
+  </div>
+
+  <!-- ══ CHAPTER 3 ══ -->
+  <div class="chapter-page page-break">
+    <div class="chapter-header">
+      <div class="chapter-number-big">03</div>
+      <div class="chapter-title-group">
+        <div class="chapter-eyebrow">Chapter Three</div>
+        <h2 class="chapter-title">The 7-Day <em>Kickstart</em> Plan</h2>
+      </div>
+    </div>
+
+    <p class="chapter-intro">
+      Stop planning to start. Here's your complete week — meals and training — laid out day by day. Follow it for 7 days and you'll have built the habits that carry you through the next 12 weeks.
+    </p>
+
+    <h3>Sample Week of Meals (Fat Loss · ~2,000 kcal · 150g protein)</h3>
+    <p>Adjust portion sizes based on your personal calorie target from Chapter 2.</p>
+
+    <table class="meal-table">
+      <thead>
+        <tr>
+          <th>Day</th>
+          <th>Breakfast</th>
+          <th>Lunch</th>
+          <th>Dinner</th>
+          <th>Snack</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Mon</strong></td>
+          <td>3 egg whites + 1 whole egg scrambled, spinach, wholegrain toast</td>
+          <td>Grilled chicken salad with olive oil dressing</td>
+          <td>Salmon fillet, roasted vegetables, quinoa</td>
+          <td>Greek yoghurt + blueberries</td>
+        </tr>
+        <tr>
+          <td><strong>Tue</strong></td>
+          <td>Overnight oats with protein powder, banana, almond butter</td>
+          <td>Turkey wrap with lettuce, tomato, hummus</td>
+          <td>Lean beef stir-fry with broccoli and brown rice</td>
+          <td>Rice cakes + cottage cheese</td>
+        </tr>
+        <tr>
+          <td><strong>Wed</strong></td>
+          <td>Omelette with feta, tomatoes, herbs</td>
+          <td>Tuna salad on wholegrain bread</td>
+          <td>Grilled chicken breast, sweet potato, green beans</td>
+          <td>Protein shake + apple</td>
+        </tr>
+        <tr>
+          <td><strong>Thu</strong></td>
+          <td>Protein smoothie: protein powder, banana, oats, almond milk</td>
+          <td>Chicken and vegetable soup with wholegrain roll</td>
+          <td>Prawn stir-fry with rice noodles and mixed veg</td>
+          <td>Mixed nuts (small handful)</td>
+        </tr>
+        <tr>
+          <td><strong>Fri</strong></td>
+          <td>Wholegrain toast with avocado and poached eggs</td>
+          <td>Grilled chicken, quinoa salad, cucumber</td>
+          <td>Lean lamb kofta, tabbouleh, grilled courgette</td>
+          <td>Greek yoghurt + honey</td>
+        </tr>
+        <tr>
+          <td><strong>Sat</strong></td>
+          <td>Protein pancakes (protein powder, oats, egg) with berries</td>
+          <td>Sushi (sashimi-heavy, avoid fried rolls)</td>
+          <td>Grilled fish, roasted peppers, brown rice</td>
+          <td>Dark chocolate (1–2 squares) + tea</td>
+        </tr>
+        <tr>
+          <td><strong>Sun</strong></td>
+          <td>Eggs any style + smoked salmon + wholegrain</td>
+          <td>Leftover protein from dinner + salad</td>
+          <td>Chicken thighs (skin off), roasted root veg</td>
+          <td>Casein protein shake (pre-bed)</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="gold-box">
+      <h4>Grocery List Essentials</h4>
+      <ul>
+        <li>Proteins: chicken breast, salmon, eggs, Greek yoghurt, cottage cheese, protein powder</li>
+        <li>Carbs: oats, brown rice, quinoa, sweet potato, wholegrain bread</li>
+        <li>Fats: avocado, olive oil, mixed nuts, almond butter (small amounts)</li>
+        <li>Vegetables: spinach, broccoli, courgette, peppers, cucumber, tomatoes</li>
+        <li>Extras: hummus, feta, dark chocolate, blueberries, banana</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ══ CHAPTER 4 ══ -->
+  <div class="chapter-page page-break">
+    <div class="chapter-header">
+      <div class="chapter-number-big">04</div>
+      <div class="chapter-title-group">
+        <div class="chapter-eyebrow">Chapter Four</div>
+        <h2 class="chapter-title">Training That <em>Actually Works</em></h2>
+      </div>
+    </div>
+
+    <p class="chapter-intro">
+      Most people either do too much too soon and burn out, or too little and wonder why nothing changes. This template has been tested on hundreds of our clients. It works — whether you're at a gym or at home.
+    </p>
+
+    <h3>The Beginner–Intermediate Template (3 Days/Week)</h3>
+    <p>For your first 4–8 weeks, 3 sessions per week is optimal. More is not better when you're building the habit. Each session takes 45–60 minutes.</p>
+
+    <div class="gold-box">
+      <h4>Day A — Upper Body Push + Pull</h4>
+      <ul>
+        <li>Push-ups or Chest Press — 3×10–12</li>
+        <li>Dumbbell Row or Cable Row — 3×10–12</li>
+        <li>Shoulder Press — 3×10–12</li>
+        <li>Lat Pulldown or Assisted Pull-up — 3×8–10</li>
+        <li>Tricep Dips or Pushdown — 2×12–15</li>
+        <li>Bicep Curl — 2×12–15</li>
+      </ul>
+    </div>
+
+    <div class="gold-box">
+      <h4>Day B — Lower Body + Core</h4>
+      <ul>
+        <li>Squat (Goblet, Barbell, or Bodyweight) — 4×8–12</li>
+        <li>Romanian Deadlift — 3×10–12</li>
+        <li>Glute Bridge or Hip Thrust — 3×12–15</li>
+        <li>Walking Lunges — 3×10/leg</li>
+        <li>Plank — 3×30–45 seconds</li>
+        <li>Dead Bug — 3×8/side</li>
+      </ul>
+    </div>
+
+    <div class="gold-box">
+      <h4>Day C — Full Body + Cardio Finish</h4>
+      <ul>
+        <li>Deadlift or Trap Bar — 3×6–8</li>
+        <li>Incline Dumbbell Press — 3×10–12</li>
+        <li>Bulgarian Split Squat — 3×10/leg</li>
+        <li>Cable or Band Pull-Apart — 3×15</li>
+        <li>20 min steady-state cardio (walk, bike, rower) — keep HR 130–150</li>
+      </ul>
+    </div>
+
+    <div class="dark-box">
+      <h4>Progressive Overload: The Only Rule That Matters</h4>
+      <p>Every week, try to do slightly more than last week. One extra rep. 2.5kg more on the bar. One fewer rest second. This is called progressive overload — and it is the entire scientific basis of how your body changes. Without it, you plateau. With it, you grow indefinitely.</p>
+    </div>
+  </div>
+
+  <!-- ══ CHAPTER 5 ══ -->
+  <div class="chapter-page page-break">
+    <div class="chapter-header">
+      <div class="chapter-number-big">05</div>
+      <div class="chapter-title-group">
+        <div class="chapter-eyebrow">Chapter Five</div>
+        <h2 class="chapter-title">The <em>Couples</em> Challenge</h2>
+      </div>
+    </div>
+
+    <p class="chapter-intro">
+      Research shows people who train with a partner are 65% more likely to stick to their programme. Now imagine that partner is your significant other — someone who is equally invested in your success and present every single day.
+    </p>
+
+    <h3>The 30-Day Couples Challenge</h3>
+    <p>This challenge is designed for couples to do together. You'll train on the same schedule, support each other's nutrition, and compete in a friendly way that makes the process genuinely enjoyable.</p>
+
+    <ul class="checklist">
+      <li><div class="check">✓</div>Share your weekly training schedule with each other — hold each other to it</li>
+      <li><div class="check">✓</div>Meal prep together on Sundays — double efficiency, double accountability</li>
+      <li><div class="check">✓</div>Track each other's weekly check-ins — weight, photos, performance metrics</li>
+      <li><div class="check">✓</div>Create a couples goal (e.g. "We'll go on a beach holiday in 12 weeks when we hit X")</li>
+      <li><div class="check">✓</div>Celebrate non-scale victories together — new personal bests, better sleep, more energy</li>
+      <li><div class="check">✓</div>Never criticise each other's progress — only encourage</li>
+    </ul>
+
+    <div class="gold-box">
+      <h4>Couples Training Tips from Tarek & Chloe</h4>
+      <ul>
+        <li>Train at the same time, but don't always do identical workouts — your goals may differ</li>
+        <li>Cook together whenever possible — nutritional goals are 10x easier when you align</li>
+        <li>Use a shared WhatsApp group to log meals and workouts — it creates social accountability</li>
+        <li>One person should never make it harder for the other to succeed (no bringing junk food home)</li>
+      </ul>
+    </div>
+
+    <div class="dark-box">
+      <h4>Our Story</h4>
+      <p>"Chloe and I transformed our bodies and our lifestyle together — and that experience taught us something no textbook could. When your partner is on the same journey as you, everything gets easier. The harder days feel lighter. The good days feel incredible. That's why we created the Couples Programme — because we know it works."<br><br>— Tarek</p>
+    </div>
+  </div>
+
+  <!-- ══ CHAPTER 6 ══ -->
+  <div class="chapter-page page-break">
+    <div class="chapter-header">
+      <div class="chapter-number-big">06</div>
+      <div class="chapter-title-group">
+        <div class="chapter-eyebrow">Chapter Six</div>
+        <h2 class="chapter-title">The <em>Mindset</em> Shift</h2>
+      </div>
+    </div>
+
+    <p class="chapter-intro">
+      Every client who has ever achieved a remarkable transformation with us had one thing in common. It wasn't their genetics, their schedule, or their starting point. It was a single belief shift that changed how they showed up every single day.
+    </p>
+
+    <h3>The Shift: From "I'm Trying to Change" to "This Is Who I Am"</h3>
+    <p>Most people approach fitness as something external — a challenge to overcome, a phase to get through, a goal to tick off. And that's exactly why most people quit. Because when it gets hard, it's easy to say "this isn't really me anyway."</p>
+
+    <p>The clients who succeed permanently make a different move. They decide — before the results come — that they are a healthy, active person. They act from identity, not motivation.</p>
+
+    <div class="gold-box">
+      <h4>Identity-Based Action</h4>
+      <ul>
+        <li>"I don't skip workouts" instead of "I'm trying to be more consistent"</li>
+        <li>"I'm someone who hits their protein" instead of "I'm trying to eat better"</li>
+        <li>"I'm a person who prioritises their health" instead of "I'm on a diet right now"</li>
+        <li>Vote for your new identity with every small action — consistency compounds</li>
+      </ul>
+    </div>
+
+    <h3>Dealing With Hard Days</h3>
+    <p>Hard days will come. You'll miss a session. You'll eat the wrong thing. You'll feel unmotivated. The question is never "will I have a bad day" — it's "what do I do on the bad day?"</p>
+
+    <ul class="checklist">
+      <li><div class="check">✓</div>Never miss twice — one missed session is a blip, two is the start of a habit</li>
+      <li><div class="check">✓</div>Lower the bar on hard days — a 15-minute walk counts. Done beats perfect.</li>
+      <li><div class="check">✓</div>Progress is not linear — accept the plateaus as part of the process</li>
+      <li><div class="check">✓</div>Talk to your coach — we've seen it all, and we're here for these moments exactly</li>
+    </ul>
+
+    <div class="dark-box">
+      <h4>The Truth About Motivation</h4>
+      <p>"Motivation is a feeling. Feelings come and go. Discipline is a skill. Skills are built with repetition. Stop waiting to feel motivated and start building the skill of showing up regardless. The motivation will follow the action — not the other way around."<br><br>— Chloe</p>
+    </div>
+  </div>
+
+  <!-- ══ FINAL CTA PAGE ══ -->
+  <div class="cta-page page-break">
+    <h2>Ready for Your <em>Transformation?</em></h2>
+    <p>This blueprint gives you the framework. Our coaching gives you the personalised plan, the accountability, and the expert guidance to execute it — and actually get there.</p>
+    <div class="cta-buttons">
+      <a href="apply.html" class="cta-btn-gold">Apply for Coaching — Free Strategy Call</a>
+      <a href="index.html" class="cta-btn-ghost">Visit Our Website →</a>
+    </div>
+    <div class="cta-contact">
+      <p>Questions? Reach us directly:</p>
+      <p><a href="mailto:info@mrandmrslifestyle.com">info@mrandmrslifestyle.com</a> &nbsp;·&nbsp; <a href="https://wa.me/971507871515">WhatsApp Us</a> &nbsp;·&nbsp; <a href="https://www.instagram.com/mrandmrslifestyle/">@mrandmrslifestyle</a></p>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="guide-footer">
+    <div class="logo"><img src="images/logo.png" alt="Mr &amp; Mrs Lifestyle" style="height:30px;width:auto;" /></div>
+    <p>© 2026 Mr and Mrs Lifestyle · Dubai, UAE · mrandmrslifestyle.com</p>
+    <p>This guide is free to share. Please don't sell it.</p>
+  </div>
+
+</div>
+
+<script src="js/shared.js"></script>
+</body>
+</html>

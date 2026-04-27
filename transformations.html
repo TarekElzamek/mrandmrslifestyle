@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Client Transformations | Mr & Mrs Lifestyle — Dubai's #1 Coaching Couple</title>
+<meta name="description" content="36+ real client transformations from Mr & Mrs Lifestyle. Dubai's elite coaching couple Tarek & Chloe. Fat loss, muscle gain, body recomposition results.">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--gold:#C9A84C;--gold-light:#E8D08A;--black:#0A0A0A;--charcoal:#181818;--white:#fff;--muted:rgba(255,255,255,0.5);--font-d:'Playfair Display',serif;--font-b:'Inter',sans-serif;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--black);color:var(--white);font-family:var(--font-b);overflow-x:hidden;}
+nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:.9rem 3rem;background:rgba(10,10,10,.96);backdrop-filter:blur(16px);border-bottom:1px solid rgba(201,168,76,.12);}
+.nav-logo{display:flex;align-items:center;text-decoration:none;flex-shrink:0;}
+.nav-links{display:flex;gap:2rem;list-style:none;}
+.nav-links a{color:rgba(255,255,255,.65);text-decoration:none;font-size:.8rem;letter-spacing:.08em;text-transform:uppercase;font-weight:500;transition:color .2s;}
+.nav-links a:hover{color:var(--gold);}
+.nav-cta{background:var(--gold)!important;color:var(--black)!important;padding:.55rem 1.3rem!important;border-radius:2px;font-weight:700!important;}
+.nav-mob{display:none;background:var(--gold);color:var(--black);font-size:.72rem;font-weight:700;padding:.45rem .9rem;border-radius:2px;letter-spacing:.05em;text-transform:uppercase;white-space:nowrap;text-decoration:none;flex-shrink:0;}
+.hero{padding:8.5rem 3rem 4rem;text-align:center;background:radial-gradient(ellipse 80% 50% at 50% 0%,rgba(201,168,76,.1) 0%,transparent 70%);position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:repeating-linear-gradient(90deg,rgba(201,168,76,.03) 0px,transparent 1px,transparent 60px,rgba(201,168,76,.03) 61px);pointer-events:none;}
+.ey{display:inline-flex;align-items:center;gap:.75rem;font-size:.7rem;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);font-weight:600;margin-bottom:1.25rem;}
+.ey::before,.ey::after{content:'';width:36px;height:1px;background:var(--gold);}
+h1{font-family:var(--font-d);font-size:clamp(2.4rem,5.5vw,4rem);line-height:1.08;margin-bottom:1.25rem;}
+h1 em{color:var(--gold);font-style:italic;}
+.hero-sub{font-size:1.05rem;color:rgba(255,255,255,.55);max-width:580px;margin:0 auto 3rem;line-height:1.75;}
+.stats{display:flex;justify-content:center;flex-wrap:wrap;border:1px solid rgba(201,168,76,.15);border-radius:4px;max-width:700px;margin:0 auto;overflow:hidden;}
+.stat{flex:1;min-width:140px;padding:1.5rem 1rem;text-align:center;border-right:1px solid rgba(201,168,76,.15);background:rgba(201,168,76,.03);}
+.stat:last-child{border-right:none;}
+.sn{font-family:var(--font-d);font-size:2rem;color:var(--gold);font-weight:700;line-height:1;}
+.sl{font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-top:.4rem;}
+.fw{padding:2.5rem 3rem 0;max-width:1300px;margin:0 auto;}
+.fb{display:flex;gap:.6rem;flex-wrap:wrap;justify-content:center;}
+.fbt{background:var(--charcoal);border:1px solid rgba(255,255,255,.08);color:rgba(255,255,255,.55);padding:.5rem 1.2rem;border-radius:100px;font-size:.75rem;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;transition:all .2s;font-family:var(--font-b);font-weight:500;}
+.fbt:hover{border-color:var(--gold);color:var(--gold);}
+.fbt.active{background:var(--gold);color:var(--black);border-color:var(--gold);font-weight:700;}
+.rc{text-align:center;font-size:.8rem;color:var(--muted);padding:.75rem 0 0;letter-spacing:.05em;}
+.gw{padding:2.5rem 3rem 4rem;max-width:1300px;margin:0 auto;}
+.gallery{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
+.tc{background:var(--charcoal);border-radius:6px;overflow:hidden;border:1px solid rgba(255,255,255,.05);transition:transform .3s,border-color .3s,box-shadow .3s;cursor:pointer;position:relative;}
+.tc:hover{transform:translateY(-4px);border-color:rgba(201,168,76,0.45);box-shadow:0 8px 32px rgba(0,0,0,.55),0 0 0 1px rgba(201,168,76,.12);}
+.tc img{width:100%;height:260px;object-fit:cover;display:block;transition:transform .4s;}
+.tc:hover img{transform:scale(1.04);}
+.tco{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent 0%,rgba(0,0,0,.85) 100%);padding:1.8rem .85rem .75rem;transform:translateY(0);transition:opacity .3s;opacity:0;}
+.tc:hover .tco{opacity:1;}
+.tcl{font-size:.68rem;color:var(--gold);font-weight:700;letter-spacing:.1em;text-transform:uppercase;}
+.tc.hidden{display:none;}
+.lb{position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,.96);backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;padding:1rem;}
+.lb.open{display:flex;}
+.lb img{max-width:90vw;max-height:90vh;border-radius:4px;object-fit:contain;}
+.lbc{position:absolute;top:1.5rem;right:1.5rem;background:none;border:2px solid rgba(255,255,255,.3);color:white;width:44px;height:44px;border-radius:50%;font-size:1.2rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;}
+.lbc:hover{background:var(--gold);border-color:var(--gold);color:var(--black);}
+.lbn{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.1);border:none;color:white;width:52px;height:52px;border-radius:50%;font-size:1.5rem;cursor:pointer;transition:background .2s;display:flex;align-items:center;justify-content:center;}
+.lbn:hover{background:var(--gold);color:var(--black);}
+.lbp{left:1rem;} .lbx{right:1rem;}
+.cta{background:linear-gradient(180deg,var(--black) 0%,rgba(201,168,76,.06) 50%,var(--black) 100%);border-top:1px solid rgba(201,168,76,.15);border-bottom:1px solid rgba(201,168,76,.15);padding:6rem 3rem;text-align:center;}
+.cta h2{font-family:var(--font-d);font-size:clamp(2rem,4vw,3rem);margin-bottom:1rem;}
+.cta h2 em{color:var(--gold);font-style:italic;}
+.cta p{color:rgba(255,255,255,.5);max-width:520px;margin:0 auto 2.5rem;line-height:1.75;font-size:1rem;}
+.cta-btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;}
+.bg{display:inline-block;background:var(--gold);color:var(--black);padding:1rem 2.5rem;font-weight:700;font-size:.85rem;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;border-radius:2px;transition:all .2s;}
+.bg:hover{background:var(--gold-light);transform:translateY(-2px);}
+.bo{display:inline-block;border:1px solid rgba(201,168,76,.4);color:var(--gold);padding:1rem 2.5rem;font-weight:600;font-size:.85rem;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;border-radius:2px;transition:all .2s;}
+.bo:hover{border-color:var(--gold);background:rgba(201,168,76,.08);}
+footer{background:#060606;padding:2rem 3rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;border-top:1px solid rgba(201,168,76,.08);}
+footer p{font-size:.78rem;color:rgba(255,255,255,.25);}
+footer a{color:var(--gold);text-decoration:none;}
+@media(max-width:1100px){.gallery{grid-template-columns:repeat(3,1fr);}}
+@media(max-width:768px){
+nav{padding:.8rem 1.2rem;}
+.nav-links{display:none;}
+.nav-mob{display:inline-block;}
+.hero{padding:6.5rem 1.4rem 3rem;}
+h1{font-size:2.2rem !important;line-height:1.1;}
+.hero-sub{font-size:0.9rem;}
+.stats{max-width:100%;border-radius:4px;}
+.stat{min-width:90px;padding:0.85rem 0.4rem;}
+.sn{font-size:1.4rem;}
+.sl{font-size:0.6rem;}
+.fw{padding:1.5rem 1rem 0;}
+.fb{gap:0.4rem;}
+.fbt{font-size:0.68rem;padding:0.4rem 0.85rem;}
+.rc{font-size:0.72rem;}
+.gw{padding:1.5rem 1rem 3rem;}
+.gallery{grid-template-columns:repeat(2,1fr);gap:8px;}
+.tc img{height:200px;}
+.tco{opacity:1;}
+.tcl{font-size:0.6rem;}
+.cta{padding:3.5rem 1.4rem;}
+.cta h2{font-size:1.8rem;}
+.cta-btns{flex-direction:column;align-items:center;}
+.bg,.bo{width:100%;text-align:center;}
+.lbn{display:none;}
+footer{padding:1.5rem 1.2rem;flex-direction:column;text-align:center;gap:0.5rem;}
+}
+@media(max-width:480px){
+.gallery{grid-template-columns:repeat(2,1fr);}
+.tc img{height:170px;}
+.sn{font-size:1.2rem;}
+h1{font-size:1.8rem !important;}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo"><img src="images/logo.png" alt="Mr & Mrs Lifestyle" style="height:34px;width:auto;"/></a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="index.html#packages">Packages</a></li>
+    <li><a href="index.html#coaches">Coaches</a></li>
+    <li><a href="free-guide.html">Free Guide</a></li>
+    <li><a href="apply.html" class="nav-cta">Apply Now</a></li>
+  </ul>
+  <a href="apply.html" class="nav-mob">Apply Now</a>
+</nav>
+
+<div class="hero">
+  <div class="ey">Real Client Results &middot; No Filters &middot; No Excuses</div>
+  <h1>500+ Lives <em>Transformed.</em><br>Yours Is Next.</h1>
+  <p class="hero-sub">Every person below trusted the process, showed up, and changed their life. These aren&apos;t stock photos &mdash; they&apos;re our clients, in Dubai and worldwide.</p>
+  <div class="stats">
+    <div class="stat"><div class="sn">500+</div><div class="sl">Lives Changed</div></div>
+    <div class="stat"><div class="sn">98%</div><div class="sl">Satisfaction</div></div>
+    <div class="stat"><div class="sn">10+</div><div class="sl">Years Experience</div></div>
+    <div class="stat"><div class="sn">45+</div><div class="sl">Results Below</div></div>
+  </div>
+</div>
+
+<div class="fw">
+  <div class="fb">
+    <button class="fbt active" data-f="all">All Results</button>
+    <button class="fbt" data-f="men">Men</button>
+    <button class="fbt" data-f="women">Women</button>
+    <button class="fbt" data-f="fat-loss">Fat Loss</button>
+    <button class="fbt" data-f="muscle">Muscle Gain</button>
+    <button class="fbt" data-f="recomp">Body Recomp</button>
+  </div>
+  <div class="rc" id="rc">Showing all 45 transformations</div>
+</div>
+
+<div class="gw"><div class="gallery" id="gallery">
+
+<div class="tc" data-c="men fat-loss muscle" data-i="images/t1_1.jpg"><img src="images/t1_1.jpg" alt="Transformation" loading="lazy"><div class="tco"><div class="tcl">&#8595; Fat &middot; &#8593; Muscle &middot; Online Coaching</div></div></div>
+<div class="tc" data-c="men fat-loss" data-i="images/t1_2.jpg"><img src="images/t1_2.jpg" alt="Transformation" loading="lazy"><div class="tco"><div class="tcl">&#8595; Body Fat &middot; Dubai PT</div></div></div>
+<div class="tc" data-c="men fat-loss recomp" data-i="images/t1_3.jpg"><img src="images/t1_3.jpg" alt="Transformation" loading="lazy"><div class="tco"><div class="tcl">Body Recomposition &middot; Online</div></div></div>
+<div class="tc" data-c="women fat-loss recomp" data-i="images/t1_4.jpg"><img src="images/t1_4.jpg" alt="Transformation" loading="lazy"><div class="tco"><div class="tcl">&#8595; Fat &middot; Confidence Rebuilt</div></div></div>
+<div class="tc" data-c="women fat-loss recomp" data-i="images/t1_5.jpg"><img src="images/t1_5.jpg" alt="Transformation" loading="lazy"><div class="tco"><div class="tcl">&#8595; Body Fat &middot; Toned &amp; Strong</div></div></div>
+<div class="tc" data-c="women recomp" data-i="images/t1_6.jpg"><img src="images/t1_6.jpg" alt="Transformation" loading="lazy"><div class="tco"><div class="tcl">Glutes &amp; Body Recomp</div></div></div>
+<div class="tc" data-c="men muscle recomp" data-i="images/t1_7.jpg"><img src="images/t1_7.jpg" alt="Transformation" loading="lazy"><div class="tco"><div class="tcl">&#8593; Muscle &middot; Fat Loss &middot; Dubai PT</div></div></div>
+<div class="tc" data-c="men muscle" data-i="images/t1_8.jpg"><img src="images/t1_8.jpg" alt="Transformation" loading="lazy"><div class="tco"><div class="tcl">&#8593; Muscle Gain &middot; Online Coaching</div></div></div>
+<div class="tc" data-c="men recomp fat-loss" data-i="images/t1_9.jpg"><img src="images/t1_9.jpg" alt="Transformation" loading="lazy"><div class="tco"><div class="tcl">&#8595; Fat &middot; &#8593; Definition</div></div></div>
+
+<div class="tc" data-c="men muscle recomp" data-i="images/t2_1.jpg"><img src="images/t2_1.jpg" alt="Transformation" loading="lazy"><div class="tco"><div class="tcl">&#8593; Muscle &middot; Dubai PT</div></div></div>
+<div class="tc" data-c="men fat-loss recomp" data-i="images/t2_2.jpg"><img src="images/t2_2.jpg" alt="Transformation" loading="lazy"><div class="tco"><div class="tcl">Body Recomp &middot; Online</div></div></div>
+<div class="tc" data-c="men fat-loss" data-i="images/t2_3.jpg"><img src="images/t2_3.jpg" alt="Transformation" loading="lazy"><div class="tco"><div class="tcl">&#8595; Fat &middot; Lean Physique</div></div></div>
+<div class="tc" data-c="women fat-loss muscle" data-i="images/t2_4.jpg"><img src="images/t2_4.jpg" alt="Transformation" loading="lazy"><div class="tco"><div class="tcl">&#8593; Tone &middot; &#8595; Fat &middot; Strong Women</div></div></div>
+<div class="tc" data-c="women recomp fat-loss" data-i="images/t2_5.jpg"><img src="images/t2_5.jpg" alt="Transformation" loading="lazy"><div class="tco"><div class="tcl">Glutes &amp; Recomp &middot; Wedding Ready</div></div></div>
+<div class="tc" data-c="women fat-loss recomp" data-i="images/t2_6.jpg"><img src="images/t2_6.jpg" alt="Transformation" loading="lazy"><div class="tco"><div class="tcl">&#8595; Fat &middot; Glutes Development</div></div></div>
+<div class="tc" data-c="men muscle recomp" data-i="images/t2_7.jpg"><img src="images/t2_7.jpg" alt="Transformation" loading="lazy"><div class="tco"><div class="tcl">&#8593; Muscle &middot; Elite Coaching</div></div></div>
+<div class="tc" data-c="women fat-loss" data-i="images/t2_8.jpg"><img src="images/t2_8.jpg" alt="Transformation" loading="lazy"><div class="tco"><div class="tcl">&#8595; Body Fat &middot; Online Coaching</div></div></div>
+<div class="tc" data-c="men muscle fat-loss" data-i="images/t2_9.jpg"><img src="images/t2_9.jpg" alt="Transformation" loading="lazy"><div class="tco"><div class="tcl">&#8595; Fat &middot; &#8593; Muscle &middot; Full Recomp</div></div></div>
+
+<div class="tc" data-c="men fat-loss recomp" data-i="images/t3_1.jpg"><img src="images/t3_1.jpg" alt="Transformation" loading="lazy"><div class="tco"><div class="tcl">&#8595; Fat &middot; &#8593; Definition</div></div></div>
+<div class="tc" data-c="women recomp fat-loss" data-i="images/t3_2.jpg"><img src="images/t3_2.jpg" alt="Transformation" loading="lazy"><div class="tco"><div class="tcl">Posture &amp; Body Recomp</div></div></div>
+<div class="tc" data-c="men muscle" data-i="images/t3_3.jpg"><img src="images/t3_3.jpg" alt="Transformation" loading="lazy"><div class="tco"><div class="tcl">&#8593; Muscle &middot; Elite Physique</div></div></div>
+<div class="tc" data-c="women recomp fat-loss" data-i="images/t3_4.jpg"><img src="images/t3_4.jpg" alt="Transformation" loading="lazy"><div class="tco"><div class="tcl">Glutes &amp; Recomp &middot; Women</div></div></div>
+<div class="tc" data-c="men fat-loss recomp" data-i="images/t3_5.jpg"><img src="images/t3_5.jpg" alt="Transformation" loading="lazy"><div class="tco"><div class="tcl">&#8595; Body Fat &middot; Back Development</div></div></div>
+<div class="tc" data-c="women fat-loss muscle" data-i="images/t3_6.jpg"><img src="images/t3_6.jpg" alt="Transformation" loading="lazy"><div class="tco"><div class="tcl">Competition Prep &middot; Women</div></div></div>
+<div class="tc" data-c="men muscle recomp" data-i="images/t3_7.jpg"><img src="images/t3_7.jpg" alt="Transformation" loading="lazy"><div class="tco"><div class="tcl">&#8593; Muscle &middot; Back &amp; Physique</div></div></div>
+<div class="tc" data-c="women fat-loss" data-i="images/t3_8.jpg"><img src="images/t3_8.jpg" alt="Transformation" loading="lazy"><div class="tco"><div class="tcl">&#8595; Body Fat &middot; Women&apos;s Coaching</div></div></div>
+<div class="tc" data-c="men fat-loss recomp" data-i="images/t3_9.jpg"><img src="images/t3_9.jpg" alt="Transformation" loading="lazy"><div class="tco"><div class="tcl">&#8595; Fat &middot; Lean &amp; Athletic</div></div></div>
+
+<div class="tc" data-c="men muscle" data-i="images/t4_1.jpg"><img src="images/t4_1.jpg" alt="Transformation" loading="lazy"><div class="tco"><div class="tcl">&#8593; Back &amp; Muscle &middot; Competition</div></div></div>
+<div class="tc" data-c="women fat-loss recomp" data-i="images/t4_2.jpg"><img src="images/t4_2.jpg" alt="Transformation" loading="lazy"><div class="tco"><div class="tcl">&#8595; Fat &middot; Tone &middot; Online Coaching</div></div></div>
+<div class="tc" data-c="men fat-loss recomp" data-i="images/t4_3.jpg"><img src="images/t4_3.jpg" alt="Transformation" loading="lazy"><div class="tco"><div class="tcl">&#8595; Fat &middot; &#8593; Definition &middot; Dubai PT</div></div></div>
+<div class="tc" data-c="women fat-loss recomp" data-i="images/t4_4.jpg"><img src="images/t4_4.jpg" alt="Transformation" loading="lazy"><div class="tco"><div class="tcl">Glutes &amp; Waist &middot; Women</div></div></div>
+<div class="tc" data-c="men fat-loss recomp" data-i="images/t4_5.jpg"><img src="images/t4_5.jpg" alt="Transformation" loading="lazy"><div class="tco"><div class="tcl">&#8595; Body Fat &middot; Lean Physique</div></div></div>
+<div class="tc" data-c="women fat-loss recomp" data-i="images/t4_6.jpg"><img src="images/t4_6.jpg" alt="Transformation" loading="lazy"><div class="tco"><div class="tcl">Body Recomp &middot; Competition Prep</div></div></div>
+<div class="tc" data-c="women fat-loss muscle" data-i="images/t4_7.jpg"><img src="images/t4_7.jpg" alt="Transformation" loading="lazy"><div class="tco"><div class="tcl">Competition Prep &middot; Women</div></div></div>
+<div class="tc" data-c="women fat-loss recomp" data-i="images/t4_8.jpg"><img src="images/t4_8.jpg" alt="Transformation" loading="lazy"><div class="tco"><div class="tcl">&#8595; Body Fat &middot; Online Coaching</div></div></div>
+<div class="tc" data-c="women fat-loss" data-i="images/t4_9.jpg"><img src="images/t4_9.jpg" alt="Transformation" loading="lazy"><div class="tco"><div class="tcl">&#8595; Fat &middot; Lean &amp; Confident</div></div></div>
+
+
+
+<div class="tc" data-c="men fat-loss recomp" data-i="images/t5_1.jpg"><img src="images/t5_1.jpg" alt="Transformation" loading="lazy"><div class="tco"><div class="tcl">&#8595; Fat &middot; &#8593; Muscle &middot; Dubai PT</div></div></div>
+<div class="tc" data-c="men fat-loss recomp" data-i="images/t5_2.jpg"><img src="images/t5_2.jpg" alt="Transformation" loading="lazy"><div class="tco"><div class="tcl">&#8595; Body Fat &middot; Side Profile &middot; Dubai PT</div></div></div>
+<div class="tc" data-c="men fat-loss recomp" data-i="images/t5_3.jpg"><img src="images/t5_3.jpg" alt="Transformation" loading="lazy"><div class="tco"><div class="tcl">&#8595; Fat &middot; Lean Physique &middot; Online</div></div></div>
+<div class="tc" data-c="men fat-loss recomp" data-i="images/t5_4.jpg"><img src="images/t5_4.jpg" alt="Transformation" loading="lazy"><div class="tco"><div class="tcl">&#8595; Fat &middot; &#8593; Definition &middot; Side View</div></div></div>
+<div class="tc" data-c="men muscle recomp" data-i="images/t5_5.jpg"><img src="images/t5_5.jpg" alt="Transformation" loading="lazy"><div class="tco"><div class="tcl">&#8593; Muscle &middot; Body Recomp &middot; Dubai PT</div></div></div>
+<div class="tc" data-c="men muscle recomp" data-i="images/t5_6.jpg"><img src="images/t5_6.jpg" alt="Transformation" loading="lazy"><div class="tco"><div class="tcl">&#8593; Muscle &middot; &#8595; Fat &middot; Online Coaching</div></div></div>
+<div class="tc" data-c="men fat-loss recomp" data-i="images/t5_7.jpg"><img src="images/t5_7.jpg" alt="Transformation" loading="lazy"><div class="tco"><div class="tcl">&#8595; Body Fat &middot; Full Recomp</div></div></div>
+<div class="tc" data-c="men fat-loss recomp" data-i="images/t5_8.jpg"><img src="images/t5_8.jpg" alt="Transformation" loading="lazy"><div class="tco"><div class="tcl">&#8595; Fat &middot; &#8593; Muscle &middot; Dubai PT</div></div></div>
+<div class="tc" data-c="men fat-loss recomp" data-i="images/t5_9.jpg"><img src="images/t5_9.jpg" alt="Transformation" loading="lazy"><div class="tco"><div class="tcl">&#8595; Fat &middot; Lean &amp; Athletic</div></div></div>
+
+</div></div>
+
+<div class="lb" id="lb">
+  <button class="lbc" id="lbc">&#10005;</button>
+  <button class="lbn lbp" id="lbp">&#8249;</button>
+  <img src="" id="lbi" alt="">
+  <button class="lbn lbx" id="lbx">&#8250;</button>
+</div>
+
+<div class="cta">
+  <div class="ey" style="justify-content:center;">Start Today</div>
+  <h2>Could <em>Your</em> Photo Be On This Page?</h2>
+  <p>Join 500+ people who stopped scrolling and started transforming. Apply today &mdash; your free strategy call costs nothing and changes everything.</p>
+  <div class="cta-btns">
+    <a href="apply.html" class="bg">Apply for Coaching &mdash; Free Call</a>
+    <a href="free-guide.html" class="bo">Get Free Blueprint First</a>
+  </div>
+</div>
+
+<footer>
+  <a href="index.html"><img src="images/logo.png" alt="Mr &amp; Mrs Lifestyle" style="height:28px;width:auto;opacity:.8;"/></a>
+  <p>&copy; 2026 Mr &amp; Mrs Lifestyle &middot; Dubai, UAE &middot; <a href="mailto:info@mrandmrslifestyle.com">info@mrandmrslifestyle.com</a></p>
+</footer>
+
+<script>
+const cards=[...document.querySelectorAll('.tc')];
+const rc=document.getElementById('rc');
+document.querySelectorAll('.fbt').forEach(b=>{
+  b.addEventListener('click',()=>{
+    document.querySelectorAll('.fbt').forEach(x=>x.classList.remove('active'));
+    b.classList.add('active');
+    const f=b.dataset.f; let v=0;
+    cards.forEach(c=>{const show=f==='all'||c.dataset.c.includes(f);c.classList.toggle('hidden',!show);if(show)v++;});
+    rc.textContent=f==='all'?`Showing all ${v} transformations`:`Showing ${v} result${v!==1?'s':''} for "${b.textContent}"`;
+  });
+});
+const lb=document.getElementById('lb'),lbi=document.getElementById('lbi');
+let idx=0,vis=[];
+function openLb(i){vis=[...document.querySelectorAll('.tc:not(.hidden)')];idx=i;lbi.src=vis[idx].dataset.i;lb.classList.add('open');document.body.style.overflow='hidden';}
+cards.forEach(c=>c.addEventListener('click',()=>{const v=[...document.querySelectorAll('.tc:not(.hidden)')];openLb(v.indexOf(c));}));
+document.getElementById('lbc').onclick=()=>{lb.classList.remove('open');document.body.style.overflow='';};
+document.getElementById('lbp').onclick=()=>{vis=[...document.querySelectorAll('.tc:not(.hidden)')];idx=(idx-1+vis.length)%vis.length;lbi.src=vis[idx].dataset.i;};
+document.getElementById('lbx').onclick=()=>{vis=[...document.querySelectorAll('.tc:not(.hidden)')];idx=(idx+1)%vis.length;lbi.src=vis[idx].dataset.i;};
+lb.addEventListener('click',e=>{if(e.target===lb){lb.classList.remove('open');document.body.style.overflow='';}});
+document.addEventListener('keydown',e=>{if(!lb.classList.contains('open'))return;if(e.key==='Escape'){lb.classList.remove('open');document.body.style.overflow='';}if(e.key==='ArrowLeft')document.getElementById('lbp').click();if(e.key==='ArrowRight')document.getElementById('lbx').click();});
+</script>
+<script src="js/shared.js"></script>
+</body>
+</html>
