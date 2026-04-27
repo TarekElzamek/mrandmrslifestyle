@@ -443,7 +443,23 @@ footer p {
 }
 
 /* ── ANIMATIONS ── */
-@keyframes slideUp {
+.mini-card {
+  display: flex;
+  flex-direction: column;
+  min-height: 320px;
+}
+.mini-quote {
+  flex: 1;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 6;
+  -webkit-box-orient: vertical;
+  margin-bottom: auto;
+}
+.mini-person { margin-top: 1.25rem; }
+@media (max-width: 768px) {
+  .mini-grid { grid-template-columns: 1fr !important; }
+}@keyframes slideUp {
   from { opacity: 0; transform: translateY(30px); }
   to { opacity: 1; transform: translateY(0); }
 }
