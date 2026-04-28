@@ -10,7 +10,7 @@ const CONFIG = {
   email:       'info@mrandmrslifestyle.com',
   gaId:        '',                    // ← Paste your Google Analytics 4 ID here (G-XXXXXXXXXX)
   formspreeApply: 'mdayvono',         // ← Your Coaching Application form ID
-  formspreeGuide: 'YOUR_GUIDE_ID',   // ← Replace after creating Formspree form "Blueprint Download"
+  formspreeGuide: 'xvzdnogv',         // ← Blueprint Download form ID
 };
 
 // ── GOOGLE ANALYTICS ─────────────────────────────────────────────────
