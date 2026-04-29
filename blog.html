@@ -32,6 +32,7 @@ h1 em{color:var(--gold);font-style:italic;}
 .blog-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;max-width:1100px;margin:0 auto;padding:3rem 3rem 5rem;}
 .post-card{background:var(--charcoal);border-radius:8px;overflow:hidden;border:1px solid rgba(255,255,255,.06);transition:transform .3s,border-color .3s;}
 .post-card:hover{transform:translateY(-5px);border-color:rgba(201,168,76,.3);}
+.post-card.featured{border-color:rgba(201,168,76,.3);}
 .post-img{width:100%;height:200px;object-fit:cover;background:rgba(201,168,76,.08);display:flex;align-items:center;justify-content:center;font-size:3rem;}
 .post-body{padding:1.5rem;}
 .post-tag{font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);font-weight:600;margin-bottom:.5rem;}
@@ -40,6 +41,7 @@ h1 em{color:var(--gold);font-style:italic;}
 .post-meta{font-size:.75rem;color:rgba(255,255,255,.3);display:flex;gap:1rem;align-items:center;}
 .read-more{display:inline-block;color:var(--gold);font-size:.8rem;font-weight:600;text-decoration:none;letter-spacing:.04em;border-bottom:1px solid rgba(201,168,76,.3);padding-bottom:2px;transition:border-color .2s;}
 .read-more:hover{border-color:var(--gold);}
+.new-badge{display:inline-block;background:var(--gold);color:var(--black);font-size:.6rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;padding:.15rem .5rem;border-radius:2px;margin-left:.5rem;vertical-align:middle;}
 .cta-strip{background:linear-gradient(135deg,rgba(201,168,76,.08),rgba(201,168,76,.02));border-top:1px solid rgba(201,168,76,.15);padding:4rem 3rem;text-align:center;}
 .cta-strip h2{font-family:var(--font-d);font-size:1.8rem;margin-bottom:.75rem;}
 .cta-strip h2 em{color:var(--gold);font-style:italic;}
@@ -70,18 +72,21 @@ footer a{color:var(--gold);text-decoration:none;}
 </div>
 
 <div class="blog-grid">
-  <div class="post-card">
+
+  <!-- REAL ARTICLE — links to full post -->
+  <div class="post-card featured">
     <div class="post-img">🍽️</div>
     <div class="post-body">
-      <div class="post-tag">Nutrition · Dubai Life</div>
-      <h2 class="post-title">How to Eat Out in Dubai Without Ruining Your Goals</h2>
-      <p class="post-excerpt">Dubai has the best restaurant scene in the world — and the most calorie-dense menus. Here's our exact strategy for eating out 4–5 times a week and still losing fat.</p>
+      <div class="post-tag">Nutrition · Dubai Life <span class="new-badge">New</span></div>
+      <h2 class="post-title">How to Lose Fat in Dubai: The Complete Guide for 2026</h2>
+      <p class="post-excerpt">Brunches, shawarma, Ramadan, business dinners — here's the exact strategy our clients use to lose fat while fully living life in Dubai.</p>
       <div style="display:flex;justify-content:space-between;align-items:center;margin-top:1rem;">
-        <div class="post-meta"><span>By Tarek</span><span>5 min read</span></div>
-        <a href="apply.html" class="read-more">Read More →</a>
+        <div class="post-meta"><span>By Tarek</span><span>8 min read</span></div>
+        <a href="blog-how-to-lose-fat-dubai.html" class="read-more">Read Article →</a>
       </div>
     </div>
   </div>
+
   <div class="post-card">
     <div class="post-img">🌙</div>
     <div class="post-body">
@@ -90,10 +95,11 @@ footer a{color:var(--gold);text-decoration:none;}
       <p class="post-excerpt">Most coaches tell you to pause during Ramadan. We tell you to use it. Here's how our clients achieve some of their best results during the holy month.</p>
       <div style="display:flex;justify-content:space-between;align-items:center;margin-top:1rem;">
         <div class="post-meta"><span>By Tarek</span><span>7 min read</span></div>
-        <a href="apply.html" class="read-more">Read More →</a>
+        <a href="apply.html" class="read-more">Coming Soon →</a>
       </div>
     </div>
   </div>
+
   <div class="post-card">
     <div class="post-img">🍑</div>
     <div class="post-body">
@@ -102,10 +108,11 @@ footer a{color:var(--gold);text-decoration:none;}
       <p class="post-excerpt">Chloe breaks down the science and the myths — why most women are training glutes wrong and the 3 things that actually drive growth. No fluff, just results.</p>
       <div style="display:flex;justify-content:space-between;align-items:center;margin-top:1rem;">
         <div class="post-meta"><span>By Chloe</span><span>6 min read</span></div>
-        <a href="apply.html" class="read-more">Read More →</a>
+        <a href="apply.html" class="read-more">Coming Soon →</a>
       </div>
     </div>
   </div>
+
   <div class="post-card">
     <div class="post-img">💪</div>
     <div class="post-body">
@@ -114,10 +121,11 @@ footer a{color:var(--gold);text-decoration:none;}
       <p class="post-excerpt">It's not your genetics. It's not your supplements. Most men make the same 3 training mistakes that completely stall progress. Here's how to fix them.</p>
       <div style="display:flex;justify-content:space-between;align-items:center;margin-top:1rem;">
         <div class="post-meta"><span>By Tarek</span><span>5 min read</span></div>
-        <a href="apply.html" class="read-more">Read More →</a>
+        <a href="apply.html" class="read-more">Coming Soon →</a>
       </div>
     </div>
   </div>
+
   <div class="post-card">
     <div class="post-img">❤️</div>
     <div class="post-body">
@@ -126,10 +134,11 @@ footer a{color:var(--gold);text-decoration:none;}
       <p class="post-excerpt">The research is clear — people who train with a partner are 65% more likely to stick to their programme. Here's how to make it work without the relationship tension.</p>
       <div style="display:flex;justify-content:space-between;align-items:center;margin-top:1rem;">
         <div class="post-meta"><span>By Tarek & Chloe</span><span>4 min read</span></div>
-        <a href="apply.html" class="read-more">Read More →</a>
+        <a href="apply.html" class="read-more">Coming Soon →</a>
       </div>
     </div>
   </div>
+
   <div class="post-card">
     <div class="post-img">🧠</div>
     <div class="post-body">
@@ -138,23 +147,23 @@ footer a{color:var(--gold);text-decoration:none;}
       <p class="post-excerpt">Every client who transforms permanently does one thing differently from those who yo-yo. It's not about willpower. It's about identity. Here's the shift that changes everything.</p>
       <div style="display:flex;justify-content:space-between;align-items:center;margin-top:1rem;">
         <div class="post-meta"><span>By Chloe</span><span>6 min read</span></div>
-        <a href="apply.html" class="read-more">Read More →</a>
+        <a href="apply.html" class="read-more">Coming Soon →</a>
       </div>
     </div>
   </div>
+
 </div>
 
 <div class="cta-strip">
   <h2>Ready to Stop Reading and <em>Start Transforming?</em></h2>
   <p style="color:var(--muted);max-width:460px;margin:.75rem auto 2rem;font-size:.9rem;line-height:1.7;">Everything in our blog is a preview of what our clients get every single week from their coaches.</p>
-  <a href="apply.html" class="btn">Apply for Coaching — Free Call</a>
+  <a href="https://wa.me/971507871515?text=Hi%20Tarek%20%26%20Chloe%2C%20I%27d%20love%20to%20apply%20for%20coaching%20%E2%80%94%20can%20we%20book%20a%20free%20strategy%20call%3F" target="_blank" class="btn">Apply for Coaching — Free Call</a>
 </div>
 
 <footer>
   <p>© 2026 Mr &amp; Mrs Lifestyle · Dubai, UAE · <a href="mailto:info@mrandmrslifestyle.com">info@mrandmrslifestyle.com</a></p>
 </footer>
 
-<!-- Fixed path: was js/shared.js, now shared.js -->
 <script src="shared.js"></script>
 </body>
 </html>
