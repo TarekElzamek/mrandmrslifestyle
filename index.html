@@ -3,7 +3,49 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mr & Mrs Lifestyle | Elite Online Coaching Dubai & Worldwide</title>
+
+<title>Personal Trainer Dubai | Online Coaching Worldwide | Mr & Mrs Lifestyle</title>
+<meta name="description" content="Dubai's #1 coaching couple Tarek & Chloe. Expert personal training in Dubai & online coaching worldwide. 500+ client transformations. Apply for a free strategy call today.">
+<meta name="keywords" content="personal trainer Dubai, online fitness coach UAE, couples coaching Dubai, fat loss Dubai, muscle gain coach UAE, online personal training worldwide">
+<link rel="canonical" href="https://www.mrandmrslifestyle.com/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://www.mrandmrslifestyle.com/">
+<meta property="og:title" content="Personal Trainer Dubai | Online Coaching Worldwide | Mr & Mrs Lifestyle">
+<meta property="og:description" content="Dubai's elite coaching couple. Expert personal training & online coaching for fat loss, muscle gain & body transformation. 500+ clients. Free strategy call.">
+<meta property="og:image" content="https://www.mrandmrslifestyle.com/logo.png">
+<meta property="og:site_name" content="Mr & Mrs Lifestyle">
+<meta property="og:locale" content="en_AE">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Personal Trainer Dubai | Mr & Mrs Lifestyle">
+<meta name="twitter:description" content="Dubai's elite coaching couple. Online coaching worldwide. 500+ transformations. Free strategy call.">
+<meta name="twitter:image" content="https://www.mrandmrslifestyle.com/logo.png">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  "name": "Mr & Mrs Lifestyle",
+  "description": "Elite personal training in Dubai and online coaching worldwide by certified coaches Tarek Elzamek and Chloe Antoniazzi.",
+  "url": "https://www.mrandmrslifestyle.com",
+  "logo": "https://www.mrandmrslifestyle.com/logo.png",
+  "telephone": "+971507871515",
+  "email": "info@mrandmrslifestyle.com",
+  "address": {"@type": "PostalAddress", "addressLocality": "Dubai", "addressCountry": "AE"},
+  "geo": {"@type": "GeoCoordinates", "latitude": 25.2048, "longitude": 55.2708},
+  "openingHours": "Mo-Su 06:00-22:00",
+  "priceRange": "AED 299 - AED 1999",
+  "sameAs": ["https://www.instagram.com/mrandmrslifestyle/", "https://www.youtube.com/@MrandMrsLifestyle-kw3jz"],
+  "hasOfferCatalog": {
+    "@type": "OfferCatalog",
+    "name": "Coaching Packages",
+    "itemListElement": [
+      {"@type": "Offer", "name": "Economy Pack", "price": "299", "priceCurrency": "AED"},
+      {"@type": "Offer", "name": "Elite Coaching Experience", "price": "899", "priceCurrency": "AED"},
+      {"@type": "Offer", "name": "VIP Online Coaching", "price": "1999", "priceCurrency": "AED"}
+    ]
+  }
+}
+</script>
+
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -24,866 +66,168 @@
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
   html { scroll-behavior: smooth; }
-  body {
-    font-family: var(--font-body);
-    background: var(--black);
-    color: var(--white);
-    overflow-x: hidden;
-  }
-  /* ── FIXED SITE HEADER ── */
-  .site-header {
-    position: fixed;
-    top: 0; left: 0; right: 0;
-    z-index: 100;
-  }
-  .site-header nav {
-    position: relative !important;
-    top: auto !important;
-  }
-  /* Push hero content below fixed header */
+  body { font-family: var(--font-body); background: var(--black); color: var(--white); overflow-x: hidden; }
+  .site-header { position: fixed; top: 0; left: 0; right: 0; z-index: 100; }
+  .site-header nav { position: relative !important; top: auto !important; }
   .hero { padding-top: 13rem; }
   @media (max-width: 768px) {
     .hero { padding-top: 7.5rem; }
     .site-header { width: 100%; }
-    .urgency-banner {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: center;
-      gap: 0.3rem;
-      font-size: 0.62rem !important;
-      padding: 0.4rem 0.8rem !important;
-      line-height: 1.4;
-      text-align: center;
-    }
-    .urgency-banner span {
-      font-size: 0.6rem !important;
-    }
+    .urgency-banner { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 0.3rem; font-size: 0.62rem !important; padding: 0.4rem 0.8rem !important; line-height: 1.4; text-align: center; }
+    .urgency-banner span { font-size: 0.6rem !important; }
   }
-  /* ── NAV ── */
-  nav {
-    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 1rem 3rem;
-    background: rgba(10,10,10,0.92);
-    backdrop-filter: blur(12px);
-    border-bottom: 1px solid rgba(201,168,76,0.15);
-  }
-  .nav-logo {
-    font-family: var(--font-display);
-    font-size: 1.3rem;
-    font-weight: 700;
-    color: var(--gold);
-    letter-spacing: 0.03em;
-    text-decoration: none;
-  }
-  .nav-links {
-    display: flex; gap: 2rem; list-style: none;
-  }
-  .nav-links a {
-    font-size: 0.82rem;
-    font-weight: 500;
-    color: rgba(255,255,255,0.75);
-    text-decoration: none;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    transition: color 0.2s;
-  }
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 1rem 3rem; background: rgba(10,10,10,0.92); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(201,168,76,0.15); }
+  .nav-logo { font-family: var(--font-display); font-size: 1.3rem; font-weight: 700; color: var(--gold); letter-spacing: 0.03em; text-decoration: none; }
+  .nav-links { display: flex; gap: 2rem; list-style: none; }
+  .nav-links a { font-size: 0.82rem; font-weight: 500; color: rgba(255,255,255,0.75); text-decoration: none; letter-spacing: 0.08em; text-transform: uppercase; transition: color 0.2s; }
   .nav-links a:hover { color: var(--gold); }
-  .nav-cta {
-    background: var(--gold);
-    color: var(--black) !important;
-    padding: 0.5rem 1.4rem;
-    border-radius: 2px;
-    font-weight: 600 !important;
-    letter-spacing: 0.05em !important;
-    transition: background 0.2s !important;
-  }
+  .nav-cta { background: var(--gold); color: var(--black) !important; padding: 0.5rem 1.4rem; border-radius: 2px; font-weight: 600 !important; letter-spacing: 0.05em !important; transition: background 0.2s !important; }
   .nav-cta:hover { background: var(--gold-light) !important; }
-  /* ── HERO ── */
-  .hero {
-    min-height: 100vh;
-    display: flex; flex-direction: column; justify-content: center;
-    padding: 0 3rem;
-    position: relative;
-    overflow: hidden;
-  }
-  .hero-bg {
-    position: absolute; inset: 0;
-    background:
-      linear-gradient(135deg, rgba(10,10,10,0.97) 0%, rgba(28,28,28,0.85) 100%),
-      url('https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=1800&q=80') center/cover no-repeat;
-  }
-  .hero-accent {
-    position: absolute; top: -200px; right: -200px;
-    width: 700px; height: 700px;
-    background: radial-gradient(circle, rgba(201,168,76,0.08) 0%, transparent 70%);
-    pointer-events: none;
-  }
+  .hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; padding: 0 3rem; position: relative; overflow: hidden; }
+  .hero-bg { position: absolute; inset: 0; background: linear-gradient(135deg, rgba(10,10,10,0.97) 0%, rgba(28,28,28,0.85) 100%), url('https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=1800&q=80') center/cover no-repeat; }
+  .hero-accent { position: absolute; top: -200px; right: -200px; width: 700px; height: 700px; background: radial-gradient(circle, rgba(201,168,76,0.08) 0%, transparent 70%); pointer-events: none; }
   .hero-content { position: relative; z-index: 2; max-width: 750px; }
-  .hero-eyebrow {
-    display: inline-flex; align-items: center; gap: 0.75rem;
-    font-size: 0.75rem; font-weight: 600; letter-spacing: 0.18em;
-    text-transform: uppercase; color: var(--gold);
-    margin-bottom: 1.5rem;
-  }
-  .hero-eyebrow::before {
-    content: ''; display: block;
-    width: 30px; height: 1px; background: var(--gold);
-  }
-  .hero h1 {
-    font-family: var(--font-display);
-    font-size: clamp(3rem, 7vw, 6rem);
-    font-weight: 900;
-    line-height: 1.0;
-    margin-bottom: 1.5rem;
-    letter-spacing: -0.01em;
-  }
-  .hero h1 em {
-    font-style: italic;
-    color: var(--gold);
-  }
-  .hero-sub {
-    font-size: 1.15rem;
-    color: rgba(255,255,255,0.7);
-    line-height: 1.7;
-    max-width: 520px;
-    margin-bottom: 2.5rem;
-    font-weight: 300;
-  }
-  .hero-stats {
-    display: flex; gap: 3rem;
-    margin-bottom: 3rem;
-    padding-bottom: 2.5rem;
-    border-bottom: 1px solid rgba(201,168,76,0.2);
-  }
-  .stat-num {
-    font-family: var(--font-display);
-    font-size: 2.2rem;
-    font-weight: 700;
-    color: var(--gold);
-    line-height: 1;
-  }
-  .stat-label {
-    font-size: 0.75rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: rgba(255,255,255,0.5);
-    margin-top: 0.3rem;
-  }
-  .hero-ctas {
-    display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;
-  }
-  .btn-primary {
-    display: inline-block;
-    background: var(--gold);
-    color: var(--black);
-    font-family: var(--font-body);
-    font-size: 0.85rem;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    padding: 1rem 2rem;
-    border-radius: 2px;
-    text-decoration: none;
-    transition: background 0.2s, transform 0.2s;
-  }
+  .hero-eyebrow { display: inline-flex; align-items: center; gap: 0.75rem; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold); margin-bottom: 1.5rem; }
+  .hero-eyebrow::before { content: ''; display: block; width: 30px; height: 1px; background: var(--gold); }
+  .hero h1 { font-family: var(--font-display); font-size: clamp(3rem, 7vw, 6rem); font-weight: 900; line-height: 1.0; margin-bottom: 1.5rem; letter-spacing: -0.01em; }
+  .hero h1 em { font-style: italic; color: var(--gold); }
+  .hero-sub { font-size: 1.15rem; color: rgba(255,255,255,0.7); line-height: 1.7; max-width: 520px; margin-bottom: 2.5rem; font-weight: 300; }
+  .hero-stats { display: flex; gap: 3rem; margin-bottom: 3rem; padding-bottom: 2.5rem; border-bottom: 1px solid rgba(201,168,76,0.2); }
+  .stat-num { font-family: var(--font-display); font-size: 2.2rem; font-weight: 700; color: var(--gold); line-height: 1; }
+  .stat-label { font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.5); margin-top: 0.3rem; }
+  .hero-ctas { display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; }
+  .btn-primary { display: inline-block; background: var(--gold); color: var(--black); font-family: var(--font-body); font-size: 0.85rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; padding: 1rem 2rem; border-radius: 2px; text-decoration: none; transition: background 0.2s, transform 0.2s; }
   .btn-primary:hover { background: var(--gold-light); transform: translateY(-1px); }
-  .btn-ghost {
-    display: inline-flex; align-items: center; gap: 0.5rem;
-    color: rgba(255,255,255,0.8);
-    font-size: 0.85rem; font-weight: 500;
-    text-decoration: none;
-    letter-spacing: 0.05em;
-    border-bottom: 1px solid rgba(255,255,255,0.3);
-    padding-bottom: 2px;
-    transition: color 0.2s;
-  }
+  .btn-ghost { display: inline-flex; align-items: center; gap: 0.5rem; color: rgba(255,255,255,0.8); font-size: 0.85rem; font-weight: 500; text-decoration: none; letter-spacing: 0.05em; border-bottom: 1px solid rgba(255,255,255,0.3); padding-bottom: 2px; transition: color 0.2s; }
   .btn-ghost:hover { color: var(--gold); border-color: var(--gold); }
-  .scroll-indicator {
-    position: absolute; bottom: 0.75rem; left: 50%; transform: translateX(-50%);
-    display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
-    color: rgba(255,255,255,0.3);
-    font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase;
-    animation: bounce 2s infinite;
-  }
-  .scroll-indicator::after {
-    content: '↓'; font-size: 1rem; color: var(--gold);
-  }
-  @keyframes bounce {
-    0%,100% { transform: translateX(-50%) translateY(0); }
-    50% { transform: translateX(-50%) translateY(6px); }
-  }
-  /* ── URGENCY BANNER ── */
-  .urgency-banner {
-    background: var(--gold);
-    color: var(--black);
-    text-align: center;
-    padding: 0.6rem 1rem;
-    font-size: 0.75rem;
-    font-weight: 600;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    line-height: 1.5;
-  }
-  /* FIX 1: Claim Yours is now a real link */
-  .urgency-banner a.claim-link {
-    background: var(--black);
-    color: var(--gold);
-    padding: 0.15rem 0.6rem;
-    border-radius: 2px;
-    margin-left: 0.5rem;
-    font-size: 0.7rem;
-    display: inline-block;
-    text-decoration: none;
-    font-weight: 700;
-    letter-spacing: 0.05em;
-    transition: background 0.2s;
-  }
+  .scroll-indicator { position: absolute; bottom: 0.75rem; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 0.5rem; color: rgba(255,255,255,0.3); font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; animation: bounce 2s infinite; }
+  .scroll-indicator::after { content: '↓'; font-size: 1rem; color: var(--gold); }
+  @keyframes bounce { 0%,100% { transform: translateX(-50%) translateY(0); } 50% { transform: translateX(-50%) translateY(6px); } }
+  .urgency-banner { background: var(--gold); color: var(--black); text-align: center; padding: 0.6rem 1rem; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; line-height: 1.5; }
+  .urgency-banner a.claim-link { background: var(--black); color: var(--gold); padding: 0.15rem 0.6rem; border-radius: 2px; margin-left: 0.5rem; font-size: 0.7rem; display: inline-block; text-decoration: none; font-weight: 700; letter-spacing: 0.05em; transition: background 0.2s; }
   .urgency-banner a.claim-link:hover { background: #1C1C1C; }
-  /* ── SECTIONS ── */
   section { padding: 6rem 3rem; }
-  .section-eyebrow {
-    font-size: 0.72rem; font-weight: 600; letter-spacing: 0.2em;
-    text-transform: uppercase; color: var(--gold);
-    margin-bottom: 1rem;
-    display: flex; align-items: center; gap: 0.75rem;
-  }
-  .section-eyebrow::before {
-    content: ''; display: block;
-    width: 24px; height: 1px; background: var(--gold);
-  }
-  .section-title {
-    font-family: var(--font-display);
-    font-size: clamp(2rem, 4vw, 3.2rem);
-    font-weight: 700;
-    line-height: 1.1;
-    margin-bottom: 1.5rem;
-  }
+  .section-eyebrow { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.75rem; }
+  .section-eyebrow::before { content: ''; display: block; width: 24px; height: 1px; background: var(--gold); }
+  .section-title { font-family: var(--font-display); font-size: clamp(2rem, 4vw, 3.2rem); font-weight: 700; line-height: 1.1; margin-bottom: 1.5rem; }
   .section-title em { font-style: italic; color: var(--gold); }
-  /* ── LEAD MAGNET ── */
-  .lead-magnet {
-    background: var(--charcoal);
-    border: 1px solid rgba(201,168,76,0.3);
-    border-radius: 4px;
-    padding: 3rem;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 3rem;
-    align-items: center;
-    max-width: 1100px;
-    margin: 0 auto;
-  }
-  .lead-magnet h2 {
-    font-family: var(--font-display);
-    font-size: 2.2rem;
-    font-weight: 700;
-    margin-bottom: 1rem;
-    line-height: 1.15;
-  }
-  .lead-magnet p {
-    color: rgba(255,255,255,0.65);
-    font-size: 1rem;
-    line-height: 1.7;
-    margin-bottom: 1.5rem;
-  }
-  .email-form {
-    display: flex; gap: 0;
-    border-radius: 2px;
-    overflow: hidden;
-    border: 1px solid rgba(201,168,76,0.4);
-  }
-  .email-form input {
-    flex: 1;
-    background: rgba(255,255,255,0.05);
-    border: none;
-    padding: 0.85rem 1.2rem;
-    color: var(--white);
-    font-family: var(--font-body);
-    font-size: 0.9rem;
-    outline: none;
-  }
-  .email-form input::placeholder { color: rgba(255,255,255,0.35); }
-  .email-form button {
-    background: var(--gold);
-    color: var(--black);
-    border: none;
-    padding: 0.85rem 1.5rem;
-    font-family: var(--font-body);
-    font-size: 0.8rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    cursor: pointer;
-    transition: background 0.2s;
-    white-space: nowrap;
-  }
-  .email-form button:hover { background: var(--gold-light); }
-  .lead-visual {
-    background: linear-gradient(135deg, rgba(201,168,76,0.08), rgba(201,168,76,0.02));
-    border: 1px solid rgba(201,168,76,0.2);
-    border-radius: 4px;
-    padding: 2.5rem;
-    text-align: center;
-  }
-  .lead-visual .freebie-label {
-    font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase;
-    color: var(--gold); margin-bottom: 1rem;
-  }
-  .lead-visual h3 {
-    font-family: var(--font-display);
-    font-size: 1.6rem;
-    font-weight: 700;
-    margin-bottom: 0.75rem;
-    line-height: 1.2;
-  }
-  .lead-perks {
-    list-style: none;
-    text-align: left;
-    margin-top: 1.5rem;
-  }
-  .lead-perks li {
-    font-size: 0.88rem;
-    color: rgba(255,255,255,0.7);
-    padding: 0.4rem 0;
-    padding-left: 1.5rem;
-    position: relative;
-  }
-  .lead-perks li::before {
-    content: '✓';
-    position: absolute; left: 0;
-    color: var(--gold);
-    font-weight: 700;
-  }
-  /* ── TRANSFORMATIONS ── */
-  .transformations-section {
-    background: var(--off-black);
-  }
-  .transforms-header {
-    text-align: center;
-    margin-bottom: 4rem;
-  }
-  .transforms-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1.5rem;
-    max-width: 1100px;
-    margin: 0 auto 3rem;
-  }
-  .transform-card {
-    background: var(--charcoal);
-    border-radius: 4px;
-    overflow: hidden;
-    border: 1px solid rgba(255,255,255,0.06);
-    transition: transform 0.3s, border-color 0.3s;
-  }
-  .transform-card:hover {
-    transform: translateY(-4px);
-    border-color: rgba(201,168,76,0.3);
-  }
-  .transform-imgs {
-    display: grid; grid-template-columns: 1fr 1fr;
-    position: relative;
-  }
-  .transform-img-half {
-    height: 200px;
-    background-size: cover;
-    background-position: center;
-    position: relative;
-  }
-  .transform-label {
-    position: absolute; bottom: 0; left: 0; right: 0;
-    background: rgba(0,0,0,0.7);
-    font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase;
-    color: rgba(255,255,255,0.7);
-    padding: 0.3rem 0.5rem;
-    text-align: center;
-  }
-  .transform-divider {
-    position: absolute; left: 50%; top: 0; bottom: 0;
-    width: 2px; background: var(--gold);
-    z-index: 2;
-    transform: translateX(-50%);
-  }
-  .transform-info {
-    padding: 1.25rem;
-  }
-  .transform-name {
-    font-weight: 600;
-    font-size: 0.95rem;
-    margin-bottom: 0.3rem;
-  }
-  .transform-result {
-    color: var(--gold);
-    font-size: 0.82rem;
-    font-weight: 500;
-    margin-bottom: 0.5rem;
-  }
-  .transform-quote {
-    font-size: 0.82rem;
-    color: rgba(255,255,255,0.55);
-    line-height: 1.5;
-    font-style: italic;
-  }
+  .lead-magnet { background: var(--charcoal); border: 1px solid rgba(201,168,76,0.3); border-radius: 4px; padding: 3rem; display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center; max-width: 1100px; margin: 0 auto; }
+  .lead-magnet h2 { font-family: var(--font-display); font-size: 2.2rem; font-weight: 700; margin-bottom: 1rem; line-height: 1.15; }
+  .lead-magnet p { color: rgba(255,255,255,0.65); font-size: 1rem; line-height: 1.7; margin-bottom: 1.5rem; }
+  .lead-visual { background: linear-gradient(135deg, rgba(201,168,76,0.08), rgba(201,168,76,0.02)); border: 1px solid rgba(201,168,76,0.2); border-radius: 4px; padding: 2.5rem; text-align: center; }
+  .lead-visual .freebie-label { font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 1rem; }
+  .lead-visual h3 { font-family: var(--font-display); font-size: 1.6rem; font-weight: 700; margin-bottom: 0.75rem; line-height: 1.2; }
+  .lead-perks { list-style: none; text-align: left; margin-top: 1.5rem; }
+  .lead-perks li { font-size: 0.88rem; color: rgba(255,255,255,0.7); padding: 0.4rem 0; padding-left: 1.5rem; position: relative; }
+  .lead-perks li::before { content: '✓'; position: absolute; left: 0; color: var(--gold); font-weight: 700; }
+  .transformations-section { background: var(--off-black); }
+  .transforms-header { text-align: center; margin-bottom: 4rem; }
+  .transforms-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; max-width: 1100px; margin: 0 auto 3rem; }
+  .transform-card { background: var(--charcoal); border-radius: 4px; overflow: hidden; border: 1px solid rgba(255,255,255,0.06); transition: transform 0.3s, border-color 0.3s; }
+  .transform-card:hover { transform: translateY(-4px); border-color: rgba(201,168,76,0.3); }
+  .transform-info { padding: 1.25rem; }
+  .transform-name { font-weight: 600; font-size: 0.95rem; margin-bottom: 0.3rem; }
+  .transform-result { color: var(--gold); font-size: 0.82rem; font-weight: 500; margin-bottom: 0.5rem; }
+  .transform-quote { font-size: 0.82rem; color: rgba(255,255,255,0.55); line-height: 1.5; font-style: italic; }
   .transforms-cta { text-align: center; }
-  /* ── PACKAGES ── */
   .packages-section { background: var(--black); }
-  .packages-intro {
-    display: grid; grid-template-columns: 1fr 1fr;
-    gap: 4rem; align-items: end;
-    margin-bottom: 4rem;
-    max-width: 1100px; margin-left: auto; margin-right: auto;
-  }
-  .packages-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1.5rem;
-    max-width: 1100px;
-    margin: 0 auto;
-  }
-  .pkg-card {
-    background: var(--charcoal);
-    border: 1px solid rgba(255,255,255,0.07);
-    border-radius: 4px;
-    padding: 2rem;
-    position: relative;
-    transition: border-color 0.3s, transform 0.3s;
-    display: flex; flex-direction: column;
-  }
-  .pkg-card:hover {
-    border-color: rgba(201,168,76,0.35);
-    transform: translateY(-3px);
-  }
-  .pkg-card.featured {
-    border-color: var(--gold);
-    background: linear-gradient(160deg, rgba(201,168,76,0.08), var(--charcoal));
-  }
-  .pkg-badge {
-    position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
-    background: var(--gold);
-    color: var(--black);
-    font-size: 0.65rem;
-    font-weight: 700;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    padding: 0.3rem 1rem;
-    border-radius: 2px;
-    white-space: nowrap;
-  }
-  .pkg-tag {
-    font-size: 0.68rem; letter-spacing: 0.15em; text-transform: uppercase;
-    color: var(--gold);
-    margin-bottom: 0.75rem;
-  }
-  .pkg-name {
-    font-family: var(--font-display);
-    font-size: 1.4rem;
-    font-weight: 700;
-    margin-bottom: 0.5rem;
-    line-height: 1.2;
-  }
-  .pkg-tagline {
-    font-size: 0.85rem;
-    color: rgba(255,255,255,0.55);
-    margin-bottom: 1.5rem;
-    line-height: 1.5;
-    font-style: italic;
-  }
-  .pkg-price {
-    margin-bottom: 1.5rem;
-  }
+  .packages-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; max-width: 1100px; margin: 0 auto; }
+  .pkg-card { background: var(--charcoal); border: 1px solid rgba(255,255,255,0.07); border-radius: 4px; padding: 2rem; position: relative; transition: border-color 0.3s, transform 0.3s; display: flex; flex-direction: column; }
+  .pkg-card:hover { border-color: rgba(201,168,76,0.35); transform: translateY(-3px); }
+  .pkg-card.featured { border-color: var(--gold); background: linear-gradient(160deg, rgba(201,168,76,0.08), var(--charcoal)); }
+  .pkg-badge { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: var(--gold); color: var(--black); font-size: 0.65rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; padding: 0.3rem 1rem; border-radius: 2px; white-space: nowrap; }
+  .pkg-tag { font-size: 0.68rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.75rem; }
+  .pkg-name { font-family: var(--font-display); font-size: 1.4rem; font-weight: 700; margin-bottom: 0.5rem; line-height: 1.2; }
+  .pkg-tagline { font-size: 0.85rem; color: rgba(255,255,255,0.55); margin-bottom: 1.5rem; line-height: 1.5; font-style: italic; }
+  .pkg-price { margin-bottom: 1.5rem; }
   .pkg-price .currency { font-size: 1rem; color: var(--gold); vertical-align: top; margin-top: 4px; display: inline-block; }
-  .pkg-price .amount {
-    font-family: var(--font-display);
-    font-size: 2.5rem;
-    font-weight: 700;
-    color: var(--white);
-    line-height: 1;
-  }
+  .pkg-price .amount { font-family: var(--font-display); font-size: 2.5rem; font-weight: 700; color: var(--white); line-height: 1; }
   .pkg-price .period { font-size: 0.8rem; color: rgba(255,255,255,0.4); }
-  .pkg-features {
-    list-style: none;
-    margin-bottom: 2rem;
-    flex: 1;
-  }
-  .pkg-features li {
-    font-size: 0.85rem;
-    color: rgba(255,255,255,0.7);
-    padding: 0.45rem 0;
-    padding-left: 1.5rem;
-    position: relative;
-    border-bottom: 1px solid rgba(255,255,255,0.05);
-  }
-  .pkg-features li::before {
-    content: '→';
-    position: absolute; left: 0;
-    color: var(--gold);
-    font-size: 0.75rem;
-  }
-  .pkg-btn {
-    display: block;
-    text-align: center;
-    padding: 0.85rem;
-    border-radius: 2px;
-    font-size: 0.82rem;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    text-decoration: none;
-    border: 1px solid var(--gold);
-    color: var(--gold);
-    transition: background 0.2s, color 0.2s;
-  }
-  .pkg-btn:hover, .pkg-card.featured .pkg-btn {
-    background: var(--gold);
-    color: var(--black);
-  }
-  .pkg-card.featured .pkg-btn:hover {
-    background: var(--gold-light);
-  }
-  /* ── WHY US ── */
-  .why-section {
-    background: var(--off-black);
-  }
-  .why-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 2rem;
-    max-width: 1100px;
-    margin: 0 auto;
-  }
-  .why-card {
-    padding: 2rem;
-    border-left: 2px solid rgba(201,168,76,0.25);
-    transition: border-color 0.3s;
-  }
+  .pkg-features { list-style: none; margin-bottom: 2rem; flex: 1; }
+  .pkg-features li { font-size: 0.85rem; color: rgba(255,255,255,0.7); padding: 0.45rem 0; padding-left: 1.5rem; position: relative; border-bottom: 1px solid rgba(255,255,255,0.05); }
+  .pkg-features li::before { content: '→'; position: absolute; left: 0; color: var(--gold); font-size: 0.75rem; }
+  .pkg-btn { display: block; text-align: center; padding: 0.85rem; border-radius: 2px; font-size: 0.82rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; text-decoration: none; border: 1px solid var(--gold); color: var(--gold); transition: background 0.2s, color 0.2s; }
+  .pkg-btn:hover, .pkg-card.featured .pkg-btn { background: var(--gold); color: var(--black); }
+  .pkg-card.featured .pkg-btn:hover { background: var(--gold-light); }
+  .why-section { background: var(--off-black); }
+  .why-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; max-width: 1100px; margin: 0 auto; }
+  .why-card { padding: 2rem; border-left: 2px solid rgba(201,168,76,0.25); transition: border-color 0.3s; }
   .why-card:hover { border-color: var(--gold); }
-  .why-icon {
-    font-size: 1.8rem; margin-bottom: 1rem;
-    display: block;
-  }
-  .why-title {
-    font-family: var(--font-display);
-    font-size: 1.15rem;
-    font-weight: 700;
-    margin-bottom: 0.6rem;
-  }
-  .why-desc {
-    font-size: 0.88rem;
-    color: rgba(255,255,255,0.55);
-    line-height: 1.7;
-  }
-  /* ── COACHES ── */
+  .why-icon { font-size: 1.8rem; margin-bottom: 1rem; display: block; }
+  .why-title { font-family: var(--font-display); font-size: 1.15rem; font-weight: 700; margin-bottom: 0.6rem; }
+  .why-desc { font-size: 0.88rem; color: rgba(255,255,255,0.55); line-height: 1.7; }
   .coaches-section { background: var(--black); }
-  .coaches-grid {
-    display: grid; grid-template-columns: 1fr 1fr;
-    gap: 3rem;
-    max-width: 900px; margin: 0 auto;
-  }
-  .coach-card {
-    background: var(--charcoal);
-    border: 1px solid rgba(255,255,255,0.07);
-    border-radius: 4px;
-    overflow: hidden;
-  }
-  .coach-photo {
-    width: 100%; height: 420px;
-    background-size: cover;
-    background-position: center top;
-    position: relative;
-    overflow: hidden;
-  }
-  .coach-photo::after {
-    content: '';
-    position: absolute; inset: 0;
-    background: linear-gradient(to bottom, transparent 50%, rgba(10,10,10,0.9) 100%);
-  }
+  .coaches-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; max-width: 900px; margin: 0 auto; }
+  .coach-card { background: var(--charcoal); border: 1px solid rgba(255,255,255,0.07); border-radius: 4px; overflow: hidden; }
+  .coach-photo { width: 100%; height: 420px; background-size: cover; background-position: center top; position: relative; overflow: hidden; }
+  .coach-photo::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to bottom, transparent 50%, rgba(10,10,10,0.9) 100%); }
   .coach-info { padding: 2rem; }
-  .coach-name {
-    font-family: var(--font-display);
-    font-size: 1.8rem;
-    font-weight: 700;
-    margin-bottom: 0.25rem;
-  }
-  .coach-role {
-    font-size: 0.75rem;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--gold);
-    margin-bottom: 1.25rem;
-  }
-  .coach-bio {
-    font-size: 0.9rem;
-    color: rgba(255,255,255,0.65);
-    line-height: 1.7;
-    margin-bottom: 1.5rem;
-  }
-  .coach-certs {
-    display: flex; flex-wrap: wrap; gap: 0.5rem;
-  }
-  .cert-tag {
-    background: rgba(201,168,76,0.1);
-    border: 1px solid rgba(201,168,76,0.25);
-    color: var(--gold-light);
-    font-size: 0.68rem;
-    letter-spacing: 0.08em;
-    padding: 0.3rem 0.7rem;
-    border-radius: 2px;
-    text-transform: uppercase;
-  }
-  /* ── TESTIMONIALS ── */
+  .coach-name { font-family: var(--font-display); font-size: 1.8rem; font-weight: 700; margin-bottom: 0.25rem; }
+  .coach-role { font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold); margin-bottom: 1.25rem; }
+  .coach-bio { font-size: 0.9rem; color: rgba(255,255,255,0.65); line-height: 1.7; margin-bottom: 1.5rem; }
+  .coach-certs { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .cert-tag { background: rgba(201,168,76,0.1); border: 1px solid rgba(201,168,76,0.25); color: var(--gold-light); font-size: 0.68rem; letter-spacing: 0.08em; padding: 0.3rem 0.7rem; border-radius: 2px; text-transform: uppercase; }
   .testimonials-section { background: var(--off-black); }
-  .testimonials-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1.5rem;
-    max-width: 1100px; margin: 0 auto;
-  }
-  .testi-card {
-    background: var(--charcoal);
-    border: 1px solid rgba(255,255,255,0.06);
-    border-radius: 4px;
-    padding: 2rem;
-    position: relative;
-  }
-  .testi-stars {
-    color: var(--gold); font-size: 0.9rem;
-    margin-bottom: 1rem; letter-spacing: 2px;
-  }
-  .testi-quote {
-    font-size: 0.92rem;
-    color: rgba(255,255,255,0.75);
-    line-height: 1.75;
-    font-style: italic;
-    margin-bottom: 1.5rem;
-  }
-  .testi-author {
-    display: flex; align-items: center; gap: 0.75rem;
-  }
-  .testi-avatar {
-    width: 44px; height: 44px; border-radius: 50%;
-    background: var(--gold);
-    display: flex; align-items: center; justify-content: center;
-    font-weight: 700; font-size: 0.9rem;
-    color: var(--black);
-    flex-shrink: 0;
-  }
-  .testi-name {
-    font-weight: 600; font-size: 0.9rem;
-  }
-  .testi-detail {
-    font-size: 0.75rem;
-    color: var(--gold);
-    margin-top: 0.15rem;
-  }
-  /* ── 1-TO-1 PT ── */
-  .pt-section {
-    background: var(--black);
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0;
-    padding: 0;
-  }
-  .pt-photo {
-    background: url('https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=900&q=80') center/cover no-repeat;
-    min-height: 600px;
-    position: relative;
-  }
-  .pt-photo::after {
-    content: '';
-    position: absolute; inset: 0;
-    background: linear-gradient(to right, transparent 60%, rgba(10,10,10,0.5));
-  }
-  .pt-content {
-    padding: 5rem 4rem;
-    background: var(--charcoal);
-    display: flex; flex-direction: column; justify-content: center;
-  }
-  .pt-locations {
-    display: flex; flex-direction: column; gap: 1rem;
-    margin: 2rem 0;
-  }
-  .location-pill {
-    display: flex; align-items: center; gap: 1rem;
-    background: rgba(201,168,76,0.08);
-    border: 1px solid rgba(201,168,76,0.2);
-    border-radius: 4px;
-    padding: 1rem 1.25rem;
-  }
+  .testimonials-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; max-width: 1100px; margin: 0 auto; }
+  .testi-card { background: var(--charcoal); border: 1px solid rgba(255,255,255,0.06); border-radius: 4px; padding: 2rem; position: relative; }
+  .testi-stars { color: var(--gold); font-size: 0.9rem; margin-bottom: 1rem; letter-spacing: 2px; }
+  .testi-quote { font-size: 0.92rem; color: rgba(255,255,255,0.75); line-height: 1.75; font-style: italic; margin-bottom: 1.5rem; }
+  .testi-author { display: flex; align-items: center; gap: 0.75rem; }
+  .testi-avatar { width: 44px; height: 44px; border-radius: 50%; background: var(--gold); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.9rem; color: var(--black); flex-shrink: 0; }
+  .testi-name { font-weight: 600; font-size: 0.9rem; }
+  .testi-detail { font-size: 0.75rem; color: var(--gold); margin-top: 0.15rem; }
+  .pt-section { background: var(--black); display: grid; grid-template-columns: 1fr 1fr; gap: 0; padding: 0; }
+  .pt-photo { background: url('https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=900&q=80') center/cover no-repeat; min-height: 600px; position: relative; }
+  .pt-photo::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to right, transparent 60%, rgba(10,10,10,0.5)); }
+  .pt-content { padding: 5rem 4rem; background: var(--charcoal); display: flex; flex-direction: column; justify-content: center; }
+  .pt-locations { display: flex; flex-direction: column; gap: 1rem; margin: 2rem 0; }
+  .location-pill { display: flex; align-items: center; gap: 1rem; background: rgba(201,168,76,0.08); border: 1px solid rgba(201,168,76,0.2); border-radius: 4px; padding: 1rem 1.25rem; }
   .location-icon { font-size: 1.4rem; }
   .location-name { font-weight: 600; font-size: 0.95rem; }
   .location-type { font-size: 0.75rem; color: rgba(255,255,255,0.5); margin-top: 0.15rem; }
-  /* ── URGENCY / SPOTS ── */
-  .urgency-section {
-    background: linear-gradient(135deg, var(--charcoal), var(--dark-gray));
-    border-top: 1px solid rgba(201,168,76,0.2);
-    border-bottom: 1px solid rgba(201,168,76,0.2);
-    text-align: center;
-    padding: 5rem 3rem;
-  }
-  .spots-counter {
-    display: inline-flex; flex-direction: column; align-items: center;
-    background: rgba(192,57,43,0.12);
-    border: 1px solid rgba(192,57,43,0.4);
-    border-radius: 4px;
-    padding: 1rem 2rem;
-    margin-bottom: 2rem;
-  }
-  .spots-num {
-    font-family: var(--font-display);
-    font-size: 3rem;
-    font-weight: 900;
-    color: #e74c3c;
-    line-height: 1;
-  }
-  .spots-label {
-    font-size: 0.72rem; letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: rgba(255,255,255,0.6);
-    margin-top: 0.25rem;
-  }
-  /* ── FAQ ── */
+  .urgency-section { background: linear-gradient(135deg, var(--charcoal), var(--dark-gray)); border-top: 1px solid rgba(201,168,76,0.2); border-bottom: 1px solid rgba(201,168,76,0.2); text-align: center; padding: 5rem 3rem; }
+  .spots-counter { display: inline-flex; flex-direction: column; align-items: center; background: rgba(192,57,43,0.12); border: 1px solid rgba(192,57,43,0.4); border-radius: 4px; padding: 1rem 2rem; margin-bottom: 2rem; }
+  .spots-num { font-family: var(--font-display); font-size: 3rem; font-weight: 900; color: #e74c3c; line-height: 1; }
+  .spots-label { font-size: 0.72rem; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(255,255,255,0.6); margin-top: 0.25rem; }
   .faq-section { background: var(--off-black); }
-  .faq-container {
-    max-width: 700px; margin: 0 auto;
-  }
-  .faq-item {
-    border-bottom: 1px solid rgba(255,255,255,0.08);
-    padding: 1.5rem 0;
-    cursor: pointer;
-  }
-  .faq-q {
-    display: flex; justify-content: space-between; align-items: center;
-    font-weight: 500; font-size: 1rem;
-    gap: 1rem;
-  }
-  .faq-toggle {
-    color: var(--gold); font-size: 1.2rem;
-    flex-shrink: 0;
-    transition: transform 0.3s;
-  }
-  .faq-a {
-    font-size: 0.9rem;
-    color: rgba(255,255,255,0.6);
-    line-height: 1.7;
-    margin-top: 1rem;
-    display: none;
-  }
+  .faq-container { max-width: 700px; margin: 0 auto; }
+  .faq-item { border-bottom: 1px solid rgba(255,255,255,0.08); padding: 1.5rem 0; cursor: pointer; }
+  .faq-q { display: flex; justify-content: space-between; align-items: center; font-weight: 500; font-size: 1rem; gap: 1rem; }
+  .faq-toggle { color: var(--gold); font-size: 1.2rem; flex-shrink: 0; transition: transform 0.3s; }
+  .faq-a { font-size: 0.9rem; color: rgba(255,255,255,0.6); line-height: 1.7; margin-top: 1rem; display: none; }
   .faq-item.open .faq-a { display: block; }
   .faq-item.open .faq-toggle { transform: rotate(45deg); }
-  /* ── FOOTER ── */
-  footer {
-    background: #050505;
-    border-top: 1px solid rgba(201,168,76,0.15);
-    padding: 4rem 3rem 2rem;
-  }
-  .footer-grid {
-    display: grid;
-    grid-template-columns: 2fr 1fr 1fr 1fr;
-    gap: 3rem;
-    margin-bottom: 3rem;
-  }
-  .footer-brand .logo {
-    font-family: var(--font-display);
-    font-size: 1.4rem;
-    font-weight: 700;
-    color: var(--gold);
-    display: block;
-    margin-bottom: 1rem;
-    text-decoration: none;
-  }
-  .footer-brand p {
-    font-size: 0.85rem;
-    color: rgba(255,255,255,0.4);
-    line-height: 1.7;
-    margin-bottom: 1.5rem;
-  }
+  footer { background: #050505; border-top: 1px solid rgba(201,168,76,0.15); padding: 4rem 3rem 2rem; }
+  .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 3rem; margin-bottom: 3rem; }
+  .footer-brand .logo { font-family: var(--font-display); font-size: 1.4rem; font-weight: 700; color: var(--gold); display: block; margin-bottom: 1rem; text-decoration: none; }
+  .footer-brand p { font-size: 0.85rem; color: rgba(255,255,255,0.4); line-height: 1.7; margin-bottom: 1.5rem; }
   .social-links { display: flex; gap: 0.75rem; }
-  .social-link {
-    width: 36px; height: 36px; border-radius: 2px;
-    border: 1px solid rgba(255,255,255,0.15);
-    display: flex; align-items: center; justify-content: center;
-    text-decoration: none;
-    color: rgba(255,255,255,0.5);
-    font-size: 0.8rem;
-    font-weight: 600;
-    transition: border-color 0.2s, color 0.2s;
-  }
+  .social-link { width: 36px; height: 36px; border-radius: 2px; border: 1px solid rgba(255,255,255,0.15); display: flex; align-items: center; justify-content: center; text-decoration: none; color: rgba(255,255,255,0.5); font-size: 0.8rem; font-weight: 600; transition: border-color 0.2s, color 0.2s; }
   .social-link:hover { border-color: var(--gold); color: var(--gold); }
-  .footer-col h4 {
-    font-size: 0.72rem;
-    font-weight: 600;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: rgba(255,255,255,0.4);
-    margin-bottom: 1.25rem;
-  }
+  .footer-col h4 { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(255,255,255,0.4); margin-bottom: 1.25rem; }
   .footer-col ul { list-style: none; }
   .footer-col ul li { margin-bottom: 0.6rem; }
-  .footer-col ul a {
-    font-size: 0.88rem;
-    color: rgba(255,255,255,0.6);
-    text-decoration: none;
-    transition: color 0.2s;
-  }
+  .footer-col ul a { font-size: 0.88rem; color: rgba(255,255,255,0.6); text-decoration: none; transition: color 0.2s; }
   .footer-col ul a:hover { color: var(--gold); }
-  .footer-bottom {
-    border-top: 1px solid rgba(255,255,255,0.06);
-    padding-top: 1.5rem;
-    display: flex; justify-content: space-between; align-items: center;
-    flex-wrap: wrap; gap: 1rem;
-  }
-  .footer-bottom p {
-    font-size: 0.78rem;
-    color: rgba(255,255,255,0.3);
-  }
-  .payment-icons {
-    display: flex; gap: 0.5rem; align-items: center;
-  }
-  .payment-icon {
-    background: rgba(255,255,255,0.08);
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 3px;
-    padding: 0.25rem 0.6rem;
-    font-size: 0.7rem;
-    font-weight: 700;
-    color: rgba(255,255,255,0.5);
-    letter-spacing: 0.05em;
-  }
-  /* ── ANIMATIONS ── */
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(24px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
+  .footer-bottom { border-top: 1px solid rgba(255,255,255,0.06); padding-top: 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+  .footer-bottom p { font-size: 0.78rem; color: rgba(255,255,255,0.3); }
+  .payment-icons { display: flex; gap: 0.5rem; align-items: center; }
+  .payment-icon { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.1); border-radius: 3px; padding: 0.25rem 0.6rem; font-size: 0.7rem; font-weight: 700; color: rgba(255,255,255,0.5); letter-spacing: 0.05em; }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
   .animate { animation: fadeUp 0.7s ease forwards; }
   .delay-1 { animation-delay: 0.15s; opacity: 0; }
   .delay-2 { animation-delay: 0.3s; opacity: 0; }
   .delay-3 { animation-delay: 0.45s; opacity: 0; }
   .delay-4 { animation-delay: 0.6s; opacity: 0; }
-  /* ── MISC ── */
   .text-gold { color: var(--gold); }
   .text-center { text-align: center; }
-  .divider {
-    width: 60px; height: 1px; background: var(--gold);
-    margin: 0 auto 2rem;
-  }
-  /* ── MOBILE RESPONSIVE ── */
+  .divider { width: 60px; height: 1px; background: var(--gold); margin: 0 auto 2rem; }
   @media (max-width: 768px) {
-    nav {
-      padding: 0.85rem 1.2rem;
-      flex-wrap: nowrap;
-      gap: 0.75rem;
-      align-items: center;
-    }
+    nav { padding: 0.85rem 1.2rem; flex-wrap: nowrap; gap: 0.75rem; align-items: center; }
     .nav-logo { flex-shrink: 0; }
     .nav-links { display: none; }
-    .nav-mobile-trans { display: none; }
-    .nav-mobile-trans { display: inline-block !important; }
     .nav-mobile-cta { display: inline-block !important; }
-    .hero {
-      padding: 6rem 1.4rem 3rem;
-      min-height: 100svh;
-    }
+    .hero { padding: 6rem 1.4rem 3rem; min-height: 100svh; }
     .hero h1 { font-size: 2.8rem; line-height: 1.05; }
     .hero-sub { font-size: 0.95rem; }
     .hero-stats { gap: 1.5rem; flex-wrap: wrap; }
@@ -894,11 +238,10 @@
     section { padding: 3.5rem 1.4rem; }
     .lead-magnet { grid-template-columns: 1fr; gap: 2rem; padding: 2rem 1.4rem; }
     .transforms-grid { grid-template-columns: 1fr; gap: 1.25rem; }
-    .transform-img-half { height: 160px; }
     .packages-grid { grid-template-columns: 1fr; gap: 1.25rem; }
     .secondary-packages { grid-template-columns: 1fr 1fr !important; gap: 0.6rem !important; }
     .couples-grid { grid-template-columns: 1fr !important; gap: 2rem !important; }
-    .why-grid { grid-template-columns: 1fr; gap: 0; }
+    .why-grid { grid-template-columns: 1fr !important; gap: 1.25rem !important; }
     .why-card { padding: 1.25rem 1rem; }
     .coaches-grid { grid-template-columns: 1fr; gap: 2rem; }
     .coach-photo { height: 360px; background-position: center top !important; }
@@ -914,23 +257,6 @@
     .footer-grid { grid-template-columns: 1fr; gap: 2rem; }
     .footer-bottom { flex-direction: column; align-items: center; gap: 0.75rem; text-align: center; }
     .section-title { font-size: 1.9rem; }
-    .packages-section > div,
-    .why-section > div,
-    .coaches-section > div,
-    .testimonials-section > div { padding-left: 0; padding-right: 0; }
-  }
-  @media (max-width: 768px) {
-    .how-grid { grid-template-columns: 1fr 1fr !important; gap: 1.5rem !important; }
-    .how-line { display: none !important; }
-  }
-  @media (max-width: 480px) {
-    .how-grid { grid-template-columns: 1fr !important; }
-  }
-  @media (max-width: 390px) {
-    .hero h1 { font-size: 2.3rem; }
-    .nav-logo img { height: 28px !important; }
-  }
-  @media (max-width: 768px) {
     .urgency-banner { font-size: 0.68rem; padding: 0.55rem 0.8rem; line-height: 1.5; }
     #lead-section { padding: 3rem 1.2rem !important; }
     .lead-magnet { padding: 1.75rem 1.2rem !important; margin: 0 !important; border-radius: 4px; }
@@ -939,26 +265,19 @@
     .lead-visual h3 { font-size: 1.2rem; }
     .lead-perks li { font-size: 0.82rem; }
     .hero { min-height: 100dvh; padding-top: 7rem; }
-    .coach-photo { background-position: center top !important; }
     .pkg-card { margin: 0; }
-    .why-section > div { padding: 1.5rem 1.4rem; }
   }
-  @media (max-width: 768px) {
-    .why-grid { grid-template-columns: 1fr !important; gap: 1.25rem !important; }
-    .why-section > div:first-of-type { margin-bottom: 2rem !important; }
-  }
+  @media (max-width: 768px) { .how-grid { grid-template-columns: 1fr 1fr !important; gap: 1.5rem !important; } .how-line { display: none !important; } }
+  @media (max-width: 480px) { .how-grid { grid-template-columns: 1fr !important; } }
+  @media (max-width: 390px) { .hero h1 { font-size: 2.3rem; } .nav-logo img { height: 28px !important; } }
 </style>
 </head>
 <body>
-
-<!-- ── FIXED HEADER (banner + nav) ── -->
 <div class="site-header">
-  <!-- FIX 1: "Claim Yours" is now a real anchor link scrolling to #packages -->
   <div class="urgency-banner">
     🔥 Only 4 Online Coaching Spots Remaining This Month — Don't Miss Out
     <a href="#packages" class="claim-link">Claim Yours</a>
   </div>
-
   <nav style="position:relative; top:auto; background:rgba(10,10,10,0.98);">
     <a href="index.html" class="nav-logo"><img src="logo.png" alt="Mr &amp; Mrs Lifestyle" style="height:36px;width:auto;display:block;" /></a>
     <ul class="nav-links">
@@ -973,37 +292,20 @@
     </ul>
     <a href="apply.html" class="nav-mobile-cta" style="display:none; background:var(--gold); color:var(--black); font-size:0.72rem; font-weight:700; padding:0.45rem 0.9rem; border-radius:2px; letter-spacing:0.05em; text-transform:uppercase; white-space:nowrap; text-decoration:none; flex-shrink:0;">Apply Now</a>
   </nav>
-</div><!-- end site-header -->
+</div>
 
-<!-- ── HERO ── -->
 <section class="hero" id="home">
   <div class="hero-bg"></div>
   <div class="hero-accent"></div>
   <div class="hero-content" style="padding-top: 1rem;">
     <div class="hero-eyebrow animate">Dubai's Premier Coaching Couple</div>
-    <h1 class="animate delay-1">
-      Stop <em>Trying.</em><br>Start<br><em>Transforming.</em>
-    </h1>
-    <p class="hero-sub animate delay-2">
-      Real coaches. Real results. Whether you're in Dubai or anywhere in the world, Tarek & Chloe deliver the personalised plan, nutrition guidance, and relentless support that finally makes the difference.
-    </p>
+    <h1 class="animate delay-1">Stop <em>Trying.</em><br>Start<br><em>Transforming.</em></h1>
+    <p class="hero-sub animate delay-2">Real coaches. Real results. Whether you're in Dubai or anywhere in the world, Tarek & Chloe deliver the personalised plan, nutrition guidance, and relentless support that finally makes the difference.</p>
     <div class="hero-stats animate delay-3">
-      <div>
-        <div class="stat-num">500+</div>
-        <div class="stat-label">Lives Changed</div>
-      </div>
-      <div>
-        <div class="stat-num">10+</div>
-        <div class="stat-label">Years Experience</div>
-      </div>
-      <div>
-        <div class="stat-num">98%</div>
-        <div class="stat-label">Client Satisfaction</div>
-      </div>
-      <div>
-        <div class="stat-num">24/7</div>
-        <div class="stat-label">Coach Access</div>
-      </div>
+      <div><div class="stat-num">500+</div><div class="stat-label">Lives Changed</div></div>
+      <div><div class="stat-num">10+</div><div class="stat-label">Years Experience</div></div>
+      <div><div class="stat-num">98%</div><div class="stat-label">Client Satisfaction</div></div>
+      <div><div class="stat-num">24/7</div><div class="stat-label">Coach Access</div></div>
     </div>
     <div class="hero-ctas animate delay-4">
       <a href="apply.html" class="btn-primary">Apply for Coaching — Free Call</a>
@@ -1013,20 +315,15 @@
   <div class="scroll-indicator">Scroll</div>
 </section>
 
-<!-- ── TRANSFORMATIONS ── -->
 <section class="transformations-section" id="transformations">
   <div class="transforms-header">
     <div class="section-eyebrow" style="justify-content:center">Real Client Results</div>
     <h2 class="section-title">The Proof Is In The <em>People</em></h2>
-    <p style="color:rgba(255,255,255,0.55); max-width:540px; margin:0 auto; font-size:0.95rem; line-height:1.7;">
-      Every transformation below is a real person who showed up, trusted the process, and changed their life. Yours is next.
-    </p>
+    <p style="color:rgba(255,255,255,0.55); max-width:540px; margin:0 auto; font-size:0.95rem; line-height:1.7;">Every transformation below is a real person who showed up, trusted the process, and changed their life. Yours is next.</p>
   </div>
   <div class="transforms-grid">
     <div class="transform-card">
-      <div class="transform-full-img">
-        <img src="transform1.jpg" alt="John S transformation" style="width:100%; display:block; border-bottom: 3px solid var(--gold);" loading="lazy">
-      </div>
+      <div class="transform-full-img"><img src="transform1.jpg" alt="John S personal training transformation Dubai — lost 10kg fat gained 4kg muscle in 14 weeks" style="width:100%; display:block; border-bottom: 3px solid var(--gold);" loading="lazy"></div>
       <div class="transform-info">
         <div class="transform-name">John S.</div>
         <div class="transform-result">↓ 10kg Fat · ↑ 4kg Muscle · 14 Weeks · Ultimate Fat Burn</div>
@@ -1034,9 +331,7 @@
       </div>
     </div>
     <div class="transform-card">
-      <div class="transform-full-img">
-        <img src="transform2.jpg" alt="Charlotte transformation" style="width:100%; display:block; border-bottom: 3px solid var(--gold);" loading="lazy">
-      </div>
+      <div class="transform-full-img"><img src="transform2.jpg" alt="Charlotte body transformation Dubai — reduced body fat and rebuilt confidence with online coaching" style="width:100%; display:block; border-bottom: 3px solid var(--gold);" loading="lazy"></div>
       <div class="transform-info">
         <div class="transform-name">Charlotte</div>
         <div class="transform-result">↓ Body Fat · Confidence Rebuilt · Elite Online Coaching</div>
@@ -1044,9 +339,7 @@
       </div>
     </div>
     <div class="transform-card">
-      <div class="transform-full-img">
-        <img src="transform3.jpg" alt="Max transformation" style="width:100%; display:block; border-bottom: 3px solid var(--gold);" loading="lazy">
-      </div>
+      <div class="transform-full-img"><img src="transform3.jpg" alt="Max muscle gain transformation — gained 12kg muscle in 20 weeks with Mr and Mrs Lifestyle coaching" style="width:100%; display:block; border-bottom: 3px solid var(--gold);" loading="lazy"></div>
       <div class="transform-info">
         <div class="transform-name">Max</div>
         <div class="transform-result">↑ 12kg Muscle · 20 Weeks · Ultimate Muscle Gain</div>
@@ -1054,49 +347,24 @@
       </div>
     </div>
   </div>
-  <div class="transforms-cta">
-    <a href="#packages" class="btn-primary">Start Your Transformation</a>
-  </div>
+  <div class="transforms-cta"><a href="#packages" class="btn-primary">Start Your Transformation</a></div>
 </section>
 
-<!-- ── HOW IT WORKS ── -->
 <section style="background:var(--black);padding:5rem 3rem;border-top:1px solid rgba(201,168,76,0.08);">
   <div style="max-width:1000px;margin:0 auto;text-align:center;">
     <div class="section-eyebrow" style="justify-content:center;">Simple Process</div>
     <h2 class="section-title" style="margin-bottom:1rem;">How It <em>Works</em></h2>
     <p style="color:rgba(255,255,255,0.5);max-width:480px;margin:0 auto 3.5rem;line-height:1.7;font-size:0.95rem;">From your first message to your first result — here's exactly what happens when you join Mr & Mrs Lifestyle.</p>
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1.5rem;" class="how-grid">
-      <div style="position:relative;">
-        <div style="width:52px;height:52px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:1.3rem;font-weight:700;color:var(--black);margin:0 auto 1rem;">1</div>
-        <div style="position:absolute;top:26px;left:calc(50% + 26px);right:0;height:1px;background:rgba(201,168,76,0.3);" class="how-line"></div>
-        <h3 style="font-family:var(--font-display);font-size:1rem;font-weight:700;margin-bottom:0.5rem;">Apply Free</h3>
-        <p style="font-size:0.82rem;color:rgba(255,255,255,0.5);line-height:1.6;">Fill in our 3-minute application. No payment, no commitment — just tell us about your goals.</p>
-      </div>
-      <div style="position:relative;">
-        <div style="width:52px;height:52px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:1.3rem;font-weight:700;color:var(--black);margin:0 auto 1rem;">2</div>
-        <div style="position:absolute;top:26px;left:calc(50% + 26px);right:0;height:1px;background:rgba(201,168,76,0.3);" class="how-line"></div>
-        <h3 style="font-family:var(--font-display);font-size:1rem;font-weight:700;margin-bottom:0.5rem;">Free Strategy Call</h3>
-        <p style="font-size:0.82rem;color:rgba(255,255,255,0.5);line-height:1.6;">Tarek or Chloe will personally call you within 24 hours to map out your exact transformation plan.</p>
-      </div>
-      <div style="position:relative;">
-        <div style="width:52px;height:52px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:1.3rem;font-weight:700;color:var(--black);margin:0 auto 1rem;">3</div>
-        <div style="position:absolute;top:26px;left:calc(50% + 26px);right:0;height:1px;background:rgba(201,168,76,0.3);" class="how-line"></div>
-        <h3 style="font-family:var(--font-display);font-size:1rem;font-weight:700;margin-bottom:0.5rem;">Get Your Plan</h3>
-        <p style="font-size:0.82rem;color:rgba(255,255,255,0.5);line-height:1.6;">Within 48 hours of joining, your fully custom training and nutrition plan lands in your inbox.</p>
-      </div>
-      <div>
-        <div style="width:52px;height:52px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:1.3rem;font-weight:700;color:var(--black);margin:0 auto 1rem;">4</div>
-        <h3 style="font-family:var(--font-display);font-size:1rem;font-weight:700;margin-bottom:0.5rem;">Transform</h3>
-        <p style="font-size:0.82rem;color:rgba(255,255,255,0.5);line-height:1.6;">Execute your plan with your coach in your corner every step — check-ins, adjustments, results.</p>
-      </div>
+      <div style="position:relative;"><div style="width:52px;height:52px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:1.3rem;font-weight:700;color:var(--black);margin:0 auto 1rem;">1</div><div style="position:absolute;top:26px;left:calc(50% + 26px);right:0;height:1px;background:rgba(201,168,76,0.3);" class="how-line"></div><h3 style="font-family:var(--font-display);font-size:1rem;font-weight:700;margin-bottom:0.5rem;">Apply Free</h3><p style="font-size:0.82rem;color:rgba(255,255,255,0.5);line-height:1.6;">Fill in our 3-minute application. No payment, no commitment — just tell us about your goals.</p></div>
+      <div style="position:relative;"><div style="width:52px;height:52px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:1.3rem;font-weight:700;color:var(--black);margin:0 auto 1rem;">2</div><div style="position:absolute;top:26px;left:calc(50% + 26px);right:0;height:1px;background:rgba(201,168,76,0.3);" class="how-line"></div><h3 style="font-family:var(--font-display);font-size:1rem;font-weight:700;margin-bottom:0.5rem;">Free Strategy Call</h3><p style="font-size:0.82rem;color:rgba(255,255,255,0.5);line-height:1.6;">Tarek or Chloe will personally call you within 24 hours to map out your exact transformation plan.</p></div>
+      <div style="position:relative;"><div style="width:52px;height:52px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:1.3rem;font-weight:700;color:var(--black);margin:0 auto 1rem;">3</div><div style="position:absolute;top:26px;left:calc(50% + 26px);right:0;height:1px;background:rgba(201,168,76,0.3);" class="how-line"></div><h3 style="font-family:var(--font-display);font-size:1rem;font-weight:700;margin-bottom:0.5rem;">Get Your Plan</h3><p style="font-size:0.82rem;color:rgba(255,255,255,0.5);line-height:1.6;">Within 48 hours of joining, your fully custom training and nutrition plan lands in your inbox.</p></div>
+      <div><div style="width:52px;height:52px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:1.3rem;font-weight:700;color:var(--black);margin:0 auto 1rem;">4</div><h3 style="font-family:var(--font-display);font-size:1rem;font-weight:700;margin-bottom:0.5rem;">Transform</h3><p style="font-size:0.82rem;color:rgba(255,255,255,0.5);line-height:1.6;">Execute your plan with your coach in your corner every step — check-ins, adjustments, results.</p></div>
     </div>
-    <div style="margin-top:3rem;">
-      <a href="apply.html" class="btn-primary">Start Your Transformation — Free</a>
-    </div>
+    <div style="margin-top:3rem;"><a href="apply.html" class="btn-primary">Start Your Transformation — Free</a></div>
   </div>
 </section>
 
-<!-- ── LEAD MAGNET ── -->
 <section style="background: var(--off-black); padding: 5rem 3rem;" id="lead-section">
   <div class="lead-magnet">
     <div>
@@ -1107,9 +375,7 @@
         <a href="free-guide.html" class="btn-primary">Download Free — Instant Access</a>
         <a href="apply.html" class="btn-ghost" style="align-self:center;">Apply for Coaching →</a>
       </div>
-      <p style="font-size:0.75rem; color:rgba(255,255,255,0.3); margin-top:0.75rem; margin-bottom:0;">
-        No spam, ever. Unsubscribe anytime.
-      </p>
+      <p style="font-size:0.75rem; color:rgba(255,255,255,0.3); margin-top:0.75rem; margin-bottom:0;">No spam, ever. Unsubscribe anytime.</p>
     </div>
     <div class="lead-visual" style="overflow:hidden;">
       <div class="freebie-label">✦ Free Resource · Used by 500+ Clients</div>
@@ -1126,217 +392,91 @@
   </div>
 </section>
 
-<!-- ── PACKAGES ── -->
 <section class="packages-section" id="packages">
   <div style="max-width:1100px; margin:0 auto;">
     <div style="text-align:center; margin-bottom:4rem;">
       <div class="section-eyebrow" style="justify-content:center">Online Coaching Worldwide</div>
       <h2 class="section-title">Choose Your <em>Plan</em></h2>
-      <p style="color:rgba(255,255,255,0.55); max-width:500px; margin:0 auto; font-size:0.95rem; line-height:1.7;">
-        Every package includes a custom workout plan, nutrition guidance, and direct coach access. Pick the intensity that matches your ambition.
-      </p>
+      <p style="color:rgba(255,255,255,0.55); max-width:500px; margin:0 auto; font-size:0.95rem; line-height:1.7;">Every package includes a custom workout plan, nutrition guidance, and direct coach access. Pick the intensity that matches your ambition.</p>
     </div>
     <div class="packages-grid">
-      <!-- Economy -->
       <div class="pkg-card">
         <div class="pkg-tag">Best Starter Value</div>
         <div class="pkg-name">Economy Pack</div>
         <div class="pkg-tagline">For Men & Women — get the foundations right and build momentum fast.</div>
-        <div class="pkg-price">
-          <span class="currency">AED </span>
-          <span class="amount">299</span>
-          <div class="period">per month</div>
-        </div>
-        <ul class="pkg-features">
-          <li>Custom 8-week workout plan</li>
-          <li>Macro & calorie targets</li>
-          <li>Progress tracking templates</li>
-          <li>Exercise video library</li>
-          <li>Email support</li>
-        </ul>
+        <div class="pkg-price"><span class="currency">AED </span><span class="amount">299</span><div class="period">per month</div></div>
+        <ul class="pkg-features"><li>Custom 8-week workout plan</li><li>Macro & calorie targets</li><li>Progress tracking templates</li><li>Exercise video library</li><li>Email support</li></ul>
         <a href="https://buy.stripe.com/3cIaEX1Ua0wC8Zv3WXdMI0Y" target="_blank" class="pkg-btn" style="margin-bottom:0.5rem;">Buy Now — AED 299/mo</a>
         <a href="apply.html" style="display:block;text-align:center;font-size:0.75rem;color:rgba(255,255,255,0.4);margin-top:0.25rem;">or apply for a free call first →</a>
       </div>
-      <!-- Elite — FEATURED -->
       <div class="pkg-card featured">
         <div class="pkg-badge">⭐ Most Popular</div>
         <div class="pkg-tag">Best Results</div>
         <div class="pkg-name">Elite Coaching Experience</div>
         <div class="pkg-tagline">Work directly with Coach Tarek & Coach Chloe. The full Mr & Mrs Lifestyle experience.</div>
-        <div class="pkg-price">
-          <span class="currency">AED </span>
-          <span class="amount">899</span>
-          <div class="period">per month · limited spots</div>
-        </div>
-        <ul class="pkg-features">
-          <li>Fully personalised training plan</li>
-          <li>Custom nutrition & meal planning</li>
-          <li>Weekly check-in calls with Tarek & Chloe</li>
-          <li>WhatsApp / 24-7 direct coach access</li>
-          <li>Progress photos & body composition tracking</li>
-          <li>Plan adjustments every 2 weeks</li>
-          <li>Lifetime access to resources</li>
-        </ul>
+        <div class="pkg-price"><span class="currency">AED </span><span class="amount">899</span><div class="period">per month · limited spots</div></div>
+        <ul class="pkg-features"><li>Fully personalised training plan</li><li>Custom nutrition & meal planning</li><li>Weekly check-in calls with Tarek & Chloe</li><li>WhatsApp / 24-7 direct coach access</li><li>Progress photos & body composition tracking</li><li>Plan adjustments every 2 weeks</li><li>Lifetime access to resources</li></ul>
         <a href="https://buy.stripe.com/fZu7sL6aqa7cgrX2STdMI0Z" target="_blank" class="pkg-btn" style="margin-bottom:0.5rem;">Buy Now — AED 899/mo</a>
         <a href="apply.html" style="display:block;text-align:center;font-size:0.75rem;color:rgba(255,255,255,0.4);margin-top:0.25rem;">or apply for a free call first →</a>
       </div>
-      <!-- VIP -->
       <div class="pkg-card">
         <div class="pkg-tag">Full Transformation</div>
         <div class="pkg-name">VIP Online Coaching</div>
         <div class="pkg-tagline">The complete premium experience — for those who want maximum results and maximum support.</div>
-        <div class="pkg-price">
-          <span class="currency">AED </span>
-          <span class="amount">1,999</span>
-          <div class="period">per month · full VIP access</div>
-        </div>
-        <ul class="pkg-features">
-          <li>Everything in Elite, plus:</li>
-          <li>Bi-weekly video coaching sessions</li>
-          <li>Tailor-made nutrition plan (new each phase)</li>
-          <li>Supplement protocol & guidance</li>
-          <li>Priority response — under 2 hours</li>
-          <li>Full lifestyle & mindset coaching</li>
-          <li>Post-programme maintenance plan</li>
-        </ul>
+        <div class="pkg-price"><span class="currency">AED </span><span class="amount">1,999</span><div class="period">per month · full VIP access</div></div>
+        <ul class="pkg-features"><li>Everything in Elite, plus:</li><li>Bi-weekly video coaching sessions</li><li>Tailor-made nutrition plan (new each phase)</li><li>Supplement protocol & guidance</li><li>Priority response — under 2 hours</li><li>Full lifestyle & mindset coaching</li><li>Post-programme maintenance plan</li></ul>
         <a href="https://buy.stripe.com/3cIeVdgP46V0b7D511dMI10" target="_blank" class="pkg-btn" style="margin-bottom:0.5rem;">Buy Now — AED 1,999/mo</a>
         <a href="apply.html" style="display:block;text-align:center;font-size:0.75rem;color:rgba(255,255,255,0.4);margin-top:0.25rem;">or apply for a free call first →</a>
       </div>
     </div>
-
-    <!-- FIX 2: Secondary packages — display:flex flex-direction:column justify-content:space-between added to each card so buttons always align -->
     <div class="secondary-packages" style="display:grid; grid-template-columns: repeat(4, 1fr); gap:1rem; margin-top:1.5rem;">
-      <div style="background:var(--charcoal); border:1px solid rgba(255,255,255,0.07); border-radius:4px; padding:1.25rem; text-align:center; display:flex; flex-direction:column; justify-content:space-between;">
-        <div>
-          <div style="font-size:0.7rem; color:var(--gold); letter-spacing:0.1em; text-transform:uppercase; margin-bottom:0.5rem;">Women</div>
-          <div style="font-family:var(--font-display); font-size:1rem; font-weight:700; margin-bottom:0.25rem;">Booty Builder</div>
-          <div style="font-size:1.3rem; font-weight:700; color:var(--gold); margin-bottom:0.75rem;">AED 649</div>
-        </div>
-        <!-- FIX 3: "Get It" now links to apply.html — swap for a Stripe link if you have one -->
-        <a href="apply.html" class="pkg-btn" style="font-size:0.75rem; padding:0.6rem;">Get It</a>
-      </div>
-      <div style="background:var(--charcoal); border:1px solid rgba(255,255,255,0.07); border-radius:4px; padding:1.25rem; text-align:center; display:flex; flex-direction:column; justify-content:space-between;">
-        <div>
-          <div style="font-size:0.7rem; color:var(--gold); letter-spacing:0.1em; text-transform:uppercase; margin-bottom:0.5rem;">Men</div>
-          <div style="font-family:var(--font-display); font-size:1rem; font-weight:700; margin-bottom:0.25rem;">Ultimate Muscle Gain</div>
-          <div style="font-size:1.3rem; font-weight:700; color:var(--gold); margin-bottom:0.75rem;">AED 480</div>
-        </div>
-        <!-- FIX 3: "Get It" now links to apply.html — swap for a Stripe link if you have one -->
-        <a href="apply.html" class="pkg-btn" style="font-size:0.75rem; padding:0.6rem;">Get It</a>
-      </div>
-      <div style="background:var(--charcoal); border:1px solid rgba(255,255,255,0.07); border-radius:4px; padding:1.25rem; text-align:center; display:flex; flex-direction:column; justify-content:space-between;">
-        <div>
-          <div style="font-size:0.7rem; color:var(--gold); letter-spacing:0.1em; text-transform:uppercase; margin-bottom:0.5rem;">All Levels</div>
-          <div style="font-family:var(--font-display); font-size:1rem; font-weight:700; margin-bottom:0.25rem;">Ultimate Fat Burn</div>
-          <div style="font-size:1.3rem; font-weight:700; color:var(--gold); margin-bottom:0.75rem;">AED 480</div>
-        </div>
-        <!-- FIX 3: "Get It" now links to apply.html — swap for a Stripe link if you have one -->
-        <a href="apply.html" class="pkg-btn" style="font-size:0.75rem; padding:0.6rem;">Get It</a>
-      </div>
-      <div style="background:var(--charcoal); border:1px solid rgba(255,255,255,0.07); border-radius:4px; padding:1.25rem; text-align:center; display:flex; flex-direction:column; justify-content:space-between;">
-        <div>
-          <div style="font-size:0.7rem; color:var(--gold); letter-spacing:0.1em; text-transform:uppercase; margin-bottom:0.5rem;">Add-On</div>
-          <div style="font-family:var(--font-display); font-size:1rem; font-weight:700; margin-bottom:0.25rem;">Tailor-Made Nutrition</div>
-          <div style="font-size:1.3rem; font-weight:700; color:var(--gold); margin-bottom:0.75rem;">AED 750</div>
-        </div>
-        <!-- FIX 3: "Get It" now links to apply.html — swap for a Stripe link if you have one -->
-        <a href="apply.html" class="pkg-btn" style="font-size:0.75rem; padding:0.6rem;">Get It</a>
-      </div>
+      <div style="background:var(--charcoal); border:1px solid rgba(255,255,255,0.07); border-radius:4px; padding:1.25rem; text-align:center; display:flex; flex-direction:column; justify-content:space-between;"><div><div style="font-size:0.7rem; color:var(--gold); letter-spacing:0.1em; text-transform:uppercase; margin-bottom:0.5rem;">Women</div><div style="font-family:var(--font-display); font-size:1rem; font-weight:700; margin-bottom:0.25rem;">Booty Builder</div><div style="font-size:1.3rem; font-weight:700; color:var(--gold); margin-bottom:0.75rem;">AED 649</div></div><a href="apply.html" class="pkg-btn" style="font-size:0.75rem; padding:0.6rem;">Get It</a></div>
+      <div style="background:var(--charcoal); border:1px solid rgba(255,255,255,0.07); border-radius:4px; padding:1.25rem; text-align:center; display:flex; flex-direction:column; justify-content:space-between;"><div><div style="font-size:0.7rem; color:var(--gold); letter-spacing:0.1em; text-transform:uppercase; margin-bottom:0.5rem;">Men</div><div style="font-family:var(--font-display); font-size:1rem; font-weight:700; margin-bottom:0.25rem;">Ultimate Muscle Gain</div><div style="font-size:1.3rem; font-weight:700; color:var(--gold); margin-bottom:0.75rem;">AED 480</div></div><a href="apply.html" class="pkg-btn" style="font-size:0.75rem; padding:0.6rem;">Get It</a></div>
+      <div style="background:var(--charcoal); border:1px solid rgba(255,255,255,0.07); border-radius:4px; padding:1.25rem; text-align:center; display:flex; flex-direction:column; justify-content:space-between;"><div><div style="font-size:0.7rem; color:var(--gold); letter-spacing:0.1em; text-transform:uppercase; margin-bottom:0.5rem;">All Levels</div><div style="font-family:var(--font-display); font-size:1rem; font-weight:700; margin-bottom:0.25rem;">Ultimate Fat Burn</div><div style="font-size:1.3rem; font-weight:700; color:var(--gold); margin-bottom:0.75rem;">AED 480</div></div><a href="apply.html" class="pkg-btn" style="font-size:0.75rem; padding:0.6rem;">Get It</a></div>
+      <div style="background:var(--charcoal); border:1px solid rgba(255,255,255,0.07); border-radius:4px; padding:1.25rem; text-align:center; display:flex; flex-direction:column; justify-content:space-between;"><div><div style="font-size:0.7rem; color:var(--gold); letter-spacing:0.1em; text-transform:uppercase; margin-bottom:0.5rem;">Add-On</div><div style="font-family:var(--font-display); font-size:1rem; font-weight:700; margin-bottom:0.25rem;">Tailor-Made Nutrition</div><div style="font-size:1.3rem; font-weight:700; color:var(--gold); margin-bottom:0.75rem;">AED 750</div></div><a href="apply.html" class="pkg-btn" style="font-size:0.75rem; padding:0.6rem;">Get It</a></div>
     </div>
   </div>
-
-  <!-- Guarantee strip -->
   <div style="max-width:700px;margin:2.5rem auto 0;background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.2);border-radius:6px;padding:1.25rem 2rem;display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap;justify-content:center;text-align:center;">
     <div style="font-size:2rem;">🛡️</div>
-    <div>
-      <div style="font-family:var(--font-display);font-size:1.1rem;font-weight:700;color:var(--gold);margin-bottom:0.25rem;">14-Day Satisfaction Guarantee</div>
-      <div style="font-size:0.85rem;color:rgba(255,255,255,0.55);line-height:1.6;">If you're not completely happy within the first 14 days, we'll refund you in full. No questions asked. We're that confident in our coaching.</div>
-    </div>
+    <div><div style="font-family:var(--font-display);font-size:1.1rem;font-weight:700;color:var(--gold);margin-bottom:0.25rem;">14-Day Satisfaction Guarantee</div><div style="font-size:0.85rem;color:rgba(255,255,255,0.55);line-height:1.6;">If you're not completely happy within the first 14 days, we'll refund you in full. No questions asked. We're that confident in our coaching.</div></div>
   </div>
 </section>
 
-<!-- ── 1-TO-1 PT ── -->
 <div class="pt-section" id="dubai-pt">
   <div class="pt-photo"></div>
   <div class="pt-content">
     <div class="section-eyebrow">Dubai Only</div>
-    <h2 class="section-title" style="margin-bottom:1rem;">
-      1-to-1 Personal<br>Training in <em>Dubai</em>
-    </h2>
-    <p style="color:rgba(255,255,255,0.6); font-size:0.95rem; line-height:1.7; margin-bottom:0.5rem;">
-      Train face-to-face with Tarek or Chloe at two exclusive Dubai locations. Hands-on coaching, real-time form correction, and a training experience that motivates you to show up every single session.
-    </p>
+    <h2 class="section-title" style="margin-bottom:1rem;">1-to-1 Personal<br>Training in <em>Dubai</em></h2>
+    <p style="color:rgba(255,255,255,0.6); font-size:0.95rem; line-height:1.7; margin-bottom:0.5rem;">Train face-to-face with Tarek or Chloe at two exclusive Dubai locations. Hands-on coaching, real-time form correction, and a training experience that motivates you to show up every single session.</p>
     <div class="pt-locations">
-      <div class="location-pill">
-        <div class="location-icon">🏋️</div>
-        <div>
-          <div class="location-name">Nogs Gym</div>
-          <div class="location-type">All Clients Welcome · Dubai</div>
-        </div>
-      </div>
-      <div class="location-pill">
-        <div class="location-icon">👑</div>
-        <div>
-          <div class="location-name">FitnGlam</div>
-          <div class="location-type">Ladies Only · Exclusive Environment</div>
-        </div>
-      </div>
+      <div class="location-pill"><div class="location-icon">🏋️</div><div><div class="location-name">Nogs Gym</div><div class="location-type">All Clients Welcome · Dubai</div></div></div>
+      <div class="location-pill"><div class="location-icon">👑</div><div><div class="location-name">FitnGlam</div><div class="location-type">Ladies Only · Exclusive Environment</div></div></div>
     </div>
-    <p style="font-size:0.85rem; color:rgba(255,255,255,0.4); margin-bottom:1.5rem;">
-      Pricing varies based on sessions per week and duration. Contact us for a personalised quote — and ask about our trial session.
-    </p>
+    <p style="font-size:0.85rem; color:rgba(255,255,255,0.4); margin-bottom:1.5rem;">Pricing varies based on sessions per week and duration. Contact us for a personalised quote — and ask about our trial session.</p>
     <a href="#contact" class="btn-primary">Book a Free Consultation</a>
   </div>
 </div>
 
-<!-- ── WHY US ── -->
 <section class="why-section">
   <div style="text-align:center; margin-bottom:4rem;">
     <div class="section-eyebrow" style="justify-content:center">Why Choose Us</div>
     <h2 class="section-title">What Makes Mr & Mrs <em>Different</em></h2>
   </div>
   <div class="why-grid" style="max-width:1100px; margin:0 auto;">
-    <div class="why-card">
-      <span class="why-icon">🎯</span>
-      <h3 class="why-title">Outcome-Driven Plans</h3>
-      <p class="why-desc">Every plan is built around your specific goal, timeline, and lifestyle — not a generic template. We design for results, not routines.</p>
-    </div>
-    <div class="why-card">
-      <span class="why-icon">👫</span>
-      <h3 class="why-title">Dual-Coach Expertise</h3>
-      <p class="why-desc">Two certified coaches — one male specialist, one female specialist. Tarek & Chloe's combined expertise covers every goal and body type.</p>
-    </div>
-    <div class="why-card">
-      <span class="why-icon">💬</span>
-      <h3 class="why-title">24/7 Coach Access</h3>
-      <p class="why-desc">Real humans, real responses. Direct WhatsApp access means your questions get answered when you need it — not the next business day.</p>
-    </div>
-    <div class="why-card">
-      <span class="why-icon">🥗</span>
-      <h3 class="why-title">Nutrition Is Central</h3>
-      <p class="why-desc">We're certified nutrition specialists. Your food plan is built alongside your training — because you can't out-train a bad diet.</p>
-    </div>
-    <div class="why-card">
-      <span class="why-icon">🤰</span>
-      <h3 class="why-title">Pre & Postnatal Experts</h3>
-      <p class="why-desc">One of the very few coaching teams in Dubai with specialist pre and postnatal certification. Train safely through every stage of motherhood.</p>
-    </div>
-    <div class="why-card">
-      <span class="why-icon">📈</span>
-      <h3 class="why-title">Sustainable, Not Extreme</h3>
-      <p class="why-desc">We build habits, not quick fixes. Our approach is designed to give you results you can keep — and a lifestyle you actually enjoy living.</p>
-    </div>
+    <div class="why-card"><span class="why-icon">🎯</span><h3 class="why-title">Outcome-Driven Plans</h3><p class="why-desc">Every plan is built around your specific goal, timeline, and lifestyle — not a generic template. We design for results, not routines.</p></div>
+    <div class="why-card"><span class="why-icon">👫</span><h3 class="why-title">Dual-Coach Expertise</h3><p class="why-desc">Two certified coaches — one male specialist, one female specialist. Tarek & Chloe's combined expertise covers every goal and body type.</p></div>
+    <div class="why-card"><span class="why-icon">💬</span><h3 class="why-title">24/7 Coach Access</h3><p class="why-desc">Real humans, real responses. Direct WhatsApp access means your questions get answered when you need it — not the next business day.</p></div>
+    <div class="why-card"><span class="why-icon">🥗</span><h3 class="why-title">Nutrition Is Central</h3><p class="why-desc">We're certified nutrition specialists. Your food plan is built alongside your training — because you can't out-train a bad diet.</p></div>
+    <div class="why-card"><span class="why-icon">🤰</span><h3 class="why-title">Pre & Postnatal Experts</h3><p class="why-desc">One of the very few coaching teams in Dubai with specialist pre and postnatal certification. Train safely through every stage of motherhood.</p></div>
+    <div class="why-card"><span class="why-icon">📈</span><h3 class="why-title">Sustainable, Not Extreme</h3><p class="why-desc">We build habits, not quick fixes. Our approach is designed to give you results you can keep — and a lifestyle you actually enjoy living.</p></div>
   </div>
 </section>
 
-<!-- ── COACHES ── -->
 <section class="coaches-section" id="coaches">
   <div style="text-align:center; margin-bottom:4rem;">
     <div class="section-eyebrow" style="justify-content:center">The Team</div>
     <h2 class="section-title">Meet Your <em>Coaches</em></h2>
-    <p style="color:rgba(255,255,255,0.5); max-width:480px; margin:0 auto; font-size:0.9rem; line-height:1.7;">
-      When you work with us, you're not buying a PDF. You're getting two real coaches who care deeply about your progress.
-    </p>
+    <p style="color:rgba(255,255,255,0.5); max-width:480px; margin:0 auto; font-size:0.9rem; line-height:1.7;">When you work with us, you're not buying a PDF. You're getting two real coaches who care deeply about your progress.</p>
   </div>
   <div class="coaches-grid">
     <div class="coach-card">
@@ -1344,15 +484,8 @@
       <div class="coach-info">
         <div class="coach-name">Tarek Elzamek</div>
         <div class="coach-role">Head Coach · Strength & Transformation Specialist</div>
-        <p class="coach-bio">
-          Tarek's own fitness transformation — from struggling to stay consistent, to competing at a high level — is the foundation of his coaching philosophy. He's been where his clients are, and he knows exactly what it takes to get out. With 10+ years of coaching experience across Dubai and internationally, Tarek specialises in body recomposition, strength programming, and men's physique development.
-        </p>
-        <div class="coach-certs">
-          <span class="cert-tag">Certified PT</span>
-          <span class="cert-tag">Nutrition Specialist</span>
-          <span class="cert-tag">First Aid</span>
-          <span class="cert-tag">Strength & Conditioning</span>
-        </div>
+        <p class="coach-bio">Tarek's own fitness transformation — from struggling to stay consistent, to competing at a high level — is the foundation of his coaching philosophy. He's been where his clients are, and he knows exactly what it takes to get out. With 10+ years of coaching experience across Dubai and internationally, Tarek specialises in body recomposition, strength programming, and men's physique development.</p>
+        <div class="coach-certs"><span class="cert-tag">Certified PT</span><span class="cert-tag">Nutrition Specialist</span><span class="cert-tag">First Aid</span><span class="cert-tag">Strength & Conditioning</span></div>
       </div>
     </div>
     <div class="coach-card">
@@ -1360,302 +493,130 @@
       <div class="coach-info">
         <div class="coach-name">Chloe Antoniazzi</div>
         <div class="coach-role">Head Coach · Women's Specialist & Glutes Expert</div>
-        <p class="coach-bio">
-          Chloe's passion for female fitness was born from her own experience navigating body confidence, hormonal challenges, and the confusion of conflicting advice. Now a certified specialist in glutes development, pre/postnatal training, and women's nutrition, she helps women train smarter, feel stronger, and embrace a sustainable approach to their bodies — at every stage of life.
-        </p>
-        <div class="coach-certs">
-          <span class="cert-tag">Certified PT</span>
-          <span class="cert-tag">Glutes Specialist</span>
-          <span class="cert-tag">Pre/Postnatal</span>
-          <span class="cert-tag">Nutrition Specialist</span>
-          <span class="cert-tag">Mat Pilates</span>
-          <span class="cert-tag">Ball Pilates</span>
-          <span class="cert-tag">Reformer Pilates</span>
-        </div>
+        <p class="coach-bio">Chloe's passion for female fitness was born from her own experience navigating body confidence, hormonal challenges, and the confusion of conflicting advice. Now a certified specialist in glutes development, pre/postnatal training, and women's nutrition, she helps women train smarter, feel stronger, and embrace a sustainable approach to their bodies — at every stage of life.</p>
+        <div class="coach-certs"><span class="cert-tag">Certified PT</span><span class="cert-tag">Glutes Specialist</span><span class="cert-tag">Pre/Postnatal</span><span class="cert-tag">Nutrition Specialist</span><span class="cert-tag">Mat Pilates</span><span class="cert-tag">Ball Pilates</span><span class="cert-tag">Reformer Pilates</span></div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ── TESTIMONIALS ── -->
 <section class="testimonials-section">
   <div style="text-align:center; margin-bottom:4rem;">
     <div class="section-eyebrow" style="justify-content:center">Client Stories</div>
     <h2 class="section-title">What Our Clients <em>Say</em></h2>
   </div>
   <div class="testimonials-grid">
-    <div class="testi-card">
-      <div class="testi-stars">★★★★★</div>
-      <p class="testi-quote">"I'd tried four different trainers before Tarek. None of them actually understood what I needed until he put together a plan that fit around my work schedule, my food preferences, and my actual goal. 14kg down in 12 weeks."</p>
-      <div class="testi-author">
-        <div class="testi-avatar">FA</div>
-        <div>
-          <div class="testi-name">Fatima A.</div>
-          <div class="testi-detail">↓ 14kg · Online Coaching</div>
-        </div>
-      </div>
-    </div>
-    <div class="testi-card">
-      <div class="testi-stars">★★★★★</div>
-      <p class="testi-quote">"Chloe was literally my secret weapon for the wedding. I had 10 weeks and she made me feel completely in control the whole time. The check-ins, the nutrition adjustments, the WhatsApp support — it felt like having a best friend who happens to be an expert."</p>
-      <div class="testi-author">
-        <div class="testi-avatar">RT</div>
-        <div>
-          <div class="testi-name">Rebecca T.</div>
-          <div class="testi-detail">↓ 9kg · 10 Weeks · Dubai PT</div>
-        </div>
-      </div>
-    </div>
-    <div class="testi-card">
-      <div class="testi-stars">★★★★★</div>
-      <p class="testi-quote">"Training with Tarek in Dubai as my personal trainer completely changed my physique. In 16 weeks I gained 8kg of solid muscle. His Dubai PT sessions are intense, personal and genuinely different to anything I'd experienced before. Non-negotiable part of my routine now."</p>
-      <div class="testi-author">
-        <div class="testi-avatar">AM</div>
-        <div>
-          <div class="testi-name">Alexandre M.</div>
-          <div class="testi-detail">↑ 8kg Muscle · Elite Package · Paris</div>
-        </div>
-      </div>
-    </div>
+    <div class="testi-card"><div class="testi-stars">★★★★★</div><p class="testi-quote">"I'd tried four different trainers before Tarek. None of them actually understood what I needed until he put together a plan that fit around my work schedule, my food preferences, and my actual goal. 14kg down in 12 weeks."</p><div class="testi-author"><div class="testi-avatar">FA</div><div><div class="testi-name">Fatima A.</div><div class="testi-detail">↓ 14kg · Online Coaching</div></div></div></div>
+    <div class="testi-card"><div class="testi-stars">★★★★★</div><p class="testi-quote">"Chloe was literally my secret weapon for the wedding. I had 10 weeks and she made me feel completely in control the whole time. The check-ins, the nutrition adjustments, the WhatsApp support — it felt like having a best friend who happens to be an expert."</p><div class="testi-author"><div class="testi-avatar">RT</div><div><div class="testi-name">Rebecca T.</div><div class="testi-detail">↓ 9kg · 10 Weeks · Dubai PT</div></div></div></div>
+    <div class="testi-card"><div class="testi-stars">★★★★★</div><p class="testi-quote">"Training with Tarek in Dubai as my personal trainer completely changed my physique. In 16 weeks I gained 8kg of solid muscle. His Dubai PT sessions are intense, personal and genuinely different to anything I'd experienced before. Non-negotiable part of my routine now."</p><div class="testi-author"><div class="testi-avatar">AM</div><div><div class="testi-name">Alexandre M.</div><div class="testi-detail">↑ 8kg Muscle · Elite Package · Paris</div></div></div></div>
   </div>
 </section>
 
-<!-- ── COUPLES SECTION ── -->
 <section style="background: linear-gradient(135deg, #0f0f0f, #181818); padding: 6rem 3rem; border-top: 1px solid rgba(201,168,76,0.12);">
   <div style="max-width:1000px; margin:0 auto; display:grid; grid-template-columns:1fr 1fr; gap:5rem; align-items:center;" class="couples-grid">
     <div>
       <div class="section-eyebrow">Our Unique Edge</div>
       <h2 class="section-title">The Only Coaching <em>Couple</em> in Dubai</h2>
-      <p style="color:rgba(255,255,255,0.6); font-size:0.95rem; line-height:1.8; margin-bottom:1.5rem;">
-        Tarek & Chloe aren't just coaches — they're partners who live the lifestyle they teach. That means you get a male specialist AND a female specialist in one programme. Whether you're training solo or as a couple, you get the right expertise for your gender, your goals, and your life.
-      </p>
-      <p style="color:rgba(255,255,255,0.6); font-size:0.95rem; line-height:1.8; margin-bottom:2rem;">
-        Our Couples Transformation Programme is unique to us — designed for partners who want to train together, support each other, and transform side by side. No other coaches in Dubai offer this.
-      </p>
+      <p style="color:rgba(255,255,255,0.6); font-size:0.95rem; line-height:1.8; margin-bottom:1.5rem;">Tarek & Chloe aren't just coaches — they're partners who live the lifestyle they teach. That means you get a male specialist AND a female specialist in one programme. Whether you're training solo or as a couple, you get the right expertise for your gender, your goals, and your life.</p>
+      <p style="color:rgba(255,255,255,0.6); font-size:0.95rem; line-height:1.8; margin-bottom:2rem;">Our Couples Transformation Programme is unique to us — designed for partners who want to train together, support each other, and transform side by side. No other coaches in Dubai offer this.</p>
       <a href="apply.html" class="btn-primary">Apply as a Couple →</a>
     </div>
     <div style="display:flex; flex-direction:column; gap:1rem;">
-      <div style="background:rgba(201,168,76,0.06); border:1px solid rgba(201,168,76,0.2); border-radius:6px; padding:1.5rem;">
-        <div style="font-size:1.8rem; margin-bottom:0.5rem;">👫</div>
-        <div style="font-weight:700; margin-bottom:0.4rem;">Couples Programme</div>
-        <div style="font-size:0.85rem; color:rgba(255,255,255,0.55); line-height:1.6;">Train together with shared goals, accountability check-ins, and individual plans tailored to each of you — from AED 1,499/month for both — the most popular choice for our Dubai couples.</div>
-      </div>
-      <div style="background:rgba(201,168,76,0.06); border:1px solid rgba(201,168,76,0.2); border-radius:6px; padding:1.5rem;">
-        <div style="font-size:1.8rem; margin-bottom:0.5rem;">🌸</div>
-        <div style="font-weight:700; margin-bottom:0.4rem;">Women's Specialist Coaching</div>
-        <div style="font-size:0.85rem; color:rgba(255,255,255,0.55); line-height:1.6;">Chloe specialises in glutes development, hormonal health, and pre/postnatal training — one of very few certified coaches of this kind in the UAE.</div>
-      </div>
-      <div style="background:rgba(201,168,76,0.06); border:1px solid rgba(201,168,76,0.2); border-radius:6px; padding:1.5rem;">
-        <div style="font-size:1.8rem; margin-bottom:0.5rem;">💪</div>
-        <div style="font-weight:700; margin-bottom:0.4rem;">Men's Body Transformation</div>
-        <div style="font-size:0.85rem; color:rgba(255,255,255,0.55); line-height:1.6;">Tarek's own transformation from struggling to competing is the blueprint. He knows exactly what it takes — and he'll take you there.</div>
-      </div>
+      <div style="background:rgba(201,168,76,0.06); border:1px solid rgba(201,168,76,0.2); border-radius:6px; padding:1.5rem;"><div style="font-size:1.8rem; margin-bottom:0.5rem;">👫</div><div style="font-weight:700; margin-bottom:0.4rem;">Couples Programme</div><div style="font-size:0.85rem; color:rgba(255,255,255,0.55); line-height:1.6;">Train together with shared goals, accountability check-ins, and individual plans tailored to each of you — from AED 1,499/month for both.</div></div>
+      <div style="background:rgba(201,168,76,0.06); border:1px solid rgba(201,168,76,0.2); border-radius:6px; padding:1.5rem;"><div style="font-size:1.8rem; margin-bottom:0.5rem;">🌸</div><div style="font-weight:700; margin-bottom:0.4rem;">Women's Specialist Coaching</div><div style="font-size:0.85rem; color:rgba(255,255,255,0.55); line-height:1.6;">Chloe specialises in glutes development, hormonal health, and pre/postnatal training — one of very few certified coaches of this kind in the UAE.</div></div>
+      <div style="background:rgba(201,168,76,0.06); border:1px solid rgba(201,168,76,0.2); border-radius:6px; padding:1.5rem;"><div style="font-size:1.8rem; margin-bottom:0.5rem;">💪</div><div style="font-weight:700; margin-bottom:0.4rem;">Men's Body Transformation</div><div style="font-size:0.85rem; color:rgba(255,255,255,0.55); line-height:1.6;">Tarek's own transformation from struggling to competing is the blueprint. He knows exactly what it takes — and he'll take you there.</div></div>
     </div>
   </div>
 </section>
 
-<!-- ── URGENCY ── -->
 <section class="urgency-section" id="contact">
-  <div class="spots-counter">
-    <div class="spots-num">4</div>
-    <div class="spots-label">Online Coaching Spots Left This Month</div>
-  </div>
-  <!-- Countdown Timer -->
+  <div class="spots-counter"><div class="spots-num">4</div><div class="spots-label">Online Coaching Spots Left This Month</div></div>
   <div style="display:flex;gap:1rem;justify-content:center;margin:1.5rem 0 2rem;flex-wrap:wrap;">
-    <div style="background:rgba(0,0,0,0.4);border:1px solid rgba(201,168,76,0.3);border-radius:6px;padding:0.75rem 1.25rem;min-width:70px;text-align:center;">
-      <div id="cd-days" style="font-family:var(--font-display);font-size:2rem;font-weight:700;color:var(--gold);line-height:1;">--</div>
-      <div style="font-size:0.6rem;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-top:0.2rem;">Days</div>
-    </div>
-    <div style="background:rgba(0,0,0,0.4);border:1px solid rgba(201,168,76,0.3);border-radius:6px;padding:0.75rem 1.25rem;min-width:70px;text-align:center;">
-      <div id="cd-hrs" style="font-family:var(--font-display);font-size:2rem;font-weight:700;color:var(--gold);line-height:1;">--</div>
-      <div style="font-size:0.6rem;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-top:0.2rem;">Hours</div>
-    </div>
-    <div style="background:rgba(0,0,0,0.4);border:1px solid rgba(201,168,76,0.3);border-radius:6px;padding:0.75rem 1.25rem;min-width:70px;text-align:center;">
-      <div id="cd-min" style="font-family:var(--font-display);font-size:2rem;font-weight:700;color:var(--gold);line-height:1;">--</div>
-      <div style="font-size:0.6rem;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-top:0.2rem;">Mins</div>
-    </div>
-    <div style="background:rgba(0,0,0,0.4);border:1px solid rgba(201,168,76,0.3);border-radius:6px;padding:0.75rem 1.25rem;min-width:70px;text-align:center;">
-      <div id="cd-sec" style="font-family:var(--font-display);font-size:2rem;font-weight:700;color:var(--gold);line-height:1;">--</div>
-      <div style="font-size:0.6rem;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-top:0.2rem;">Secs</div>
-    </div>
+    <div style="background:rgba(0,0,0,0.4);border:1px solid rgba(201,168,76,0.3);border-radius:6px;padding:0.75rem 1.25rem;min-width:70px;text-align:center;"><div id="cd-days" style="font-family:var(--font-display);font-size:2rem;font-weight:700;color:var(--gold);line-height:1;">--</div><div style="font-size:0.6rem;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-top:0.2rem;">Days</div></div>
+    <div style="background:rgba(0,0,0,0.4);border:1px solid rgba(201,168,76,0.3);border-radius:6px;padding:0.75rem 1.25rem;min-width:70px;text-align:center;"><div id="cd-hrs" style="font-family:var(--font-display);font-size:2rem;font-weight:700;color:var(--gold);line-height:1;">--</div><div style="font-size:0.6rem;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-top:0.2rem;">Hours</div></div>
+    <div style="background:rgba(0,0,0,0.4);border:1px solid rgba(201,168,76,0.3);border-radius:6px;padding:0.75rem 1.25rem;min-width:70px;text-align:center;"><div id="cd-min" style="font-family:var(--font-display);font-size:2rem;font-weight:700;color:var(--gold);line-height:1;">--</div><div style="font-size:0.6rem;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-top:0.2rem;">Mins</div></div>
+    <div style="background:rgba(0,0,0,0.4);border:1px solid rgba(201,168,76,0.3);border-radius:6px;padding:0.75rem 1.25rem;min-width:70px;text-align:center;"><div id="cd-sec" style="font-family:var(--font-display);font-size:2rem;font-weight:700;color:var(--gold);line-height:1;">--</div><div style="font-size:0.6rem;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-top:0.2rem;">Secs</div></div>
   </div>
   <p style="font-size:0.78rem;color:rgba(255,255,255,0.35);margin-bottom:1.5rem;">Until spots reset at end of month</p>
   <h2 class="section-title" style="margin-bottom:1rem;">Your Transformation <em>Starts Today</em></h2>
-  <p style="color:rgba(255,255,255,0.55); max-width:480px; margin:0 auto 2.5rem; font-size:0.95rem; line-height:1.7;">
-    We limit new clients each month so every person gets the attention they deserve. When spots are gone, they're gone.
-  </p>
+  <p style="color:rgba(255,255,255,0.55); max-width:480px; margin:0 auto 2.5rem; font-size:0.95rem; line-height:1.7;">We limit new clients each month so every person gets the attention they deserve. When spots are gone, they're gone.</p>
   <div style="display:flex; gap:1rem; justify-content:center; flex-wrap:wrap;">
     <a href="apply.html" class="btn-primary" style="font-size:0.9rem; padding:1.1rem 2.5rem;">Apply for Coaching — Free Call</a>
     <a href="free-guide.html" class="btn-ghost" style="font-size:0.9rem;">Download Free Blueprint</a>
   </div>
 </section>
 
-<!-- ── VIDEO TESTIMONIAL ── -->
 <section style="background:var(--black);padding:5rem 3rem;border-top:1px solid rgba(255,255,255,0.05);">
   <div style="max-width:800px;margin:0 auto;text-align:center;">
     <div class="section-eyebrow" style="justify-content:center;">Client Story</div>
     <h2 class="section-title" style="margin-bottom:1rem;">Hear It <em>Directly</em></h2>
     <p style="color:rgba(255,255,255,0.5);max-width:480px;margin:0 auto 2.5rem;line-height:1.7;font-size:0.95rem;">Real words from a real client. No scripts. No actors.</p>
     <div style="position:relative;border-radius:12px;overflow:hidden;border:1px solid rgba(201,168,76,0.2);box-shadow:0 20px 60px rgba(0,0,0,0.5);">
-      <video controls playsinline preload="auto"
-        style="width:100%;display:block;background:#000;max-height:500px;object-fit:contain;"
-        poster="video-poster.jpg">
+      <video controls playsinline preload="auto" style="width:100%;display:block;background:#000;max-height:500px;object-fit:contain;" poster="video-poster.jpg">
         <source src="client-testimonial.mp4" type="video/mp4">
       </video>
     </div>
     <div style="margin-top:2rem;display:flex;gap:1.5rem;justify-content:center;flex-wrap:wrap;">
-      <div style="text-align:center;">
-        <div style="font-family:var(--font-display);font-size:1.5rem;color:var(--gold);">500+</div>
-        <div style="font-size:0.75rem;color:rgba(255,255,255,0.4);letter-spacing:0.08em;text-transform:uppercase;">Happy Clients</div>
-      </div>
-      <div style="text-align:center;">
-        <div style="font-family:var(--font-display);font-size:1.5rem;color:var(--gold);">98%</div>
-        <div style="font-size:0.75rem;color:rgba(255,255,255,0.4);letter-spacing:0.08em;text-transform:uppercase;">Satisfaction Rate</div>
-      </div>
-      <div style="text-align:center;">
-        <div style="font-family:var(--font-display);font-size:1.5rem;color:var(--gold);">30+</div>
-        <div style="font-size:0.75rem;color:rgba(255,255,255,0.4);letter-spacing:0.08em;text-transform:uppercase;">Countries Coached</div>
-      </div>
+      <div style="text-align:center;"><div style="font-family:var(--font-display);font-size:1.5rem;color:var(--gold);">500+</div><div style="font-size:0.75rem;color:rgba(255,255,255,0.4);letter-spacing:0.08em;text-transform:uppercase;">Happy Clients</div></div>
+      <div style="text-align:center;"><div style="font-family:var(--font-display);font-size:1.5rem;color:var(--gold);">98%</div><div style="font-size:0.75rem;color:rgba(255,255,255,0.4);letter-spacing:0.08em;text-transform:uppercase;">Satisfaction Rate</div></div>
+      <div style="text-align:center;"><div style="font-family:var(--font-display);font-size:1.5rem;color:var(--gold);">30+</div><div style="font-size:0.75rem;color:rgba(255,255,255,0.4);letter-spacing:0.08em;text-transform:uppercase;">Countries Coached</div></div>
     </div>
   </div>
 </section>
 
-<!-- ── FAQ ── -->
 <section class="faq-section" id="faq">
   <div style="text-align:center; margin-bottom:3rem;">
     <div class="section-eyebrow" style="justify-content:center">Questions</div>
     <h2 class="section-title">Frequently Asked <em>Questions</em></h2>
   </div>
   <div class="faq-container">
-    <div class="faq-item open">
-      <div class="faq-q" onclick="toggleFaq(this)">
-        How does online coaching actually work?
-        <span class="faq-toggle">+</span>
-      </div>
-      <div class="faq-a">
-        Once you purchase a package, you'll fill in our detailed onboarding questionnaire covering your goals, lifestyle, training history, dietary preferences and any injuries. Within 48 hours, you'll receive your fully custom training plan and nutrition guide. Depending on your package, you'll also get regular check-in calls and direct WhatsApp access to Tarek or Chloe.
-      </div>
-    </div>
-    <div class="faq-item">
-      <div class="faq-q" onclick="toggleFaq(this)">
-        Do I need a gym membership?
-        <span class="faq-toggle">+</span>
-      </div>
-      <div class="faq-a">
-        No — we can build your plan around a gym, home equipment, or even no equipment at all. Just let us know your situation in the onboarding form and we'll design accordingly.
-      </div>
-    </div>
-    <div class="faq-item">
-      <div class="faq-q" onclick="toggleFaq(this)">
-        What results can I realistically expect?
-        <span class="faq-toggle">+</span>
-      </div>
-      <div class="faq-a">
-        Results depend on consistency, starting point, and goal. Most clients on our Elite package see significant visible changes within 4 weeks and transformative results by week 12. Our clients have lost between 5–20kg and gained between 3–10kg of muscle in 12-week cycles — with proper commitment to the plan.
-      </div>
-    </div>
-    <div class="faq-item">
-      <div class="faq-q" onclick="toggleFaq(this)">
-        I'm a complete beginner — is this for me?
-        <span class="faq-toggle">+</span>
-      </div>
-      <div class="faq-a">
-        Absolutely. Many of our best transformations are from people who had never trained consistently before. We meet you where you are and build from there. Beginners often see the fastest results because every positive change is new for their body.
-      </div>
-    </div>
-    <div class="faq-item">
-      <div class="faq-q" onclick="toggleFaq(this)">
-        Can I train with you if I'm pregnant or postpartum?
-        <span class="faq-toggle">+</span>
-      </div>
-      <div class="faq-a">
-        Yes — Chloe is a certified Pre and Postnatal Specialist. We offer safe, effective programming for every stage of pregnancy and postnatal recovery. Always consult your doctor before starting, and let us know your situation during onboarding.
-      </div>
-    </div>
-    <div class="faq-item">
-      <div class="faq-q" onclick="toggleFaq(this)">
-        How do I contact you between sessions?
-        <span class="faq-toggle">+</span>
-      </div>
-      <div class="faq-a">
-        Elite and VIP clients have direct WhatsApp access to their coach with a guaranteed response within a few hours. Economy package clients can reach us via email. We're genuinely available — this is not a bot.
-      </div>
-    </div>
+    <div class="faq-item open"><div class="faq-q" onclick="toggleFaq(this)">How does online coaching actually work?<span class="faq-toggle">+</span></div><div class="faq-a">Once you purchase a package, you'll fill in our detailed onboarding questionnaire covering your goals, lifestyle, training history, dietary preferences and any injuries. Within 48 hours, you'll receive your fully custom training plan and nutrition guide. Depending on your package, you'll also get regular check-in calls and direct WhatsApp access to Tarek or Chloe.</div></div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Do I need a gym membership?<span class="faq-toggle">+</span></div><div class="faq-a">No — we can build your plan around a gym, home equipment, or even no equipment at all. Just let us know your situation in the onboarding form and we'll design accordingly.</div></div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">What results can I realistically expect?<span class="faq-toggle">+</span></div><div class="faq-a">Results depend on consistency, starting point, and goal. Most clients on our Elite package see significant visible changes within 4 weeks and transformative results by week 12. Our clients have lost between 5–20kg and gained between 3–10kg of muscle in 12-week cycles — with proper commitment to the plan.</div></div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">I'm a complete beginner — is this for me?<span class="faq-toggle">+</span></div><div class="faq-a">Absolutely. Many of our best transformations are from people who had never trained consistently before. We meet you where you are and build from there. Beginners often see the fastest results because every positive change is new for their body.</div></div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Can I train with you if I'm pregnant or postpartum?<span class="faq-toggle">+</span></div><div class="faq-a">Yes — Chloe is a certified Pre and Postnatal Specialist. We offer safe, effective programming for every stage of pregnancy and postnatal recovery. Always consult your doctor before starting, and let us know your situation during onboarding.</div></div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">How do I contact you between sessions?<span class="faq-toggle">+</span></div><div class="faq-a">Elite and VIP clients have direct WhatsApp access to their coach with a guaranteed response within a few hours. Economy package clients can reach us via email. We're genuinely available — this is not a bot.</div></div>
   </div>
 </section>
 
-<!-- ── INSTAGRAM ── -->
 <section style="background:var(--off-black);padding:4rem 3rem;border-top:1px solid rgba(255,255,255,0.05);text-align:center;">
   <div class="section-eyebrow" style="justify-content:center;">Follow Our Journey</div>
   <h2 class="section-title" style="margin-bottom:0.75rem;">We're On <em>Instagram</em></h2>
   <p style="color:rgba(255,255,255,0.5);margin-bottom:2rem;font-size:0.9rem;">Daily tips, client results, behind the scenes — follow us for free value every day.</p>
-  <a href="https://www.instagram.com/mrandmrslifestyle/" target="_blank" rel="noopener"
-    style="display:inline-flex;align-items:center;gap:0.6rem;background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);color:#fff;padding:0.85rem 2rem;border-radius:100px;font-weight:700;font-size:0.9rem;text-decoration:none;margin-bottom:2.5rem;letter-spacing:0.04em;">
+  <a href="https://www.instagram.com/mrandmrslifestyle/" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:0.6rem;background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);color:#fff;padding:0.85rem 2rem;border-radius:100px;font-weight:700;font-size:0.9rem;text-decoration:none;margin-bottom:2.5rem;letter-spacing:0.04em;">
     <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
     @mrandmrslifestyle
   </a>
   <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:4px;max-width:900px;margin:0 auto;border-radius:8px;overflow:hidden;">
-    <a href="https://www.instagram.com/mrandmrslifestyle/" target="_blank" style="aspect-ratio:1;background:var(--charcoal);display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative;">
-      <img src="t1_1.jpg" style="width:100%;height:100%;object-fit:cover;filter:brightness(0.85);transition:filter 0.3s;" onmouseover="this.style.filter='brightness(1)'" onmouseout="this.style.filter='brightness(0.85)'" alt="@mrandmrslifestyle">
-    </a>
-    <a href="https://www.instagram.com/mrandmrslifestyle/" target="_blank" style="aspect-ratio:1;background:var(--charcoal);display:flex;align-items:center;justify-content:center;overflow:hidden;">
-      <img src="t1_4.jpg" style="width:100%;height:100%;object-fit:cover;filter:brightness(0.85);transition:filter 0.3s;" onmouseover="this.style.filter='brightness(1)'" onmouseout="this.style.filter='brightness(0.85)'" alt="@mrandmrslifestyle">
-    </a>
-    <a href="https://www.instagram.com/mrandmrslifestyle/" target="_blank" style="aspect-ratio:1;background:var(--charcoal);display:flex;align-items:center;justify-content:center;overflow:hidden;">
-      <img src="t2_1.jpg" style="width:100%;height:100%;object-fit:cover;filter:brightness(0.85);transition:filter 0.3s;" onmouseover="this.style.filter='brightness(1)'" onmouseout="this.style.filter='brightness(0.85)'" alt="@mrandmrslifestyle">
-    </a>
-    <a href="https://www.instagram.com/mrandmrslifestyle/" target="_blank" style="aspect-ratio:1;background:var(--charcoal);display:flex;align-items:center;justify-content:center;overflow:hidden;">
-      <img src="t2_4.jpg" style="width:100%;height:100%;object-fit:cover;filter:brightness(0.85);transition:filter 0.3s;" onmouseover="this.style.filter='brightness(1)'" onmouseout="this.style.filter='brightness(0.85)'" alt="@mrandmrslifestyle">
-    </a>
-    <a href="https://www.instagram.com/mrandmrslifestyle/" target="_blank" style="aspect-ratio:1;background:var(--charcoal);display:flex;align-items:center;justify-content:center;overflow:hidden;">
-      <img src="t3_3.jpg" style="width:100%;height:100%;object-fit:cover;filter:brightness(0.85);transition:filter 0.3s;" onmouseover="this.style.filter='brightness(1)'" onmouseout="this.style.filter='brightness(0.85)'" alt="@mrandmrslifestyle">
-    </a>
-    <a href="https://www.instagram.com/mrandmrslifestyle/" target="_blank" style="aspect-ratio:1;background:var(--charcoal);display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative;">
-      <img src="t4_3.jpg" style="width:100%;height:100%;object-fit:cover;filter:brightness(0.5);transition:filter 0.3s;" alt="@mrandmrslifestyle">
-      <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;color:white;">
-        <div style="font-size:1.2rem;font-weight:700;">+500</div>
-        <div style="font-size:0.6rem;letter-spacing:0.1em;">VIEW ALL</div>
-      </div>
-    </a>
+    <a href="https://www.instagram.com/mrandmrslifestyle/" target="_blank" style="aspect-ratio:1;background:var(--charcoal);display:flex;align-items:center;justify-content:center;overflow:hidden;"><img src="t1_1.jpg" style="width:100%;height:100%;object-fit:cover;filter:brightness(0.85);transition:filter 0.3s;" onmouseover="this.style.filter='brightness(1)'" onmouseout="this.style.filter='brightness(0.85)'" alt="Mr and Mrs Lifestyle Dubai transformation results"></a>
+    <a href="https://www.instagram.com/mrandmrslifestyle/" target="_blank" style="aspect-ratio:1;background:var(--charcoal);display:flex;align-items:center;justify-content:center;overflow:hidden;"><img src="t1_4.jpg" style="width:100%;height:100%;object-fit:cover;filter:brightness(0.85);transition:filter 0.3s;" onmouseover="this.style.filter='brightness(1)'" onmouseout="this.style.filter='brightness(0.85)'" alt="Dubai fitness transformation"></a>
+    <a href="https://www.instagram.com/mrandmrslifestyle/" target="_blank" style="aspect-ratio:1;background:var(--charcoal);display:flex;align-items:center;justify-content:center;overflow:hidden;"><img src="t2_1.jpg" style="width:100%;height:100%;object-fit:cover;filter:brightness(0.85);transition:filter 0.3s;" onmouseover="this.style.filter='brightness(1)'" onmouseout="this.style.filter='brightness(0.85)'" alt="Online coaching results UAE"></a>
+    <a href="https://www.instagram.com/mrandmrslifestyle/" target="_blank" style="aspect-ratio:1;background:var(--charcoal);display:flex;align-items:center;justify-content:center;overflow:hidden;"><img src="t2_4.jpg" style="width:100%;height:100%;object-fit:cover;filter:brightness(0.85);transition:filter 0.3s;" onmouseover="this.style.filter='brightness(1)'" onmouseout="this.style.filter='brightness(0.85)'" alt="Body transformation Dubai"></a>
+    <a href="https://www.instagram.com/mrandmrslifestyle/" target="_blank" style="aspect-ratio:1;background:var(--charcoal);display:flex;align-items:center;justify-content:center;overflow:hidden;"><img src="t3_3.jpg" style="width:100%;height:100%;object-fit:cover;filter:brightness(0.85);transition:filter 0.3s;" onmouseover="this.style.filter='brightness(1)'" onmouseout="this.style.filter='brightness(0.85)'" alt="Fat loss coaching UAE"></a>
+    <a href="https://www.instagram.com/mrandmrslifestyle/" target="_blank" style="aspect-ratio:1;background:var(--charcoal);display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative;"><img src="t4_3.jpg" style="width:100%;height:100%;object-fit:cover;filter:brightness(0.5);" alt="More transformations Mr and Mrs Lifestyle"><div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;color:white;"><div style="font-size:1.2rem;font-weight:700;">+500</div><div style="font-size:0.6rem;letter-spacing:0.1em;">VIEW ALL</div></div></a>
   </div>
 </section>
 
-<!-- ── CONTACT ── -->
 <section style="background:var(--charcoal);padding:4rem 3rem;border-top:1px solid rgba(255,255,255,0.06);" id="contact-form">
   <div style="max-width:600px;margin:0 auto;text-align:center;">
     <div class="section-eyebrow" style="justify-content:center;">Get In Touch</div>
     <h2 class="section-title" style="margin-bottom:0.75rem;">Have a <em>Question?</em></h2>
     <p style="color:rgba(255,255,255,0.5);margin-bottom:2rem;font-size:0.9rem;line-height:1.7;">Not ready to apply yet? Send us a message and we'll get back to you personally within a few hours.</p>
     <form id="contactForm" style="display:flex;flex-direction:column;gap:1rem;text-align:left;">
-      <input type="text" id="cf-name" placeholder="Your Name" required
-        style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);color:#fff;padding:0.85rem 1rem;border-radius:4px;font-size:0.9rem;font-family:inherit;outline:none;width:100%;">
-      <input type="email" id="cf-email" placeholder="Your Email" required
-        style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);color:#fff;padding:0.85rem 1rem;border-radius:4px;font-size:0.9rem;font-family:inherit;outline:none;width:100%;">
-      <textarea id="cf-msg" placeholder="Your question or message..." rows="4" required
-        style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);color:#fff;padding:0.85rem 1rem;border-radius:4px;font-size:0.9rem;font-family:inherit;outline:none;width:100%;resize:vertical;"></textarea>
-      <button type="button" onclick="sendContact()"
-        style="background:var(--gold);color:var(--black);border:none;padding:0.95rem;font-weight:700;font-size:0.85rem;letter-spacing:0.08em;text-transform:uppercase;border-radius:4px;cursor:pointer;transition:background 0.2s;">
-        Send Message
-      </button>
-      <div id="cf-success" style="display:none;color:var(--gold);text-align:center;font-size:0.9rem;padding:0.5rem;">
-        ✅ Message sent! We'll reply within a few hours.
-      </div>
+      <input type="text" id="cf-name" placeholder="Your Name" required style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);color:#fff;padding:0.85rem 1rem;border-radius:4px;font-size:0.9rem;font-family:inherit;outline:none;width:100%;">
+      <input type="email" id="cf-email" placeholder="Your Email" required style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);color:#fff;padding:0.85rem 1rem;border-radius:4px;font-size:0.9rem;font-family:inherit;outline:none;width:100%;">
+      <textarea id="cf-msg" placeholder="Your question or message..." rows="4" required style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);color:#fff;padding:0.85rem 1rem;border-radius:4px;font-size:0.9rem;font-family:inherit;outline:none;width:100%;resize:vertical;"></textarea>
+      <button type="button" onclick="sendContact()" style="background:var(--gold);color:var(--black);border:none;padding:0.95rem;font-weight:700;font-size:0.85rem;letter-spacing:0.08em;text-transform:uppercase;border-radius:4px;cursor:pointer;transition:background 0.2s;">Send Message</button>
+      <div id="cf-success" style="display:none;color:var(--gold);text-align:center;font-size:0.9rem;padding:0.5rem;">✅ Message sent! We'll reply within a few hours.</div>
     </form>
     <div style="margin-top:2rem;display:flex;gap:1.5rem;justify-content:center;flex-wrap:wrap;">
-      <a href="https://wa.me/971507871515" target="_blank" style="color:rgba(255,255,255,0.5);font-size:0.85rem;text-decoration:none;display:flex;align-items:center;gap:0.4rem;">
-        <span style="color:#25D366;">●</span> WhatsApp
-      </a>
-      <a href="mailto:info@mrandmrslifestyle.com" style="color:rgba(255,255,255,0.5);font-size:0.85rem;text-decoration:none;">
-        📧 info@mrandmrslifestyle.com
-      </a>
-      <a href="https://www.instagram.com/mrandmrslifestyle/" target="_blank" style="color:rgba(255,255,255,0.5);font-size:0.85rem;text-decoration:none;">
-        📷 @mrandmrslifestyle
-      </a>
+      <a href="https://wa.me/971507871515" target="_blank" style="color:rgba(255,255,255,0.5);font-size:0.85rem;text-decoration:none;display:flex;align-items:center;gap:0.4rem;"><span style="color:#25D366;">●</span> WhatsApp</a>
+      <a href="mailto:info@mrandmrslifestyle.com" style="color:rgba(255,255,255,0.5);font-size:0.85rem;text-decoration:none;">📧 info@mrandmrslifestyle.com</a>
+      <a href="https://www.instagram.com/mrandmrslifestyle/" target="_blank" style="color:rgba(255,255,255,0.5);font-size:0.85rem;text-decoration:none;">📷 @mrandmrslifestyle</a>
     </div>
   </div>
 </section>
 
-<!-- ── FOOTER ── -->
 <footer>
   <div class="footer-grid">
     <div class="footer-brand">
@@ -1667,120 +628,24 @@
         <a href="mailto:info@mrandmrslifestyle.com" class="social-link">✉</a>
       </div>
     </div>
-    <div class="footer-col">
-      <h4>Coaching</h4>
-      <ul>
-        <li><a href="#packages">Online Packages</a></li>
-        <li><a href="#dubai-pt">Dubai PT</a></li>
-        <li><a href="#coaches">Meet the Coaches</a></li>
-        <li><a href="transformations.html">Transformations</a></li>
-      </ul>
-    </div>
-    <div class="footer-col">
-      <h4>Packages</h4>
-      <ul>
-        <li><a href="#packages">Economy Pack</a></li>
-        <li><a href="#packages">Elite Coaching</a></li>
-        <li><a href="#packages">VIP Programme</a></li>
-        <li><a href="#packages">Booty Builder</a></li>
-      </ul>
-    </div>
-    <div class="footer-col">
-      <h4>Company</h4>
-      <ul>
-        <li><a href="#faq">FAQ</a></li>
-        <li><a href="mailto:info@mrandmrslifestyle.com">Contact Us</a></li>
-        <li><a href="privacy.html">Privacy Policy</a></li>
-        <li><a href="terms.html">Terms & Conditions</a></li>
-      </ul>
-    </div>
+    <div class="footer-col"><h4>Coaching</h4><ul><li><a href="#packages">Online Packages</a></li><li><a href="#dubai-pt">Dubai PT</a></li><li><a href="#coaches">Meet the Coaches</a></li><li><a href="transformations.html">Transformations</a></li></ul></div>
+    <div class="footer-col"><h4>Packages</h4><ul><li><a href="#packages">Economy Pack</a></li><li><a href="#packages">Elite Coaching</a></li><li><a href="#packages">VIP Programme</a></li><li><a href="#packages">Booty Builder</a></li></ul></div>
+    <div class="footer-col"><h4>Company</h4><ul><li><a href="#faq">FAQ</a></li><li><a href="mailto:info@mrandmrslifestyle.com">Contact Us</a></li><li><a href="privacy.html">Privacy Policy</a></li><li><a href="terms.html">Terms & Conditions</a></li></ul></div>
   </div>
   <div class="footer-bottom">
     <p>© 2026 Mr &amp; Mrs Lifestyle. All rights reserved. · info@mrandmrslifestyle.com</p>
-    <div class="payment-icons">
-      <span class="payment-icon">VISA</span>
-      <span class="payment-icon">MC</span>
-      <span class="payment-icon">AMEX</span>
-    </div>
+    <div class="payment-icons"><span class="payment-icon">VISA</span><span class="payment-icon">MC</span><span class="payment-icon">AMEX</span></div>
   </div>
 </footer>
 
 <script>
-  function toggleFaq(el) {
-    const item = el.closest('.faq-item');
-    const isOpen = item.classList.contains('open');
-    document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
-    if (!isOpen) item.classList.add('open');
-  }
-  function handleEmail() {
-    const val = document.getElementById('emailInput').value;
-    if (val && val.includes('@')) {
-      alert('🎉 Your Macro Cheat Sheet is on its way to ' + val + '!\n\nCheck your inbox in the next few minutes.');
-      document.getElementById('emailInput').value = '';
-    } else {
-      alert('Please enter a valid email address.');
-    }
-  }
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.style.opacity = '1';
-        entry.target.style.transform = 'translateY(0)';
-      }
-    });
-  }, { threshold: 0.1 });
-  document.querySelectorAll('.transform-card, .pkg-card, .why-card, .coach-card, .testi-card').forEach(el => {
-    el.style.opacity = '0';
-    el.style.transform = 'translateY(20px)';
-    el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-    observer.observe(el);
-  });
-  setTimeout(() => {
-    document.querySelectorAll('.transform-card, .pkg-card, .why-card, .coach-card, .testi-card').forEach(el => {
-      el.style.opacity = '1';
-      el.style.transform = 'translateY(0)';
-    });
-  }, 1000);
-</script>
-<script>
-function updateCountdown() {
-  const now = new Date();
-  const end = new Date(now.getFullYear(), now.getMonth() + 1, 1, 0, 0, 0);
-  const diff = end - now;
-  if (diff <= 0) return;
-  const days = Math.floor(diff / 86400000);
-  const hrs  = Math.floor((diff % 86400000) / 3600000);
-  const mins = Math.floor((diff % 3600000) / 60000);
-  const secs = Math.floor((diff % 60000) / 1000);
-  const pad  = n => String(n).padStart(2,'0');
-  const d = document.getElementById('cd-days');
-  const h = document.getElementById('cd-hrs');
-  const m = document.getElementById('cd-min');
-  const s = document.getElementById('cd-sec');
-  if(d) d.textContent = pad(days);
-  if(h) h.textContent = pad(hrs);
-  if(m) m.textContent = pad(mins);
-  if(s) s.textContent = pad(secs);
-}
-updateCountdown();
-setInterval(updateCountdown, 1000);
-async function sendContact() {
-  const name  = document.getElementById('cf-name').value.trim();
-  const email = document.getElementById('cf-email').value.trim();
-  const msg   = document.getElementById('cf-msg').value.trim();
-  if (!name || !email || !msg) { alert('Please fill in all fields.'); return; }
-  if (!email.includes('@')) { alert('Please enter a valid email.'); return; }
-  await submitToFormspree(CONFIG.formspreeApply, {
-    _subject: '💬 Website Enquiry from ' + name,
-    _replyto: email,
-    name, email, message: msg,
-    source: 'Homepage Contact Form'
-  });
-  document.getElementById('cf-success').style.display = 'block';
-  document.getElementById('cf-name').value = '';
-  document.getElementById('cf-email').value = '';
-  document.getElementById('cf-msg').value = '';
-}
+function toggleFaq(el) { const item = el.closest('.faq-item'); const isOpen = item.classList.contains('open'); document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open')); if (!isOpen) item.classList.add('open'); }
+const observer = new IntersectionObserver((entries) => { entries.forEach(entry => { if (entry.isIntersecting) { entry.target.style.opacity = '1'; entry.target.style.transform = 'translateY(0)'; } }); }, { threshold: 0.1 });
+document.querySelectorAll('.transform-card, .pkg-card, .why-card, .coach-card, .testi-card').forEach(el => { el.style.opacity = '0'; el.style.transform = 'translateY(20px)'; el.style.transition = 'opacity 0.6s ease, transform 0.6s ease'; observer.observe(el); });
+setTimeout(() => { document.querySelectorAll('.transform-card, .pkg-card, .why-card, .coach-card, .testi-card').forEach(el => { el.style.opacity = '1'; el.style.transform = 'translateY(0)'; }); }, 1000);
+function updateCountdown() { const now = new Date(); const end = new Date(now.getFullYear(), now.getMonth() + 1, 1, 0, 0, 0); const diff = end - now; if (diff <= 0) return; const days = Math.floor(diff / 86400000); const hrs = Math.floor((diff % 86400000) / 3600000); const mins = Math.floor((diff % 3600000) / 60000); const secs = Math.floor((diff % 60000) / 1000); const pad = n => String(n).padStart(2,'0'); const d = document.getElementById('cd-days'); const h = document.getElementById('cd-hrs'); const m = document.getElementById('cd-min'); const s = document.getElementById('cd-sec'); if(d) d.textContent = pad(days); if(h) h.textContent = pad(hrs); if(m) m.textContent = pad(mins); if(s) s.textContent = pad(secs); }
+updateCountdown(); setInterval(updateCountdown, 1000);
+async function sendContact() { const name = document.getElementById('cf-name').value.trim(); const email = document.getElementById('cf-email').value.trim(); const msg = document.getElementById('cf-msg').value.trim(); if (!name || !email || !msg) { alert('Please fill in all fields.'); return; } if (!email.includes('@')) { alert('Please enter a valid email.'); return; } await submitToFormspree(CONFIG.formspreeApply, { _subject: '💬 Website Enquiry from ' + name, _replyto: email, name, email, message: msg, source: 'Homepage Contact Form' }); document.getElementById('cf-success').style.display = 'block'; document.getElementById('cf-name').value = ''; document.getElementById('cf-email').value = ''; document.getElementById('cf-msg').value = ''; }
 </script>
 <script src="shared.js"></script>
 </body>
