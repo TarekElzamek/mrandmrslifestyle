@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Free Calorie & BMI Calculator Dubai | How Many Calories Should I Eat? | Mr & Mrs Lifestyle</title>
+<meta name="description" content="Free calorie calculator for Dubai residents. Enter your weight, height, age and goal to get your exact daily calorie target, macros and a personalised coaching recommendation.">
+<link rel="canonical" href="https://www.mrandmrslifestyle.com/calculator.html">
+<meta property="og:title" content="Free Calorie & BMI Calculator | Mr & Mrs Lifestyle Dubai">
+<meta property="og:description" content="Find out exactly how many calories you need to lose fat or build muscle. Free tool by certified coaches Tarek & Chloe.">
+<meta property="og:url" content="https://www.mrandmrslifestyle.com/calculator.html">
+<meta property="og:image" content="https://www.mrandmrslifestyle.com/logo.png">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Calorie & BMI Calculator",
+  "description": "Free calorie and BMI calculator for fat loss and muscle gain, by Mr & Mrs Lifestyle Dubai.",
+  "url": "https://www.mrandmrslifestyle.com/calculator.html",
+  "applicationCategory": "HealthApplication",
+  "provider": {"@type": "Organization", "name": "Mr & Mrs Lifestyle", "url": "https://www.mrandmrslifestyle.com"}
+}
+</script>
+
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-2E0EXHN28J"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-2E0EXHN28J');
+</script>
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --gold: #C9A84C;
+  --gold-light: #E8D08A;
+  --gold-dim: rgba(201,168,76,0.12);
+  --black: #0A0A0A;
+  --charcoal: #141414;
+  --card: #1A1A1A;
+  --card2: #1F1F1F;
+  --white: #FFFFFF;
+  --muted: rgba(255,255,255,0.5);
+  --muted2: rgba(255,255,255,0.25);
+  --green: #2ecc71;
+  --red: #e74c3c;
+  --blue: #3498db;
+  --font-d: 'Playfair Display', Georgia, serif;
+  --font-b: 'DM Sans', sans-serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { font-family: var(--font-b); background: var(--black); color: var(--white); overflow-x: hidden; min-height: 100vh; }
+
+/* NAV */
+nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: .9rem 3rem; background: rgba(10,10,10,.96); backdrop-filter: blur(16px); border-bottom: 1px solid rgba(201,168,76,.12); }
+.nav-logo { display: flex; align-items: center; text-decoration: none; }
+.nav-links { display: flex; gap: 2rem; list-style: none; }
+.nav-links a { color: rgba(255,255,255,.65); text-decoration: none; font-size: .8rem; letter-spacing: .08em; text-transform: uppercase; font-weight: 500; transition: color .2s; }
+.nav-links a:hover, .nav-links a.active { color: var(--gold); }
+.nav-cta { background: var(--gold) !important; color: var(--black) !important; padding: .55rem 1.3rem !important; border-radius: 2px; font-weight: 700 !important; }
+.nav-mob { display: none; background: var(--gold); color: var(--black); font-size: .72rem; font-weight: 700; padding: .45rem .9rem; border-radius: 2px; letter-spacing: .05em; text-transform: uppercase; white-space: nowrap; text-decoration: none; }
+
+/* HERO */
+.hero { padding: 8rem 3rem 4rem; text-align: center; position: relative; overflow: hidden; }
+.hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(201,168,76,.09) 0%, transparent 70%); pointer-events: none; }
+.hero-tag { display: inline-flex; align-items: center; gap: .6rem; font-size: .7rem; letter-spacing: .2em; text-transform: uppercase; color: var(--gold); font-weight: 600; margin-bottom: 1.25rem; }
+.hero-tag::before, .hero-tag::after { content: ''; width: 28px; height: 1px; background: var(--gold); }
+.hero h1 { font-family: var(--font-d); font-size: clamp(2.2rem, 5vw, 3.8rem); font-weight: 900; line-height: 1.08; max-width: 780px; margin: 0 auto 1.25rem; }
+.hero h1 em { font-style: italic; color: var(--gold); }
+.hero-sub { font-size: 1rem; color: var(--muted); max-width: 540px; margin: 0 auto; line-height: 1.75; }
+
+/* MAIN LAYOUT */
+.main { display: grid; grid-template-columns: 1fr 360px; gap: 2.5rem; max-width: 1100px; margin: 0 auto; padding: 3rem 3rem 6rem; align-items: start; }
+
+/* CALCULATOR CARD */
+.calc-card { background: var(--card); border: 1px solid rgba(201,168,76,.2); border-radius: 12px; overflow: hidden; }
+.calc-header { background: linear-gradient(135deg, rgba(201,168,76,.12), rgba(201,168,76,.04)); border-bottom: 1px solid rgba(201,168,76,.15); padding: 1.75rem 2rem; }
+.calc-header h2 { font-family: var(--font-d); font-size: 1.4rem; font-weight: 700; margin-bottom: .3rem; }
+.calc-header p { font-size: .83rem; color: var(--muted); }
+.calc-body { padding: 2rem; }
+
+/* UNIT TOGGLE */
+.unit-toggle { display: flex; background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.08); border-radius: 6px; overflow: hidden; margin-bottom: 2rem; }
+.unit-btn { flex: 1; padding: .6rem; font-family: var(--font-b); font-size: .8rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; border: none; background: transparent; color: var(--muted); cursor: pointer; transition: all .2s; }
+.unit-btn.active { background: var(--gold); color: var(--black); }
+
+/* FORM SECTIONS */
+.form-section { margin-bottom: 1.75rem; }
+.form-section-title { font-size: .7rem; letter-spacing: .18em; text-transform: uppercase; color: var(--gold); font-weight: 600; margin-bottom: 1rem; display: flex; align-items: center; gap: .5rem; }
+.form-section-title::after { content: ''; flex: 1; height: 1px; background: rgba(201,168,76,.2); }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: .75rem; }
+.form-group { display: flex; flex-direction: column; gap: .4rem; }
+.form-group label { font-size: .78rem; color: rgba(255,255,255,.6); font-weight: 500; }
+.form-group input, .form-group select { background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.1); border-radius: 6px; padding: .75rem 1rem; color: var(--white); font-family: var(--font-b); font-size: .9rem; outline: none; transition: border-color .2s; -webkit-appearance: none; width: 100%; }
+.form-group input:focus, .form-group select:focus { border-color: rgba(201,168,76,.5); }
+.form-group input::placeholder { color: rgba(255,255,255,.25); }
+.form-group select { cursor: pointer; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23C9A84C' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 1rem center; padding-right: 2.5rem; }
+.form-group select option { background: #1a1a1a; }
+
+/* GOAL PILLS */
+.goal-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: .5rem; }
+.goal-pill { background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.08); border-radius: 8px; padding: .75rem .5rem; text-align: center; cursor: pointer; transition: all .2s; }
+.goal-pill:hover { border-color: rgba(201,168,76,.35); }
+.goal-pill.selected { background: rgba(201,168,76,.1); border-color: var(--gold); }
+.goal-pill .goal-icon { font-size: 1.4rem; display: block; margin-bottom: .3rem; }
+.goal-pill .goal-label { font-size: .72rem; color: rgba(255,255,255,.7); font-weight: 500; line-height: 1.3; }
+.goal-pill.selected .goal-label { color: var(--gold); }
+
+/* CALCULATE BUTTON */
+.calc-btn { width: 100%; background: var(--gold); color: var(--black); border: none; border-radius: 6px; padding: 1.1rem; font-family: var(--font-b); font-size: .92rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; cursor: pointer; transition: background .2s, transform .15s; margin-top: 1.5rem; }
+.calc-btn:hover { background: var(--gold-light); transform: translateY(-1px); }
+
+/* RESULTS */
+.results { display: none; margin-top: 2rem; border-top: 1px solid rgba(201,168,76,.15); padding-top: 2rem; animation: fadeUp .4s ease; }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+.results-title { font-family: var(--font-d); font-size: 1.15rem; font-weight: 700; margin-bottom: 1.25rem; color: var(--gold); }
+
+/* CALORIE DISPLAY */
+.calorie-hero { background: linear-gradient(135deg, rgba(201,168,76,.1), rgba(201,168,76,.03)); border: 1px solid rgba(201,168,76,.25); border-radius: 10px; padding: 1.5rem; text-align: center; margin-bottom: 1.25rem; }
+.calorie-num { font-family: var(--font-d); font-size: 3.5rem; font-weight: 900; color: var(--gold); line-height: 1; }
+.calorie-label { font-size: .78rem; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); margin-top: .4rem; }
+.calorie-sub { font-size: .82rem; color: rgba(255,255,255,.6); margin-top: .5rem; }
+
+/* STATS ROW */
+.stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: .6rem; margin-bottom: 1.25rem; }
+.stat-box { background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.07); border-radius: 8px; padding: .85rem .6rem; text-align: center; }
+.stat-box .val { font-family: var(--font-d); font-size: 1.3rem; font-weight: 700; color: var(--white); line-height: 1; }
+.stat-box .lbl { font-size: .65rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-top: .3rem; }
+
+/* MACROS */
+.macros-title { font-size: .75rem; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); margin-bottom: .75rem; font-weight: 600; }
+.macro-bars { display: flex; flex-direction: column; gap: .6rem; margin-bottom: 1.25rem; }
+.macro-row { display: flex; align-items: center; gap: .75rem; }
+.macro-name { font-size: .8rem; font-weight: 600; width: 70px; flex-shrink: 0; }
+.macro-bar-wrap { flex: 1; background: rgba(255,255,255,.06); border-radius: 20px; height: 8px; overflow: hidden; }
+.macro-bar { height: 100%; border-radius: 20px; transition: width .8s cubic-bezier(.34,1.56,.64,1); }
+.macro-bar.protein { background: linear-gradient(90deg, #e74c3c, #c0392b); }
+.macro-bar.carbs { background: linear-gradient(90deg, #f39c12, #e67e22); }
+.macro-bar.fat { background: linear-gradient(90deg, #3498db, #2980b9); }
+.macro-val { font-size: .8rem; color: var(--muted); width: 55px; text-align: right; flex-shrink: 0; }
+
+/* BMI METER */
+.bmi-section { background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.07); border-radius: 8px; padding: 1rem; margin-bottom: 1.25rem; }
+.bmi-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: .6rem; }
+.bmi-label { font-size: .75rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.bmi-value { font-family: var(--font-d); font-size: 1.4rem; font-weight: 700; }
+.bmi-bar-wrap { background: linear-gradient(90deg, #3498db 0%, #2ecc71 30%, #f39c12 60%, #e74c3c 100%); border-radius: 20px; height: 6px; position: relative; margin-bottom: .5rem; }
+.bmi-marker { position: absolute; top: 50%; width: 14px; height: 14px; border-radius: 50%; background: var(--white); border: 2px solid var(--black); transform: translate(-50%, -50%); transition: left .8s cubic-bezier(.34,1.56,.64,1); box-shadow: 0 2px 6px rgba(0,0,0,.4); }
+.bmi-status { font-size: .82rem; font-weight: 600; text-align: center; }
+
+/* PACKAGE RECOMMENDATION */
+.pkg-rec { border: 1px solid rgba(201,168,76,.3); border-radius: 10px; background: rgba(201,168,76,.06); padding: 1.25rem; margin-bottom: 1rem; }
+.pkg-rec-tag { font-size: .65rem; letter-spacing: .15em; text-transform: uppercase; color: var(--gold); font-weight: 700; margin-bottom: .5rem; }
+.pkg-rec-name { font-family: var(--font-d); font-size: 1.1rem; font-weight: 700; margin-bottom: .4rem; }
+.pkg-rec-desc { font-size: .82rem; color: var(--muted); line-height: 1.6; margin-bottom: 1rem; }
+.wa-btn { display: flex; align-items: center; justify-content: center; gap: .6rem; background: #25D366; color: var(--white); border: none; border-radius: 6px; padding: .85rem; font-family: var(--font-b); font-size: .82rem; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; cursor: pointer; text-decoration: none; transition: filter .2s; width: 100%; }
+.wa-btn:hover { filter: brightness(1.1); }
+
+/* SIDEBAR */
+.sidebar { display: flex; flex-direction: column; gap: 1.5rem; position: sticky; top: 5.5rem; }
+.side-card { background: var(--card); border: 1px solid rgba(201,168,76,.18); border-radius: 10px; padding: 1.5rem; }
+.side-card h3 { font-family: var(--font-d); font-size: 1rem; font-weight: 700; margin-bottom: .75rem; }
+.side-card p { font-size: .83rem; color: var(--muted); line-height: 1.65; margin-bottom: 1rem; }
+.side-btn { display: block; background: var(--gold); color: var(--black); text-align: center; padding: .8rem; border-radius: 6px; font-size: .78rem; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; text-decoration: none; transition: background .2s; }
+.side-btn:hover { background: var(--gold-light); }
+.side-btn-ghost { display: block; border: 1px solid rgba(201,168,76,.3); color: var(--gold); text-align: center; padding: .7rem; border-radius: 6px; font-size: .75rem; font-weight: 600; text-decoration: none; margin-top: .6rem; transition: background .2s; }
+.side-btn-ghost:hover { background: rgba(201,168,76,.08); }
+
+/* FACT LIST */
+.fact-list { list-style: none; display: flex; flex-direction: column; gap: .6rem; }
+.fact-list li { font-size: .82rem; color: rgba(255,255,255,.65); padding-left: 1.25rem; position: relative; line-height: 1.55; }
+.fact-list li::before { content: '✓'; position: absolute; left: 0; color: var(--gold); font-weight: 700; font-size: .75rem; }
+
+/* TIPS SECTION */
+.tips-section { max-width: 1100px; margin: 0 auto; padding: 0 3rem 6rem; }
+.tips-title { font-family: var(--font-d); font-size: 1.8rem; font-weight: 700; margin-bottom: .75rem; }
+.tips-title em { font-style: italic; color: var(--gold); }
+.tips-sub { color: var(--muted); font-size: .9rem; line-height: 1.7; margin-bottom: 2.5rem; max-width: 540px; }
+.tips-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; }
+.tip-card { background: var(--card); border: 1px solid rgba(255,255,255,.06); border-radius: 10px; padding: 1.5rem; transition: border-color .3s, transform .3s; }
+.tip-card:hover { border-color: rgba(201,168,76,.3); transform: translateY(-3px); }
+.tip-icon { font-size: 1.6rem; margin-bottom: .75rem; display: block; }
+.tip-title { font-weight: 700; font-size: .95rem; margin-bottom: .5rem; }
+.tip-desc { font-size: .83rem; color: var(--muted); line-height: 1.65; }
+
+/* FOOTER */
+footer { text-align: center; padding: 2rem; font-size: .78rem; color: rgba(255,255,255,.25); border-top: 1px solid rgba(255,255,255,.06); }
+footer a { color: var(--gold); text-decoration: none; }
+
+/* RESPONSIVE */
+@media (max-width: 900px) { .main { grid-template-columns: 1fr; padding: 2rem 1.4rem 4rem; } .sidebar { position: static; } .tips-section { padding: 0 1.4rem 4rem; } .tips-grid { grid-template-columns: 1fr; } }
+@media (max-width: 768px) { nav { padding: .8rem 1.2rem; } .nav-links { display: none; } .nav-mob { display: inline-block; } .hero { padding: 6rem 1.4rem 2.5rem; } .hero h1 { font-size: 2rem; } .form-row { grid-template-columns: 1fr; } .goal-grid { grid-template-columns: repeat(3, 1fr); } .stats-row { grid-template-columns: repeat(3, 1fr); } .calorie-num { font-size: 2.8rem; } }
+@media (max-width: 480px) { .goal-grid { grid-template-columns: 1fr 1fr; } .stats-row { grid-template-columns: 1fr 1fr; } }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo"><img src="logo.png" alt="Mr & Mrs Lifestyle" style="height:34px;width:auto;"/></a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="calculator.html" class="active">Calculator</a></li>
+    <li><a href="transformations.html">Results</a></li>
+    <li><a href="blog.html">Blog</a></li>
+    <li><a href="free-guide.html">Free Guide</a></li>
+    <li><a href="https://wa.me/971507871515?text=Hi%20Tarek%20%26%20Chloe%2C%20I%27d%20love%20to%20book%20a%20free%20strategy%20call%21" target="_blank" class="nav-cta">Free Call</a></li>
+  </ul>
+  <a href="https://wa.me/971507871515?text=Hi%20Tarek%20%26%20Chloe%2C%20I%27d%20love%20to%20book%20a%20free%20strategy%20call%21" target="_blank" class="nav-mob">Free Call</a>
+</nav>
+
+<div class="hero">
+  <div class="hero-tag">Free Tool · No Sign-up Required</div>
+  <h1>Your <em>Exact</em> Daily Calories<br>& Macros — Calculated</h1>
+  <p class="hero-sub">Enter your details below and get your personalised calorie target, BMI, macro split, and a coaching recommendation — in seconds.</p>
+</div>
+
+<div class="main">
+
+  <!-- CALCULATOR -->
+  <div class="calc-card">
+    <div class="calc-header">
+      <h2>Calorie & BMI Calculator</h2>
+      <p>Takes 30 seconds · 100% free · No email required</p>
+    </div>
+    <div class="calc-body">
+
+      <!-- UNIT TOGGLE -->
+      <div class="unit-toggle">
+        <button class="unit-btn active" id="btnMetric" onclick="setUnit('metric')">Metric (kg / cm)</button>
+        <button class="unit-btn" id="btnImperial" onclick="setUnit('imperial')">Imperial (lbs / ft)</button>
+      </div>
+
+      <!-- PERSONAL DETAILS -->
+      <div class="form-section">
+        <div class="form-section-title">Personal Details</div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Age</label>
+            <input type="number" id="age" placeholder="e.g. 28" min="15" max="80">
+          </div>
+          <div class="form-group">
+            <label>Gender</label>
+            <select id="gender">
+              <option value="" disabled selected>Select</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row" style="margin-top:.75rem;">
+          <div class="form-group">
+            <label id="weightLabel">Weight (kg)</label>
+            <input type="number" id="weight" placeholder="e.g. 75" min="30" max="300">
+          </div>
+          <div class="form-group" id="heightGroup">
+            <label id="heightLabel">Height (cm)</label>
+            <input type="number" id="heightCm" placeholder="e.g. 175" min="100" max="250">
+          </div>
+        </div>
+        <!-- Imperial height (hidden by default) -->
+        <div class="form-row" id="heightImperial" style="display:none; margin-top:.75rem;">
+          <div class="form-group">
+            <label>Height (ft)</label>
+            <input type="number" id="heightFt" placeholder="e.g. 5" min="3" max="8">
+          </div>
+          <div class="form-group">
+            <label>Height (in)</label>
+            <input type="number" id="heightIn" placeholder="e.g. 9" min="0" max="11">
+          </div>
+        </div>
+      </div>
+
+      <!-- ACTIVITY LEVEL -->
+      <div class="form-section">
+        <div class="form-section-title">Activity Level</div>
+        <div class="form-group">
+          <select id="activity">
+            <option value="" disabled selected>Select your activity level</option>
+            <option value="1.2">Sedentary — desk job, little or no exercise</option>
+            <option value="1.375">Lightly Active — light exercise 1–3 days/week</option>
+            <option value="1.55">Moderately Active — exercise 3–5 days/week</option>
+            <option value="1.725">Very Active — hard exercise 6–7 days/week</option>
+            <option value="1.9">Extra Active — athlete or physical job</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- GOAL -->
+      <div class="form-section">
+        <div class="form-section-title">Your Goal</div>
+        <div class="goal-grid" id="goalGrid">
+          <div class="goal-pill" data-goal="lose-fast" onclick="selectGoal(this)">
+            <span class="goal-icon">🔥</span>
+            <span class="goal-label">Aggressive Fat Loss</span>
+          </div>
+          <div class="goal-pill" data-goal="lose" onclick="selectGoal(this)">
+            <span class="goal-icon">⚡</span>
+            <span class="goal-label">Fat Loss</span>
+          </div>
+          <div class="goal-pill" data-goal="maintain" onclick="selectGoal(this)">
+            <span class="goal-icon">⚖️</span>
+            <span class="goal-label">Maintain Weight</span>
+          </div>
+          <div class="goal-pill" data-goal="gain" onclick="selectGoal(this)">
+            <span class="goal-icon">💪</span>
+            <span class="goal-label">Muscle Gain</span>
+          </div>
+          <div class="goal-pill" data-goal="gain-fast" onclick="selectGoal(this)">
+            <span class="goal-icon">🚀</span>
+            <span class="goal-label">Aggressive Bulk</span>
+          </div>
+          <div class="goal-pill" data-goal="recomp" onclick="selectGoal(this)">
+            <span class="goal-icon">🔄</span>
+            <span class="goal-label">Body Recomp</span>
+          </div>
+        </div>
+      </div>
+
+      <button class="calc-btn" onclick="calculate()">✦ Calculate My Numbers</button>
+
+      <!-- RESULTS -->
+      <div class="results" id="results">
+        <div class="results-title" id="resultsTitle">Your Results</div>
+
+        <!-- CALORIE TARGET -->
+        <div class="calorie-hero">
+          <div class="calorie-num" id="calorieNum">—</div>
+          <div class="calorie-label">Daily Calorie Target</div>
+          <div class="calorie-sub" id="calorieSub"></div>
+        </div>
+
+        <!-- STATS -->
+        <div class="stats-row">
+          <div class="stat-box"><div class="val" id="bmrVal">—</div><div class="lbl">BMR</div></div>
+          <div class="stat-box"><div class="val" id="tdeeVal">—</div><div class="lbl">TDEE</div></div>
+          <div class="stat-box"><div class="val" id="deficitVal">—</div><div class="lbl" id="deficitLbl">Deficit</div></div>
+        </div>
+
+        <!-- BMI -->
+        <div class="bmi-section">
+          <div class="bmi-row">
+            <span class="bmi-label">BMI</span>
+            <span class="bmi-value" id="bmiVal">—</span>
+          </div>
+          <div class="bmi-bar-wrap"><div class="bmi-marker" id="bmiMarker" style="left:50%"></div></div>
+          <div class="bmi-status" id="bmiStatus"></div>
+        </div>
+
+        <!-- MACROS -->
+        <div class="macros-title">Daily Macro Targets</div>
+        <div class="macro-bars">
+          <div class="macro-row">
+            <span class="macro-name" style="color:#e74c3c;">Protein</span>
+            <div class="macro-bar-wrap"><div class="macro-bar protein" id="proteinBar" style="width:0%"></div></div>
+            <span class="macro-val" id="proteinVal">—</span>
+          </div>
+          <div class="macro-row">
+            <span class="macro-name" style="color:#f39c12;">Carbs</span>
+            <div class="macro-bar-wrap"><div class="macro-bar carbs" id="carbsBar" style="width:0%"></div></div>
+            <span class="macro-val" id="carbsVal">—</span>
+          </div>
+          <div class="macro-row">
+            <span class="macro-name" style="color:#3498db;">Fat</span>
+            <div class="macro-bar-wrap"><div class="macro-bar fat" id="fatBar" style="width:0%"></div></div>
+            <span class="macro-val" id="fatVal">—</span>
+          </div>
+        </div>
+
+        <!-- PACKAGE RECOMMENDATION -->
+        <div class="pkg-rec" id="pkgRec">
+          <div class="pkg-rec-tag">✦ Personalised Recommendation</div>
+          <div class="pkg-rec-name" id="pkgName">—</div>
+          <div class="pkg-rec-desc" id="pkgDesc">—</div>
+          <a id="pkgWaBtn" href="#" target="_blank" class="wa-btn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            Book Free Strategy Call on WhatsApp
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="side-card">
+      <h3>Book a Free Call</h3>
+      <p>Get a fully personalised nutrition and training plan from Tarek or Chloe — not just a calculator result.</p>
+      <a href="https://wa.me/971507871515?text=Hi%20Tarek%20%26%20Chloe%2C%20I%20just%20used%20your%20calorie%20calculator%20and%20I%27d%20love%20a%20free%20strategy%20call%21" target="_blank" class="side-btn">💬 WhatsApp Us Now</a>
+      <a href="free-guide.html" class="side-btn-ghost">Get Free Blueprint →</a>
+    </div>
+
+    <div class="side-card">
+      <h3>Why Numbers Alone Don't Work</h3>
+      <p>A calculator gives you a starting point. What actually gets results is the plan built around it — the right foods, the right training, and someone checking in on you weekly.</p>
+      <ul class="fact-list">
+        <li>Calories are just one piece of the puzzle</li>
+        <li>Timing, food quality and stress all affect results</li>
+        <li>Most people need adjustments after 2–3 weeks</li>
+        <li>Accountability doubles the chance of success</li>
+      </ul>
+    </div>
+
+    <div class="side-card" style="background:rgba(201,168,76,0.05); border-color:rgba(201,168,76,0.25);">
+      <h3>500+ Transformations</h3>
+      <p>Every client starts with numbers. But it's the personalised coaching that turns numbers into a body they're proud of.</p>
+      <a href="transformations.html" class="side-btn-ghost">See Real Results →</a>
+    </div>
+  </aside>
+</div>
+
+<!-- TIPS SECTION -->
+<div class="tips-section">
+  <div style="border-top:1px solid rgba(201,168,76,0.1); padding-top:4rem; margin-bottom:3rem;">
+    <div style="font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);font-weight:600;margin-bottom:1rem;">From Our Coaches</div>
+    <h2 class="tips-title">How to <em>Actually Use</em> These Numbers</h2>
+    <p class="tips-sub">Your calorie target is a starting point — not a rigid rule. Here's how our coaches teach clients to apply them in real life, especially in Dubai.</p>
+  </div>
+  <div class="tips-grid">
+    <div class="tip-card">
+      <span class="tip-icon">🎯</span>
+      <div class="tip-title">Hit Your Protein First</div>
+      <p class="tip-desc">Before worrying about total calories, prioritise your protein target every day. It keeps you full, preserves muscle, and makes hitting your calorie goal much easier.</p>
+    </div>
+    <div class="tip-card">
+      <span class="tip-icon">📉</span>
+      <div class="tip-title">Expect to Adjust</div>
+      <p class="tip-desc">These numbers are calculated estimates. After 2–3 weeks, track your weight trend. If it's not moving as expected, adjust by 100–150 calories and reassess.</p>
+    </div>
+    <div class="tip-card">
+      <span class="tip-icon">🍽️</span>
+      <div class="tip-title">The Dubai Strategy</div>
+      <p class="tip-desc">Eating out 4–5 times a week? Order protein first, sauces on the side, and eat to 80% full. You can absolutely hit your targets while enjoying Dubai's restaurant scene.</p>
+    </div>
+    <div class="tip-card">
+      <span class="tip-icon">💧</span>
+      <div class="tip-title">Hydration Matters More Here</div>
+      <p class="tip-desc">In Dubai's heat, dehydration is often mistaken for hunger. Drink 3–4 litres of water daily. Many clients find their "cravings" disappear when they stay properly hydrated.</p>
+    </div>
+    <div class="tip-card">
+      <span class="tip-icon">⚖️</span>
+      <div class="tip-title">Weigh Yourself Correctly</div>
+      <p class="tip-desc">Weigh yourself first thing in the morning, after the bathroom, before eating. Take 3–4 readings per week and track the average — not the daily fluctuation.</p>
+    </div>
+    <div class="tip-card">
+      <span class="tip-icon">🧠</span>
+      <div class="tip-title">Consistency Beats Perfection</div>
+      <p class="tip-desc">Hitting 90% of your targets every day beats hitting 100% for 3 days and nothing for 4. Our most successful clients are consistent, not perfect.</p>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <p>© 2026 Mr &amp; Mrs Lifestyle · Dubai, UAE · <a href="mailto:info@mrandmrslifestyle.com">info@mrandmrslifestyle.com</a> · <a href="index.html">Home</a></p>
+</footer>
+
+<script>
+let unit = 'metric';
+let selectedGoal = '';
+
+function setUnit(u) {
+  unit = u;
+  document.getElementById('btnMetric').classList.toggle('active', u === 'metric');
+  document.getElementById('btnImperial').classList.toggle('active', u === 'imperial');
+  document.getElementById('weightLabel').textContent = u === 'metric' ? 'Weight (kg)' : 'Weight (lbs)';
+  document.getElementById('heightLabel').textContent = 'Height (cm)';
+  document.getElementById('heightCm').parentElement.parentElement.style.display = u === 'metric' ? '' : 'none';
+  document.getElementById('heightImperial').style.display = u === 'imperial' ? '' : 'none';
+  document.getElementById('weight').placeholder = u === 'metric' ? 'e.g. 75' : 'e.g. 165';
+}
+
+function selectGoal(el) {
+  document.querySelectorAll('.goal-pill').forEach(p => p.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedGoal = el.dataset.goal;
+}
+
+function calculate() {
+  const age = parseFloat(document.getElementById('age').value);
+  const gender = document.getElementById('gender').value;
+  const activity = parseFloat(document.getElementById('activity').value);
+  let weightKg, heightCm;
+
+  if (unit === 'metric') {
+    weightKg = parseFloat(document.getElementById('weight').value);
+    heightCm = parseFloat(document.getElementById('heightCm').value);
+  } else {
+    const lbs = parseFloat(document.getElementById('weight').value);
+    const ft = parseFloat(document.getElementById('heightFt').value) || 0;
+    const inches = parseFloat(document.getElementById('heightIn').value) || 0;
+    weightKg = lbs * 0.453592;
+    heightCm = (ft * 30.48) + (inches * 2.54);
+  }
+
+  if (!age || !gender || !weightKg || !heightCm || !activity || !selectedGoal) {
+    alert('Please fill in all fields and select a goal.'); return;
+  }
+
+  // BMR (Mifflin-St Jeor)
+  let bmr;
+  if (gender === 'male') {
+    bmr = 10 * weightKg + 6.25 * heightCm - 5 * age + 5;
+  } else {
+    bmr = 10 * weightKg + 6.25 * heightCm - 5 * age - 161;
+  }
+
+  const tdee = Math.round(bmr * activity);
+
+  // Goal adjustments
+  const adjustments = {
+    'lose-fast': -750, 'lose': -400, 'maintain': 0,
+    'gain': 300, 'gain-fast': 600, 'recomp': -100
+  };
+  const adj = adjustments[selectedGoal];
+  const target = Math.round(tdee + adj);
+
+  // BMI
+  const heightM = heightCm / 100;
+  const bmi = (weightKg / (heightM * heightM)).toFixed(1);
+
+  // Macros
+  let proteinG, fatPct, carbPct;
+  if (selectedGoal === 'lose-fast' || selectedGoal === 'lose') {
+    proteinG = Math.round(weightKg * 2.2);
+    fatPct = 0.28;
+  } else if (selectedGoal === 'gain' || selectedGoal === 'gain-fast') {
+    proteinG = Math.round(weightKg * 2.0);
+    fatPct = 0.25;
+  } else {
+    proteinG = Math.round(weightKg * 1.8);
+    fatPct = 0.3;
+  }
+  const proteinCals = proteinG * 4;
+  const fatCals = Math.round(target * fatPct);
+  const fatG = Math.round(fatCals / 9);
+  const carbCals = target - proteinCals - fatCals;
+  const carbG = Math.round(carbCals / 4);
+  const maxMacro = Math.max(proteinG, carbG, fatG);
+
+  // BMI status
+  let bmiColor, bmiText;
+  if (bmi < 18.5) { bmiColor = '#3498db'; bmiText = 'Underweight'; }
+  else if (bmi < 25) { bmiColor = '#2ecc71'; bmiText = 'Healthy Weight ✓'; }
+  else if (bmi < 30) { bmiColor = '#f39c12'; bmiText = 'Overweight'; }
+  else { bmiColor = '#e74c3c'; bmiText = 'Obese'; }
+  const bmiPct = Math.min(Math.max(((bmi - 15) / 25) * 100, 2), 98);
+
+  // Goal labels
+  const goalLabels = {
+    'lose-fast': 'Aggressive Fat Loss', 'lose': 'Fat Loss',
+    'maintain': 'Maintain', 'gain': 'Muscle Gain',
+    'gain-fast': 'Aggressive Bulk', 'recomp': 'Body Recomposition'
+  };
+
+  // Package recommendation
+  let pkgName, pkgDesc, pkgMsg;
+  if (selectedGoal === 'lose-fast' || selectedGoal === 'lose') {
+    pkgName = '🔥 Elite Coaching Experience — AED 899/month';
+    pkgDesc = 'Based on your fat loss goal, we recommend our Elite package. You get a fully personalised nutrition plan, weekly check-in calls, and 24/7 WhatsApp access to Tarek or Chloe to keep you on track.';
+    pkgMsg = 'Hi Tarek & Chloe! I used your calorie calculator — I want to lose fat and I\'m interested in the Elite coaching package. Can we book a free strategy call?';
+  } else if (selectedGoal === 'gain' || selectedGoal === 'gain-fast') {
+    pkgName = '💪 Elite Coaching Experience — AED 899/month';
+    pkgDesc = 'For muscle gain, our Elite package gives you progressive strength programming, custom nutrition for muscle growth, and weekly coaching calls with Tarek to fine-tune your plan.';
+    pkgMsg = 'Hi Tarek & Chloe! I used your calorie calculator — I want to build muscle and I\'m interested in coaching. Can we book a free strategy call?';
+  } else if (selectedGoal === 'recomp') {
+    pkgName = '⚡ VIP Online Coaching — AED 1,999/month';
+    pkgDesc = 'Body recomposition is the most challenging goal — losing fat while gaining muscle simultaneously. Our VIP programme gives you bi-weekly coaching calls, frequent plan adjustments, and priority access to both Tarek and Chloe.';
+    pkgMsg = 'Hi Tarek & Chloe! I used your calorie calculator — I want to do a body recomposition and I\'d love to learn about the VIP coaching programme. Can we chat?';
+  } else {
+    pkgName = '✦ Economy Pack — AED 299/month';
+    pkgDesc = 'For maintenance, our Economy Pack gives you a solid training template and macro targets to keep your physique dialled in — at an accessible price point.';
+    pkgMsg = 'Hi Tarek & Chloe! I used your calorie calculator and I\'d love to find out more about coaching. Can we book a free strategy call?';
+  }
+
+  // UPDATE UI
+  document.getElementById('calorieNum').textContent = target.toLocaleString();
+  document.getElementById('calorieSub').textContent = `${goalLabels[selectedGoal]} · ${Math.abs(adj)} kcal ${adj < 0 ? 'below' : adj > 0 ? 'above' : 'at'} maintenance`;
+  document.getElementById('bmrVal').textContent = Math.round(bmr).toLocaleString();
+  document.getElementById('tdeeVal').textContent = tdee.toLocaleString();
+  document.getElementById('deficitVal').textContent = Math.abs(adj);
+  document.getElementById('deficitLbl').textContent = adj < 0 ? 'Deficit' : adj > 0 ? 'Surplus' : 'Balance';
+  document.getElementById('bmiVal').textContent = bmi;
+  document.getElementById('bmiVal').style.color = bmiColor;
+  document.getElementById('bmiMarker').style.left = bmiPct + '%';
+  document.getElementById('bmiStatus').textContent = bmiText;
+  document.getElementById('bmiStatus').style.color = bmiColor;
+  document.getElementById('proteinVal').textContent = proteinG + 'g';
+  document.getElementById('carbsVal').textContent = carbG + 'g';
+  document.getElementById('fatVal').textContent = fatG + 'g';
+  setTimeout(() => {
+    document.getElementById('proteinBar').style.width = (proteinG / maxMacro * 100) + '%';
+    document.getElementById('carbsBar').style.width = (carbG / maxMacro * 100) + '%';
+    document.getElementById('fatBar').style.width = (fatG / maxMacro * 100) + '%';
+  }, 100);
+  document.getElementById('pkgName').textContent = pkgName;
+  document.getElementById('pkgDesc').textContent = pkgDesc;
+  document.getElementById('pkgWaBtn').href = `https://wa.me/971507871515?text=${encodeURIComponent(pkgMsg)}`;
+  document.getElementById('resultsTitle').textContent = `Your Results — ${goalLabels[selectedGoal]}`;
+
+  const results = document.getElementById('results');
+  results.style.display = 'block';
+  setTimeout(() => results.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 100);
+}
+</script>
+<script src="shared.js"></script>
+<script src="chat-widget.js" defer></script>
+</body>
+</html>
