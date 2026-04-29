@@ -250,5 +250,6 @@ const observer = new IntersectionObserver(entries => { entries.forEach(e => { if
 document.querySelectorAll('.chapter-card, .mini-card').forEach(el => { el.style.opacity = '0'; el.style.transform = 'translateY(20px)'; el.style.transition = 'opacity 0.6s ease, transform 0.6s ease'; observer.observe(el); });
 </script>
 <script src="shared.js"></script>
+<script src="chat-widget.js" defer></script>
 </body>
 </html>

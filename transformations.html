@@ -226,5 +226,6 @@ lb.addEventListener('click',e=>{if(e.target===lb){lb.classList.remove('open');do
 document.addEventListener('keydown',e=>{if(!lb.classList.contains('open'))return;if(e.key==='Escape'){lb.classList.remove('open');document.body.style.overflow='';}if(e.key==='ArrowLeft')document.getElementById('lbp').click();if(e.key==='ArrowRight')document.getElementById('lbx').click();});
 </script>
 <script src="shared.js"></script>
+<script src="chat-widget.js" defer></script>
 </body>
 </html>

@@ -656,5 +656,6 @@ updateCountdown(); setInterval(updateCountdown, 1000);
 async function sendContact() { const name = document.getElementById('cf-name').value.trim(); const email = document.getElementById('cf-email').value.trim(); const msg = document.getElementById('cf-msg').value.trim(); if (!name || !email || !msg) { alert('Please fill in all fields.'); return; } if (!email.includes('@')) { alert('Please enter a valid email.'); return; } await submitToFormspree(CONFIG.formspreeApply, { _subject: '💬 Website Enquiry from ' + name, _replyto: email, name, email, message: msg, source: 'Homepage Contact Form' }); document.getElementById('cf-success').style.display = 'block'; document.getElementById('cf-name').value = ''; document.getElementById('cf-email').value = ''; document.getElementById('cf-msg').value = ''; }
 </script>
 <script src="shared.js"></script>
+<script src="chat-widget.js" defer></script>
 </body>
 </html>
