@@ -62,13 +62,14 @@ nav {
 }
 
 /* ── HERO ── */
+/* FIX: Added padding on both sides so text doesn't sit flush against the left edge */
 .hero {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 0;
-  min-height: 92vh; } @media (max-width: 768px) {   .hero {     grid-template-columns: 1fr !important;     min-height: auto !important;     padding: 2rem 1.4rem 3rem !important;     gap: 2rem !important;   }   .hero-text { max-width: 100% !important; }   .hero h1 { font-size: 2.2rem !important; }   .form-card { max-width: 100% !important; margin: 0 !important; } } .hero-dummy {
+  gap: 4rem;
+  min-height: 92vh;
   align-items: center;
-  padding: 5rem 3rem 5rem 5rem;
+  padding: 5rem 5rem 5rem 5rem; /* equal padding all sides on desktop */
   position: relative;
   overflow: hidden;
 }
@@ -78,7 +79,11 @@ nav {
   background: radial-gradient(ellipse 80% 80% at 60% 40%, rgba(201,168,76,0.05) 0%, transparent 70%);
   pointer-events: none;
 }
-.hero-text { position: relative; z-index: 2; max-width: 580px; }
+.hero-text {
+  position: relative;
+  z-index: 2;
+  max-width: 540px;
+}
 
 .free-badge {
   display: inline-flex; align-items: center; gap: 0.5rem;
@@ -122,7 +127,7 @@ nav {
   position: relative;
   z-index: 2;
   max-width: 460px;
-  margin: 0 auto;
+  width: 100%;
   box-shadow: 0 40px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(201,168,76,0.08);
 }
 
@@ -338,6 +343,9 @@ nav {
   border: 1px solid rgba(255,255,255,0.07);
   border-radius: 6px;
   padding: 1.75rem;
+  display: flex;
+  flex-direction: column;
+  min-height: 320px;
 }
 .mini-stars { color: var(--gold); font-size: 0.85rem; margin-bottom: 0.75rem; }
 .mini-quote {
@@ -345,9 +353,14 @@ nav {
   color: rgba(255,255,255,0.7);
   line-height: 1.7;
   font-style: italic;
-  margin-bottom: 1.25rem;
+  margin-bottom: auto;
+  flex: 1;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 6;
+  -webkit-box-orient: vertical;
 }
-.mini-person { display: flex; align-items: center; gap: 0.65rem; }
+.mini-person { display: flex; align-items: center; gap: 0.65rem; margin-top: 1.25rem; }
 .mini-avatar {
   width: 36px; height: 36px; border-radius: 50%;
   background: var(--gold);
@@ -402,22 +415,6 @@ nav {
   text-align: center;
   padding: 2rem 0;
 }
-.success-state .big-check {
-  font-size: 3rem;
-  margin-bottom: 1rem;
-}
-.success-state h3 {
-  font-family: var(--font-display);
-  font-size: 1.5rem;
-  font-weight: 700;
-  margin-bottom: 0.5rem;
-  color: var(--gold);
-}
-.success-state p {
-  font-size: 0.88rem;
-  color: var(--muted);
-  line-height: 1.65;
-}
 
 /* ── FOOTER ── */
 footer {
@@ -443,23 +440,7 @@ footer p {
 }
 
 /* ── ANIMATIONS ── */
-.mini-card {
-  display: flex;
-  flex-direction: column;
-  min-height: 320px;
-}
-.mini-quote {
-  flex: 1;
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-line-clamp: 6;
-  -webkit-box-orient: vertical;
-  margin-bottom: auto;
-}
-.mini-person { margin-top: 1.25rem; }
-@media (max-width: 768px) {
-  .mini-grid { grid-template-columns: 1fr !important; }
-}@keyframes slideUp {
+@keyframes slideUp {
   from { opacity: 0; transform: translateY(30px); }
   to { opacity: 1; transform: translateY(0); }
 }
@@ -475,10 +456,20 @@ footer p {
 /* ── RESPONSIVE ── */
 @media (max-width: 768px) {
   nav { padding: 0.85rem 1.2rem !important; }
-  .hero-split { grid-template-columns: 1fr !important; min-height: auto !important; }
-  .hero-left { padding: 6rem 1.4rem 2rem !important; min-height: auto !important; }
-  .hero-left h1 { font-size: 2.2rem !important; line-height: 1.1; }
-  .form-card { border-radius: 0 !important; padding: 1.5rem 1.2rem !important; }
+  /* FIX: on mobile, full-width single column with normal padding */
+  .hero {
+    grid-template-columns: 1fr !important;
+    min-height: auto !important;
+    padding: 2rem 1.4rem 3rem !important;
+    gap: 2rem !important;
+  }
+  .hero-text { max-width: 100% !important; }
+  .hero h1 { font-size: 2.2rem !important; line-height: 1.1; }
+  .form-card {
+    max-width: 100% !important;
+    border-radius: 0 !important;
+    padding: 1.5rem 1.2rem !important;
+  }
   .form-card h2 { font-size: 1.4rem !important; }
   .field-group { gap: 0.75rem !important; }
   .form-btn { font-size: 0.78rem !important; padding: 0.9rem !important; }
@@ -489,11 +480,11 @@ footer p {
   .inside-section { padding: 3rem 1.4rem !important; }
   .guide-preview { padding: 1rem !important; }
   .guide-preview li { font-size: 0.82rem !important; }
-  .mini-testimonials { grid-template-columns: 1fr !important; gap: 1rem !important; }
+  .mini-grid { grid-template-columns: 1fr !important; }
   footer { flex-direction: column !important; text-align: center !important; padding: 1.5rem 1.2rem !important; gap: 0.75rem !important; }
 }
 @media (max-width: 480px) {
-  .hero-left h1 { font-size: 1.8rem !important; }
+  .hero h1 { font-size: 1.8rem !important; }
   .proof-strip { gap: 0.75rem !important; }
 }
 </style>
@@ -743,7 +734,6 @@ async function handleSubmit() {
   if (!email || !email.includes('@')) { alert('Please enter a valid email address.'); return; }
   if (!goal) { alert('Please select your main goal.'); return; }
 
-  // Send lead notification to Formspree (notifies you via email)
   await submitToFormspree(CONFIG.formspreeGuide, {
     _subject: '📋 New Blueprint Download — ' + firstName + ' wants the guide!',
     _replyto: email,
@@ -753,7 +743,6 @@ async function handleSubmit() {
     source:   'Free Blueprint Download Page',
   });
 
-  // Show success state with download button
   const form = document.getElementById('formCard');
   form.querySelector('.form-card-tag').style.display = 'none';
   form.querySelector('h2').style.display = 'none';
@@ -764,7 +753,6 @@ async function handleSubmit() {
   form.querySelector('.guide-preview').style.display = 'none';
   document.getElementById('successState').style.display = 'block';
 
-  // Auto-trigger PDF download after short delay
   setTimeout(() => {
     const link = document.createElement('a');
     link.href = 'dubai-transformation-blueprint.pdf';
@@ -774,11 +762,9 @@ async function handleSubmit() {
     document.body.removeChild(link);
   }, 800);
 
-  // Scroll to success message
   document.getElementById('successState').scrollIntoView({ behavior: 'smooth', block: 'center' });
 }
 
-// Scroll animation
 const observer = new IntersectionObserver(entries => {
   entries.forEach(e => {
     if (e.isIntersecting) {
