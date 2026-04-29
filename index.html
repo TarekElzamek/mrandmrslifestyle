@@ -226,7 +226,8 @@
     text-transform: uppercase;
     line-height: 1.5;
   }
-  .urgency-banner span {
+  /* FIX 1: Claim Yours is now a real link */
+  .urgency-banner a.claim-link {
     background: var(--black);
     color: var(--gold);
     padding: 0.15rem 0.6rem;
@@ -234,7 +235,12 @@
     margin-left: 0.5rem;
     font-size: 0.7rem;
     display: inline-block;
+    text-decoration: none;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    transition: background 0.2s;
   }
+  .urgency-banner a.claim-link:hover { background: #1C1C1C; }
   /* ── SECTIONS ── */
   section { padding: 6rem 3rem; }
   .section-eyebrow {
@@ -863,147 +869,55 @@
   }
   /* ── MOBILE RESPONSIVE ── */
   @media (max-width: 768px) {
-    /* NAV */
     nav {
       padding: 0.85rem 1.2rem;
       flex-wrap: nowrap;
       gap: 0.75rem;
       align-items: center;
     }
-    .nav-logo {
-      flex-shrink: 0;
-    }
-    .nav-links {
-      display: none;
-    }
+    .nav-logo { flex-shrink: 0; }
+    .nav-links { display: none; }
     .nav-mobile-trans { display: none; }
     .nav-mobile-trans { display: inline-block !important; }
-    .nav-mobile-cta {
-      display: inline-block !important;
-    }
-    /* HERO */
+    .nav-mobile-cta { display: inline-block !important; }
     .hero {
       padding: 6rem 1.4rem 3rem;
       min-height: 100svh;
     }
-    .hero h1 {
-      font-size: 2.8rem;
-      line-height: 1.05;
-    }
-    .hero-sub {
-      font-size: 0.95rem;
-    }
-    .hero-stats {
-      gap: 1.5rem;
-      flex-wrap: wrap;
-    }
-    .hero-stats > div {
-      flex: 1 1 40%;
-    }
+    .hero h1 { font-size: 2.8rem; line-height: 1.05; }
+    .hero-sub { font-size: 0.95rem; }
+    .hero-stats { gap: 1.5rem; flex-wrap: wrap; }
+    .hero-stats > div { flex: 1 1 40%; }
     .stat-num { font-size: 1.8rem; }
-    .hero-ctas {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 0.85rem;
-    }
-    .btn-primary {
-      width: 100%;
-      text-align: center;
-      padding: 0.95rem 1.2rem;
-    }
-    /* SECTIONS */
+    .hero-ctas { flex-direction: column; align-items: flex-start; gap: 0.85rem; }
+    .btn-primary { width: 100%; text-align: center; padding: 0.95rem 1.2rem; }
     section { padding: 3.5rem 1.4rem; }
-    /* LEAD MAGNET */
-    .lead-magnet {
-      grid-template-columns: 1fr;
-      gap: 2rem;
-      padding: 2rem 1.4rem;
-    }
-    /* TRANSFORMATIONS */
-    .transforms-grid {
-      grid-template-columns: 1fr;
-      gap: 1.25rem;
-    }
+    .lead-magnet { grid-template-columns: 1fr; gap: 2rem; padding: 2rem 1.4rem; }
+    .transforms-grid { grid-template-columns: 1fr; gap: 1.25rem; }
     .transform-img-half { height: 160px; }
-    /* PACKAGES */
-    .packages-grid {
-      grid-template-columns: 1fr;
-      gap: 1.25rem;
-    }
-    /* Secondary packages row */
-    .secondary-packages {
-      grid-template-columns: 1fr 1fr !important;
-      gap: 0.6rem !important;
-    }
-    /* Couples grid */
-    .couples-grid {
-      grid-template-columns: 1fr !important;
-      gap: 2rem !important;
-    }
-    .why-grid {
-      grid-template-columns: 1fr;
-      gap: 0;
-    }
-    .why-card {
-      padding: 1.25rem 1rem;
-    }
-    /* COACHES */
-    .coaches-grid {
-      grid-template-columns: 1fr;
-      gap: 2rem;
-    }
+    .packages-grid { grid-template-columns: 1fr; gap: 1.25rem; }
+    .secondary-packages { grid-template-columns: 1fr 1fr !important; gap: 0.6rem !important; }
+    .couples-grid { grid-template-columns: 1fr !important; gap: 2rem !important; }
+    .why-grid { grid-template-columns: 1fr; gap: 0; }
+    .why-card { padding: 1.25rem 1rem; }
+    .coaches-grid { grid-template-columns: 1fr; gap: 2rem; }
     .coach-photo { height: 360px; background-position: center top !important; }
     .coach-name { font-size: 1.5rem; }
-    /* TESTIMONIALS */
-    .testimonials-grid {
-      grid-template-columns: 1fr;
-      gap: 1.25rem;
-    }
-    /* PT SECTION */
-    .pt-section {
-      grid-template-columns: 1fr;
-      display: flex;
-      flex-direction: column;
-    }
+    .testimonials-grid { grid-template-columns: 1fr; gap: 1.25rem; }
+    .pt-section { grid-template-columns: 1fr; display: flex; flex-direction: column; }
     .pt-photo { min-height: 260px; }
-    .pt-content {
-      padding: 2.5rem 1.4rem;
-    }
-    /* COUPLES SECTION */
-    div[style*="grid-template-columns:1fr 1fr"][style*="5rem"] {
-      display: flex !important;
-      flex-direction: column !important;
-      gap: 2rem !important;
-    }
-    /* URGENCY */
+    .pt-content { padding: 2.5rem 1.4rem; }
     .urgency-section { padding: 3rem 1.4rem; }
     .spots-num { font-size: 2.2rem; }
-    /* FAQ */
     .faq-container { padding: 0; }
     .faq-q { font-size: 0.9rem; }
-    /* FOOTER */
-    .footer-grid {
-      grid-template-columns: 1fr;
-      gap: 2rem;
-    }
-    .footer-bottom {
-      flex-direction: column;
-      align-items: center;
-      gap: 0.75rem;
-      text-align: center;
-    }
-    /* Section titles */
-    .section-title {
-      font-size: 1.9rem;
-    }
-    /* General padding fix */
+    .footer-grid { grid-template-columns: 1fr; gap: 2rem; }
+    .footer-bottom { flex-direction: column; align-items: center; gap: 0.75rem; text-align: center; }
+    .section-title { font-size: 1.9rem; }
     .packages-section > div,
     .why-section > div,
     .coaches-section > div,
-    .testimonials-section > div {
-      padding-left: 0;
-      padding-right: 0;
-    }
+    .testimonials-section > div { padding-left: 0; padding-right: 0; }
   }
   @media (max-width: 768px) {
     .how-grid { grid-template-columns: 1fr 1fr !important; gap: 1.5rem !important; }
@@ -1012,100 +926,55 @@
   @media (max-width: 480px) {
     .how-grid { grid-template-columns: 1fr !important; }
   }
-  /* Small phones */
   @media (max-width: 390px) {
     .hero h1 { font-size: 2.3rem; }
     .nav-logo img { height: 28px !important; }
   }
-  /* ── ADDITIONAL MOBILE FIXES ── */
   @media (max-width: 768px) {
-    /* Urgency banner wrapping fix */
-    .urgency-banner {
-      font-size: 0.68rem;
-      padding: 0.55rem 0.8rem;
-      line-height: 1.5;
-    }
-    /* Lead magnet section padding */
-    #lead-section {
-      padding: 3rem 1.2rem !important;
-    }
-    .lead-magnet {
-      padding: 1.75rem 1.2rem !important;
-      margin: 0 !important;
-      border-radius: 4px;
-    }
-    .lead-magnet h2 {
-      font-size: 1.6rem;
-    }
-    .lead-visual {
-      padding: 1.5rem 1.2rem !important;
-      margin: 0 !important;
-      width: 100%;
-      box-sizing: border-box;
-    }
-    .lead-visual h3 {
-      font-size: 1.2rem;
-    }
-    .lead-perks li {
-      font-size: 0.82rem;
-    }
-    /* Hero min-height fix for notch phones */
-    .hero {
-      min-height: 100dvh;
-      padding-top: 7rem;
-    }
-    /* Coach photo position - show face */
-    .coach-photo {
-      background-position: center top !important;
-    }
-    /* Section inner max-width fix */
-    .packages-section > div > div[style],
-    .transformations-section > div {
-      overflow: hidden;
-    }
-    /* Packages cards full width */
-    .pkg-card {
-      margin: 0;
-    }
-    /* Why section full width */
-    .why-section > div {
-      padding: 1.5rem 1.4rem;
-    }
+    .urgency-banner { font-size: 0.68rem; padding: 0.55rem 0.8rem; line-height: 1.5; }
+    #lead-section { padding: 3rem 1.2rem !important; }
+    .lead-magnet { padding: 1.75rem 1.2rem !important; margin: 0 !important; border-radius: 4px; }
+    .lead-magnet h2 { font-size: 1.6rem; }
+    .lead-visual { padding: 1.5rem 1.2rem !important; margin: 0 !important; width: 100%; box-sizing: border-box; }
+    .lead-visual h3 { font-size: 1.2rem; }
+    .lead-perks li { font-size: 0.82rem; }
+    .hero { min-height: 100dvh; padding-top: 7rem; }
+    .coach-photo { background-position: center top !important; }
+    .pkg-card { margin: 0; }
+    .why-section > div { padding: 1.5rem 1.4rem; }
   }
-/* === MOBILE FIXES === */
-@media (max-width: 768px) {
-  .why-grid {
-    grid-template-columns: 1fr !important;
-    gap: 1.25rem !important;
+  @media (max-width: 768px) {
+    .why-grid { grid-template-columns: 1fr !important; gap: 1.25rem !important; }
+    .why-section > div:first-of-type { margin-bottom: 2rem !important; }
   }
-  .why-section > div:first-of-type {
-    margin-bottom: 2rem !important;
-  }
-}</style>
+</style>
 </head>
 <body>
+
 <!-- ── FIXED HEADER (banner + nav) ── -->
 <div class="site-header">
-<div class="urgency-banner">
-  🔥 Only 4 Online Coaching Spots Remaining This Month — Don't Miss Out
-  <span>Claim Yours</span>
-</div>
-<!-- ── NAV ── -->
-<nav style="position:relative; top:auto; background:rgba(10,10,10,0.98);">
-  <a href="index.html" class="nav-logo"><img src="logo.png" alt="Mr &amp; Mrs Lifestyle" style="height:36px;width:auto;display:block;" /></a>
-  <ul class="nav-links">
-    <li><a href="#transformations">Results</a></li>
-    <li><a href="#packages">Packages</a></li>
-    <li><a href="free-guide.html">Free Guide</a></li>
-    <li><a href="#coaches">Coaches</a></li>
-    <li><a href="transformations.html">Transformations</a></li>
-    <li><a href="#faq">FAQ</a></li>
-    <li><a href="blog.html">Blog</a></li>
-    <li><a href="apply.html" class="nav-cta">Apply Now</a></li>
-  </ul>
-<a href="apply.html" class="nav-mobile-cta" style="display:none; background:var(--gold); color:var(--black); font-size:0.72rem; font-weight:700; padding:0.45rem 0.9rem; border-radius:2px; letter-spacing:0.05em; text-transform:uppercase; white-space:nowrap; text-decoration:none; flex-shrink:0;">Apply Now</a>
-</nav>
+  <!-- FIX 1: "Claim Yours" is now a real anchor link scrolling to #packages -->
+  <div class="urgency-banner">
+    🔥 Only 4 Online Coaching Spots Remaining This Month — Don't Miss Out
+    <a href="#packages" class="claim-link">Claim Yours</a>
+  </div>
+
+  <nav style="position:relative; top:auto; background:rgba(10,10,10,0.98);">
+    <a href="index.html" class="nav-logo"><img src="logo.png" alt="Mr &amp; Mrs Lifestyle" style="height:36px;width:auto;display:block;" /></a>
+    <ul class="nav-links">
+      <li><a href="#transformations">Results</a></li>
+      <li><a href="#packages">Packages</a></li>
+      <li><a href="free-guide.html">Free Guide</a></li>
+      <li><a href="#coaches">Coaches</a></li>
+      <li><a href="transformations.html">Transformations</a></li>
+      <li><a href="#faq">FAQ</a></li>
+      <li><a href="blog.html">Blog</a></li>
+      <li><a href="apply.html" class="nav-cta">Apply Now</a></li>
+    </ul>
+    <a href="apply.html" class="nav-mobile-cta" style="display:none; background:var(--gold); color:var(--black); font-size:0.72rem; font-weight:700; padding:0.45rem 0.9rem; border-radius:2px; letter-spacing:0.05em; text-transform:uppercase; white-space:nowrap; text-decoration:none; flex-shrink:0;">Apply Now</a>
+  </nav>
 </div><!-- end site-header -->
+
 <!-- ── HERO ── -->
 <section class="hero" id="home">
   <div class="hero-bg"></div>
@@ -1143,7 +1012,8 @@
   </div>
   <div class="scroll-indicator">Scroll</div>
 </section>
-<!-- ── TRANSFORMATIONS (moved up to attract visitors immediately) ── -->
+
+<!-- ── TRANSFORMATIONS ── -->
 <section class="transformations-section" id="transformations">
   <div class="transforms-header">
     <div class="section-eyebrow" style="justify-content:center">Real Client Results</div>
@@ -1153,7 +1023,6 @@
     </p>
   </div>
   <div class="transforms-grid">
-    <!-- Card 1 — John S -->
     <div class="transform-card">
       <div class="transform-full-img">
         <img src="transform1.jpg" alt="John S transformation" style="width:100%; display:block; border-bottom: 3px solid var(--gold);" loading="lazy">
@@ -1164,7 +1033,6 @@
         <div class="transform-quote">"I came in looking for fat loss and walked out with a completely new body and mindset. Tarek built me a plan that actually fit my life — results I never thought possible at my age."</div>
       </div>
     </div>
-    <!-- Card 2 — Charlotte -->
     <div class="transform-card">
       <div class="transform-full-img">
         <img src="transform2.jpg" alt="Charlotte transformation" style="width:100%; display:block; border-bottom: 3px solid var(--gold);" loading="lazy">
@@ -1175,7 +1043,6 @@
         <div class="transform-quote">"Chloe completely changed how I see myself. I stopped hiding behind baggy clothes and started owning every room I walk into. This wasn't just a physical transformation — it changed everything."</div>
       </div>
     </div>
-    <!-- Card 3 — Max -->
     <div class="transform-card">
       <div class="transform-full-img">
         <img src="transform3.jpg" alt="Max transformation" style="width:100%; display:block; border-bottom: 3px solid var(--gold);" loading="lazy">
@@ -1191,6 +1058,7 @@
     <a href="#packages" class="btn-primary">Start Your Transformation</a>
   </div>
 </section>
+
 <!-- ── HOW IT WORKS ── -->
 <section style="background:var(--black);padding:5rem 3rem;border-top:1px solid rgba(201,168,76,0.08);">
   <div style="max-width:1000px;margin:0 auto;text-align:center;">
@@ -1227,6 +1095,7 @@
     </div>
   </div>
 </section>
+
 <!-- ── LEAD MAGNET ── -->
 <section style="background: var(--off-black); padding: 5rem 3rem;" id="lead-section">
   <div class="lead-magnet">
@@ -1256,6 +1125,7 @@
     </div>
   </div>
 </section>
+
 <!-- ── PACKAGES ── -->
 <section class="packages-section" id="packages">
   <div style="max-width:1100px; margin:0 auto;">
@@ -1333,34 +1203,48 @@
         <a href="apply.html" style="display:block;text-align:center;font-size:0.75rem;color:rgba(255,255,255,0.4);margin-top:0.25rem;">or apply for a free call first →</a>
       </div>
     </div>
-    <!-- Secondary packages row -->
+
+    <!-- FIX 2: Secondary packages — display:flex flex-direction:column justify-content:space-between added to each card so buttons always align -->
     <div class="secondary-packages" style="display:grid; grid-template-columns: repeat(4, 1fr); gap:1rem; margin-top:1.5rem;">
-      <div style="background:var(--charcoal); border:1px solid rgba(255,255,255,0.07); border-radius:4px; padding:1.25rem; text-align:center;">
-        <div style="font-size:0.7rem; color:var(--gold); letter-spacing:0.1em; text-transform:uppercase; margin-bottom:0.5rem;">Women</div>
-        <div style="font-family:var(--font-display); font-size:1rem; font-weight:700; margin-bottom:0.25rem;">Booty Builder</div>
-        <div style="font-size:1.3rem; font-weight:700; color:var(--gold); margin-bottom:0.75rem;">AED 649</div>
-        <a href="#" class="pkg-btn" style="font-size:0.75rem; padding:0.6rem;">Get It</a>
+      <div style="background:var(--charcoal); border:1px solid rgba(255,255,255,0.07); border-radius:4px; padding:1.25rem; text-align:center; display:flex; flex-direction:column; justify-content:space-between;">
+        <div>
+          <div style="font-size:0.7rem; color:var(--gold); letter-spacing:0.1em; text-transform:uppercase; margin-bottom:0.5rem;">Women</div>
+          <div style="font-family:var(--font-display); font-size:1rem; font-weight:700; margin-bottom:0.25rem;">Booty Builder</div>
+          <div style="font-size:1.3rem; font-weight:700; color:var(--gold); margin-bottom:0.75rem;">AED 649</div>
+        </div>
+        <!-- FIX 3: "Get It" now links to apply.html — swap for a Stripe link if you have one -->
+        <a href="apply.html" class="pkg-btn" style="font-size:0.75rem; padding:0.6rem;">Get It</a>
       </div>
-      <div style="background:var(--charcoal); border:1px solid rgba(255,255,255,0.07); border-radius:4px; padding:1.25rem; text-align:center;">
-        <div style="font-size:0.7rem; color:var(--gold); letter-spacing:0.1em; text-transform:uppercase; margin-bottom:0.5rem;">Men</div>
-        <div style="font-family:var(--font-display); font-size:1rem; font-weight:700; margin-bottom:0.25rem;">Ultimate Muscle Gain</div>
-        <div style="font-size:1.3rem; font-weight:700; color:var(--gold); margin-bottom:0.75rem;">AED 480</div>
-        <a href="#" class="pkg-btn" style="font-size:0.75rem; padding:0.6rem;">Get It</a>
+      <div style="background:var(--charcoal); border:1px solid rgba(255,255,255,0.07); border-radius:4px; padding:1.25rem; text-align:center; display:flex; flex-direction:column; justify-content:space-between;">
+        <div>
+          <div style="font-size:0.7rem; color:var(--gold); letter-spacing:0.1em; text-transform:uppercase; margin-bottom:0.5rem;">Men</div>
+          <div style="font-family:var(--font-display); font-size:1rem; font-weight:700; margin-bottom:0.25rem;">Ultimate Muscle Gain</div>
+          <div style="font-size:1.3rem; font-weight:700; color:var(--gold); margin-bottom:0.75rem;">AED 480</div>
+        </div>
+        <!-- FIX 3: "Get It" now links to apply.html — swap for a Stripe link if you have one -->
+        <a href="apply.html" class="pkg-btn" style="font-size:0.75rem; padding:0.6rem;">Get It</a>
       </div>
-      <div style="background:var(--charcoal); border:1px solid rgba(255,255,255,0.07); border-radius:4px; padding:1.25rem; text-align:center;">
-        <div style="font-size:0.7rem; color:var(--gold); letter-spacing:0.1em; text-transform:uppercase; margin-bottom:0.5rem;">All Levels</div>
-        <div style="font-family:var(--font-display); font-size:1rem; font-weight:700; margin-bottom:0.25rem;">Ultimate Fat Burn</div>
-        <div style="font-size:1.3rem; font-weight:700; color:var(--gold); margin-bottom:0.75rem;">AED 480</div>
-        <a href="#" class="pkg-btn" style="font-size:0.75rem; padding:0.6rem;">Get It</a>
+      <div style="background:var(--charcoal); border:1px solid rgba(255,255,255,0.07); border-radius:4px; padding:1.25rem; text-align:center; display:flex; flex-direction:column; justify-content:space-between;">
+        <div>
+          <div style="font-size:0.7rem; color:var(--gold); letter-spacing:0.1em; text-transform:uppercase; margin-bottom:0.5rem;">All Levels</div>
+          <div style="font-family:var(--font-display); font-size:1rem; font-weight:700; margin-bottom:0.25rem;">Ultimate Fat Burn</div>
+          <div style="font-size:1.3rem; font-weight:700; color:var(--gold); margin-bottom:0.75rem;">AED 480</div>
+        </div>
+        <!-- FIX 3: "Get It" now links to apply.html — swap for a Stripe link if you have one -->
+        <a href="apply.html" class="pkg-btn" style="font-size:0.75rem; padding:0.6rem;">Get It</a>
       </div>
-      <div style="background:var(--charcoal); border:1px solid rgba(255,255,255,0.07); border-radius:4px; padding:1.25rem; text-align:center;">
-        <div style="font-size:0.7rem; color:var(--gold); letter-spacing:0.1em; text-transform:uppercase; margin-bottom:0.5rem;">Add-On</div>
-        <div style="font-family:var(--font-display); font-size:1rem; font-weight:700; margin-bottom:0.25rem;">Tailor-Made Nutrition</div>
-        <div style="font-size:1.3rem; font-weight:700; color:var(--gold); margin-bottom:0.75rem;">AED 750</div>
-        <a href="#" class="pkg-btn" style="font-size:0.75rem; padding:0.6rem;">Get It</a>
+      <div style="background:var(--charcoal); border:1px solid rgba(255,255,255,0.07); border-radius:4px; padding:1.25rem; text-align:center; display:flex; flex-direction:column; justify-content:space-between;">
+        <div>
+          <div style="font-size:0.7rem; color:var(--gold); letter-spacing:0.1em; text-transform:uppercase; margin-bottom:0.5rem;">Add-On</div>
+          <div style="font-family:var(--font-display); font-size:1rem; font-weight:700; margin-bottom:0.25rem;">Tailor-Made Nutrition</div>
+          <div style="font-size:1.3rem; font-weight:700; color:var(--gold); margin-bottom:0.75rem;">AED 750</div>
+        </div>
+        <!-- FIX 3: "Get It" now links to apply.html — swap for a Stripe link if you have one -->
+        <a href="apply.html" class="pkg-btn" style="font-size:0.75rem; padding:0.6rem;">Get It</a>
       </div>
     </div>
   </div>
+
   <!-- Guarantee strip -->
   <div style="max-width:700px;margin:2.5rem auto 0;background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.2);border-radius:6px;padding:1.25rem 2rem;display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap;justify-content:center;text-align:center;">
     <div style="font-size:2rem;">🛡️</div>
@@ -1370,6 +1254,7 @@
     </div>
   </div>
 </section>
+
 <!-- ── 1-TO-1 PT ── -->
 <div class="pt-section" id="dubai-pt">
   <div class="pt-photo"></div>
@@ -1403,6 +1288,7 @@
     <a href="#contact" class="btn-primary">Book a Free Consultation</a>
   </div>
 </div>
+
 <!-- ── WHY US ── -->
 <section class="why-section">
   <div style="text-align:center; margin-bottom:4rem;">
@@ -1442,6 +1328,7 @@
     </div>
   </div>
 </section>
+
 <!-- ── COACHES ── -->
 <section class="coaches-section" id="coaches">
   <div style="text-align:center; margin-bottom:4rem;">
@@ -1489,6 +1376,7 @@
     </div>
   </div>
 </section>
+
 <!-- ── TESTIMONIALS ── -->
 <section class="testimonials-section">
   <div style="text-align:center; margin-bottom:4rem;">
@@ -1531,6 +1419,7 @@
     </div>
   </div>
 </section>
+
 <!-- ── COUPLES SECTION ── -->
 <section style="background: linear-gradient(135deg, #0f0f0f, #181818); padding: 6rem 3rem; border-top: 1px solid rgba(201,168,76,0.12);">
   <div style="max-width:1000px; margin:0 auto; display:grid; grid-template-columns:1fr 1fr; gap:5rem; align-items:center;" class="couples-grid">
@@ -1564,6 +1453,7 @@
     </div>
   </div>
 </section>
+
 <!-- ── URGENCY ── -->
 <section class="urgency-section" id="contact">
   <div class="spots-counter">
@@ -1599,6 +1489,7 @@
     <a href="free-guide.html" class="btn-ghost" style="font-size:0.9rem;">Download Free Blueprint</a>
   </div>
 </section>
+
 <!-- ── VIDEO TESTIMONIAL ── -->
 <section style="background:var(--black);padding:5rem 3rem;border-top:1px solid rgba(255,255,255,0.05);">
   <div style="max-width:800px;margin:0 auto;text-align:center;">
@@ -1628,6 +1519,7 @@
     </div>
   </div>
 </section>
+
 <!-- ── FAQ ── -->
 <section class="faq-section" id="faq">
   <div style="text-align:center; margin-bottom:3rem;">
@@ -1691,6 +1583,7 @@
     </div>
   </div>
 </section>
+
 <!-- ── INSTAGRAM ── -->
 <section style="background:var(--off-black);padding:4rem 3rem;border-top:1px solid rgba(255,255,255,0.05);text-align:center;">
   <div class="section-eyebrow" style="justify-content:center;">Follow Our Journey</div>
@@ -1701,24 +1594,23 @@
     <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
     @mrandmrslifestyle
   </a>
-  <!-- Static Instagram grid — 6 placeholder tiles linking to profile -->
   <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:4px;max-width:900px;margin:0 auto;border-radius:8px;overflow:hidden;">
-    <a href="https://www.instagram.com/mrandmrslifestyle/" target="_blank" class="ig-tile" style="aspect-ratio:1;background:var(--charcoal);display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative;">
+    <a href="https://www.instagram.com/mrandmrslifestyle/" target="_blank" style="aspect-ratio:1;background:var(--charcoal);display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative;">
       <img src="t1_1.jpg" style="width:100%;height:100%;object-fit:cover;filter:brightness(0.85);transition:filter 0.3s;" onmouseover="this.style.filter='brightness(1)'" onmouseout="this.style.filter='brightness(0.85)'" alt="@mrandmrslifestyle">
     </a>
-    <a href="https://www.instagram.com/mrandmrslifestyle/" target="_blank" class="ig-tile" style="aspect-ratio:1;background:var(--charcoal);display:flex;align-items:center;justify-content:center;overflow:hidden;">
+    <a href="https://www.instagram.com/mrandmrslifestyle/" target="_blank" style="aspect-ratio:1;background:var(--charcoal);display:flex;align-items:center;justify-content:center;overflow:hidden;">
       <img src="t1_4.jpg" style="width:100%;height:100%;object-fit:cover;filter:brightness(0.85);transition:filter 0.3s;" onmouseover="this.style.filter='brightness(1)'" onmouseout="this.style.filter='brightness(0.85)'" alt="@mrandmrslifestyle">
     </a>
-    <a href="https://www.instagram.com/mrandmrslifestyle/" target="_blank" class="ig-tile" style="aspect-ratio:1;background:var(--charcoal);display:flex;align-items:center;justify-content:center;overflow:hidden;">
+    <a href="https://www.instagram.com/mrandmrslifestyle/" target="_blank" style="aspect-ratio:1;background:var(--charcoal);display:flex;align-items:center;justify-content:center;overflow:hidden;">
       <img src="t2_1.jpg" style="width:100%;height:100%;object-fit:cover;filter:brightness(0.85);transition:filter 0.3s;" onmouseover="this.style.filter='brightness(1)'" onmouseout="this.style.filter='brightness(0.85)'" alt="@mrandmrslifestyle">
     </a>
-    <a href="https://www.instagram.com/mrandmrslifestyle/" target="_blank" class="ig-tile" style="aspect-ratio:1;background:var(--charcoal);display:flex;align-items:center;justify-content:center;overflow:hidden;">
+    <a href="https://www.instagram.com/mrandmrslifestyle/" target="_blank" style="aspect-ratio:1;background:var(--charcoal);display:flex;align-items:center;justify-content:center;overflow:hidden;">
       <img src="t2_4.jpg" style="width:100%;height:100%;object-fit:cover;filter:brightness(0.85);transition:filter 0.3s;" onmouseover="this.style.filter='brightness(1)'" onmouseout="this.style.filter='brightness(0.85)'" alt="@mrandmrslifestyle">
     </a>
-    <a href="https://www.instagram.com/mrandmrslifestyle/" target="_blank" class="ig-tile" style="aspect-ratio:1;background:var(--charcoal);display:flex;align-items:center;justify-content:center;overflow:hidden;">
+    <a href="https://www.instagram.com/mrandmrslifestyle/" target="_blank" style="aspect-ratio:1;background:var(--charcoal);display:flex;align-items:center;justify-content:center;overflow:hidden;">
       <img src="t3_3.jpg" style="width:100%;height:100%;object-fit:cover;filter:brightness(0.85);transition:filter 0.3s;" onmouseover="this.style.filter='brightness(1)'" onmouseout="this.style.filter='brightness(0.85)'" alt="@mrandmrslifestyle">
     </a>
-    <a href="https://www.instagram.com/mrandmrslifestyle/" target="_blank" class="ig-tile" style="aspect-ratio:1;background:var(--charcoal);display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative;">
+    <a href="https://www.instagram.com/mrandmrslifestyle/" target="_blank" style="aspect-ratio:1;background:var(--charcoal);display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative;">
       <img src="t4_3.jpg" style="width:100%;height:100%;object-fit:cover;filter:brightness(0.5);transition:filter 0.3s;" alt="@mrandmrslifestyle">
       <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;color:white;">
         <div style="font-size:1.2rem;font-weight:700;">+500</div>
@@ -1727,6 +1619,7 @@
     </a>
   </div>
 </section>
+
 <!-- ── CONTACT ── -->
 <section style="background:var(--charcoal);padding:4rem 3rem;border-top:1px solid rgba(255,255,255,0.06);" id="contact-form">
   <div style="max-width:600px;margin:0 auto;text-align:center;">
@@ -1761,6 +1654,7 @@
     </div>
   </div>
 </section>
+
 <!-- ── FOOTER ── -->
 <footer>
   <div class="footer-grid">
@@ -1810,6 +1704,7 @@
     </div>
   </div>
 </footer>
+
 <script>
   function toggleFaq(el) {
     const item = el.closest('.faq-item');
@@ -1826,7 +1721,6 @@
       alert('Please enter a valid email address.');
     }
   }
-  // Intersection observer for scroll animations
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
@@ -1841,7 +1735,6 @@
     el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
     observer.observe(el);
   });
-  // Safety net — force-show all cards after 1 second in case the observer misses any
   setTimeout(() => {
     document.querySelectorAll('.transform-card, .pkg-card, .why-card, .coach-card, .testi-card').forEach(el => {
       el.style.opacity = '1';
@@ -1850,7 +1743,6 @@
   }, 1000);
 </script>
 <script>
-// ── COUNTDOWN TIMER (resets end of each month) ───────────────────────
 function updateCountdown() {
   const now = new Date();
   const end = new Date(now.getFullYear(), now.getMonth() + 1, 1, 0, 0, 0);
@@ -1872,7 +1764,6 @@ function updateCountdown() {
 }
 updateCountdown();
 setInterval(updateCountdown, 1000);
-// ── CONTACT FORM ────────────────────────────────────────────────────
 async function sendContact() {
   const name  = document.getElementById('cf-name').value.trim();
   const email = document.getElementById('cf-email').value.trim();
