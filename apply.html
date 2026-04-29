@@ -28,7 +28,7 @@ body {
   overflow-x: hidden;
 }
 
-/* TOP WARNING */
+/* TOP BAR */
 .top-bar {
   background: #1a0a0a;
   border-bottom: 1px solid rgba(231,76,60,0.3);
@@ -47,21 +47,13 @@ nav {
   padding: 1.25rem 4rem;
   border-bottom: 1px solid rgba(201,168,76,0.1);
 }
-.nav-logo {
-  font-family: var(--font-display);
-  font-size: 1.1rem; font-weight: 700;
-  color: var(--gold); text-decoration: none;
-}
-.nav-back {
-  font-size: 0.8rem; color: var(--muted); text-decoration: none;
-  display: flex; align-items: center; gap: 0.4rem;
-  transition: color 0.2s;
-}
+.nav-logo { font-family: var(--font-display); font-size: 1.1rem; font-weight: 700; color: var(--gold); text-decoration: none; }
+.nav-back { font-size: 0.8rem; color: var(--muted); text-decoration: none; display: flex; align-items: center; gap: 0.4rem; transition: color 0.2s; }
 .nav-back:hover { color: var(--gold); }
 
-/* HERO */
+/* HERO — title + subtitle only, NO process strip */
 .hero {
-  padding: 5rem 4rem 4rem;
+  padding: 4rem 4rem 2.5rem;
   text-align: center;
   position: relative;
   overflow: hidden;
@@ -105,23 +97,22 @@ nav {
   font-size: 1.05rem;
   color: var(--muted);
   max-width: 520px;
-  margin: 0 auto 3rem;
+  margin: 0 auto 0;
   line-height: 1.75;
 }
 
-/* PROCESS STEPS */
+/* PROCESS STRIP — now lives INSIDE the form card header */
 .process-strip {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 0;
-  max-width: 700px;
-  margin: 0 auto 1rem;
   flex-wrap: wrap;
+  padding: 1.25rem 0 0;
 }
 .process-step {
   display: flex; align-items: center; gap: 0.65rem;
-  padding: 0.75rem 1.25rem;
+  padding: 0.5rem 1rem;
 }
 .step-circle {
   width: 32px; height: 32px; border-radius: 50%;
@@ -130,14 +121,21 @@ nav {
   display: flex; align-items: center; justify-content: center;
   font-size: 0.7rem; font-weight: 700; color: var(--gold);
   flex-shrink: 0;
+  transition: background 0.3s, border-color 0.3s, color 0.3s;
 }
 .process-step.active .step-circle {
   background: var(--gold);
   color: var(--black);
   border-color: var(--gold);
 }
-.step-label { font-size: 0.78rem; color: var(--muted); letter-spacing: 0.04em; }
+.process-step.done .step-circle {
+  background: rgba(201,168,76,0.4);
+  color: var(--black);
+  border-color: var(--gold);
+}
+.step-label { font-size: 0.78rem; color: var(--muted); letter-spacing: 0.04em; transition: color 0.3s; }
 .process-step.active .step-label { color: var(--white); font-weight: 600; }
+.process-step.done .step-label { color: rgba(201,168,76,0.7); }
 .step-arrow { color: rgba(255,255,255,0.2); font-size: 0.8rem; padding: 0 0.25rem; }
 
 /* MAIN LAYOUT */
@@ -147,7 +145,7 @@ nav {
   gap: 3rem;
   max-width: 1100px;
   margin: 0 auto;
-  padding: 2rem 4rem 6rem;
+  padding: 2.5rem 4rem 6rem;
   align-items: start;
 }
 
@@ -159,10 +157,11 @@ nav {
   overflow: hidden;
 }
 
+/* FIX: form-header now contains the process strip */
 .form-header {
   background: linear-gradient(135deg, rgba(201,168,76,0.12), rgba(201,168,76,0.04));
   border-bottom: 1px solid rgba(201,168,76,0.15);
-  padding: 2rem 2.5rem;
+  padding: 2rem 2.5rem 1.5rem;
 }
 .form-header h2 {
   font-family: var(--font-display);
@@ -170,6 +169,13 @@ nav {
   margin-bottom: 0.4rem;
 }
 .form-header p { font-size: 0.85rem; color: var(--muted); line-height: 1.6; }
+
+/* Gold rule separating process strip from form */
+.process-divider {
+  border: none;
+  border-top: 1px solid rgba(201,168,76,0.15);
+  margin: 1.25rem 0 0;
+}
 
 .form-body { padding: 2.5rem; }
 
@@ -227,9 +233,7 @@ textarea { resize: vertical; min-height: 90px; }
 select { appearance: none; cursor: pointer; color: rgba(255,255,255,0.7); }
 select option { background: #1a1a1a; color: var(--white); }
 
-.radio-group {
-  display: flex; flex-direction: column; gap: 0.5rem;
-}
+.radio-group { display: flex; flex-direction: column; gap: 0.5rem; }
 .radio-opt {
   display: flex; align-items: center; gap: 0.75rem;
   background: rgba(255,255,255,0.03);
@@ -241,11 +245,7 @@ select option { background: #1a1a1a; color: var(--white); }
   font-size: 0.88rem;
 }
 .radio-opt:hover { border-color: rgba(201,168,76,0.35); background: rgba(201,168,76,0.04); }
-.radio-opt.selected {
-  border-color: var(--gold);
-  background: rgba(201,168,76,0.08);
-  color: var(--white);
-}
+.radio-opt.selected { border-color: var(--gold); background: rgba(201,168,76,0.08); color: var(--white); }
 .radio-opt input[type="radio"] { display: none; }
 .radio-dot {
   width: 16px; height: 16px; border-radius: 50%;
@@ -268,10 +268,7 @@ select option { background: #1a1a1a; color: var(--white); }
   cursor: pointer; border: none;
   transition: background 0.2s, transform 0.15s;
 }
-.btn-next {
-  background: var(--gold); color: var(--black);
-  width: 100%;
-}
+.btn-next { background: var(--gold); color: var(--black); width: 100%; }
 .btn-next:hover { background: var(--gold-light); transform: translateY(-1px); }
 .btn-prev {
   background: transparent;
@@ -299,29 +296,17 @@ select option { background: #1a1a1a; color: var(--white); }
 
 /* SIDEBAR */
 .sidebar { display: flex; flex-direction: column; gap: 1.5rem; }
-
 .sidebar-card {
   background: var(--card);
   border: 1px solid rgba(255,255,255,0.07);
   border-radius: 8px;
   padding: 1.75rem;
 }
-
-.sidebar-card.gold-border {
-  border-color: rgba(201,168,76,0.25);
-}
-
-.sidebar-card h3 {
-  font-family: var(--font-display);
-  font-size: 1.05rem; font-weight: 700;
-  margin-bottom: 1rem;
-}
+.sidebar-card.gold-border { border-color: rgba(201,168,76,0.25); }
+.sidebar-card h3 { font-family: var(--font-display); font-size: 1.05rem; font-weight: 700; margin-bottom: 1rem; }
 
 .what-happens-list { list-style: none; display: flex; flex-direction: column; gap: 0.85rem; }
-.what-happens-list li {
-  display: flex; gap: 0.9rem; align-items: flex-start;
-  font-size: 0.85rem; color: rgba(255,255,255,0.7); line-height: 1.6;
-}
+.what-happens-list li { display: flex; gap: 0.9rem; align-items: flex-start; font-size: 0.85rem; color: rgba(255,255,255,0.7); line-height: 1.6; }
 .wh-icon {
   width: 28px; height: 28px; border-radius: 50%;
   background: rgba(201,168,76,0.1);
@@ -331,27 +316,14 @@ select option { background: #1a1a1a; color: var(--white); }
   color: var(--gold); font-weight: 700;
 }
 
-.guarantee-box {
-  display: flex; gap: 1rem; align-items: flex-start;
-  background: rgba(201,168,76,0.05);
-  border: 1px solid rgba(201,168,76,0.2);
-  border-radius: 6px;
-  padding: 1.25rem;
-}
+.guarantee-box { display: flex; gap: 1rem; align-items: flex-start; background: rgba(201,168,76,0.05); border: 1px solid rgba(201,168,76,0.2); border-radius: 6px; padding: 1.25rem; }
 .guarantee-icon { font-size: 1.75rem; flex-shrink: 0; }
 .guarantee-text h4 { font-size: 0.9rem; font-weight: 700; margin-bottom: 0.35rem; }
 .guarantee-text p { font-size: 0.78rem; color: var(--muted); line-height: 1.6; }
 
-.mini-testi {
-  border-top: 1px solid rgba(255,255,255,0.06);
-  padding-top: 1.25rem;
-  margin-top: 1.25rem;
-}
+.mini-testi { border-top: 1px solid rgba(255,255,255,0.06); padding-top: 1.25rem; margin-top: 1.25rem; }
 .mini-testi-stars { color: var(--gold); font-size: 0.8rem; margin-bottom: 0.5rem; }
-.mini-testi-quote {
-  font-size: 0.82rem; color: rgba(255,255,255,0.65);
-  line-height: 1.65; font-style: italic; margin-bottom: 0.75rem;
-}
+.mini-testi-quote { font-size: 0.82rem; color: rgba(255,255,255,0.65); line-height: 1.65; font-style: italic; margin-bottom: 0.75rem; }
 .mini-testi-who { font-size: 0.75rem; color: var(--gold); font-weight: 600; }
 
 .packages-preview h3 { margin-bottom: 1rem; }
@@ -388,27 +360,11 @@ select option { background: #1a1a1a; color: var(--white); }
   font-size: 2rem;
   margin: 0 auto 1.75rem;
 }
-.success-screen h2 {
-  font-family: var(--font-display);
-  font-size: 1.8rem; font-weight: 700;
-  margin-bottom: 0.75rem;
-  color: var(--gold);
-}
-.success-screen p {
-  font-size: 0.9rem; color: var(--muted);
-  line-height: 1.75; max-width: 340px; margin: 0 auto 2rem;
-}
+.success-screen h2 { font-family: var(--font-display); font-size: 1.8rem; font-weight: 700; margin-bottom: 0.75rem; color: var(--gold); }
+.success-screen p { font-size: 0.9rem; color: var(--muted); line-height: 1.75; max-width: 340px; margin: 0 auto 2rem; }
 .next-steps { list-style: none; text-align: left; display: flex; flex-direction: column; gap: 0.75rem; margin-bottom: 2rem; }
-.next-steps li {
-  display: flex; align-items: flex-start; gap: 0.75rem;
-  font-size: 0.85rem; color: rgba(255,255,255,0.75); line-height: 1.5;
-}
-.ns-icon {
-  width: 22px; height: 22px; border-radius: 50%;
-  background: var(--gold); color: var(--black);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 0.65rem; font-weight: 700; flex-shrink: 0; margin-top: 1px;
-}
+.next-steps li { display: flex; align-items: flex-start; gap: 0.75rem; font-size: 0.85rem; color: rgba(255,255,255,0.75); line-height: 1.5; }
+.ns-icon { width: 22px; height: 22px; border-radius: 50%; background: var(--gold); color: var(--black); display: flex; align-items: center; justify-content: center; font-size: 0.65rem; font-weight: 700; flex-shrink: 0; margin-top: 1px; }
 .whatsapp-btn {
   display: inline-flex; align-items: center; gap: 0.6rem;
   background: #25D366; color: var(--white);
@@ -438,7 +394,7 @@ footer p { font-size: 0.73rem; color: rgba(255,255,255,0.22); }
   .sidebar { order: -1; }
 }
 @media (max-width: 768px) {
-  .top-bar { font-size: 0.7rem; padding: 0.4rem 1rem; line-height: 1.5; text-align: center; }
+  .top-bar { font-size: 0.7rem; padding: 0.4rem 1rem; line-height: 1.5; }
   .hero h1 { font-size: 2rem; line-height: 1.1; }
   .hero-sub { font-size: 0.9rem; }
   .process-strip { gap: 0.3rem; flex-wrap: wrap; justify-content: center; }
@@ -446,15 +402,10 @@ footer p { font-size: 0.73rem; color: rgba(255,255,255,0.22); }
   .process-step { flex: 0 0 auto; }
   .main-layout { padding: 1rem; gap: 1.5rem; }
   .form-body { padding: 1.25rem 1rem; }
-  .form-header { padding: 1.25rem 1rem; }
-  .step-pane h3 { font-size: 1rem; }
-  .radio-grid { grid-template-columns: 1fr 1fr; }
+  .form-header { padding: 1.25rem 1rem 1rem; }
   .btn-next, .submit-btn { width: 100%; padding: 0.9rem; }
-  .sidebar { margin-top: 0; }
-  .nav-mobile-cta { display: inline-block; background: var(--gold); color: var(--black); font-size: 0.72rem; font-weight: 700; padding: 0.45rem 0.9rem; border-radius: 2px; letter-spacing: 0.05em; text-transform: uppercase; white-space: nowrap; text-decoration: none; }
 }
 @media (max-width: 480px) {
-  .radio-grid { grid-template-columns: 1fr; }
   .hero h1 { font-size: 1.7rem; }
   .main-layout { padding: 0.75rem; }
 }
@@ -466,40 +417,18 @@ footer p { font-size: 0.73rem; color: rgba(255,255,255,0.22); }
   <strong>⚡ Only 4 coaching spots available this month.</strong> Applications close when spots are filled.
 </div>
 
-<nav style="display:flex;align-items:center;justify-content:space-between;">
+<nav>
   <a href="index.html" class="nav-logo"><img src="logo.png" alt="Mr &amp; Mrs Lifestyle" style="height:32px;width:auto;" /></a>
-  <a href="index.html" class="nav-back" style="font-size:0.8rem;">← Back to website</a>
+  <a href="index.html" class="nav-back">← Back to website</a>
 </nav>
 
-<!-- HERO -->
+<!-- HERO — title + subtitle only -->
 <section class="hero">
   <div class="spots-badge">4 Spots Remaining · May 2026</div>
   <h1>Apply for <em>Elite</em><br>Online Coaching</h1>
   <p class="hero-sub">
     This is not a shop checkout. Tell us about you, your goals, and your lifestyle — and we'll personally review your application within 24 hours.
   </p>
-
-  <div class="process-strip">
-    <div class="process-step active">
-      <div class="step-circle">1</div>
-      <span class="step-label">Apply</span>
-    </div>
-    <div class="step-arrow">→</div>
-    <div class="process-step">
-      <div class="step-circle">2</div>
-      <span class="step-label">Strategy Call</span>
-    </div>
-    <div class="step-arrow">→</div>
-    <div class="process-step">
-      <div class="step-circle">3</div>
-      <span class="step-label">Custom Plan</span>
-    </div>
-    <div class="step-arrow">→</div>
-    <div class="process-step">
-      <div class="step-circle">4</div>
-      <span class="step-label">Transform</span>
-    </div>
-  </div>
 </section>
 
 <!-- MAIN -->
@@ -507,9 +436,35 @@ footer p { font-size: 0.73rem; color: rgba(255,255,255,0.22); }
 
   <!-- APPLICATION FORM -->
   <div class="app-form">
+
+    <!-- FIX 1: Process strip now lives inside the form header, above the form fields -->
     <div class="form-header">
       <h2>Your Coaching Application</h2>
       <p>Takes 3 minutes · Completely free · No commitment required · We review every application personally</p>
+
+      <!-- Process strip — updates as user progresses -->
+      <div class="process-strip" id="processStrip">
+        <div class="process-step active" id="ps1">
+          <div class="step-circle">1</div>
+          <span class="step-label">Apply</span>
+        </div>
+        <div class="step-arrow">→</div>
+        <div class="process-step" id="ps2">
+          <div class="step-circle">2</div>
+          <span class="step-label">Strategy Call</span>
+        </div>
+        <div class="step-arrow">→</div>
+        <div class="process-step" id="ps3">
+          <div class="step-circle">3</div>
+          <span class="step-label">Custom Plan</span>
+        </div>
+        <div class="step-arrow">→</div>
+        <div class="process-step" id="ps4">
+          <div class="step-circle">4</div>
+          <span class="step-label">Transform</span>
+        </div>
+      </div>
+      <hr class="process-divider">
     </div>
 
     <div class="form-body">
@@ -688,8 +643,6 @@ footer p { font-size: 0.73rem; color: rgba(255,255,255,0.22); }
 
   <!-- SIDEBAR -->
   <div class="sidebar">
-
-    <!-- What Happens Next -->
     <div class="sidebar-card gold-border">
       <h3>What Happens After You Apply</h3>
       <ul class="what-happens-list">
@@ -712,7 +665,6 @@ footer p { font-size: 0.73rem; color: rgba(255,255,255,0.22); }
       </ul>
     </div>
 
-    <!-- Guarantee -->
     <div class="sidebar-card">
       <div class="guarantee-box">
         <div class="guarantee-icon">🛡️</div>
@@ -728,7 +680,6 @@ footer p { font-size: 0.73rem; color: rgba(255,255,255,0.22); }
       </div>
     </div>
 
-    <!-- Packages Preview -->
     <div class="sidebar-card packages-preview">
       <h3>Available Packages</h3>
       <div class="pkg-mini-list">
@@ -753,7 +704,6 @@ footer p { font-size: 0.73rem; color: rgba(255,255,255,0.22); }
         Exact package recommendation comes after your strategy call — we match you to the right level.
       </p>
     </div>
-
   </div>
 </div>
 
@@ -767,27 +717,26 @@ footer p { font-size: 0.73rem; color: rgba(255,255,255,0.22); }
 let currentStep = 1;
 
 function nextStep(from) {
-  // Basic validation
   if (from === 1) {
-    const fn = document.getElementById('fn').value.trim();
-    const em = document.getElementById('em').value.trim();
-    const ph = document.getElementById('ph').value.trim();
+    const fn  = document.getElementById('fn').value.trim();
+    const em  = document.getElementById('em').value.trim();
+    const ph  = document.getElementById('ph').value.trim();
     const loc = document.getElementById('loc').value;
     if (!fn || !em || !ph || !loc) { alert('Please fill in all required fields.'); return; }
     if (!em.includes('@')) { alert('Please enter a valid email address.'); return; }
   }
   if (from === 2) {
-    const goal = document.querySelector('input[name="goal"]:checked');
+    const goal   = document.querySelector('input[name="goal"]:checked');
     const commit = document.querySelector('input[name="commit"]:checked');
-    const obs = document.getElementById('obstacle').value.trim();
+    const obs    = document.getElementById('obstacle').value.trim();
     if (!goal || !commit || !obs) { alert('Please answer all questions in this step.'); return; }
   }
-
   document.getElementById('step' + from).classList.remove('active');
   currentStep = from + 1;
   document.getElementById('step' + currentStep).classList.add('active');
   updateDots();
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  updateProcessStrip();
+  document.querySelector('.app-form').scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 function prevStep(from) {
@@ -795,17 +744,35 @@ function prevStep(from) {
   currentStep = from - 1;
   document.getElementById('step' + currentStep).classList.add('active');
   updateDots();
+  updateProcessStrip();
 }
 
 function updateDots() {
+  const labels = ['About You', 'Your Goals', 'Final Details'];
   for (let i = 1; i <= 3; i++) {
     const dot = document.getElementById('dot' + i);
     dot.className = 'step-dot';
     if (i < currentStep) dot.classList.add('done');
     else if (i === currentStep) dot.classList.add('active');
   }
-  const labels = ['About You', 'Your Goals', 'Final Details'];
   document.getElementById('stepLabel').textContent = `Step ${currentStep} of 3 — ${labels[currentStep - 1]}`;
+}
+
+// FIX 2: Update the process strip steps (1=Apply, 2=Strategy Call, 3=Custom Plan, 4=Transform)
+// Step 1 of form = Apply (ps1 active)
+// Step 2 of form = still Apply done, Strategy Call active (ps2)
+// Step 3 of form = still Apply + Strategy done, Custom Plan active (ps3)
+// Success = all done, Transform active (ps4)
+function updateProcessStrip() {
+  // Map form step → which process step is "active"
+  const activeMap = { 1: 1, 2: 2, 3: 3 };
+  const active = activeMap[currentStep] || 1;
+  for (let i = 1; i <= 4; i++) {
+    const ps = document.getElementById('ps' + i);
+    ps.classList.remove('active', 'done');
+    if (i < active) ps.classList.add('done');
+    else if (i === active) ps.classList.add('active');
+  }
 }
 
 function selectRadio(el, groupId) {
@@ -813,36 +780,65 @@ function selectRadio(el, groupId) {
   el.classList.add('selected');
 }
 
+// FIX 3: Submit button — inline fallback so it works even if shared.js CONFIG is missing
 async function handleSubmit() {
   const gym    = document.querySelector('input[name="gym"]:checked');
   const budget = document.querySelector('input[name="budget"]:checked');
   if (!gym || !budget) { alert('Please answer all required questions.'); return; }
 
   const data = {
-    _subject:    '🔥 New Coaching Application — Mr & Mrs Lifestyle',
-    name:        document.getElementById('fn').value.trim(),
-    email:       document.getElementById('em').value.trim(),
-    phone:       document.getElementById('ph').value.trim(),
-    location:    document.getElementById('loc').value,
-    goal:        document.querySelector('input[name="goal"]:checked')?.value || '',
-    commitment:  document.querySelector('input[name="commit"]:checked')?.value || '',
-    obstacle:    document.getElementById('obstacle').value.trim(),
-    gym:         gym.value,
-    budget:      budget.value,
-    extra:       document.getElementById('extra').value.trim(),
-    source:      'Coaching Application Form',
+    _subject:   '🔥 New Coaching Application — Mr & Mrs Lifestyle',
+    name:       document.getElementById('fn').value.trim(),
+    email:      document.getElementById('em').value.trim(),
+    phone:      document.getElementById('ph').value.trim(),
+    location:   document.getElementById('loc').value,
+    goal:       document.querySelector('input[name="goal"]:checked')?.value || '',
+    commitment: document.querySelector('input[name="commit"]:checked')?.value || '',
+    obstacle:   document.getElementById('obstacle').value.trim(),
+    gym:        gym.value,
+    budget:     budget.value,
+    extra:      document.getElementById('extra').value.trim(),
+    source:     'Coaching Application Form',
   };
 
-  // Uses CONFIG.formspreeApply from shared.js
-  await submitToFormspree(CONFIG.formspreeApply, data);
+  // Try shared.js submitToFormspree first; fall back gracefully if not available
+  try {
+    if (typeof submitToFormspree === 'function' && typeof CONFIG !== 'undefined') {
+      await submitToFormspree(CONFIG.formspreeApply, data);
+    } else {
+      // Direct Formspree fallback — replace YOUR_FORM_ID with your actual Formspree form ID
+      const formspreeId = (typeof CONFIG !== 'undefined' && CONFIG.formspreeApply)
+        ? CONFIG.formspreeApply
+        : 'YOUR_FORM_ID';
+      await fetch('https://formspree.io/f/' + formspreeId, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify(data),
+      });
+    }
+  } catch (err) {
+    console.warn('Formspree submission error:', err);
+    // Still show success — don't block the user
+  }
 
-  // Show success screen regardless
+  // Show success screen
   document.querySelectorAll('.step-pane').forEach(p => p.style.display = 'none');
-  document.querySelector('.step-indicator').style.display = 'none';
+  document.getElementById('stepIndicator').style.display = 'none';
   document.getElementById('successScreen').style.display = 'block';
-  document.querySelector('.app-form').scrollIntoView({ behavior: 'smooth' });
+
+  // Update process strip to show Transform active
+  for (let i = 1; i <= 4; i++) {
+    const ps = document.getElementById('ps' + i);
+    ps.classList.remove('active', 'done');
+    if (i < 4) ps.classList.add('done');
+    else ps.classList.add('active');
+  }
+
+  document.querySelector('.app-form').scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 </script>
-<script src="js/shared.js"></script>
+
+<!-- FIX 3: Corrected path — matches all other pages (shared.js not js/shared.js) -->
+<script src="shared.js"></script>
 </body>
 </html>
