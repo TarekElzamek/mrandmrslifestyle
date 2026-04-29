@@ -1,0 +1,18 @@
+# robots.txt — mrandmrslifestyle.com
+# Allows all search engines to crawl the site fully
+
+User-agent: *
+Allow: /
+
+# Block image files from being indexed as standalone pages
+Disallow: /*.jpg$
+Disallow: /*.jpeg$
+Disallow: /*.png$
+Disallow: /*.mp4$
+Disallow: /*.pdf$
+
+# Block shared.js and other utility files
+Disallow: /shared.js
+
+# Sitemap location
+Sitemap: https://www.mrandmrslifestyle.com/sitemap.xml
