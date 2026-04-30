@@ -87,9 +87,7 @@
   .hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; padding: 0 3rem; position: relative; overflow: hidden; }
   .hero-bg { position: absolute; inset: 0; background: linear-gradient(135deg, rgba(10,10,10,0.97) 0%, rgba(28,28,28,0.85) 100%), url('https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=1800&q=80') center/cover no-repeat; }
   .hero-accent { position: absolute; top: -200px; right: -200px; width: 700px; height: 700px; background: radial-gradient(circle, rgba(201,168,76,0.08) 0%, transparent 70%); pointer-events: none; }
-  .hero-content { position: relative; z-index: 2; max-width: 580px; }
-  .hero-image { position: absolute; right: -2rem; bottom: 0; height: 92%; max-height: 780px; z-index: 2; pointer-events: none; filter: drop-shadow(0 0 40px rgba(201,168,76,0.15)); animation: heroFloat 6s ease-in-out infinite; }
-  @keyframes heroFloat { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
+  .hero-content { position: relative; z-index: 2; max-width: 750px; }
   .hero-eyebrow { display: inline-flex; align-items: center; gap: 0.75rem; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold); margin-bottom: 1.5rem; }
   .hero-eyebrow::before { content: ''; display: block; width: 30px; height: 1px; background: var(--gold); }
   .hero h1 { font-family: var(--font-display); font-size: clamp(3rem, 7vw, 6rem); font-weight: 900; line-height: 1.0; margin-bottom: 1.5rem; letter-spacing: -0.01em; }
@@ -233,7 +231,6 @@
     #mob-menu-btn { display: flex !important; }
     #mob-menu.open { display: flex !important; }
     .hero { padding: 6rem 1.4rem 3rem; min-height: 100svh; }
-    .hero-image { display: none; }
     .hero h1 { font-size: 2.8rem; line-height: 1.05; }
     .hero-sub { font-size: 0.95rem; }
     .hero-stats { gap: 1.5rem; flex-wrap: wrap; }
@@ -331,7 +328,6 @@
 <section class="hero" id="home">
   <div class="hero-bg"></div>
   <div class="hero-accent"></div>
-  <img src="couple-cartoon.png" alt="Tarek and Chloe — Mr & Mrs Lifestyle Dubai Personal Trainers" class="hero-image animate">
   <div class="hero-content" style="padding-top: 1rem;">
     <div class="hero-eyebrow animate">Dubai's Premier Coaching Couple</div>
     <h1 class="animate delay-1">Stop <em>Trying.</em><br>Start<br><em>Transforming.</em></h1>
