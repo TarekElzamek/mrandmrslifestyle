@@ -151,6 +151,11 @@ footer a { color: var(--gold); text-decoration: none; }
 
 @media (max-width: 900px) { .article-layout { grid-template-columns: 1fr; gap: 2rem; padding: 2rem 1.4rem 4rem; } .sidebar { position: static; } .article-hero { padding: 6rem 1.4rem 3rem; } nav { padding: .8rem 1.2rem; } .nav-links { display: none; } }
 @media (max-width: 768px) { .article-hero h1 { font-size: 1.8rem; } .article-body h2 { font-size: 1.3rem; } .author-box { flex-direction: column; } }
+
+@media (max-width: 768px) {
+  #mob-menu-btn { display: flex !important; }
+  #mob-menu.open { display: flex !important; }
+}
 </style>
 <!-- Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-2E0EXHN28J"></script>
@@ -169,10 +174,23 @@ footer a { color: var(--gold); text-decoration: none; }
     <li><a href="index.html">Home</a></li>
     <li><a href="transformations.html">Results</a></li>
     <li><a href="blog.html">Blog</a></li>
+      <li><a href="calculator.html">Calculator</a></li>
     <li><a href="free-guide.html">Free Guide</a></li>
     <li><a href="https://wa.me/971507871515?text=Hi%20Tarek%20%26%20Chloe%2C%20I%27d%20love%20to%20book%20a%20free%20strategy%20call%21" target="_blank" class="nav-cta">Apply Now</a></li>
   </ul>
+<button id="mob-menu-btn" onclick="toggleMobMenu()" style="display:none;background:none;border:1px solid rgba(201,168,76,0.4);border-radius:4px;padding:0.4rem 0.5rem;cursor:pointer;flex-direction:column;gap:4px;align-items:center;justify-content:center;"><span style="display:block;width:18px;height:2px;background:#C9A84C;border-radius:2px;"></span><span style="display:block;width:18px;height:2px;background:#C9A84C;border-radius:2px;"></span><span style="display:block;width:18px;height:2px;background:#C9A84C;border-radius:2px;"></span></button>
 </nav>
+
+  <!-- MOBILE MENU -->
+  <div id="mob-menu" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:999;background:rgba(10,10,10,0.98);flex-direction:column;align-items:center;justify-content:center;gap:1.5rem;">
+    <button onclick="toggleMobMenu()" style="position:absolute;top:1.5rem;right:1.5rem;background:none;border:none;color:#C9A84C;font-size:1.8rem;cursor:pointer;">✕</button>
+    <a href="index.html" style="color:#fff;text-decoration:none;font-size:1.4rem;font-weight:700;">Home</a>
+    <a href="calculator.html" style="color:#C9A84C;text-decoration:none;font-size:1.4rem;font-weight:700;">Calculator</a>
+    <a href="transformations.html" style="color:#fff;text-decoration:none;font-size:1.4rem;font-weight:700;">Results</a>
+    <a href="blog.html" style="color:#fff;text-decoration:none;font-size:1.4rem;font-weight:700;">Blog</a>
+    <a href="free-guide.html" style="color:#fff;text-decoration:none;font-size:1.4rem;font-weight:700;">Free Guide</a>
+    <a href="https://wa.me/971507871515?text=Hi%20Tarek%20%26%20Chloe%2C%20I%27d%20love%20to%20book%20a%20free%20strategy%20call%21" target="_blank" style="background:#C9A84C;color:#0A0A0A;text-decoration:none;font-size:1rem;font-weight:700;padding:1rem 2.5rem;border-radius:2px;letter-spacing:0.06em;text-transform:uppercase;">Book Free Call</a>
+  </div>
 
 <div class="article-hero">
   <div class="article-tag">Fat Loss · Dubai Life · Nutrition</div>
@@ -373,5 +391,9 @@ footer a { color: var(--gold); text-decoration: none; }
 
 <script src="shared.js"></script>
 <script src="chat-widget.js" defer></script>
+
+<script>
+function toggleMobMenu() { const m = document.getElementById('mob-menu'); m.classList.toggle('open'); document.body.style.overflow = m.classList.contains('open') ? 'hidden' : ''; }
+</script>
 </body>
 </html>
