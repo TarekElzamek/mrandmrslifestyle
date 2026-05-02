@@ -443,7 +443,7 @@
         <div class="pkg-tagline">For Men & Women — get the foundations right and build momentum fast.</div>
         <div class="pkg-price"><span class="currency">AED </span><span class="amount">299</span><div class="period">per month</div></div>
         <ul class="pkg-features"><li>Custom 8-week workout plan</li><li>Macro & calorie targets</li><li>Progress tracking templates</li><li>Exercise video library</li><li>Email support</li></ul>
-        <a href="https://buy.stripe.com/3cIaEX1Ua0wC8Zv3WXdMI0Y" target="_blank" class="pkg-btn" style="margin-bottom:0.5rem;">Buy Now — AED 299/mo</a>
+        <a href="#" onclick="openIntakeModal('https://buy.stripe.com/3cIaEX1Ua0wC8Zv3WXdMI0Y', 'Economy Pack', 'AED 299/month'); return false;" class="pkg-btn" style="margin-bottom:0.5rem;">Buy Now — AED 299/mo</a>
         <a href="apply.html" style="display:block;text-align:center;font-size:0.75rem;color:rgba(255,255,255,0.4);margin-top:0.25rem;">or apply for a free call first →</a>
       </div>
       <div class="pkg-card featured">
@@ -453,7 +453,7 @@
         <div class="pkg-tagline">Work directly with Coach Tarek & Coach Chloe. The full Mr & Mrs Lifestyle experience.</div>
         <div class="pkg-price"><span class="currency">AED </span><span class="amount">899</span><div class="period">per month · limited spots</div></div>
         <ul class="pkg-features"><li>Fully personalised training plan</li><li>Custom nutrition & meal planning</li><li>Weekly check-in calls with Tarek & Chloe</li><li>WhatsApp / 24-7 direct coach access</li><li>Progress photos & body composition tracking</li><li>Plan adjustments every 2 weeks</li><li>Lifetime access to resources</li></ul>
-        <a href="https://buy.stripe.com/fZu7sL6aqa7cgrX2STdMI0Z" target="_blank" class="pkg-btn" style="margin-bottom:0.5rem;">Buy Now — AED 899/mo</a>
+        <a href="#" onclick="openIntakeModal('https://buy.stripe.com/fZu7sL6aqa7cgrX2STdMI0Z', 'Elite Coaching Experience', 'AED 899/month'); return false;" class="pkg-btn" style="margin-bottom:0.5rem;">Buy Now — AED 899/mo</a>
         <a href="apply.html" style="display:block;text-align:center;font-size:0.75rem;color:rgba(255,255,255,0.4);margin-top:0.25rem;">or apply for a free call first →</a>
       </div>
       <div class="pkg-card">
@@ -462,7 +462,7 @@
         <div class="pkg-tagline">The complete premium experience — for those who want maximum results and maximum support.</div>
         <div class="pkg-price"><span class="currency">AED </span><span class="amount">1,999</span><div class="period">per month · full VIP access</div></div>
         <ul class="pkg-features"><li>Everything in Elite, plus:</li><li>Bi-weekly video coaching sessions</li><li>Tailor-made nutrition plan (new each phase)</li><li>Supplement protocol & guidance</li><li>Priority response — under 2 hours</li><li>Full lifestyle & mindset coaching</li><li>Post-programme maintenance plan</li></ul>
-        <a href="https://buy.stripe.com/3cIeVdgP46V0b7D511dMI10" target="_blank" class="pkg-btn" style="margin-bottom:0.5rem;">Buy Now — AED 1,999/mo</a>
+        <a href="#" onclick="openIntakeModal('https://buy.stripe.com/3cIeVdgP46V0b7D511dMI10', 'VIP Online Coaching', 'AED 1,999/month'); return false;" class="pkg-btn" style="margin-bottom:0.5rem;">Buy Now — AED 1,999/mo</a>
         <a href="apply.html" style="display:block;text-align:center;font-size:0.75rem;color:rgba(255,255,255,0.4);margin-top:0.25rem;">or apply for a free call first →</a>
       </div>
     </div>
@@ -684,6 +684,104 @@ setTimeout(() => { document.querySelectorAll('.transform-card, .pkg-card, .why-c
 function updateCountdown() { const now = new Date(); const end = new Date(now.getFullYear(), now.getMonth() + 1, 1, 0, 0, 0); const diff = end - now; if (diff <= 0) return; const days = Math.floor(diff / 86400000); const hrs = Math.floor((diff % 86400000) / 3600000); const mins = Math.floor((diff % 3600000) / 60000); const secs = Math.floor((diff % 60000) / 1000); const pad = n => String(n).padStart(2,'0'); const d = document.getElementById('cd-days'); const h = document.getElementById('cd-hrs'); const m = document.getElementById('cd-min'); const s = document.getElementById('cd-sec'); if(d) d.textContent = pad(days); if(h) h.textContent = pad(hrs); if(m) m.textContent = pad(mins); if(s) s.textContent = pad(secs); }
 updateCountdown(); setInterval(updateCountdown, 1000);
 async function sendContact() { const name = document.getElementById('cf-name').value.trim(); const email = document.getElementById('cf-email').value.trim(); const msg = document.getElementById('cf-msg').value.trim(); if (!name || !email || !msg) { alert('Please fill in all fields.'); return; } if (!email.includes('@')) { alert('Please enter a valid email.'); return; } await submitToFormspree(CONFIG.formspreeApply, { _subject: '💬 Website Enquiry from ' + name, _replyto: email, name, email, message: msg, source: 'Homepage Contact Form' }); document.getElementById('cf-success').style.display = 'block'; document.getElementById('cf-name').value = ''; document.getElementById('cf-email').value = ''; document.getElementById('cf-msg').value = ''; }
+</script>
+
+<!-- INTAKE MODAL -->
+<div id="intake-modal" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.85);backdrop-filter:blur(6px);align-items:center;justify-content:center;padding:1rem;">
+  <div style="background:#1C1C1C;border:1px solid rgba(201,168,76,0.3);border-radius:12px;padding:2.5rem 2rem;max-width:460px;width:100%;position:relative;max-height:90vh;overflow-y:auto;">
+    <button onclick="closeIntakeModal()" style="position:absolute;top:1rem;right:1rem;background:none;border:none;color:rgba(255,255,255,0.4);font-size:1.5rem;cursor:pointer;line-height:1;">✕</button>
+    <div style="font-size:0.68rem;letter-spacing:0.2em;text-transform:uppercase;color:#C9A84C;margin-bottom:0.5rem;font-weight:600;">Almost there</div>
+    <h3 id="modal-pkg-name" style="font-family:'Playfair Display',Georgia,serif;font-size:1.5rem;font-weight:700;margin-bottom:0.25rem;line-height:1.2;"></h3>
+    <p id="modal-pkg-price" style="font-size:0.85rem;color:rgba(255,255,255,0.4);margin-bottom:1.75rem;"></p>
+    <p style="font-size:0.85rem;color:rgba(255,255,255,0.55);line-height:1.6;margin-bottom:1.75rem;">Before we take you to checkout, tell us a little about yourself so we can hit the ground running the moment your payment goes through.</p>
+    <div style="display:flex;flex-direction:column;gap:0.85rem;">
+      <input id="im-name" type="text" placeholder="Full Name *" required style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);color:#fff;padding:0.85rem 1rem;border-radius:6px;font-size:0.9rem;font-family:inherit;outline:none;width:100%;">
+      <input id="im-email" type="email" placeholder="Email Address *" required style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);color:#fff;padding:0.85rem 1rem;border-radius:6px;font-size:0.9rem;font-family:inherit;outline:none;width:100%;">
+      <input id="im-phone" type="tel" placeholder="WhatsApp Number * (e.g. +971 50 000 0000)" required style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);color:#fff;padding:0.85rem 1rem;border-radius:6px;font-size:0.9rem;font-family:inherit;outline:none;width:100%;">
+      <select id="im-goal" style="background:#1C1C1C;border:1px solid rgba(255,255,255,0.12);color:rgba(255,255,255,0.75);padding:0.85rem 1rem;border-radius:6px;font-size:0.9rem;font-family:inherit;outline:none;width:100%;appearance:none;">
+        <option value="" disabled selected>Primary Goal *</option>
+        <option value="Fat Loss">Fat Loss</option>
+        <option value="Muscle Gain">Muscle Gain</option>
+        <option value="Body Recomposition">Body Recomposition (Lose fat + gain muscle)</option>
+        <option value="General Fitness">General Fitness & Health</option>
+        <option value="Pre/Postnatal">Pre/Postnatal Training</option>
+        <option value="Glutes Development">Glutes Development</option>
+        <option value="Couples Transformation">Couples Transformation</option>
+      </select>
+      <input id="im-location" type="text" placeholder="City / Country" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);color:#fff;padding:0.85rem 1rem;border-radius:6px;font-size:0.9rem;font-family:inherit;outline:none;width:100%;">
+    </div>
+    <div id="im-error" style="display:none;color:#e74c3c;font-size:0.82rem;margin-top:0.75rem;">Please fill in all required fields.</div>
+    <button onclick="submitIntake()" id="im-submit-btn" style="margin-top:1.25rem;width:100%;background:#C9A84C;color:#0A0A0A;border:none;padding:1rem;border-radius:6px;font-family:inherit;font-size:0.88rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;transition:background 0.2s;">Continue to Payment →</button>
+    <p style="text-align:center;font-size:0.72rem;color:rgba(255,255,255,0.25);margin-top:0.85rem;">🔒 Secure checkout powered by Stripe. Your details are sent to Tarek & Chloe before payment.</p>
+  </div>
+</div>
+
+<script>
+var _intakeStripeUrl = '';
+var _intakePkg = '';
+var _intakePrice = '';
+
+function openIntakeModal(stripeUrl, pkg, price) {
+  _intakeStripeUrl = stripeUrl;
+  _intakePkg = pkg;
+  _intakePrice = price;
+  document.getElementById('modal-pkg-name').textContent = pkg;
+  document.getElementById('modal-pkg-price').textContent = price;
+  document.getElementById('im-name').value = '';
+  document.getElementById('im-email').value = '';
+  document.getElementById('im-phone').value = '';
+  document.getElementById('im-goal').value = '';
+  document.getElementById('im-location').value = '';
+  document.getElementById('im-error').style.display = 'none';
+  document.getElementById('im-submit-btn').textContent = 'Continue to Payment →';
+  document.getElementById('im-submit-btn').disabled = false;
+  var modal = document.getElementById('intake-modal');
+  modal.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+}
+
+function closeIntakeModal() {
+  document.getElementById('intake-modal').style.display = 'none';
+  document.body.style.overflow = '';
+}
+
+async function submitIntake() {
+  var name  = document.getElementById('im-name').value.trim();
+  var email = document.getElementById('im-email').value.trim();
+  var phone = document.getElementById('im-phone').value.trim();
+  var goal  = document.getElementById('im-goal').value;
+  if (!name || !email || !phone || !goal) {
+    document.getElementById('im-error').style.display = 'block';
+    return;
+  }
+  document.getElementById('im-error').style.display = 'none';
+  var btn = document.getElementById('im-submit-btn');
+  btn.textContent = 'Sending...';
+  btn.disabled = true;
+  try {
+    await fetch('https://formspree.io/f/mdayvono', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({
+        _subject: '💳 New Purchase: ' + _intakePkg + ' — ' + name,
+        package: _intakePkg,
+        price: _intakePrice,
+        name: name,
+        email: email,
+        phone: phone,
+        goal: goal,
+        location: document.getElementById('im-location').value.trim() || 'Not provided',
+        source: 'Buy Now — Home Page'
+      })
+    });
+  } catch(e) { console.error('Formspree error:', e); }
+  closeIntakeModal();
+  window.location.href = _intakeStripeUrl;
+}
+
+document.getElementById('intake-modal').addEventListener('click', function(e) {
+  if (e.target === this) closeIntakeModal();
+});
 </script>
 <script src="shared.js"></script>
 <script src="chat-widget.js" defer></script>
