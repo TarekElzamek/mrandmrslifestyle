@@ -1,18 +1,19 @@
-# robots.txt — mrandmrslifestyle.com
-# Allows all search engines to crawl the site fully
-
 User-agent: *
 Allow: /
 
-# Block image files from being indexed as standalone pages
-Disallow: /*.jpg$
-Disallow: /*.jpeg$
-Disallow: /*.png$
-Disallow: /*.mp4$
-Disallow: /*.pdf$
+# Block old Wix pages permanently
+Disallow: /shop
+Disallow: /product-page/
+Disallow: /privacy-policy
+Disallow: /contact-us
+Disallow: /about-us
+Disallow: /book-online
+Disallow: /services-5
+Disallow: /product-page/free-download-macro-cheat-sheet
+Disallow: /product-page/high-protein-recipe-pack
 
-# Block shared.js and other utility files
-Disallow: /shared.js
+# Block thank-you page from being indexed
+Disallow: /thank-you.html
 
 # Sitemap location
 Sitemap: https://www.mrandmrslifestyle.com/sitemap.xml
