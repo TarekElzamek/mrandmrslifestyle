@@ -1,0 +1,18 @@
+# Mr & Mrs Lifestyle — Redirects
+# Old Wix pages redirected to correct new pages (301 = permanent)
+
+/transformations                              /transformations.html                  301
+/faq                                          /#faq                                  301
+/calorie-calculator                           /calculator.html                       301
+/terms-and-conditions                         /privacy-policy.html                   301
+/product-page/abs-only-workout                /packages.html                         301
+/product-page/high-protein-recipe-pack        /free-guide.html                       301
+/product-page/free-download-macro-cheat-sheet /free-guide.html                       301
+/product-page-4                               /packages.html                         301
+/product-page-1                               /packages.html                         301
+/shop                                         /packages.html                         301
+/shop/                                        /packages.html                         301
+/book-online                                  /apply.html                            301
+/about-us                                     /index.html                            301
+/contact-us                                   /apply.html                            301
+/privacy-policy                               /privacy-policy.html                   301
