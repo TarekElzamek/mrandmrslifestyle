@@ -7,7 +7,7 @@
 <meta name="description" content="Chloe breaks down the science and the myths around glutes training — why most women are doing it wrong and the 3 things that actually drive growth.">
 <meta name="keywords" content="glutes training women, hip thrust, build glutes, women fitness Dubai, booty workout">
 <meta name="robots" content="index, follow">
-<meta name="author" content="Chloe Bennet — Mr & Mrs Lifestyle">
+<meta name="author" content="Chloe Antoniazzi — Mr & Mrs Lifestyle">
 <link rel="canonical" href="https://www.mrandmrslifestyle.com/blog-glutes-training-women.html">
 <meta property="og:title" content="The Truth About Glutes Training — What Actually Works for Women">
 <meta property="og:description" content="Why most women are training glutes wrong and the 3 things that actually drive growth. No fluff, just results.">
@@ -20,7 +20,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
-body{background:#0a0a0a;color:#e8e0d0;font-family:'DM Sans',sans-serif;font-size:17px;line-height:1.75;}
+body{background:#0a0a0a;color:#e8e0d0;font-family:'DM Sans',sans-serif;font-size:17px;line-height:1.75;-webkit-text-size-adjust:100%;}
 a{color:#C9A84C;text-decoration:none;}
 a:hover{text-decoration:underline;}
 
@@ -80,6 +80,124 @@ nav{position:sticky;top:0;z-index:100;background:rgba(10,10,10,0.97);backdrop-fi
 footer{background:#050505;border-top:1px solid rgba(255,255,255,0.06);padding:32px 40px;text-align:center;}
 footer p{font-size:13px;color:rgba(255,255,255,0.3);}
 footer a{color:#C9A84C;}
+
+/* ── MOBILE RESPONSIVE ─────────────────────────────── */
+@media (max-width: 768px) {
+  nav {
+    padding: 12px 20px;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .nav-links {
+    display: none; /* hide desktop links on mobile */
+  }
+  .nav-logo img { height: 32px; }
+
+  .hero { height: 320px; }
+  .hero-title { font-size: 26px !important; }
+  .hero-content { bottom: 28px; padding: 0 16px; }
+  .hero-category { font-size: 11px; }
+  .hero-meta { font-size: 12px; }
+
+  .article-wrap {
+    padding: 32px 18px 60px;
+  }
+  .article-wrap h2 { font-size: 22px; margin: 32px 0 12px; }
+  .article-wrap h3 { font-size: 18px; }
+  .article-wrap p  { font-size: 16px; line-height: 1.7; }
+  .article-wrap li { font-size: 16px; }
+
+  .tip-box { padding: 16px 18px; }
+  .tip-box p { font-size: 15px; }
+
+  .cta-box { padding: 28px 20px; }
+  .cta-box h3 { font-size: 22px; }
+  .cta-box p  { font-size: 14px; }
+  .cta-btn {
+    display: block;
+    width: 100%;
+    text-align: center;
+    padding: 16px 20px;
+    font-size: 13px;
+  }
+
+  .author-box {
+    flex-direction: column;
+    gap: 14px;
+  }
+  .author-avatar { width: 52px; height: 52px; font-size: 18px; }
+  .author-name { font-size: 15px; }
+  .author-bio  { font-size: 13px; }
+
+  footer { padding: 24px 20px; }
+  footer p { font-size: 12px; }
+}
+
+@media (max-width: 480px) {
+  .hero { height: 280px; }
+  .hero-title { font-size: 22px !important; line-height: 1.2 !important; }
+  .article-wrap { padding: 24px 16px 48px; }
+  .article-wrap h2 { font-size: 20px; }
+  .cta-box h3 { font-size: 20px; }
+}
+
+/* Mobile nav hamburger menu */
+.mobile-nav-toggle {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  flex-direction: column;
+  gap: 5px;
+}
+.mobile-nav-toggle span {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: #C9A84C;
+  border-radius: 2px;
+}
+@media (max-width: 768px) {
+  .mobile-nav-toggle { display: flex; }
+  .mobile-menu {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(10,10,10,0.98);
+    z-index: 999;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 32px;
+  }
+  .mobile-menu.open { display: flex; }
+  .mobile-menu a {
+    color: #fff;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 20px;
+    font-weight: 500;
+    text-decoration: none;
+    letter-spacing: 0.05em;
+  }
+  .mobile-menu a:hover { color: #C9A84C; }
+  .mobile-menu-close {
+    position: absolute;
+    top: 24px; right: 24px;
+    background: none; border: none;
+    color: #C9A84C; font-size: 28px;
+    cursor: pointer; line-height: 1;
+  }
+  .mobile-menu .mobile-cta {
+    background: #C9A84C;
+    color: #000 !important;
+    padding: 14px 40px;
+    border-radius: 3px;
+    font-weight: 700 !important;
+    font-size: 15px !important;
+  }
+}
+
 </style>
 
 <script type="application/ld+json">
@@ -93,7 +211,7 @@ footer a{color:#C9A84C;}
   "dateModified": "2026-05-11",
   "author": {
     "@type": "Person",
-    "name": "Chloe Bennet",
+    "name": "Chloe Antoniazzi",
     "url": "https://www.mrandmrslifestyle.com"
   },
   "publisher": {
@@ -167,6 +285,23 @@ footer a{color:#C9A84C;}
     <a href="https://www.mrandmrslifestyle.com/free-guide.html">Free Guide</a>
     <a href="https://wa.me/971507871515?text=Hi%20Chloe%2C%20I%20read%20your%20glutes%20guide%20and%20I%27d%20love%20a%20free%20strategy%20call!" class="nav-cta">Apply Now</a>
   </div>
+
+  <!-- Mobile hamburger button -->
+  <button class="mobile-nav-toggle" onclick="document.getElementById('mobileMenu').classList.add('open')" aria-label="Open menu">
+    <span></span><span></span><span></span>
+  </button>
+
+  <!-- Mobile fullscreen menu -->
+  <div class="mobile-menu" id="mobileMenu">
+    <button class="mobile-menu-close" onclick="document.getElementById('mobileMenu').classList.remove('open')">&times;</button>
+    <a href="https://www.mrandmrslifestyle.com/index.html">Home</a>
+    <a href="https://www.mrandmrslifestyle.com/transformations.html">Results</a>
+    <a href="https://www.mrandmrslifestyle.com/blog.html">Blog</a>
+    <a href="https://www.mrandmrslifestyle.com/calculator.html">Calculator</a>
+    <a href="https://www.mrandmrslifestyle.com/free-guide.html">Free Guide</a>
+    <a href="https://www.mrandmrslifestyle.com/apply.html" class="mobile-cta">Apply Now</a>
+  </div>
+
 </nav>
 
 <div class="hero">
@@ -175,7 +310,7 @@ footer a{color:#C9A84C;}
   <div class="hero-content">
     <div class="hero-category">Training · Women · Glutes</div>
     <h1 class="hero-title">The Truth About Glutes Training — <em>What Actually Works for Women</em></h1>
-    <div class="hero-meta">By Chloe Bennet &nbsp;·&nbsp; 6 min read &nbsp;·&nbsp; May 2026</div>
+    <div class="hero-meta">By Chloe Antoniazzi &nbsp;·&nbsp; 6 min read &nbsp;·&nbsp; May 2026</div>
   </div>
 </div>
 
@@ -212,7 +347,7 @@ footer a{color:#C9A84C;}
   <div class="author-box">
     <div class="author-avatar">C</div>
     <div>
-      <div class="author-name">Chloe Bennet</div>
+      <div class="author-name">Chloe Antoniazzi</div>
       <div class="author-role">Coach · Mr & Mrs Lifestyle</div>
       <div class="author-bio">Certified coach at Mr & Mrs Lifestyle with 10+ years of experience transforming clients across Dubai and worldwide.</div>
     </div>

@@ -7,7 +7,7 @@
 <meta name="description" content="People who train with a partner are 65% more likely to stick to their programme. Here's how to make couple training work — without the relationship tension.">
 <meta name="keywords" content="couples training Dubai, train together, fitness couple, couples coaching Dubai, workout partner">
 <meta name="robots" content="index, follow">
-<meta name="author" content="Tarek & Chloe — Mr & Mrs Lifestyle">
+<meta name="author" content="Tarek & Chloe Antoniazzi — Mr & Mrs Lifestyle">
 <link rel="canonical" href="https://www.mrandmrslifestyle.com/blog-couples-training.html">
 <meta property="og:title" content="Training as a Couple: Why It Works Better Than Going Alone">
 <meta property="og:description" content="The research is clear — people who train with a partner are 65% more likely to succeed. Here's how to make it work.">
@@ -20,7 +20,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
-body{background:#0a0a0a;color:#e8e0d0;font-family:'DM Sans',sans-serif;font-size:17px;line-height:1.75;}
+body{background:#0a0a0a;color:#e8e0d0;font-family:'DM Sans',sans-serif;font-size:17px;line-height:1.75;-webkit-text-size-adjust:100%;}
 a{color:#C9A84C;text-decoration:none;}
 a:hover{text-decoration:underline;}
 
@@ -80,6 +80,124 @@ nav{position:sticky;top:0;z-index:100;background:rgba(10,10,10,0.97);backdrop-fi
 footer{background:#050505;border-top:1px solid rgba(255,255,255,0.06);padding:32px 40px;text-align:center;}
 footer p{font-size:13px;color:rgba(255,255,255,0.3);}
 footer a{color:#C9A84C;}
+
+/* ── MOBILE RESPONSIVE ─────────────────────────────── */
+@media (max-width: 768px) {
+  nav {
+    padding: 12px 20px;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .nav-links {
+    display: none; /* hide desktop links on mobile */
+  }
+  .nav-logo img { height: 32px; }
+
+  .hero { height: 320px; }
+  .hero-title { font-size: 26px !important; }
+  .hero-content { bottom: 28px; padding: 0 16px; }
+  .hero-category { font-size: 11px; }
+  .hero-meta { font-size: 12px; }
+
+  .article-wrap {
+    padding: 32px 18px 60px;
+  }
+  .article-wrap h2 { font-size: 22px; margin: 32px 0 12px; }
+  .article-wrap h3 { font-size: 18px; }
+  .article-wrap p  { font-size: 16px; line-height: 1.7; }
+  .article-wrap li { font-size: 16px; }
+
+  .tip-box { padding: 16px 18px; }
+  .tip-box p { font-size: 15px; }
+
+  .cta-box { padding: 28px 20px; }
+  .cta-box h3 { font-size: 22px; }
+  .cta-box p  { font-size: 14px; }
+  .cta-btn {
+    display: block;
+    width: 100%;
+    text-align: center;
+    padding: 16px 20px;
+    font-size: 13px;
+  }
+
+  .author-box {
+    flex-direction: column;
+    gap: 14px;
+  }
+  .author-avatar { width: 52px; height: 52px; font-size: 18px; }
+  .author-name { font-size: 15px; }
+  .author-bio  { font-size: 13px; }
+
+  footer { padding: 24px 20px; }
+  footer p { font-size: 12px; }
+}
+
+@media (max-width: 480px) {
+  .hero { height: 280px; }
+  .hero-title { font-size: 22px !important; line-height: 1.2 !important; }
+  .article-wrap { padding: 24px 16px 48px; }
+  .article-wrap h2 { font-size: 20px; }
+  .cta-box h3 { font-size: 20px; }
+}
+
+/* Mobile nav hamburger menu */
+.mobile-nav-toggle {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  flex-direction: column;
+  gap: 5px;
+}
+.mobile-nav-toggle span {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: #C9A84C;
+  border-radius: 2px;
+}
+@media (max-width: 768px) {
+  .mobile-nav-toggle { display: flex; }
+  .mobile-menu {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(10,10,10,0.98);
+    z-index: 999;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 32px;
+  }
+  .mobile-menu.open { display: flex; }
+  .mobile-menu a {
+    color: #fff;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 20px;
+    font-weight: 500;
+    text-decoration: none;
+    letter-spacing: 0.05em;
+  }
+  .mobile-menu a:hover { color: #C9A84C; }
+  .mobile-menu-close {
+    position: absolute;
+    top: 24px; right: 24px;
+    background: none; border: none;
+    color: #C9A84C; font-size: 28px;
+    cursor: pointer; line-height: 1;
+  }
+  .mobile-menu .mobile-cta {
+    background: #C9A84C;
+    color: #000 !important;
+    padding: 14px 40px;
+    border-radius: 3px;
+    font-weight: 700 !important;
+    font-size: 15px !important;
+  }
+}
+
 </style>
 
 <script type="application/ld+json">
@@ -167,6 +285,23 @@ footer a{color:#C9A84C;}
     <a href="https://www.mrandmrslifestyle.com/free-guide.html">Free Guide</a>
     <a href="https://wa.me/971507871515?text=Hi%20Tarek%20%26%20Chloe%2C%20I%20read%20your%20couples%20training%20article%20and%20I%27d%20love%20a%20free%20strategy%20call!" class="nav-cta">Apply Now</a>
   </div>
+
+  <!-- Mobile hamburger button -->
+  <button class="mobile-nav-toggle" onclick="document.getElementById('mobileMenu').classList.add('open')" aria-label="Open menu">
+    <span></span><span></span><span></span>
+  </button>
+
+  <!-- Mobile fullscreen menu -->
+  <div class="mobile-menu" id="mobileMenu">
+    <button class="mobile-menu-close" onclick="document.getElementById('mobileMenu').classList.remove('open')">&times;</button>
+    <a href="https://www.mrandmrslifestyle.com/index.html">Home</a>
+    <a href="https://www.mrandmrslifestyle.com/transformations.html">Results</a>
+    <a href="https://www.mrandmrslifestyle.com/blog.html">Blog</a>
+    <a href="https://www.mrandmrslifestyle.com/calculator.html">Calculator</a>
+    <a href="https://www.mrandmrslifestyle.com/free-guide.html">Free Guide</a>
+    <a href="https://www.mrandmrslifestyle.com/apply.html" class="mobile-cta">Apply Now</a>
+  </div>
+
 </nav>
 
 <div class="hero">
