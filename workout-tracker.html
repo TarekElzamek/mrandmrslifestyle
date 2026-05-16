@@ -150,6 +150,12 @@ nav.site-nav{position:fixed;top:0;left:0;right:0;z-index:200;height:var(--nav-h)
 .btn-gold:active{background:var(--gold-light);}
 .gate-disclaimer{text-align:center;font-size:.68rem;color:rgba(255,255,255,.2);margin-top:.7rem;line-height:1.5;}
 
+/* GATE TABS */
+.gate-tabs{display:flex;gap:.5rem;margin-bottom:1.25rem;background:rgba(255,255,255,.05);border-radius:10px;padding:.25rem;}
+.gate-tab{flex:1;background:none;border:none;color:rgba(255,255,255,.4);font-family:var(--font-body);font-size:.78rem;font-weight:600;padding:.65rem .5rem;border-radius:7px;cursor:pointer;transition:all .2s;letter-spacing:.03em;}
+.gate-tab.active{background:var(--gold);color:var(--black);}
+.gate-tab:not(.active):hover{color:rgba(255,255,255,.7);}
+
 /* APP SHELL */
 #app-section{display:none;min-height:100vh;padding-top:var(--nav-h);}
 
@@ -375,32 +381,58 @@ nav.app-tabs{display:grid;grid-template-columns:repeat(4,1fr);background:var(--o
       </div>
       <div class="proof-text">Join <strong>500+ clients</strong> tracking with Tarek &amp; Chloe</div>
     </div>
-    <ul class="gate-perks" role="list" style="list-style:none;">
-      <li class="perk"><div class="perk-icon" aria-hidden="true">✓</div>200+ exercises across all muscle groups</li>
-      <li class="perk"><div class="perk-icon" aria-hidden="true">✓</div>Track sets, weight &amp; reps every session</li>
-      <li class="perk"><div class="perk-icon" aria-hidden="true">✓</div>Full history with dates &amp; personal bests</li>
-      <li class="perk"><div class="perk-icon" aria-hidden="true">✓</div>Free forever — no credit card needed</li>
-    </ul>
-    <div class="gate-form">
-      <input type="text" id="g-name" placeholder="Full Name *" autocomplete="name" inputmode="text">
-      <input type="email" id="g-email" placeholder="Email Address *" autocomplete="email" inputmode="email">
-      <input type="tel" id="g-phone" placeholder="WhatsApp e.g. +971 50 000 0000" autocomplete="tel" inputmode="tel">
-      <select id="g-goal" aria-label="Primary fitness goal">
-        <option value="" disabled selected>Your Goal *</option>
-        <option>Fat Loss</option><option>Muscle Gain</option>
-        <option>Body Recomposition</option><option>General Fitness &amp; Health</option>
-        <option>Strength &amp; Performance</option><option>Glutes Development</option>
-        <option>Couples Transformation</option><option>Pre/Postnatal Training</option>
-      </select>
-      <select id="g-level" aria-label="Training level">
-        <option value="" disabled selected>Training Level *</option>
-        <option>Beginner (0–1 year)</option>
-        <option>Intermediate (1–3 years)</option>
-        <option>Advanced (3+ years)</option>
-      </select>
-      <button class="btn-gold" id="register-btn" onclick="handleRegister()">🔓 Get Free Access Now</button>
+
+    <!-- Gate tabs -->
+    <div class="gate-tabs">
+      <button class="gate-tab active" id="tab-new" onclick="switchGateTab('new')">New User</button>
+      <button class="gate-tab" id="tab-returning" onclick="switchGateTab('returning')">Returning? Sign In</button>
     </div>
-    <p class="gate-disclaimer">🔒 Private &amp; secure. We may offer a free strategy call — never spam.</p>
+
+    <!-- NEW USER FORM -->
+    <div id="gate-new">
+      <ul class="gate-perks" role="list" style="list-style:none;margin-bottom:1.1rem;">
+        <li class="perk"><div class="perk-icon" aria-hidden="true">✓</div>200+ exercises across all muscle groups</li>
+        <li class="perk"><div class="perk-icon" aria-hidden="true">✓</div>Track sets, weight &amp; reps every session</li>
+        <li class="perk"><div class="perk-icon" aria-hidden="true">✓</div>Full history with dates &amp; personal bests</li>
+        <li class="perk"><div class="perk-icon" aria-hidden="true">✓</div>Free forever — no credit card needed</li>
+      </ul>
+      <div class="gate-form">
+        <input type="text" id="g-name" placeholder="Full Name *" autocomplete="name" inputmode="text">
+        <input type="email" id="g-email" placeholder="Email Address *" autocomplete="email" inputmode="email">
+        <input type="tel" id="g-phone" placeholder="WhatsApp e.g. +971 50 000 0000" autocomplete="tel" inputmode="tel">
+        <select id="g-goal" aria-label="Primary fitness goal">
+          <option value="" disabled selected>Your Goal *</option>
+          <option>Fat Loss</option><option>Muscle Gain</option>
+          <option>Body Recomposition</option><option>General Fitness &amp; Health</option>
+          <option>Strength &amp; Performance</option><option>Glutes Development</option>
+          <option>Couples Transformation</option><option>Pre/Postnatal Training</option>
+        </select>
+        <select id="g-level" aria-label="Training level">
+          <option value="" disabled selected>Training Level *</option>
+          <option>Beginner (0–1 year)</option>
+          <option>Intermediate (1–3 years)</option>
+          <option>Advanced (3+ years)</option>
+        </select>
+        <div style="position:relative;">
+          <input type="text" id="g-username" placeholder="Choose a username * (e.g. tarek91)" autocomplete="off" inputmode="text" style="padding-right:2.5rem;">
+          <span id="username-check" style="position:absolute;right:.85rem;top:50%;transform:translateY(-50%);font-size:1rem;"></span>
+        </div>
+        <p style="font-size:.72rem;color:rgba(255,255,255,.35);margin-top:-.3rem;line-height:1.5;">You'll use this to sign back in — no password needed.</p>
+        <button class="btn-gold" id="register-btn" onclick="handleRegister()">🔓 Get Free Access Now</button>
+      </div>
+      <p class="gate-disclaimer">🔒 Private &amp; secure. We may offer a free strategy call — never spam.</p>
+    </div>
+
+    <!-- RETURNING USER FORM -->
+    <div id="gate-returning" style="display:none;">
+      <p style="font-size:.86rem;color:rgba(255,255,255,.5);margin-bottom:1.25rem;line-height:1.6;">Welcome back! Enter your username to pick up right where you left off — all your history will be waiting.</p>
+      <div class="gate-form">
+        <input type="text" id="g-login-username" placeholder="Your username" autocomplete="off" inputmode="text">
+        <button class="btn-gold" id="login-btn" onclick="handleLogin()">▶ Continue My Training</button>
+      </div>
+      <p style="font-size:.72rem;color:rgba(255,255,255,.25);text-align:center;margin-top:.85rem;line-height:1.5;">Your data is saved on this device. Use the same browser &amp; device you registered on.</p>
+    </div>
+
   </div>
 </section>
 
@@ -677,40 +709,117 @@ const CATS=[
 // ══ STATE ══
 let user=null,activeEx=[],sessions=[],selCat=null;
 
+// ══ STORAGE (keyed by username) ══
+function userKey(u){return 'mml_u_'+u.toLowerCase().trim();}
+function sessKey(u){return 'mml_s_'+u.toLowerCase().trim();}
+function activeUserKey(){return 'mml_active';}
+
 function load(){
-  try{const u=localStorage.getItem('mml_u');if(u)user=JSON.parse(u);}catch(e){}
-  try{const s=localStorage.getItem('mml_s');if(s)sessions=JSON.parse(s);}catch(e){}
+  // Backwards compat: old single-user storage
+  try{
+    const active=localStorage.getItem(activeUserKey());
+    if(active){
+      const u=localStorage.getItem(userKey(active));
+      const s=localStorage.getItem(sessKey(active));
+      if(u)user=JSON.parse(u);
+      if(s)sessions=JSON.parse(s);
+    } else {
+      // Legacy (no username system yet)
+      const u=localStorage.getItem('mml_u');
+      if(u){
+        user=JSON.parse(u);
+        // Migrate to new keyed storage if username exists
+        if(user.username){
+          const s=localStorage.getItem('mml_s');
+          if(s)sessions=JSON.parse(s);
+          save();
+          localStorage.setItem(activeUserKey(),user.username);
+        }
+      }
+    }
+  }catch(e){}
 }
 function save(){
-  try{localStorage.setItem('mml_u',JSON.stringify(user));localStorage.setItem('mml_s',JSON.stringify(sessions));}
-  catch(e){toast('⚠️','Storage full — please clear old sessions');}
+  if(!user||!user.username)return;
+  try{
+    localStorage.setItem(userKey(user.username),JSON.stringify(user));
+    localStorage.setItem(sessKey(user.username),JSON.stringify(sessions));
+    localStorage.setItem(activeUserKey(),user.username);
+  }catch(e){toast('⚠️','Storage full — please clear old sessions');}
 }
 
-// ══ GATE ══
+// ══ GATE TABS ══
+function switchGateTab(tab){
+  document.getElementById('gate-new').style.display=tab==='new'?'block':'none';
+  document.getElementById('gate-returning').style.display=tab==='returning'?'block':'none';
+  document.getElementById('tab-new').classList.toggle('active',tab==='new');
+  document.getElementById('tab-returning').classList.toggle('active',tab==='returning');
+}
+
+// ══ USERNAME AVAILABILITY CHECK ══
+document.addEventListener('DOMContentLoaded',function(){
+  const uInput=document.getElementById('g-username');
+  if(uInput){
+    uInput.addEventListener('input',function(){
+      const val=this.value.trim().toLowerCase();
+      const chk=document.getElementById('username-check');
+      if(!val){chk.textContent='';return;}
+      if(val.length<3){chk.textContent='';return;}
+      const exists=localStorage.getItem(userKey(val));
+      chk.textContent=exists?'✗':'✓';
+      chk.style.color=exists?'#e74c3c':'#27ae60';
+    });
+  }
+});
+
+// ══ REGISTER (new user) ══
 async function handleRegister(){
   const name=document.getElementById('g-name').value.trim();
   const email=document.getElementById('g-email').value.trim();
   const phone=document.getElementById('g-phone').value.trim();
   const goal=document.getElementById('g-goal').value;
   const level=document.getElementById('g-level').value;
-  if(!name||!email||!goal||!level){toast('⚠️','Please fill all required fields.');return;}
+  const username=document.getElementById('g-username').value.trim().toLowerCase().replace(/\s+/g,'');
+  if(!name||!email||!goal||!level||!username){toast('⚠️','Please fill all required fields.');return;}
   if(!email.includes('@')){toast('⚠️','Enter a valid email address.');return;}
+  if(username.length<3){toast('⚠️','Username must be at least 3 characters.');return;}
+  if(localStorage.getItem(userKey(username))){toast('⚠️','That username is taken — try another.');return;}
   const btn=document.getElementById('register-btn');
   btn.textContent='Setting up…';btn.disabled=true;
   try{
     await fetch('https://formspree.io/f/mdayvono',{
       method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},
-      body:JSON.stringify({_subject:'🏋️ Workout Tracker Lead — '+name,name,email,phone:phone||'—',goal,level,source:'Free Workout Tracker'})
+      body:JSON.stringify({_subject:'🏋️ Workout Tracker Lead — '+name,name,email,phone:phone||'—',goal,level,username,source:'Free Workout Tracker'})
     });
   }catch(e){}
-  user={name,email,phone,goal,level,joined:new Date().toISOString()};
+  user={name,email,phone,goal,level,username,joined:new Date().toISOString()};
+  sessions=[];
   save();showApp();
 }
+
+// ══ LOGIN (returning user) ══
+function handleLogin(){
+  const username=document.getElementById('g-login-username').value.trim().toLowerCase();
+  if(!username){toast('⚠️','Please enter your username.');return;}
+  const stored=localStorage.getItem(userKey(username));
+  if(!stored){toast('⚠️','Username not found on this device. Check spelling or register as new.');return;}
+  try{
+    user=JSON.parse(stored);
+    const s=localStorage.getItem(sessKey(username));
+    sessions=s?JSON.parse(s):[];
+    localStorage.setItem(activeUserKey(),username);
+    showApp();
+  }catch(e){toast('⚠️','Could not load your data. Please try again.');}
+}
+
 function handleLogout(){
   if(!confirm('Sign out?'))return;
-  user=null;localStorage.removeItem('mml_u');
+  user=null;sessions=[];
+  localStorage.removeItem(activeUserKey());
   document.getElementById('app-section').style.display='none';
   document.getElementById('gate-section').style.display='flex';
+  // Reset gate to new-user tab
+  switchGateTab('new');
 }
 
 // ══ APP ══
@@ -1051,7 +1160,12 @@ function toast(icon,msg){
 // ══ BOOT ══
 load();
 if(user){document.getElementById('gate-section').style.display='none';showApp();}
-else document.getElementById('gate-section').style.display='flex';
+else{
+  document.getElementById('gate-section').style.display='flex';
+  // If there are any saved users on this device, open on returning tab
+  const active=localStorage.getItem(activeUserKey());
+  if(active) switchGateTab('returning');
+}
 </script>
 </body>
 </html>
