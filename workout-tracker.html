@@ -1024,6 +1024,24 @@ function saveSession(){
   updateStats();toast('✅','Workout saved! Great work 💪');
 }
 
+// ══ SCROLL-SAFE TAP HANDLER ══
+// Only fires the callback if the finger moved less than 10px (i.e. it's a tap, not a scroll)
+function addTapHandler(el, cb){
+  var startX, startY;
+  el.addEventListener('touchstart', function(ev){
+    startX = ev.touches[0].clientX;
+    startY = ev.touches[0].clientY;
+  }, {passive: true});
+  el.addEventListener('touchend', function(ev){
+    var dx = Math.abs(ev.changedTouches[0].clientX - startX);
+    var dy = Math.abs(ev.changedTouches[0].clientY - startY);
+    if(dx < 10 && dy < 10){
+      ev.preventDefault();
+      cb();
+    }
+  });
+}
+
 // ══ LIBRARY ══
 function renderLib(){
   var catGrid=document.getElementById('cat-grid');
@@ -1033,7 +1051,7 @@ function renderLib(){
     div.className='cat-card'+(selCat===c.id?' active':'');
     div.innerHTML='<div class="cat-icon">'+c.icon+'</div><div class="cat-name">'+c.id+'</div><div class="cat-count">'+EX.filter(function(e){return e.c===c.id;}).length+'</div>';
     div.addEventListener('click',function(){selCatF(c.id);});
-    div.addEventListener('touchend',function(ev){ev.preventDefault();selCatF(c.id);});
+    addTapHandler(div,function(){selCatF(c.id);});
     catGrid.appendChild(div);
   });
   var toShow=selCat?EX.reduce(function(acc,e,i){if(e.c===selCat)acc.push(i);return acc;},[]):EX.map(function(_,i){return i;});
@@ -1045,7 +1063,7 @@ function renderLib(){
     div.className='ex-card';
     div.innerHTML='<div class="ex-name">'+e.n+'</div><div class="ex-muscle">'+e.m+'</div><div class="ex-add">+ Add to workout</div>';
     div.addEventListener('click',function(){addExByIdx(i);});
-    div.addEventListener('touchend',function(ev){ev.preventDefault();addExByIdx(i);});
+    addTapHandler(div,function(){addExByIdx(i);});
     exList.appendChild(div);
   });
 }
