@@ -273,7 +273,13 @@ nav.app-tabs{display:grid;grid-template-columns:repeat(4,1fr);background:var(--o
       </ul>
       <div class="gate-form">
         <input type="text" id="g-name" placeholder="Full Name *" autocomplete="name" inputmode="text">
-        <input type="email" id="g-email" placeholder="Email Address *" autocomplete="email" inputmode="email">
+        <div style="position:relative;">
+          <input type="email" id="g-email" placeholder="Email Address *" autocomplete="email" inputmode="email" style="width:100%;">
+        </div>
+        <div id="email-already-msg" style="display:none;background:rgba(231,76,60,.1);border:1px solid rgba(231,76,60,.3);border-radius:8px;padding:.65rem .9rem;font-size:.78rem;color:rgba(255,255,255,.75);line-height:1.5;">
+          ⚠️ This email is already registered. Your username is: <strong id="email-existing-username" style="color:var(--gold);"></strong><br>
+          <span onclick="switchGateTab('returning')" style="color:var(--gold);cursor:pointer;font-weight:600;text-decoration:underline;">Sign in instead →</span>
+        </div>
         <input type="tel" id="g-phone" placeholder="WhatsApp e.g. +971 50 000 0000" autocomplete="tel" inputmode="tel">
         <select id="g-goal">
           <option value="" disabled selected>Your Goal *</option>
@@ -636,9 +642,11 @@ function switchGateTab(tab){
   document.getElementById('tab-returning').classList.toggle('active', tab==='returning');
 }
 
-// ══ USERNAME CHECK (live) ══
-let usernameCheckTimer;
+// ══ LIVE FIELD CHECKS (username + email uniqueness) ══
+let usernameCheckTimer, emailCheckTimer;
 document.addEventListener('DOMContentLoaded', function(){
+
+  // Username uniqueness
   const uInput = document.getElementById('g-username');
   if(uInput){
     uInput.addEventListener('input', function(){
@@ -654,6 +662,25 @@ document.addEventListener('DOMContentLoaded', function(){
           chk.style.color = rows.length ? '#e74c3c' : '#27ae60';
         }catch(e){ chk.textContent=''; }
       }, 500);
+    });
+  }
+
+  // Email uniqueness — check on blur
+  const eInput = document.getElementById('g-email');
+  if(eInput){
+    eInput.addEventListener('blur', async function(){
+      const val = this.value.trim().toLowerCase();
+      const msg = document.getElementById('email-already-msg');
+      if(!val.includes('@')){if(msg)msg.style.display='none';return;}
+      try{
+        const rows = await api.get('users?email=eq.'+encodeURIComponent(val)+'&select=username');
+        if(rows.length && msg){
+          document.getElementById('email-existing-username').textContent = rows[0].username;
+          msg.style.display = 'block';
+        } else if(msg){
+          msg.style.display = 'none';
+        }
+      }catch(e){}
     });
   }
 });
@@ -681,6 +708,18 @@ async function handleRegister(){
       toast('⚠️','That username is already taken — try another.');
       btn.textContent='🔓 Get Free Access Now'; btn.disabled=false;
       hideLoading(); return;
+    }
+
+    // Check email not already registered
+    const emailCheck = await api.get('users?email=eq.'+encodeURIComponent(email)+'&select=username');
+    if(emailCheck.length){
+      toast('⚠️','That email is already registered. Sign in with username: '+emailCheck[0].username);
+      btn.textContent='🔓 Get Free Access Now'; btn.disabled=false;
+      hideLoading();
+      // Switch to returning tab and pre-fill their username
+      document.getElementById('g-login-username').value = emailCheck[0].username;
+      switchGateTab('returning');
+      return;
     }
 
     // Create user in Supabase
