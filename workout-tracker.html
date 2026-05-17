@@ -3,8 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-
-<!-- ══ SEO: Core ══ -->
 <title>Free Workout Tracker App | Log Weights, Reps & Progress | Mr & Mrs Lifestyle Dubai</title>
 <meta name="description" content="Free gym workout tracker by Mr & Mrs Lifestyle — Dubai's #1 personal training couple. Log sets, weights & reps across 200+ exercises. Track your progress & personal bests. No app download needed.">
 <meta name="keywords" content="free workout tracker, gym progress tracker, weight lifting log, exercise tracker, personal trainer Dubai, fitness tracker online, workout log app, Mr and Mrs Lifestyle, track reps and sets, strength training tracker">
@@ -12,8 +10,6 @@
 <meta name="robots" content="index, follow">
 <meta name="theme-color" content="#0A0A0A">
 <link rel="canonical" href="https://www.mrandmrslifestyle.com/workout-tracker">
-
-<!-- ══ SEO: Open Graph ══ -->
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://www.mrandmrslifestyle.com/workout-tracker">
 <meta property="og:title" content="Free Workout Tracker | Log Weights & Reps | Mr & Mrs Lifestyle">
@@ -21,21 +17,15 @@
 <meta property="og:image" content="https://www.mrandmrslifestyle.com/logo.png">
 <meta property="og:site_name" content="Mr & Mrs Lifestyle">
 <meta property="og:locale" content="en_AE">
-
-<!-- ══ SEO: Twitter Card ══ -->
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Free Workout Tracker | Mr & Mrs Lifestyle Dubai">
 <meta name="twitter:description" content="Log your gym weights, reps & sets for free. 200+ exercises, full history & personal bests. By Tarek & Chloe.">
 <meta name="twitter:image" content="https://www.mrandmrslifestyle.com/logo.png">
-
-<!-- ══ Mobile / PWA ══ -->
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="MML Tracker">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="format-detection" content="telephone=no">
-
-<!-- ══ SEO: Structured Data ══ -->
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -114,14 +104,12 @@
 html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;}
 body{font-family:var(--font-body);background:var(--black);color:var(--white);overflow-x:hidden;min-height:100vh;-webkit-font-smoothing:antialiased;}
 
-/* NAV */
 nav.site-nav{position:fixed;top:0;left:0;right:0;z-index:200;height:var(--nav-h);display:flex;align-items:center;justify-content:space-between;padding:0 1.25rem;background:rgba(10,10,10,0.97);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid rgba(201,168,76,.18);}
 .nav-logo{font-family:var(--font-display);font-size:1.15rem;font-weight:700;color:var(--gold);text-decoration:none;}
 .nav-back{font-size:.72rem;font-weight:600;color:rgba(255,255,255,.5);text-decoration:none;letter-spacing:.06em;text-transform:uppercase;display:flex;align-items:center;gap:.35rem;padding:.6rem 0;}
 .nav-back::before{content:'←';}
 .nav-back:hover{color:var(--gold);}
 
-/* GATE */
 #gate-section{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:calc(var(--nav-h) + 1.25rem) 1rem 2rem;position:relative;overflow:hidden;}
 .gate-bg{position:absolute;inset:0;background:linear-gradient(160deg,rgba(10,10,10,.97) 0%,rgba(28,28,28,.88) 100%),url('https://images.unsplash.com/photo-1571902943202-507ec2618e8f?w=1200&q=75') center/cover no-repeat;}
 .gate-glow{position:absolute;top:-200px;right:-200px;width:600px;height:600px;background:radial-gradient(circle,rgba(201,168,76,.07) 0%,transparent 70%);pointer-events:none;}
@@ -139,7 +127,6 @@ nav.site-nav{position:fixed;top:0;left:0;right:0;z-index:200;height:var(--nav-h)
 .gate-perks{display:flex;flex-direction:column;gap:.5rem;margin-bottom:1.5rem;}
 .perk{display:flex;align-items:center;gap:.6rem;font-size:.82rem;color:rgba(255,255,255,.72);}
 .perk-icon{width:19px;height:19px;background:rgba(201,168,76,.12);border:1px solid rgba(201,168,76,.28);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.6rem;color:var(--gold);flex-shrink:0;}
-/* 16px font-size prevents iOS auto-zoom on input focus */
 .gate-form{display:flex;flex-direction:column;gap:.7rem;}
 .gate-form input,.gate-form select{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);color:#fff;padding:.88rem 1rem;border-radius:10px;font-size:16px;font-family:inherit;outline:none;width:100%;transition:border-color .2s;-webkit-appearance:none;appearance:none;}
 .gate-form input:focus,.gate-form select:focus{border-color:rgba(201,168,76,.5);}
@@ -150,16 +137,13 @@ nav.site-nav{position:fixed;top:0;left:0;right:0;z-index:200;height:var(--nav-h)
 .btn-gold:active{background:var(--gold-light);}
 .gate-disclaimer{text-align:center;font-size:.68rem;color:rgba(255,255,255,.2);margin-top:.7rem;line-height:1.5;}
 
-/* GATE TABS */
 .gate-tabs{display:flex;gap:.5rem;margin-bottom:1.25rem;background:rgba(255,255,255,.05);border-radius:10px;padding:.25rem;}
 .gate-tab{flex:1;background:none;border:none;color:rgba(255,255,255,.4);font-family:var(--font-body);font-size:.78rem;font-weight:600;padding:.65rem .5rem;border-radius:7px;cursor:pointer;transition:all .2s;letter-spacing:.03em;}
 .gate-tab.active{background:var(--gold);color:var(--black);}
 .gate-tab:not(.active):hover{color:rgba(255,255,255,.7);}
 
-/* APP SHELL */
 #app-section{display:none;min-height:100vh;padding-top:var(--nav-h);}
 
-/* APP HEADER */
 .app-header{background:var(--charcoal);border-bottom:1px solid rgba(201,168,76,.14);padding:.8rem 1.1rem;display:grid;grid-template-columns:1fr auto;gap:.5rem;align-items:center;}
 .app-welcome{font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);font-weight:600;}
 .app-welcome-name{font-family:var(--font-display);font-size:1.2rem;font-weight:700;line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
@@ -171,18 +155,15 @@ nav.site-nav{position:fixed;top:0;left:0;right:0;z-index:200;height:var(--nav-h)
 .logout-btn{background:none;border:1px solid rgba(255,255,255,.12);color:rgba(255,255,255,.38);padding:.42rem .7rem;border-radius:6px;font-family:inherit;font-size:.7rem;cursor:pointer;white-space:nowrap;min-height:36px;}
 .logout-btn:active{border-color:var(--gold);color:var(--gold);}
 
-/* TABS — sticky below nav */
 nav.app-tabs{display:grid;grid-template-columns:repeat(4,1fr);background:var(--off-black);border-bottom:1px solid rgba(255,255,255,.07);position:sticky;top:var(--nav-h);z-index:100;}
 .tab-btn{background:none;border:none;color:rgba(255,255,255,.36);padding:.55rem .2rem;font-family:inherit;font-size:.58rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase;cursor:pointer;transition:color .18s;border-bottom:2px solid transparent;display:flex;flex-direction:column;align-items:center;gap:.22rem;min-height:var(--tab-h);}
 .tab-btn .ti{font-size:1.05rem;line-height:1;}
 .tab-btn.active{color:var(--gold);border-bottom-color:var(--gold);}
 
-/* BODY */
 .app-body{max-width:900px;margin:0 auto;padding:1.1rem 1rem calc(1.5rem + var(--safe-b));}
 .section-title{font-family:var(--font-display);font-size:1.25rem;font-weight:700;margin-bottom:.2rem;}
 .section-sub{font-size:.8rem;color:rgba(255,255,255,.36);margin-bottom:1.1rem;line-height:1.5;}
 
-/* SEARCH */
 .exercise-search-wrap{position:relative;margin-bottom:1.1rem;}
 .exercise-search{width:100%;background:var(--charcoal);border:1px solid rgba(255,255,255,.1);color:#fff;padding:.88rem 1rem .88rem 2.7rem;border-radius:10px;font-size:16px;font-family:inherit;outline:none;-webkit-appearance:none;}
 .exercise-search:focus{border-color:rgba(201,168,76,.4);}
@@ -196,7 +177,6 @@ nav.app-tabs{display:grid;grid-template-columns:repeat(4,1fr);background:var(--o
 .dropdown-item-name{color:#fff;font-weight:600;}
 .dropdown-item-cat{font-size:.66rem;color:var(--gold);letter-spacing:.07em;text-transform:uppercase;}
 
-/* SET LOGGER */
 .set-logger{background:var(--charcoal);border:1px solid rgba(255,255,255,.08);border-radius:12px;overflow:hidden;margin-bottom:1.1rem;}
 .set-logger-header{padding:.9rem 1rem;border-bottom:1px solid rgba(255,255,255,.07);display:flex;align-items:flex-start;justify-content:space-between;gap:.5rem;}
 .set-logger-name{font-family:var(--font-display);font-size:.98rem;font-weight:700;line-height:1.25;}
@@ -204,13 +184,11 @@ nav.app-tabs{display:grid;grid-template-columns:repeat(4,1fr);background:var(--o
 .remove-ex-btn{background:none;border:none;color:rgba(255,255,255,.22);cursor:pointer;font-size:1rem;flex-shrink:0;min-width:40px;min-height:40px;display:flex;align-items:center;justify-content:center;border-radius:6px;}
 .remove-ex-btn:active{color:var(--danger);}
 
-/* last session hint */
 .last-hint{background:rgba(201,168,76,.07);border-left:3px solid var(--gold);padding:.55rem .9rem;font-size:.74rem;color:rgba(255,255,255,.52);line-height:1.45;display:flex;align-items:flex-start;gap:.45rem;}
 .last-hint strong{color:var(--gold);}
 .hint-chips{display:flex;flex-wrap:wrap;gap:.28rem .5rem;margin-top:.22rem;}
 .hint-chip{background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.18);border-radius:4px;padding:.12rem .38rem;font-size:.68rem;color:rgba(255,255,255,.58);white-space:nowrap;}
 
-/* set grid: num | weight | reps | done */
 .set-logger-body{padding:.9rem .9rem;}
 .sg{display:grid;grid-template-columns:28px 1fr 1fr 44px;gap:.45rem;align-items:center;}
 .sg-hdr{margin-bottom:.38rem;}
@@ -225,19 +203,16 @@ nav.app-tabs{display:grid;grid-template-columns:repeat(4,1fr);background:var(--o
 .add-set-btn{background:rgba(201,168,76,.07);border:1px dashed rgba(201,168,76,.26);color:var(--gold);padding:.65rem;border-radius:8px;cursor:pointer;font-family:inherit;font-size:.8rem;font-weight:600;width:100%;margin-top:.38rem;min-height:44px;}
 .add-set-btn:active{background:rgba(201,168,76,.14);}
 
-/* save session */
 #save-session-wrap{margin-top:.75rem;}
 .save-btn{width:100%;background:var(--gold);color:var(--black);border:none;padding:1rem;border-radius:10px;font-family:inherit;font-size:1rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;min-height:52px;}
 .save-btn:active{background:var(--gold-light);}
 
-/* CTA */
 .cta-banner{background:linear-gradient(135deg,rgba(201,168,76,.09),rgba(201,168,76,.02));border:1px solid rgba(201,168,76,.17);border-radius:12px;padding:1.35rem;display:flex;flex-direction:column;gap:.9rem;margin-top:1.5rem;}
 .cta-banner h3{font-family:var(--font-display);font-size:1.1rem;font-weight:700;margin-bottom:.25rem;}
 .cta-banner p{font-size:.8rem;color:rgba(255,255,255,.42);line-height:1.6;}
 .cta-btn{display:block;background:var(--gold);color:var(--black);text-decoration:none;padding:.88rem 1.25rem;border-radius:8px;font-size:.82rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;text-align:center;}
 .cta-btn:active{background:var(--gold-light);}
 
-/* EXERCISE LIBRARY */
 .cat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.55rem;margin-bottom:1.35rem;}
 .cat-card{background:var(--charcoal);border:1px solid rgba(255,255,255,.07);border-radius:10px;padding:.9rem .6rem;text-align:center;cursor:pointer;}
 .cat-card:active,.cat-card.active{border-color:var(--gold);background:rgba(201,168,76,.08);}
@@ -251,13 +226,11 @@ nav.app-tabs{display:grid;grid-template-columns:repeat(4,1fr);background:var(--o
 .ex-muscle{font-size:.65rem;color:rgba(255,255,255,.33);line-height:1.3;}
 .ex-add{font-size:.65rem;color:var(--gold);margin-top:auto;font-weight:600;}
 
-/* UNIT SELECTORS */
 .unit-row{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;padding:.6rem .9rem;background:rgba(255,255,255,.03);border-bottom:1px solid rgba(255,255,255,.06);}
 .unit-select{background:#1a1a1a;border:1px solid rgba(255,255,255,.12);color:rgba(255,255,255,.75);padding:.5rem .6rem;border-radius:7px;font-family:inherit;font-size:13px;outline:none;width:100%;cursor:pointer;-webkit-appearance:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23C9A84C'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right .55rem center;padding-right:1.6rem;}
 .unit-select:focus{border-color:rgba(201,168,76,.5);}
 .unit-label{font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.35);font-weight:600;margin-bottom:.22rem;}
 
-/* HISTORY */
 .hist-empty{text-align:center;padding:3rem 1.5rem;}
 .hist-empty-icon{font-size:2.5rem;margin-bottom:.7rem;}
 .hist-empty-title{font-family:var(--font-display);font-size:1.15rem;font-weight:700;margin-bottom:.35rem;}
@@ -281,7 +254,6 @@ nav.app-tabs{display:grid;grid-template-columns:repeat(4,1fr);background:var(--o
 .hist-ex{margin-bottom:.9rem;}
 .hist-ex:last-child{margin-bottom:0;}
 .hist-ex-name{font-size:.8rem;font-weight:700;color:var(--gold);margin-bottom:.42rem;}
-/* card-based set display — no horizontal table overflow */
 .hist-set-card{display:grid;grid-template-columns:20px 1fr 1fr 1fr;gap:.35rem;align-items:center;background:rgba(255,255,255,.03);border-radius:6px;padding:.4rem .55rem;margin-bottom:.3rem;font-size:.76rem;}
 .hsc-num{color:rgba(255,255,255,.32);font-weight:700;font-size:.65rem;}
 .hsc-cell{text-align:center;}
@@ -290,7 +262,6 @@ nav.app-tabs{display:grid;grid-template-columns:repeat(4,1fr);background:var(--o
 .hsc-cell .hsc-date{font-size:.65rem;color:var(--gold);font-weight:600;}
 .hist-sets-hdr{display:grid;grid-template-columns:20px 1fr 1fr 1fr;gap:.35rem;padding:.18rem .55rem;font-size:.58rem;letter-spacing:.09em;text-transform:uppercase;color:rgba(255,255,255,.26);font-weight:600;margin-bottom:.2rem;}
 
-/* PROGRESS */
 .prog-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.65rem;margin-bottom:1.35rem;}
 .prog-card{background:var(--charcoal);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:1rem;}
 .prog-title{font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.36);font-weight:600;margin-bottom:.22rem;}
@@ -301,19 +272,15 @@ nav.app-tabs{display:grid;grid-template-columns:repeat(4,1fr);background:var(--o
 .pb-name{color:rgba(255,255,255,.62);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;}
 .pb-wt{color:var(--gold);font-weight:700;flex-shrink:0;}
 
-/* TOAST — centred at bottom, safe area aware */
 .toast{position:fixed;bottom:calc(1rem + var(--safe-b));left:50%;transform:translateX(-50%) translateY(100px);background:#252525;border:1px solid rgba(201,168,76,.28);border-radius:10px;padding:.8rem 1.15rem;font-size:.84rem;color:#fff;z-index:500;opacity:0;transition:transform .3s,opacity .3s;display:flex;align-items:center;gap:.6rem;box-shadow:0 12px 36px rgba(0,0,0,.55);white-space:nowrap;max-width:calc(100vw - 2rem);}
 .toast.show{transform:translateX(-50%) translateY(0);opacity:1;}
 .toast-icon{font-size:.95rem;}
 
-/* SEO hidden content for crawlers */
 .seo-only{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);}
 
-/* ANIMATIONS */
 @keyframes fadeUp{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
 .fade-up{animation:fadeUp .4s ease both;}
 
-/* ── DESKTOP ── */
 @media(min-width:560px){
   .gate-card{padding:2.25rem 2.25rem;}
   .gate-title{font-size:2.3rem;}
@@ -337,34 +304,18 @@ nav.app-tabs{display:grid;grid-template-columns:repeat(4,1fr);background:var(--o
 </head>
 <body>
 
-<!-- SEO static content for Googlebot -->
 <div class="seo-only" aria-hidden="true">
   <h1>Free Workout Tracker — Mr &amp; Mrs Lifestyle Dubai</h1>
   <h2>Track Your Gym Weights, Reps &amp; Sets for Free</h2>
-  <p>The Mr &amp; Mrs Lifestyle free workout tracker lets you log every set across 200+ gym exercises — including Bench Press, Squat, Deadlift, Hip Thrust, Lat Pulldown, Barbell Curl and more. Created by certified personal trainers Tarek and Chloe based in Dubai, UAE. Track fat loss, muscle gain, glutes training and general fitness progress.</p>
-  <h2>200+ Exercises Across All Muscle Groups</h2>
-  <p>Chest, Back, Shoulders, Biceps, Triceps, Legs, Glutes, Core, Cardio, Olympic lifts and Forearms. Log your weight in kg, number of reps and number of sets. See your full workout history with exact dates and times. Track personal bests across every exercise.</p>
-  <h2>How to Use the Free Workout Tracker</h2>
-  <ol>
-    <li>Register your name, email and goal for free.</li>
-    <li>Search or browse 200+ exercises by muscle group.</li>
-    <li>Log your sets — enter weight in kg and number of reps.</li>
-    <li>Save your session. Your history is saved to your device automatically.</li>
-    <li>Return any day — your full history will be waiting for you.</li>
-  </ol>
-  <h2>Why Track Your Workout Progress?</h2>
-  <p>Progressive overload is the #1 driver of muscle growth and strength. Tracking your weights and reps ensures you are improving every session. This free tool helps gym-goers in Dubai and worldwide stay consistent and see measurable improvement week by week.</p>
-  <h2>About Mr &amp; Mrs Lifestyle</h2>
-  <p>Mr &amp; Mrs Lifestyle is Dubai's leading personal training couple — Tarek Elzamek and Chloe Antoniazzi. With 500+ client transformations and coaching clients worldwide, they offer in-person training in Dubai and online coaching globally.</p>
+  <p>The Mr &amp; Mrs Lifestyle free workout tracker lets you log every set across 200+ gym exercises. Created by certified personal trainers Tarek and Chloe based in Dubai, UAE.</p>
 </div>
 
-<!-- NAV -->
 <nav class="site-nav" aria-label="Site navigation">
   <a href="https://www.mrandmrslifestyle.com" class="nav-logo" aria-label="Mr & Mrs Lifestyle home">Mr &amp; Mrs Lifestyle</a>
   <a href="https://www.mrandmrslifestyle.com" class="nav-back">Website</a>
 </nav>
 
-<!-- ═══ GATE ═══ -->
+<!-- GATE -->
 <section id="gate-section" aria-labelledby="gate-heading">
   <div class="gate-bg" role="presentation"></div>
   <div class="gate-glow" role="presentation"></div>
@@ -382,13 +333,12 @@ nav.app-tabs{display:grid;grid-template-columns:repeat(4,1fr);background:var(--o
       <div class="proof-text">Join <strong>500+ clients</strong> tracking with Tarek &amp; Chloe</div>
     </div>
 
-    <!-- Gate tabs -->
     <div class="gate-tabs">
       <button class="gate-tab active" id="tab-new" onclick="switchGateTab('new')">New User</button>
       <button class="gate-tab" id="tab-returning" onclick="switchGateTab('returning')">Returning? Sign In</button>
     </div>
 
-    <!-- NEW USER FORM -->
+    <!-- NEW USER -->
     <div id="gate-new">
       <ul class="gate-perks" role="list" style="list-style:none;margin-bottom:1.1rem;">
         <li class="perk"><div class="perk-icon" aria-hidden="true">✓</div>200+ exercises across all muscle groups</li>
@@ -423,9 +373,16 @@ nav.app-tabs{display:grid;grid-template-columns:repeat(4,1fr);background:var(--o
       <p class="gate-disclaimer">🔒 Private &amp; secure. We may offer a free strategy call — never spam.</p>
     </div>
 
-    <!-- RETURNING USER FORM -->
+    <!-- RETURNING USER — FIXED -->
     <div id="gate-returning" style="display:none;">
       <p style="font-size:.86rem;color:rgba(255,255,255,.5);margin-bottom:1.25rem;line-height:1.6;">Welcome back! Enter your username to pick up right where you left off — all your history will be waiting.</p>
+
+      <!-- Saved accounts hint — auto-populated on tab open -->
+      <div id="saved-accounts-hint" style="display:none;background:rgba(201,168,76,.07);border:1px solid rgba(201,168,76,.22);border-radius:10px;padding:.75rem 1rem;margin-bottom:1rem;">
+        <div style="font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);font-weight:700;margin-bottom:.45rem;">👤 Accounts saved on this device — tap to select:</div>
+        <div id="saved-accounts-list"></div>
+      </div>
+
       <div class="gate-form">
         <input type="text" id="g-login-username" placeholder="Your username" autocomplete="off" inputmode="text">
         <button class="btn-gold" id="login-btn" onclick="handleLogin()">▶ Continue My Training</button>
@@ -436,7 +393,7 @@ nav.app-tabs{display:grid;grid-template-columns:repeat(4,1fr);background:var(--o
   </div>
 </section>
 
-<!-- ═══ APP ═══ -->
+<!-- APP -->
 <section id="app-section" aria-label="Workout tracker">
 
   <div class="app-header">
@@ -462,7 +419,6 @@ nav.app-tabs{display:grid;grid-template-columns:repeat(4,1fr);background:var(--o
 
   <div class="app-body">
 
-    <!-- LOG -->
     <div id="tab-log">
       <div class="section-title">Today's Workout</div>
       <p class="section-sub" id="today-date-lbl">—</p>
@@ -488,7 +444,6 @@ nav.app-tabs{display:grid;grid-template-columns:repeat(4,1fr);background:var(--o
       </div>
     </div>
 
-    <!-- LIBRARY -->
     <div id="tab-exercises" style="display:none;">
       <div class="section-title">Exercise Library</div>
       <p class="section-sub">200+ exercises — tap any to add to today's log.</p>
@@ -496,14 +451,12 @@ nav.app-tabs{display:grid;grid-template-columns:repeat(4,1fr);background:var(--o
       <div class="ex-list" id="ex-list"></div>
     </div>
 
-    <!-- HISTORY -->
     <div id="tab-history" style="display:none;">
       <div class="section-title">Workout History</div>
       <p class="section-sub">Every session logged — tap to expand.</p>
       <div id="history-container" aria-live="polite"></div>
     </div>
 
-    <!-- PROGRESS -->
     <div id="tab-progress" style="display:none;">
       <div class="section-title">Your Progress</div>
       <p class="section-sub">Personal bests &amp; stats across all sessions.</p>
@@ -709,13 +662,12 @@ const CATS=[
 // ══ STATE ══
 let user=null,activeEx=[],sessions=[],selCat=null;
 
-// ══ STORAGE (keyed by username) ══
+// ══ STORAGE ══
 function userKey(u){return 'mml_u_'+u.toLowerCase().trim();}
 function sessKey(u){return 'mml_s_'+u.toLowerCase().trim();}
 function activeUserKey(){return 'mml_active';}
 
 function load(){
-  // Backwards compat: old single-user storage
   try{
     const active=localStorage.getItem(activeUserKey());
     if(active){
@@ -724,11 +676,9 @@ function load(){
       if(u)user=JSON.parse(u);
       if(s)sessions=JSON.parse(s);
     } else {
-      // Legacy (no username system yet)
       const u=localStorage.getItem('mml_u');
       if(u){
         user=JSON.parse(u);
-        // Migrate to new keyed storage if username exists
         if(user.username){
           const s=localStorage.getItem('mml_s');
           if(s)sessions=JSON.parse(s);
@@ -748,23 +698,52 @@ function save(){
   }catch(e){toast('⚠️','Storage full — please clear old sessions');}
 }
 
-// ══ GATE TABS ══
+// ══ GATE TABS — FIXED: scans localStorage to show saved accounts ══
 function switchGateTab(tab){
   document.getElementById('gate-new').style.display=tab==='new'?'block':'none';
   document.getElementById('gate-returning').style.display=tab==='returning'?'block':'none';
   document.getElementById('tab-new').classList.toggle('active',tab==='new');
   document.getElementById('tab-returning').classList.toggle('active',tab==='returning');
+
+  if(tab==='returning'){
+    const accounts=[];
+    for(let i=0;i<localStorage.length;i++){
+      const k=localStorage.key(i);
+      if(k&&k.startsWith('mml_u_')){
+        try{
+          const u=JSON.parse(localStorage.getItem(k));
+          if(u&&u.username)accounts.push({username:u.username,name:u.name||''});
+        }catch(e){}
+      }
+    }
+    const hint=document.getElementById('saved-accounts-hint');
+    const list=document.getElementById('saved-accounts-list');
+    if(accounts.length&&hint&&list){
+      list.innerHTML=accounts.map(function(a){
+        const label=a.username+(a.name?' — '+a.name.split(' ')[0]:'');
+        return '<span onclick="selectAccount(\''+a.username+'\')" style="display:inline-block;background:rgba(201,168,76,.13);border:1px solid rgba(201,168,76,.3);border-radius:6px;padding:.3rem .7rem;margin:.2rem .2rem;cursor:pointer;color:var(--gold);font-weight:600;font-size:.82rem;">'+label+' →</span>';
+      }).join('');
+      hint.style.display='block';
+    } else if(hint){
+      hint.style.display='none';
+    }
+  }
 }
 
-// ══ USERNAME AVAILABILITY CHECK ══
+function selectAccount(username){
+  document.getElementById('g-login-username').value=username;
+  // Auto-login immediately
+  handleLogin();
+}
+
+// ══ USERNAME CHECK ══
 document.addEventListener('DOMContentLoaded',function(){
   const uInput=document.getElementById('g-username');
   if(uInput){
     uInput.addEventListener('input',function(){
       const val=this.value.trim().toLowerCase();
       const chk=document.getElementById('username-check');
-      if(!val){chk.textContent='';return;}
-      if(val.length<3){chk.textContent='';return;}
+      if(!val||val.length<3){chk.textContent='';return;}
       const exists=localStorage.getItem(userKey(val));
       chk.textContent=exists?'✗':'✓';
       chk.style.color=exists?'#e74c3c':'#27ae60';
@@ -772,7 +751,7 @@ document.addEventListener('DOMContentLoaded',function(){
   }
 });
 
-// ══ REGISTER (new user) ══
+// ══ REGISTER ══
 async function handleRegister(){
   const name=document.getElementById('g-name').value.trim();
   const email=document.getElementById('g-email').value.trim();
@@ -797,19 +776,63 @@ async function handleRegister(){
   save();showApp();
 }
 
-// ══ LOGIN (returning user) ══
+// ══ LOGIN — FIXED: scans all keys + matches by username/name/email ══
 function handleLogin(){
-  const username=document.getElementById('g-login-username').value.trim().toLowerCase();
-  if(!username){toast('⚠️','Please enter your username.');return;}
-  const stored=localStorage.getItem(userKey(username));
-  if(!stored){toast('⚠️','Username not found on this device. Check spelling or register as new.');return;}
+  const raw=document.getElementById('g-login-username').value.trim();
+  if(!raw){toast('⚠️','Please enter your username.');return;}
+  const username=raw.toLowerCase().replace(/\s+/g,'');
+
+  // 1. Direct key lookup (fastest)
+  let stored=localStorage.getItem(userKey(username));
+
+  // 2. Scan ALL mml_u_ keys — match username, name, or email
+  if(!stored){
+    for(let i=0;i<localStorage.length;i++){
+      const k=localStorage.key(i);
+      if(k&&k.startsWith('mml_u_')){
+        try{
+          const candidate=JSON.parse(localStorage.getItem(k));
+          if(candidate&&(
+            (candidate.username&&candidate.username.toLowerCase()===username)||
+            (candidate.name&&candidate.name.toLowerCase().replace(/\s+/g,'')===username)||
+            (candidate.email&&candidate.email.toLowerCase()===username)
+          )){
+            stored=localStorage.getItem(k);
+            break;
+          }
+        }catch(e){}
+      }
+    }
+  }
+
+  if(!stored){
+    // Tell user what accounts ARE on this device
+    const available=[];
+    for(let i=0;i<localStorage.length;i++){
+      const k=localStorage.key(i);
+      if(k&&k.startsWith('mml_u_')){
+        try{
+          const u=JSON.parse(localStorage.getItem(k));
+          if(u&&u.username)available.push(u.username);
+        }catch(e){}
+      }
+    }
+    if(available.length){
+      toast('⚠️','Not found. Try: '+available.join(', '));
+    } else {
+      toast('⚠️','No accounts on this device — register as a new user.');
+    }
+    return;
+  }
+
   try{
     user=JSON.parse(stored);
-    const s=localStorage.getItem(sessKey(username));
+    const uname=user.username||username;
+    const s=localStorage.getItem(sessKey(uname));
     sessions=s?JSON.parse(s):[];
-    localStorage.setItem(activeUserKey(),username);
+    localStorage.setItem(activeUserKey(),uname);
     showApp();
-  }catch(e){toast('⚠️','Could not load your data. Please try again.');}
+  }catch(e){toast('⚠️','Could not load data. Please try again.');}
 }
 
 function handleLogout(){
@@ -818,7 +841,6 @@ function handleLogout(){
   localStorage.removeItem(activeUserKey());
   document.getElementById('app-section').style.display='none';
   document.getElementById('gate-section').style.display='flex';
-  // Reset gate to new-user tab
   switchGateTab('new');
 }
 
@@ -885,7 +907,6 @@ function getLastSess(name){
 function fmt(iso){return new Date(iso).toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short',year:'numeric'});}
 function fmtShort(iso){return new Date(iso).toLocaleDateString('en-GB',{day:'numeric',month:'short'});}
 
-// Default load/meas types by category
 function defaultTypes(cat){
   if(cat==='Cardio') return {loadType:'bodyweight',measType:'time'};
   if(cat==='Core')   return {loadType:'bodyweight',measType:'time'};
@@ -909,7 +930,6 @@ function addEx(name,cat,muscle){
   if(activeEx.find(e=>e.name===name)){toast('⚠️',name+' already added.');return;}
   const last=getLastSess(name);
   const def=defaultTypes(cat);
-  // Restore previous unit choices if they exist
   const prevLoad=last&&last.loadType?last.loadType:def.loadType;
   const prevMeas=last&&last.measType?last.measType:def.measType;
   const sets=last
@@ -928,7 +948,6 @@ function renderLog(){
   wrap.innerHTML=activeEx.map((ex,ei)=>{
     const lt=ex.loadType;const mt=ex.measType;
     const isBodyweight=lt==='bodyweight';
-    // Last session hint chips
     const chips=ex.last?ex.last.sets.map((s,i)=>{
       const wPart=isBodyweight?'BW':(s.w2||s.weight||0)+(s.loadType&&s.loadType!=='weight'?'':' kg');
       const rPart=(s.r2||s.reps||0)+(s.measType==='time'?' s':s.measType==='distance'?' km':s.measType==='calories'?' cal':' reps');
@@ -941,7 +960,6 @@ function renderLog(){
         +'<button class="remove-ex-btn" onclick="removeEx('+ei+')" aria-label="Remove">✕</button>'
       +'</div>'
       +hint
-      // ── Unit selector row ──
       +'<div class="unit-row">'
         +'<div>'
           +'<div class="unit-label">Load type</div>'
@@ -965,7 +983,6 @@ function renderLog(){
           +'</select>'
         +'</div>'
       +'</div>'
-      // ── Set rows ──
       +'<div class="set-logger-body">'
         +'<div class="sg sg-hdr">'
           +'<div class="sg-lbl">Set</div>'
@@ -1024,21 +1041,14 @@ function saveSession(){
   updateStats();toast('✅','Workout saved! Great work 💪');
 }
 
-// ══ SCROLL-SAFE TAP HANDLER ══
-// Only fires the callback if the finger moved less than 10px (i.e. it's a tap, not a scroll)
-function addTapHandler(el, cb){
-  var startX, startY;
-  el.addEventListener('touchstart', function(ev){
-    startX = ev.touches[0].clientX;
-    startY = ev.touches[0].clientY;
-  }, {passive: true});
-  el.addEventListener('touchend', function(ev){
-    var dx = Math.abs(ev.changedTouches[0].clientX - startX);
-    var dy = Math.abs(ev.changedTouches[0].clientY - startY);
-    if(dx < 10 && dy < 10){
-      ev.preventDefault();
-      cb();
-    }
+// ══ TAP HANDLER ══
+function addTapHandler(el,cb){
+  var startX,startY;
+  el.addEventListener('touchstart',function(ev){startX=ev.touches[0].clientX;startY=ev.touches[0].clientY;},{passive:true});
+  el.addEventListener('touchend',function(ev){
+    var dx=Math.abs(ev.changedTouches[0].clientX-startX);
+    var dy=Math.abs(ev.changedTouches[0].clientY-startY);
+    if(dx<10&&dy<10){ev.preventDefault();cb();}
   });
 }
 
@@ -1073,7 +1083,7 @@ function selCatF(id){selCat=selCat===id?null:id;renderLib();}
 function renderHistory(){
   const wrap=document.getElementById('history-container');
   if(!sessions.length){
-    wrap.innerHTML=`<div class="hist-empty"><div class="hist-empty-icon">📋</div><div class="hist-empty-title">No sessions yet</div><div class="hist-empty-sub">Log your first workout and it will appear here.</div></div>`;
+    wrap.innerHTML='<div class="hist-empty"><div class="hist-empty-icon">📋</div><div class="hist-empty-title">No sessions yet</div><div class="hist-empty-sub">Log your first workout and it will appear here.</div></div>';
     return;
   }
   wrap.innerHTML=sessions.map((s,si)=>{
@@ -1083,44 +1093,36 @@ function renderHistory(){
     const time=d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
     const ts=s.exercises.reduce((a,e)=>a+e.sets.length,0);
     const vol=s.exercises.reduce((a,e)=>a+e.sets.reduce((b,st)=>b+(st.weight||0)*(st.reps||0),0),0);
-    return `<div class="hist-session">
-      <div class="hist-hdr" onclick="toggleSess(${si})">
-        <div class="date-badge">
-          <div class="db-day">${d.getDate()}</div>
-          <div class="db-mon">${d.toLocaleDateString('en-GB',{month:'short'})}</div>
-          <div class="db-yr">${d.getFullYear()}</div>
-        </div>
-        <div class="hist-info">
-          <div class="hist-date">${dayName}, ${dateShort}</div>
-          <div class="hist-meta">${time} · ${s.exercises.length} exercises · ${ts} sets · ${vol.toLocaleString()} kg vol</div>
-        </div>
-        <div class="hist-actions">
-          <button class="del-btn" onclick="event.stopPropagation();delSess(${si})" aria-label="Delete session">🗑</button>
-          <span class="chevron" id="chev-${si}">▼</span>
-        </div>
-      </div>
-      <div class="hist-body" id="hb-${si}">
-        ${s.exercises.map(ex=>`
-        <div class="hist-ex">
-          <div class="hist-ex-name">${ex.name}</div>
-          <div class="hist-sets-hdr"><div>#</div><div>Date</div><div>Load</div><div>Measure</div></div>
-          ${ex.sets.map((st,i)=>{
-            const lt=st.loadType||ex.loadType||'weight';
-            const mt=st.measType||ex.measType||'reps';
-            const wDisp=lt==='bodyweight'?'BW':((st.w2!==undefined?st.w2:st.weight)||0);
-            const wUnit=lt==='bodyweight'?'':lt==='distance'?'km':lt==='band'?'band':'kg';
-            const rDisp=(st.r2!==undefined?st.r2:st.reps)||0;
-            const rUnit=mt==='time'?'sec':mt==='distance'?'km':mt==='calories'?'cal':'reps';
-            return '<div class="hist-set-card">'
-              +'<div class="hsc-num">'+(i+1)+'</div>'
-              +'<div class="hsc-cell"><span class="hsc-date">'+dateShort+'</span></div>'
-              +'<div class="hsc-cell"><strong>'+wDisp+'</strong><span>'+wUnit+'</span></div>'
-              +'<div class="hsc-cell"><strong>'+rDisp+'</strong><span>'+rUnit+'</span></div>'
-              +'</div>';
-          }).join('')}
-        </div>`).join('')}
-      </div>
-    </div>`;
+    return '<div class="hist-session">'
+      +'<div class="hist-hdr" onclick="toggleSess('+si+')">'
+        +'<div class="date-badge"><div class="db-day">'+d.getDate()+'</div><div class="db-mon">'+d.toLocaleDateString('en-GB',{month:'short'})+'</div><div class="db-yr">'+d.getFullYear()+'</div></div>'
+        +'<div class="hist-info"><div class="hist-date">'+dayName+', '+dateShort+'</div><div class="hist-meta">'+time+' · '+s.exercises.length+' exercises · '+ts+' sets · '+vol.toLocaleString()+' kg vol</div></div>'
+        +'<div class="hist-actions"><button class="del-btn" onclick="event.stopPropagation();delSess('+si+')" aria-label="Delete">🗑</button><span class="chevron" id="chev-'+si+'">▼</span></div>'
+      +'</div>'
+      +'<div class="hist-body" id="hb-'+si+'">'
+        +s.exercises.map(ex=>{
+          const dateShortEx=new Date(s.date).toLocaleDateString('en-GB',{day:'numeric',month:'short'});
+          return '<div class="hist-ex">'
+            +'<div class="hist-ex-name">'+ex.name+'</div>'
+            +'<div class="hist-sets-hdr"><div>#</div><div>Date</div><div>Load</div><div>Measure</div></div>'
+            +ex.sets.map((st,i)=>{
+              const lt=st.loadType||ex.loadType||'weight';
+              const mt=st.measType||ex.measType||'reps';
+              const wDisp=lt==='bodyweight'?'BW':((st.w2!==undefined?st.w2:st.weight)||0);
+              const wUnit=lt==='bodyweight'?'':lt==='band'?'band':'kg';
+              const rDisp=(st.r2!==undefined?st.r2:st.reps)||0;
+              const rUnit=mt==='time'?'sec':mt==='distance'?'km':mt==='calories'?'cal':'reps';
+              return '<div class="hist-set-card">'
+                +'<div class="hsc-num">'+(i+1)+'</div>'
+                +'<div class="hsc-cell"><span class="hsc-date">'+dateShortEx+'</span></div>'
+                +'<div class="hsc-cell"><strong>'+wDisp+'</strong><span>'+wUnit+'</span></div>'
+                +'<div class="hsc-cell"><strong>'+rDisp+'</strong><span>'+rUnit+'</span></div>'
+                +'</div>';
+            }).join('')
+          +'</div>';
+        }).join('')
+      +'</div>'
+    +'</div>';
   }).join('');
 }
 function toggleSess(si){
@@ -1142,26 +1144,21 @@ function renderProgress(){
   const today=new Date();today.setHours(0,0,0,0);
   const days=[...new Set(sessions.map(s=>{const d=new Date(s.date);d.setHours(0,0,0,0);return d.getTime()}))].sort((a,b)=>b-a);
   for(let i=0;i<days.length;i++){const e=new Date(today);e.setDate(today.getDate()-i);if(days[i]===e.getTime())streak++;else break;}
-  document.getElementById('prog-grid').innerHTML=`
-    <div class="prog-card"><div class="prog-title">Sessions</div><div class="prog-val">${sessions.length}</div><div class="prog-sub">logged</div></div>
-    <div class="prog-card"><div class="prog-title">Total Sets</div><div class="prog-val">${ts}</div><div class="prog-sub">all sessions</div></div>
-    <div class="prog-card"><div class="prog-title">Volume</div><div class="prog-val">${vol>=1000?(vol/1000).toFixed(1)+'t':vol+'kg'}</div><div class="prog-sub">weight × reps</div></div>
-    <div class="prog-card"><div class="prog-title">Exercises</div><div class="prog-val">${uEx}</div><div class="prog-sub">unique</div></div>
-    <div class="prog-card"><div class="prog-title">Streak</div><div class="prog-val">${streak}</div><div class="prog-sub">days in a row</div></div>
-  `;
+  document.getElementById('prog-grid').innerHTML=
+    '<div class="prog-card"><div class="prog-title">Sessions</div><div class="prog-val">'+sessions.length+'</div><div class="prog-sub">logged</div></div>'
+    +'<div class="prog-card"><div class="prog-title">Total Sets</div><div class="prog-val">'+ts+'</div><div class="prog-sub">all sessions</div></div>'
+    +'<div class="prog-card"><div class="prog-title">Volume</div><div class="prog-val">'+(vol>=1000?(vol/1000).toFixed(1)+'t':vol+'kg')+'</div><div class="prog-sub">weight × reps</div></div>'
+    +'<div class="prog-card"><div class="prog-title">Exercises</div><div class="prog-val">'+uEx+'</div><div class="prog-sub">unique</div></div>'
+    +'<div class="prog-card"><div class="prog-title">Streak</div><div class="prog-val">'+streak+'</div><div class="prog-sub">days in a row</div></div>';
   const bests={};
   sessions.forEach(s=>s.exercises.forEach(ex=>ex.sets.forEach(st=>{if(!bests[ex.name]||st.weight>bests[ex.name])bests[ex.name]=st.weight;})));
   const sorted=Object.entries(bests).sort((a,b)=>b[1]-a[1]).slice(0,15);
   const pb=document.getElementById('pb-container');
   if(!sorted.length){pb.innerHTML='';return;}
-  pb.innerHTML=`
-    <div class="section-title" style="margin-top:1.25rem;margin-bottom:.2rem;">Personal Bests 🏆</div>
-    <p class="section-sub">Heaviest weight logged per exercise.</p>
-    <div class="pb-list">${sorted.map(([n,w])=>`<div class="pb-row"><span class="pb-name">${n}</span><span class="pb-wt">${w} kg</span></div>`).join('')}</div>
-    <div class="cta-banner" style="margin-top:1.35rem;">
-      <div><h3>Ready to break more records?</h3><p>Get a custom program from Tarek &amp; Chloe and hit new PBs every week.</p></div>
-      <a href="https://www.mrandmrslifestyle.com/#coaching" class="cta-btn">Get My Program →</a>
-    </div>`;
+  pb.innerHTML='<div class="section-title" style="margin-top:1.25rem;margin-bottom:.2rem;">Personal Bests 🏆</div>'
+    +'<p class="section-sub">Heaviest weight logged per exercise.</p>'
+    +'<div class="pb-list">'+sorted.map(([n,w])=>'<div class="pb-row"><span class="pb-name">'+n+'</span><span class="pb-wt">'+w+' kg</span></div>').join('')+'</div>'
+    +'<div class="cta-banner" style="margin-top:1.35rem;"><div><h3>Ready to break more records?</h3><p>Get a custom program from Tarek &amp; Chloe and hit new PBs every week.</p></div><a href="https://www.mrandmrslifestyle.com/#coaching" class="cta-btn">Get My Program →</a></div>';
 }
 
 // ══ TOAST ══
@@ -1172,17 +1169,23 @@ function toast(icon,msg){
   document.getElementById('toast-msg').textContent=msg;
   const t=document.getElementById('toast');
   t.classList.add('show');
-  tt=setTimeout(()=>t.classList.remove('show'),3000);
+  tt=setTimeout(()=>t.classList.remove('show'),3500);
 }
 
 // ══ BOOT ══
 load();
-if(user){document.getElementById('gate-section').style.display='none';showApp();}
-else{
+if(user){
+  document.getElementById('gate-section').style.display='none';
+  showApp();
+} else {
   document.getElementById('gate-section').style.display='flex';
-  // If there are any saved users on this device, open on returning tab
-  const active=localStorage.getItem(activeUserKey());
-  if(active) switchGateTab('returning');
+  // Check if any accounts exist on this device → open returning tab
+  let hasAccounts=false;
+  for(let i=0;i<localStorage.length;i++){
+    const k=localStorage.key(i);
+    if(k&&k.startsWith('mml_u_')){hasAccounts=true;break;}
+  }
+  if(hasAccounts) switchGateTab('returning');
 }
 </script>
 </body>
