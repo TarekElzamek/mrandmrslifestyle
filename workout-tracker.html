@@ -204,14 +204,7 @@ nav.app-tabs{display:grid;grid-template-columns:repeat(4,1fr);background:var(--o
 .social-btns-col{display:flex;flex-direction:column;gap:.6rem;}
 .modal-disclaimer{text-align:center;font-size:.64rem;color:rgba(255,255,255,.18);margin-top:.85rem;line-height:1.55;}
 
-/* Step 2 — quick profile */
-#step-profile{display:none;}
-.profile-form{display:flex;flex-direction:column;gap:.65rem;margin-top:.8rem;}
-.profile-sel{background:#1c1c1c;border:1px solid rgba(255,255,255,.12);color:rgba(255,255,255,.78);padding:.88rem 1rem;border-radius:var(--radius);font-family:inherit;font-size:16px;outline:none;width:100%;cursor:pointer;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23C9A84C'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right .9rem center;padding-right:2rem;}
-.profile-sel option{background:#1c1c1c;}
-.btn-gold-full{width:100%;background:var(--gold);color:#000;border:none;padding:1rem;border-radius:var(--radius);font-family:inherit;font-size:1rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;min-height:52px;margin-top:.2rem;}
-.btn-gold-full:active{background:var(--gold-light);}
-.btn-gold-full:disabled{opacity:.55;cursor:not-allowed;}
+
 
 /* Loading spinner */
 #loading-overlay{position:fixed;inset:0;background:rgba(10,10,10,.9);z-index:999;display:none;flex-direction:column;align-items:center;justify-content:center;gap:1rem;}
@@ -361,32 +354,7 @@ nav.app-tabs{display:grid;grid-template-columns:repeat(4,1fr);background:var(--o
       <p class="modal-disclaimer">🔒 We only access your name &amp; email. No passwords stored. Cancel anytime.</p>
     </div>
 
-    <!-- Step 2: Quick profile (post-auth) -->
-    <div id="step-profile">
-      <div class="modal-eyebrow">Almost there — 2 quick questions</div>
-      <h2 class="modal-title">Let's <em>Personalise</em><br>Your Experience.</h2>
-      <p class="modal-sub" style="margin-bottom:.5rem;">Tarek &amp; Chloe use this to send you relevant tips. Takes 5 seconds.</p>
-      <div class="profile-form">
-        <select class="profile-sel" id="prof-goal">
-          <option value="" disabled selected>Your Goal *</option>
-          <option>Fat Loss</option>
-          <option>Muscle Gain</option>
-          <option>Body Recomposition</option>
-          <option>General Fitness &amp; Health</option>
-          <option>Strength &amp; Performance</option>
-          <option>Glutes Development</option>
-          <option>Couples Transformation</option>
-          <option>Pre/Postnatal Training</option>
-        </select>
-        <select class="profile-sel" id="prof-level">
-          <option value="" disabled selected>Training Level *</option>
-          <option>Beginner (0–1 year)</option>
-          <option>Intermediate (1–3 years)</option>
-          <option>Advanced (3+ years)</option>
-        </select>
-        <button class="btn-gold-full" id="prof-submit-btn" onclick="submitProfile()">🚀 Save My Workout Now</button>
-      </div>
-    </div>
+
   </div>
 </div>
 
@@ -583,25 +551,21 @@ function overlayClick(e){if(e.target===document.getElementById('modal-overlay'))
 
 // ══ AUTH ══
 async function authWith(provider){
-  // Simulate OAuth — in production this would redirect to Apple/Google OAuth
-  // For demo purposes we simulate a successful return with mock user data
   showLoad('Connecting to '+(provider==='apple'?'Apple':'Google')+'…');
   await new Promise(r=>setTimeout(r,1400)); // Simulate OAuth round-trip
 
-  // Simulated user data returned from OAuth
+  // Simulated OAuth return — in production replace with real Apple/Google OAuth data
   const mockUsers={
     apple:{name:'Alex Johnson',email:'alex.johnson@icloud.com',provider:'apple'},
     google:{name:'Alex Johnson',email:'alex.johnson@gmail.com',provider:'google'},
   };
-  const oauthUser=mockUsers[provider];
+  const oAuth=mockUsers[provider];
+  const username=oAuth.email.split('@')[0].toLowerCase().replace(/[^a-z0-9]/g,'')+(Math.floor(Math.random()*900)+100);
 
-  hideLoad();
-
-  // Check if already registered
   try{
-    const rows=await api.get('users?email=eq.'+encodeURIComponent(oauthUser.email)+'&select=*');
+    // Returning user?
+    const rows=await api.get('users?email=eq.'+encodeURIComponent(oAuth.email)+'&select=*');
     if(rows&&rows.length){
-      // Returning user — load their data
       user={...rows[0]};
       saveLocal(user);
       showLoad('Loading your sessions…');
@@ -613,58 +577,25 @@ async function authWith(provider){
       toast('👋','Welcome back, '+user.name.split(' ')[0]+'!');
       return;
     }
-  }catch(e){}
-
-  // New user — show quick profile step
-  hideLoad();
-  window._oauthPending=oauthUser;
-  document.getElementById('step-auth').style.display='none';
-  document.getElementById('step-profile').style.display='block';
-}
-
-async function submitProfile(){
-  const goal=document.getElementById('prof-goal').value;
-  const level=document.getElementById('prof-level').value;
-  if(!goal||!level){toast('⚠️','Please answer both questions.');return;}
-  if(!window._oauthPending){closeModal();return;}
-
-  const btn=document.getElementById('prof-submit-btn');
-  btn.textContent='Saving…';btn.disabled=true;
-  showLoad('Creating your account…');
-
-  const oAuth=window._oauthPending;
-  const username=oAuth.email.split('@')[0].toLowerCase().replace(/[^a-z0-9]/g,'')+(Math.floor(Math.random()*900)+100);
-
-  try{
-    // Check email uniqueness
-    const rows=await api.get('users?email=eq.'+encodeURIComponent(oAuth.email)+'&select=*');
-    if(rows&&rows.length){user={...rows[0]};}
-    else{
-      const created=await api.post('users',{
-        username,name:oAuth.name,email:oAuth.email,phone:'',
-        goal,level,provider:oAuth.provider
-      });
-      user=created[0];
-      // Lead capture
-      try{await fetch('https://formspree.io/f/mdayvono',{
-        method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},
-        body:JSON.stringify({_subject:'🏋️ New Tracker User — '+oAuth.name,name:oAuth.name,email:oAuth.email,goal,level,provider:oAuth.provider,source:'Free Workout Tracker (Social Auth)'})
-      });}catch(e){}
-    }
+    // New user — create account instantly, no extra steps
+    showLoad('Creating your account…');
+    const created=await api.post('users',{username,name:oAuth.name,email:oAuth.email,phone:'',goal:'',level:'',provider:oAuth.provider});
+    user=created[0];
+    // Lead capture (silent)
+    try{await fetch('https://formspree.io/f/mdayvono',{
+      method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},
+      body:JSON.stringify({_subject:'🏋️ New Tracker User — '+oAuth.name,name:oAuth.name,email:oAuth.email,provider:oAuth.provider,source:'Free Workout Tracker (Social Auth)'})
+    });}catch(e){}
     saveLocal(user);
-    showLoad('Loading your account…');
-    await loadSessions();
+    sessions=[];
     hideLoad();
     closeModal();
     setLoggedInUI();
     if(pendingSession){await doSave();pendingSession=null;}
-    toast('🎉','Account created! Welcome, '+user.name.split(' ')[0]+'!');
+    toast('🎉','You\'re in! Welcome, '+user.name.split(' ')[0]+'! 💪');
   }catch(e){
     hideLoad();
-    toast('⚠️','Could not create account — try again.');
-  }finally{
-    btn.textContent='🚀 Save My Workout Now';btn.disabled=false;
-    window._oauthPending=null;
+    toast('⚠️','Could not sign in — please try again.');
   }
 }
 
