@@ -845,52 +845,54 @@ function renderLog(){
   }).join('');
 }
 
-// ── Single event-delegation listener on the exercises container ──
-document.addEventListener('DOMContentLoaded',function(){
-  // Save button
-  document.getElementById('save-btn-main').addEventListener('click', handleSave);
+// ── Event delegation — called once after DOM ready ──
+function initListeners(){
+  // Save button — direct click
+  var saveBtn=document.getElementById('save-btn-main');
+  if(saveBtn) saveBtn.onclick=handleSave;
 
-  const wrap=document.getElementById('active-exercises');
+  var wrap=document.getElementById('active-exercises');
 
-  // Input changes — update state directly
+  // Inputs: sync value into state immediately
   wrap.addEventListener('input',function(e){
-    const inp=e.target;
-    if(inp.dataset.f&&inp.dataset.ei!==undefined){
+    var inp=e.target;
+    if(inp.dataset&&inp.dataset.f&&inp.dataset.ei!==undefined){
       activeEx[+inp.dataset.ei].sets[+inp.dataset.si][inp.dataset.f]=inp.value;
     }
   });
 
-  // All button/select clicks via delegation
+  // Selects: unit changes
   wrap.addEventListener('change',function(e){
-    const el=e.target;
-    if(el.dataset.action==='unit'){
+    var el=e.target;
+    if(el.dataset&&el.dataset.action==='unit'){
       activeEx[+el.dataset.ei][el.dataset.field]=el.value;
       renderLog();
     }
   });
 
+  // Buttons: done / remove / addset
   wrap.addEventListener('click',function(e){
-    const el=e.target.closest('[data-action]');
+    var el=e.target.closest('[data-action]');
     if(!el)return;
-    const action=el.dataset.action;
-    const ei=+el.dataset.ei;
+    var action=el.dataset.action;
+    var ei=+el.dataset.ei;
     if(action==='remove'){
       activeEx.splice(ei,1);
       renderLog();
       document.getElementById('save-wrap').style.display=activeEx.length?'block':'none';
     } else if(action==='done'){
-      const si=+el.dataset.si;
+      var si=+el.dataset.si;
       activeEx[ei].sets[si].done=!activeEx[ei].sets[si].done;
       el.classList.toggle('done',activeEx[ei].sets[si].done);
       el.textContent=activeEx[ei].sets[si].done?'✓':'○';
     } else if(action==='addset'){
-      const ex=activeEx[ei],si=ex.sets.length;
-      const h=ex.last&&ex.last.sets[si]?{hw:ex.last.sets[si].weight,hr:ex.last.sets[si].reps}:{hw:'',hr:''};
-      ex.sets.push({w:'',r:'',done:false,...h});
+      var ex=activeEx[ei],si2=ex.sets.length;
+      var h=ex.last&&ex.last.sets[si2]?{hw:ex.last.sets[si2].weight,hr:ex.last.sets[si2].reps}:{hw:'',hr:''};
+      ex.sets.push({w:'',r:'',done:false,hw:h.hw||'',hr:h.hr||''});
       renderLog();
     }
   });
-});
+}
 
 // ══ LIBRARY ══
 function renderLib(){
@@ -1024,6 +1026,7 @@ function renderProgress(){
 
 // ══ BOOT ══
 async function boot(){
+  initListeners();
   document.getElementById('today-date').textContent=new Date().toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
   renderLib();
 
