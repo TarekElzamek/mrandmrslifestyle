@@ -177,6 +177,10 @@ nav.app-tabs{display:grid;grid-template-columns:repeat(4,1fr);background:var(--o
 .pb-name{color:rgba(255,255,255,.62);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;}
 .pb-wt{color:var(--gold);font-weight:700;flex-shrink:0;}
 
+.modal-tabs{display:flex;gap:.4rem;background:rgba(255,255,255,.05);border-radius:10px;padding:.25rem;margin-bottom:1.25rem;}
+.modal-tab{flex:1;background:none;border:none;color:rgba(255,255,255,.4);font-family:var(--font-body);font-size:.8rem;font-weight:600;padding:.62rem .5rem;border-radius:7px;cursor:pointer;transition:all .2s;letter-spacing:.02em;}
+.modal-tab.active{background:var(--gold);color:#000;}
+
 /* SAVE MODAL */
 #save-modal{position:fixed;inset:0;z-index:400;display:none;align-items:flex-end;justify-content:center;background:rgba(0,0,0,.72);backdrop-filter:blur(4px);}
 #save-modal.open{display:flex;}
@@ -239,7 +243,7 @@ nav.app-tabs{display:grid;grid-template-columns:repeat(4,1fr);background:var(--o
 
 <div id="guest-banner">
   <div class="gb-text"><strong>Guest mode</strong> — log freely. Enter your details when you save to keep your history.</div>
-  <button class="gb-btn" onclick="openModal()">Sign In</button>
+  <button class="gb-btn" onclick="openModal('returning')">Sign In</button>
 </div>
 
 <div id="app-section">
@@ -314,18 +318,39 @@ nav.app-tabs{display:grid;grid-template-columns:repeat(4,1fr);background:var(--o
   </div>
 </div>
 
-<!-- SAVE MODAL — name + email only -->
+<!-- SAVE / SIGN IN MODAL -->
 <div id="save-modal" onclick="modalBgClick(event)">
   <div class="modal-sheet">
     <div class="modal-pill"></div>
     <div class="modal-close-row"><button class="modal-close-btn" onclick="closeModal()">✕</button></div>
-    <div class="modal-eyebrow">Save Your Progress</div>
-    <h2 class="modal-title">Never Lose a<br><em>Workout Again.</em></h2>
-    <p class="modal-sub">Enter your name and email — your workout saves to the cloud instantly and you can access it on any device, forever.</p>
-    <input class="modal-input" id="modal-name" type="text" placeholder="Your name *" autocomplete="name" inputmode="text">
-    <input class="modal-input" id="modal-email" type="email" placeholder="Email address *" autocomplete="email" inputmode="email">
-    <button class="modal-save-btn" id="modal-save-btn" onclick="authEmail()">💾 Save My Workout</button>
-    <p class="modal-disclaimer">🔒 Private &amp; secure. We never share your data or spam you.</p>
+
+    <!-- Tabs -->
+    <div class="modal-tabs">
+      <button class="modal-tab active" id="mtab-new" onclick="switchModalTab('new')">New here</button>
+      <button class="modal-tab" id="mtab-returning" onclick="switchModalTab('returning')">Returning</button>
+    </div>
+
+    <!-- NEW USER -->
+    <div id="modal-new">
+      <div class="modal-eyebrow">Save Your Progress</div>
+      <h2 class="modal-title">Never Lose a<br><em>Workout Again.</em></h2>
+      <p class="modal-sub">Enter your name and email — your workout saves to the cloud instantly and you can access it on any device, forever.</p>
+      <input class="modal-input" id="modal-name" type="text" placeholder="Your name *" autocomplete="name" inputmode="text">
+      <input class="modal-input" id="modal-email" type="email" placeholder="Email address *" autocomplete="email" inputmode="email">
+      <button class="modal-save-btn" id="modal-save-btn" onclick="authEmail()">💾 Save My Workout</button>
+      <p class="modal-disclaimer">🔒 Private &amp; secure. We never share your data or spam you.</p>
+    </div>
+
+    <!-- RETURNING USER -->
+    <div id="modal-returning" style="display:none;">
+      <div class="modal-eyebrow">Welcome Back</div>
+      <h2 class="modal-title">Load Your<br><em>History.</em></h2>
+      <p class="modal-sub">Enter the email you signed up with — your full workout history loads back instantly.</p>
+      <input class="modal-input" id="modal-return-email" type="email" placeholder="Your email address *" autocomplete="email" inputmode="email">
+      <button class="modal-save-btn" id="modal-return-btn" onclick="authReturn()">▶ Load My History</button>
+      <p class="modal-disclaimer">☁️ Your data is saved to the cloud — works on any device.</p>
+    </div>
+
   </div>
 </div>
 
@@ -487,9 +512,44 @@ function toast(icon,msg){
   _tt=setTimeout(()=>t.classList.remove('show'),3500);
 }
 
-function openModal(){document.getElementById('save-modal').classList.add('open');}
+function openModal(tab){
+  switchModalTab(tab||'new');
+  document.getElementById('save-modal').classList.add('open');
+}
 function closeModal(){document.getElementById('save-modal').classList.remove('open');}
 function modalBgClick(e){if(e.target===document.getElementById('save-modal'))closeModal();}
+
+function switchModalTab(tab){
+  document.getElementById('modal-new').style.display=tab==='new'?'block':'none';
+  document.getElementById('modal-returning').style.display=tab==='returning'?'block':'none';
+  document.getElementById('mtab-new').classList.toggle('active',tab==='new');
+  document.getElementById('mtab-returning').classList.toggle('active',tab==='returning');
+}
+
+function authReturn(){
+  const email=document.getElementById('modal-return-email').value.trim();
+  if(!email||!email.includes('@')){toast('⚠️','Please enter your email address.');return;}
+  const btn=document.getElementById('modal-return-btn');
+  btn.disabled=true;btn.textContent='Loading…';
+  showLoading('Loading your history…');
+  api.get('users?email=eq.'+encodeURIComponent(email)+'&select=*').then(rows=>{
+    if(!rows||!rows.length){
+      hideLoading();btn.disabled=false;btn.textContent='▶ Load My History';
+      toast('⚠️','No account found with that email. Check spelling or sign up as new.');
+      return;
+    }
+    user=rows[0];
+    return api.get('workout_sessions?username=eq.'+encodeURIComponent(user.username)+'&order=date.desc&select=*').then(r=>{
+      sessions=(r||[]).map(x=>({id:x.id,date:x.date,exercises:x.exercises}));
+      saveLocal(user);hideLoading();closeModal();showLoggedInUI();
+      toast('👋','Welcome back, '+user.name.split(' ')[0]+'! 💪');
+    });
+  }).catch(e=>{
+    console.error(e);hideLoading();
+    toast('⚠️','Connection error — please try again.');
+    btn.disabled=false;btn.textContent='▶ Load My History';
+  });
+}
 
 function authEmail(){
   const name=document.getElementById('modal-name').value.trim();
