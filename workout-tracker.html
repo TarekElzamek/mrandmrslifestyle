@@ -299,8 +299,8 @@ nav.app-tabs{display:grid;grid-template-columns:repeat(4,1fr);background:var(--o
         <div class="search-dd" id="search-dd"></div>
       </div>
       <div id="active-exercises"></div>
-      <div id="save-wrap">
-        <button class="save-btn" onclick="handleSave()">✓ Save Workout Session</button>
+      <div id="save-wrap" style="display:none;">
+        <button class="save-btn" id="save-btn-main">✓ Save Workout Session</button>
       </div>
       <div class="cta-banner">
         <h3>Want a personalised program?</h3>
@@ -678,9 +678,10 @@ function hasData(ex){
   return ex.sets.some(s=>s.done||s.w||s.r);
 }
 function handleSave(){
+  syncFromDOM(); // pull any un-synced input values into state first
   const valid=activeEx.filter(hasData);
   if(!activeEx.length){toast('⚠️','Add an exercise first.');return;}
-  if(!valid.length){toast('⚠️','Fill in at least one set — weight or reps.');return;}
+  if(!valid.length){toast('⚠️','Enter weight or reps for at least one set.');return;}
   pendingSession=valid;
   if(!user){openModal('save');return;}
   doSave();
@@ -786,6 +787,14 @@ function addEx(name,cat,muscle){
   switchTab('log');
 }
 
+// ── Sync inputs → activeEx state before any read (called before save/validate) ──
+function syncFromDOM(){
+  document.querySelectorAll('.set-inp[data-ei]').forEach(inp=>{
+    const ei=+inp.dataset.ei,si=+inp.dataset.si,f=inp.dataset.f;
+    activeEx[ei].sets[si][f]=inp.value;
+  });
+}
+
 function renderLog(){
   const wrap=document.getElementById('active-exercises');
   if(!activeEx.length){wrap.innerHTML='';return;}
@@ -797,12 +806,12 @@ function renderLog(){
       return '<span class="hint-chip">S'+(i+1)+': '+wP+' × '+rP+'</span>';
     }).join(''):'';
     const hint=ex.last?'<div class="last-hint"><span>🕒</span><div><strong>'+fmtDate(ex.last.date)+'</strong><div class="hint-chips">'+chips+'</div></div></div>':'';
-    return '<div class="set-logger fade-up">'
+    return '<div class="set-logger fade-up" data-ei="'+ei+'">'
       +'<div class="sl-head"><div><div class="sl-name">'+ex.name+'</div><div class="sl-cat">'+ex.cat+' · '+ex.muscle+'</div></div>'
-      +'<button class="rm-btn" onclick="removeEx('+ei+')">✕</button></div>'+hint
+      +'<button class="rm-btn" data-action="remove" data-ei="'+ei+'">✕</button></div>'+hint
       +'<div class="unit-row">'
         +'<div><div class="unit-label">Load</div>'
-        +'<select class="unit-sel" onchange="setUnit('+ei+',\'loadType\',this.value)">'
+        +'<select class="unit-sel" data-action="unit" data-ei="'+ei+'" data-field="loadType">'
           +'<option value="weight"'+(lt==='weight'?' selected':'')+'>🏋️ Weight (kg)</option>'
           +'<option value="bodyweight"'+(lt==='bodyweight'?' selected':'')+'>🤸 Bodyweight</option>'
           +'<option value="barbell"'+(lt==='barbell'?' selected':'')+'>🔩 Barbell (kg)</option>'
@@ -812,7 +821,7 @@ function renderLog(){
           +'<option value="band"'+(lt==='band'?' selected':'')+'>🎀 Band</option>'
         +'</select></div>'
         +'<div><div class="unit-label">Measure</div>'
-        +'<select class="unit-sel" onchange="setUnit('+ei+',\'measType\',this.value)">'
+        +'<select class="unit-sel" data-action="unit" data-ei="'+ei+'" data-field="measType">'
           +'<option value="reps"'+(mt==='reps'?' selected':'')+'>🔁 Reps</option>'
           +'<option value="time"'+(mt==='time'?' selected':'')+'>⏱ Time (s)</option>'
           +'<option value="distance"'+(mt==='distance'?' selected':'')+'>📏 Distance</option>'
@@ -822,25 +831,66 @@ function renderLog(){
       +'<div class="sl-body">'
         +'<div class="sg sg-hdr"><div class="sg-lbl">Set</div><div class="sg-lbl">'+(isBW?'Load':'kg')+'</div><div class="sg-lbl">'+measLabel(mt)+'</div><div class="sg-lbl">Done</div></div>'
         +ex.sets.map((s,si)=>
-          '<div class="sg sg-row"><div class="set-num">'+(si+1)+'</div>'
-          +(isBW?'<div class="set-inp" style="display:flex;align-items:center;justify-content:center;font-size:.7rem;color:rgba(255,255,255,.35);border:1px solid rgba(255,255,255,.07);border-radius:8px;min-height:44px;">BW</div>'
-            :'<input class="set-inp" type="number" inputmode="decimal" min="0" step="0.5" placeholder="'+(s.hw||'0')+'" value="'+s.w+'" oninput="upd('+ei+','+si+',\'w\',this.value)">')
-          +'<input class="set-inp" type="number" inputmode="'+(mt==='reps'?'numeric':'decimal')+'" min="0" step="'+(mt==='reps'?'1':'0.1')+'" placeholder="'+measPH(mt)+'" value="'+s.r+'" oninput="upd('+ei+','+si+',\'r\',this.value)">'
-          +'<button class="done-btn '+(s.done?'done':'')+'" onclick="toggleDone('+ei+','+si+')">'+(s.done?'✓':'○')+'</button></div>'
+          '<div class="sg sg-row">'
+          +'<div class="set-num">'+(si+1)+'</div>'
+          +(isBW
+            ?'<div class="set-inp" style="display:flex;align-items:center;justify-content:center;font-size:.7rem;color:rgba(255,255,255,.35);border:1px solid rgba(255,255,255,.07);border-radius:8px;min-height:44px;">BW</div>'
+            :'<input class="set-inp" type="number" inputmode="decimal" min="0" step="0.5" placeholder="'+(s.hw||'0')+'" value="'+s.w+'" data-ei="'+ei+'" data-si="'+si+'" data-f="w">')
+          +'<input class="set-inp" type="number" inputmode="'+(mt==='reps'?'numeric':'decimal')+'" min="0" step="'+(mt==='reps'?'1':'0.1')+'" placeholder="'+measPH(mt)+'" value="'+s.r+'" data-ei="'+ei+'" data-si="'+si+'" data-f="r">'
+          +'<button class="done-btn'+(s.done?' done':'')+'" data-action="done" data-ei="'+ei+'" data-si="'+si+'">'+(s.done?'✓':'○')+'</button>'
+          +'</div>'
         ).join('')
-        +'<button class="add-set-btn" onclick="addSet('+ei+')">+ Add Set</button>'
+        +'<button class="add-set-btn" data-action="addset" data-ei="'+ei+'">+ Add Set</button>'
       +'</div></div>';
   }).join('');
 }
-function setUnit(ei,f,v){activeEx[ei][f]=v;renderLog();}
-function upd(ei,si,f,v){activeEx[ei].sets[si][f]=v;}
-function toggleDone(ei,si){activeEx[ei].sets[si].done=!activeEx[ei].sets[si].done;renderLog();}
-function addSet(ei){
-  const ex=activeEx[ei],si=ex.sets.length;
-  const h=ex.last&&ex.last.sets[si]?{hw:ex.last.sets[si].weight,hr:ex.last.sets[si].reps}:{hw:'',hr:''};
-  ex.sets.push({w:'',r:'',done:false,...h});renderLog();
-}
-function removeEx(ei){activeEx.splice(ei,1);renderLog();if(!activeEx.length)document.getElementById('save-wrap').style.display='none';}
+
+// ── Single event-delegation listener on the exercises container ──
+document.addEventListener('DOMContentLoaded',function(){
+  // Save button
+  document.getElementById('save-btn-main').addEventListener('click', handleSave);
+
+  const wrap=document.getElementById('active-exercises');
+
+  // Input changes — update state directly
+  wrap.addEventListener('input',function(e){
+    const inp=e.target;
+    if(inp.dataset.f&&inp.dataset.ei!==undefined){
+      activeEx[+inp.dataset.ei].sets[+inp.dataset.si][inp.dataset.f]=inp.value;
+    }
+  });
+
+  // All button/select clicks via delegation
+  wrap.addEventListener('change',function(e){
+    const el=e.target;
+    if(el.dataset.action==='unit'){
+      activeEx[+el.dataset.ei][el.dataset.field]=el.value;
+      renderLog();
+    }
+  });
+
+  wrap.addEventListener('click',function(e){
+    const el=e.target.closest('[data-action]');
+    if(!el)return;
+    const action=el.dataset.action;
+    const ei=+el.dataset.ei;
+    if(action==='remove'){
+      activeEx.splice(ei,1);
+      renderLog();
+      document.getElementById('save-wrap').style.display=activeEx.length?'block':'none';
+    } else if(action==='done'){
+      const si=+el.dataset.si;
+      activeEx[ei].sets[si].done=!activeEx[ei].sets[si].done;
+      el.classList.toggle('done',activeEx[ei].sets[si].done);
+      el.textContent=activeEx[ei].sets[si].done?'✓':'○';
+    } else if(action==='addset'){
+      const ex=activeEx[ei],si=ex.sets.length;
+      const h=ex.last&&ex.last.sets[si]?{hw:ex.last.sets[si].weight,hr:ex.last.sets[si].reps}:{hw:'',hr:''};
+      ex.sets.push({w:'',r:'',done:false,...h});
+      renderLog();
+    }
+  });
+});
 
 // ══ LIBRARY ══
 function renderLib(){
