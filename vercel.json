@@ -1,0 +1,21 @@
+{
+  "redirects": [
+    { "source": "/(.*)", "has": [{ "type": "host", "value": "mrandmrslifestyle.vercel.app" }], "destination": "https://www.mrandmrslifestyle.com/$1", "permanent": true },
+
+    { "source": "/faq", "destination": "/#faq", "permanent": true },
+    { "source": "/terms-and-conditions", "destination": "/terms.html", "permanent": true },
+    { "source": "/transformations", "destination": "/transformations.html", "permanent": true },
+    { "source": "/calorie-calculator", "destination": "/calculator.html", "permanent": true },
+
+    { "source": "/about-us", "destination": "/#coaches", "permanent": true },
+    { "source": "/contact-us", "destination": "/apply.html", "permanent": true },
+    { "source": "/privacy-policy", "destination": "/privacy.html", "permanent": true },
+    { "source": "/book-online", "destination": "/apply.html", "permanent": true },
+    { "source": "/services-5", "destination": "/packages.html", "permanent": true },
+    { "source": "/shop", "destination": "/packages.html", "permanent": true },
+    { "source": "/product-page/free-download-macro-cheat-sheet", "destination": "/free-guide.html", "permanent": true },
+    { "source": "/product-page/high-protein-recipe-pack", "destination": "/free-guide.html", "permanent": true },
+    { "source": "/product-page/:slug*", "destination": "/packages.html", "permanent": true },
+    { "source": "/product-page-:num", "destination": "/packages.html", "permanent": true }
+  ]
+}

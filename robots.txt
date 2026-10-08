@@ -1,19 +1,5 @@
 User-agent: *
 Allow: /
-
-# Block old Wix pages permanently
-Disallow: /shop
-Disallow: /product-page/
-Disallow: /privacy-policy
-Disallow: /contact-us
-Disallow: /about-us
-Disallow: /book-online
-Disallow: /services-5
-Disallow: /product-page/free-download-macro-cheat-sheet
-Disallow: /product-page/high-protein-recipe-pack
-
-# Block thank-you page from being indexed
 Disallow: /thank-you.html
 
-# Sitemap location
 Sitemap: https://www.mrandmrslifestyle.com/sitemap.xml
