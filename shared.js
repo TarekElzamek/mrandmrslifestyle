@@ -14,7 +14,7 @@ const CONFIG = {
 };
 
 // ── GOOGLE ANALYTICS ─────────────────────────────────────────────────
-if (CONFIG.gaId) {
+if (CONFIG.gaId && typeof window.gtag !== "function") { // skip if the page already loaded GA inline (prevents double-counted pageviews)
   const s = document.createElement('script');
   s.src = `https://www.googletagmanager.com/gtag/js?id=${CONFIG.gaId}`;
   s.async = true;
