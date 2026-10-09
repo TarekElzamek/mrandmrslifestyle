@@ -203,6 +203,9 @@ footer a{color:#C9A84C;}
   }
 }
 
+
+/* mobile menu: full-screen overlay (lives outside the nav so the nav blur cannot clip it) */
+@media (max-width:768px){.mobile-menu{gap:14px!important;overflow-y:auto;justify-content:flex-start!important;padding:90px 24px 48px;}.mobile-menu a{font-size:19px!important;text-transform:none;letter-spacing:0.02em;}.mobile-menu a.current{color:#C9A84C!important;}.mobile-menu .mobile-cta{margin-top:10px;}.mobile-menu{background:#0a0a0a!important;z-index:2147483000!important;}}
 </style>
 
 <script type="application/ld+json">
@@ -295,24 +298,25 @@ footer a{color:#C9A84C;}
   </div>
 
   <!-- Mobile hamburger button -->
-  <button class="mobile-nav-toggle" onclick="document.getElementById('mobileMenu').classList.add('open')" aria-label="Open menu">
+  <button class="mobile-nav-toggle" onclick="openMobileMenu()" aria-label="Open menu">
     <span></span><span></span><span></span>
   </button>
-
-  <!-- Mobile fullscreen menu -->
-  <div class="mobile-menu" id="mobileMenu">
-    <button class="mobile-menu-close" onclick="document.getElementById('mobileMenu').classList.remove('open')">&times;</button>
-    <a href="https://www.mrandmrslifestyle.com/index.html">Home</a>
-    <a href="https://www.mrandmrslifestyle.com/personal-trainer-dubai.html">Dubai PT</a>
-    <a href="https://www.mrandmrslifestyle.com/online-coaching.html">Online Coaching</a>
-    <a href="https://www.mrandmrslifestyle.com/transformations.html">Results</a>
-    <a href="https://www.mrandmrslifestyle.com/blog.html">Blog</a>
-    <a href="https://www.mrandmrslifestyle.com/calculator.html">Calculator</a>
-    <a href="https://www.mrandmrslifestyle.com/free-guide.html">Free Guide</a>
-    <a href="https://www.mrandmrslifestyle.com/apply.html" class="mobile-cta">Apply Now</a>
-  </div>
-
 </nav>
+<div class="mobile-menu" id="mobileMenu" role="dialog" aria-label="Site menu">
+  <button class="mobile-menu-close" onclick="closeMobileMenu()" aria-label="Close menu">&times;</button>
+  <a href="https://www.mrandmrslifestyle.com/">Home</a>
+  <a href="https://www.mrandmrslifestyle.com/personal-trainer-dubai.html">Dubai PT</a>
+  <a href="https://www.mrandmrslifestyle.com/female-personal-trainer-dubai.html">Female PT</a>
+  <a href="https://www.mrandmrslifestyle.com/online-coaching.html">Online Coaching</a>
+  <a href="https://www.mrandmrslifestyle.com/packages.html">Packages</a>
+  <a href="https://www.mrandmrslifestyle.com/transformations.html">Results</a>
+  <a href="https://www.mrandmrslifestyle.com/blog.html">Blog</a>
+  <a href="https://www.mrandmrslifestyle.com/free-guide.html">Free Guide</a>
+  <a href="https://www.mrandmrslifestyle.com/calculator.html">Calculator</a>
+  <a href="https://www.mrandmrslifestyle.com/workout-tracker.html">Free Workout Tracker</a>
+  <a href="https://www.mrandmrslifestyle.com/apply.html" class="mobile-cta">Apply Now</a>
+</div>
+<script>function openMobileMenu(){document.getElementById('mobileMenu').classList.add('open');document.body.style.overflow='hidden';}function closeMobileMenu(){document.getElementById('mobileMenu').classList.remove('open');document.body.style.overflow='';}</script>
 
 <div class="hero">
   <img src="blog-ramadan-fitness.jpg" alt="Athletic man training at night with crescent moon and Dubai skyline">
