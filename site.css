@@ -147,3 +147,13 @@ img.coach-pic { display: block; width: 100%; height: auto; aspect-ratio: 1 / 1; 
 .mm-related a { display: flex; justify-content: space-between; gap: 1rem; padding: 0.9rem 1.1rem; border: 1px solid rgba(201,168,76,0.18); border-radius: 6px; color: #fff; text-decoration: none; font-size: 0.95rem; transition: border-color .25s, background .25s; }
 .mm-related a:hover { border-color: rgba(201,168,76,0.5); background: rgba(201,168,76,0.06); }
 .mm-related a span { color: #C9A84C; flex-shrink: 0; }
+
+/* Long-form text block used on visual pages */
+.mm-prose { max-width: 860px; margin: 0 auto; padding: 4.5rem 1.5rem 2rem; font-family: 'DM Sans', sans-serif; color: rgba(232,224,208,0.85); line-height: 1.75; }
+.mm-prose h2 { font-family: 'DM Serif Display', Georgia, serif; font-weight: 400; font-size: clamp(1.8rem, 4vw, 2.6rem); color: #fff; margin: 0 0 1rem; line-height: 1.15; }
+.mm-prose h2 em { color: #C9A84C; }
+.mm-prose h3 { font-family: 'DM Serif Display', Georgia, serif; font-weight: 400; font-size: 1.35rem; color: #C9A84C; margin: 2rem 0 0.5rem; }
+.mm-prose p { margin: 0 0 1rem; }
+.mm-prose a { color: #C9A84C; }
+.mm-prose ul { padding-left: 1.3rem; margin: 0 0 1rem; }
+.mm-prose li { margin-bottom: 0.4rem; }
