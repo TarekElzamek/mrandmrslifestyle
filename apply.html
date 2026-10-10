@@ -144,7 +144,7 @@ footer p { font-size: 0.73rem; color: rgba(255,255,255,0.22); }
 <body>
 
 <div class="top-bar">
-  <strong>⚡ Only 4 coaching spots available this month.</strong> Applications close when spots are filled.
+  <strong>⚡ Only <span data-spots>3</span> coaching spots available this month.</strong> Applications close when spots are filled.
 </div>
 
 <nav>
@@ -153,7 +153,7 @@ footer p { font-size: 0.73rem; color: rgba(255,255,255,0.22); }
 </nav>
 
 <section class="hero">
-  <div class="spots-badge">4 Spots Remaining · May 2026</div>
+  <div class="spots-badge"><span data-spots>3</span> <span data-spots-word>Spots</span> Remaining · <span data-month>October 2026</span></div>
   <h1>Apply for <em>Elite</em><br>Online Coaching</h1>
   <p class="hero-sub">This is not a shop checkout. Tell us about you, your goals, and your lifestyle — and we'll personally review your application within 24 hours.</p>
 </section>
@@ -371,5 +371,6 @@ async function handleSubmit() {
 </script>
 <script src="shared.js"></script>
 <script src="chat-widget.js" defer></script>
+<script src="/spots.js" defer></script>
 </body>
 </html>

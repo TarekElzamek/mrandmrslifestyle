@@ -390,7 +390,7 @@
 <body>
 <div class="site-header">
   <div class="urgency-banner">
-    🔥 Only 4 Online Coaching Spots Remaining This Month — Don't Miss Out
+    🔥 Only <span data-spots>3</span> Online Coaching <span data-spots-word>Spots</span> Remaining This Month — Don't Miss Out
     <a href="packages.html" class="claim-link">Claim Yours</a>
   </div>
   <header class="mm-header mm-static">
@@ -692,7 +692,7 @@
 </section>
 
 <section class="urgency-section" id="contact">
-  <div class="spots-counter"><div class="spots-num">4</div><div class="spots-label">Online Coaching Spots Left This Month</div></div>
+  <div class="spots-counter"><div class="spots-num" data-spots>3</div><div class="spots-label">Online Coaching Spots Left This Month</div></div>
   <div style="display:flex;gap:1rem;justify-content:center;margin:1.5rem 0 2rem;flex-wrap:wrap;">
     <div style="background:rgba(0,0,0,0.4);border:1px solid rgba(201,168,76,0.3);border-radius:6px;padding:0.75rem 1.25rem;min-width:70px;text-align:center;"><div id="cd-days" style="font-family:var(--font-display);font-size:2rem;font-weight:700;color:var(--gold);line-height:1;">--</div><div style="font-size:0.6rem;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-top:0.2rem;">Days</div></div>
     <div style="background:rgba(0,0,0,0.4);border:1px solid rgba(201,168,76,0.3);border-radius:6px;padding:0.75rem 1.25rem;min-width:70px;text-align:center;"><div id="cd-hrs" style="font-family:var(--font-display);font-size:2rem;font-weight:700;color:var(--gold);line-height:1;">--</div><div style="font-size:0.6rem;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-top:0.2rem;">Hours</div></div>
@@ -935,5 +935,6 @@ document.getElementById('intake-modal').addEventListener('click', function(e) {
 </script>
 <script src="shared.js"></script>
 <script src="chat-widget.js" defer></script>
+<script src="/spots.js" defer></script>
 </body>
 </html>
