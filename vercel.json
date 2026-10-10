@@ -107,6 +107,71 @@
       "permanent": true
     },
     {
+      "source": "/tarek-elzamek",
+      "destination": "/tarek-elzamek.html",
+      "permanent": true
+    },
+    {
+      "source": "/chloe-antoniazzi",
+      "destination": "/chloe-antoniazzi.html",
+      "permanent": true
+    },
+    {
+      "source": "/personal-trainer-al-quoz",
+      "destination": "/personal-trainer-al-quoz.html",
+      "permanent": true
+    },
+    {
+      "source": "/personal-trainer-meydan",
+      "destination": "/personal-trainer-meydan.html",
+      "permanent": true
+    },
+    {
+      "source": "/reformer-pilates-meydan",
+      "destination": "/reformer-pilates-meydan.html",
+      "permanent": true
+    },
+    {
+      "source": "/blog-personal-trainer-cost-dubai",
+      "destination": "/blog-personal-trainer-cost-dubai.html",
+      "permanent": true
+    },
+    {
+      "source": "/blog-private-reformer-pilates-dubai",
+      "destination": "/blog-private-reformer-pilates-dubai.html",
+      "permanent": true
+    },
+    {
+      "source": "/ar/personal-trainer-dubai",
+      "destination": "/ar/personal-trainer-dubai.html",
+      "permanent": true
+    },
+    {
+      "source": "/ar/female-personal-trainer-dubai",
+      "destination": "/ar/female-personal-trainer-dubai.html",
+      "permanent": true
+    },
+    {
+      "source": "/ar/online-coaching",
+      "destination": "/ar/online-coaching.html",
+      "permanent": true
+    },
+    {
+      "source": "/results",
+      "destination": "/transformations.html",
+      "permanent": true
+    },
+    {
+      "source": "/ar/index.html",
+      "destination": "/ar/",
+      "permanent": true
+    },
+    {
+      "source": "/pilates",
+      "destination": "/reformer-pilates-meydan.html",
+      "permanent": true
+    },
+    {
       "source": "/faq",
       "destination": "/#faq",
       "permanent": true
