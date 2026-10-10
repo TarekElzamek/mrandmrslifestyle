@@ -234,11 +234,15 @@
   .pkg-btn:hover, .pkg-card.featured .pkg-btn { background: var(--gold); color: var(--black); }
   .pkg-card.featured .pkg-btn:hover { background: var(--gold-light); }
   .why-section { background: var(--off-black); }
-  .why-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; max-width: 1100px; margin: 0 auto; }
-  .why-card { padding: 2rem; border-left: 2px solid rgba(201,168,76,0.25); transition: border-color 0.3s; }
-  .why-card:hover { border-color: var(--gold); }
-  .why-icon { font-size: 1.8rem; margin-bottom: 1rem; display: block; }
-  .why-title { font-family: var(--font-display); font-size: 1.15rem; font-weight: 700; margin-bottom: 0.6rem; }
+  .why-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; max-width: 1100px; margin: 0 auto; }
+  .why-card { position: relative; padding: 2.25rem 2rem 2rem; background: linear-gradient(180deg, rgba(255,255,255,0.025), rgba(255,255,255,0.005)); border: 1px solid rgba(201,168,76,0.14); border-radius: 6px; overflow: hidden; transition: border-color 0.35s, transform 0.35s, background 0.35s; }
+  .why-card::before { content: ""; position: absolute; left: 0; top: 0; height: 2px; width: 100%; background: linear-gradient(90deg, var(--gold), transparent); transform: scaleX(0); transform-origin: left; transition: transform 0.45s ease; }
+  .why-card:hover { border-color: rgba(201,168,76,0.4); transform: translateY(-4px); background: linear-gradient(180deg, rgba(201,168,76,0.06), rgba(255,255,255,0.01)); }
+  .why-card:hover::before { transform: scaleX(1); }
+  .why-num { position: absolute; top: 1.5rem; right: 1.75rem; font-family: var(--font-display); font-size: 1.6rem; color: rgba(201,168,76,0.22); line-height: 1; }
+  .why-icon { width: 52px; height: 52px; border: 1px solid rgba(201,168,76,0.45); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--gold); margin-bottom: 1.4rem; background: rgba(201,168,76,0.06); }
+  .why-icon svg { width: 24px; height: 24px; }
+  .why-title { font-family: var(--font-display); font-size: 1.3rem; font-weight: 400; margin-bottom: 0.6rem; letter-spacing: 0.005em; }
   .why-desc { font-size: 0.88rem; color: rgba(255,255,255,0.55); line-height: 1.7; }
   .coaches-section { background: var(--black); }
   .coaches-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; max-width: 900px; margin: 0 auto; }
@@ -330,7 +334,7 @@
     .secondary-packages { grid-template-columns: 1fr 1fr !important; gap: 0.6rem !important; }
     .couples-grid { grid-template-columns: 1fr !important; gap: 2rem !important; }
     .why-grid { grid-template-columns: 1fr !important; gap: 1.25rem !important; }
-    .why-card { padding: 1.25rem 1rem; }
+    .why-card { padding: 1.6rem 1.3rem 1.4rem; } .why-num { top: 1.2rem; right: 1.2rem; }
     .coaches-grid { grid-template-columns: 1fr; gap: 2rem; }
     .coach-photo { height: 360px; background-position: center top !important; }
     .coach-name { font-size: 1.5rem; }
@@ -619,12 +623,12 @@
     <h2 class="section-title">What Makes Mr & Mrs <em>Different</em></h2>
   </div>
   <div class="why-grid" style="max-width:1100px; margin:0 auto;">
-    <div class="why-card"><span class="why-icon">🎯</span><h3 class="why-title">Outcome-Driven Plans</h3><p class="why-desc">Every plan is built around your specific goal, timeline, and lifestyle — not a generic template. We design for results, not routines.</p></div>
-    <div class="why-card"><span class="why-icon">👫</span><h3 class="why-title">Dual-Coach Expertise</h3><p class="why-desc">Two certified coaches — one male specialist, one female specialist. Tarek & Chloe's combined expertise covers every goal and body type.</p></div>
-    <div class="why-card"><span class="why-icon">💬</span><h3 class="why-title">24/7 Coach Access</h3><p class="why-desc">Real humans, real responses. Direct WhatsApp access means your questions get answered when you need it — not the next business day.</p></div>
-    <div class="why-card"><span class="why-icon">🥗</span><h3 class="why-title">Nutrition Is Central</h3><p class="why-desc">We're certified nutrition specialists. Your food plan is built alongside your training — because you can't out-train a bad diet.</p></div>
-    <div class="why-card"><span class="why-icon">🤰</span><h3 class="why-title">Pre & Postnatal Experts</h3><p class="why-desc">One of the very few coaching teams in Dubai with specialist pre and postnatal certification. Train safely through every stage of motherhood.</p></div>
-    <div class="why-card"><span class="why-icon">📈</span><h3 class="why-title">Sustainable, Not Extreme</h3><p class="why-desc">We build habits, not quick fixes. Our approach is designed to give you results you can keep — and a lifestyle you actually enjoy living.</p></div>
+    <div class="why-card"><span class="why-num">01</span><span class="why-icon"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.2" fill="currentColor"/></svg></span><h3 class="why-title">Outcome-Driven Plans</h3><p class="why-desc">Every plan is built around your specific goal, timeline, and lifestyle — not a generic template. We design for results, not routines.</p></div>
+    <div class="why-card"><span class="why-num">02</span><span class="why-icon"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8.5" cy="7.5" r="3"/><circle cx="16.5" cy="8.5" r="2.5"/><path d="M3 20c0-3.3 2.5-6 5.5-6s5.5 2.7 5.5 6"/><path d="M14.5 14.2c.6-.2 1.3-.3 2-.3 2.5 0 4.5 2.3 4.5 5.1"/></svg></span><h3 class="why-title">Dual-Coach Expertise</h3><p class="why-desc">Two certified coaches — one male specialist, one female specialist. Tarek & Chloe's combined expertise covers every goal and body type.</p></div>
+    <div class="why-card"><span class="why-num">03</span><span class="why-icon"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12a8 8 0 0 1-11.6 7.1L4 20l1-4.2A8 8 0 1 1 20 12z"/><path d="M8.5 10.5h7M8.5 13.5h4.5"/></svg></span><h3 class="why-title">24/7 Coach Access</h3><p class="why-desc">Real humans, real responses. Direct WhatsApp access means your questions get answered when you need it — not the next business day.</p></div>
+    <div class="why-card"><span class="why-num">04</span><span class="why-icon"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 19c0-8 5-14 15-14 0 10-6 15-14 15"/><path d="M5 19l8-8"/></svg></span><h3 class="why-title">Nutrition Is Central</h3><p class="why-desc">We're certified nutrition specialists. Your food plan is built alongside your training — because you can't out-train a bad diet.</p></div>
+    <div class="why-card"><span class="why-num">05</span><span class="why-icon"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg></span><h3 class="why-title">Pre & Postnatal Experts</h3><p class="why-desc">One of the very few coaching teams in Dubai with specialist pre and postnatal certification. Train safely through every stage of motherhood.</p></div>
+    <div class="why-card"><span class="why-num">06</span><span class="why-icon"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 20h18"/><path d="M5 16l5-5 3.5 3.5L20 8"/><path d="M15 8h5v5"/></svg></span><h3 class="why-title">Sustainable, Not Extreme</h3><p class="why-desc">We build habits, not quick fixes. Our approach is designed to give you results you can keep — and a lifestyle you actually enjoy living.</p></div>
   </div>
 </section>
 
