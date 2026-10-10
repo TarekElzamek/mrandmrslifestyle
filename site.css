@@ -157,3 +157,12 @@ img.coach-pic { display: block; width: 100%; height: auto; aspect-ratio: 1 / 1; 
 .mm-prose a { color: #C9A84C; }
 .mm-prose ul { padding-left: 1.3rem; margin: 0 0 1rem; }
 .mm-prose li { margin-bottom: 0.4rem; }
+
+/* Buy buttons converted from links: keep the link look */
+button.pkg-btn, button.pkg-stripe-btn { width: 100%; background: transparent; font-family: inherit; cursor: pointer; -webkit-appearance: none; appearance: none; line-height: inherit; }
+.pkg-card.featured button.pkg-btn { background: var(--gold); color: var(--black); }
+button.pkg-btn:hover { background: var(--gold); color: var(--black); }
+
+/* Inline gold line icons (replaced emojis) */
+.mm-i { display: inline-flex; width: 1.1em; height: 1.1em; vertical-align: -0.18em; color: #C9A84C; flex-shrink: 0; }
+.mm-i svg { width: 100%; height: 100%; display: block; }

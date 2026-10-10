@@ -220,7 +220,7 @@ After 2-3 exchanges, always suggest booking the free WhatsApp strategy call.`;
   const wrapper = document.createElement("div");
   wrapper.id = "mnml-chat-widget";
   wrapper.innerHTML = `
-    <div id="mnml-chat-bubble">💬 Ask us anything about coaching!</div>
+    <div id="mnml-chat-bubble">Ask us anything about coaching!</div>
 
     <div id="mnml-chat-window">
       <div id="mnml-chat-header">
@@ -302,7 +302,7 @@ After 2-3 exchanges, always suggest booking the free WhatsApp strategy call.`;
 
   /* ── WELCOME MESSAGE ── */
   function showWelcome() {
-    addBotMessage("Hey! 👋 I'm the Mr & Mrs Lifestyle AI assistant. I can answer questions about our coaching programmes, packages, and how we can help you transform. What would you like to know?");
+    addBotMessage("Hi! I'm the Mr & Mrs Lifestyle AI assistant. I can answer questions about our coaching programmes, packages, and how we can help you transform. What would you like to know?");
     showQuickReplies();
   }
 
@@ -384,7 +384,7 @@ After 2-3 exchanges, always suggest booking the free WhatsApp strategy call.`;
       });
 
       const data = await response.json();
-      const reply = data.content?.[0]?.text || "Great question! Tarek or Chloe can answer that personally — tap the WhatsApp button above to reach them directly 💪";
+      const reply = data.content?.[0]?.text || "Great question! Tarek or Chloe can answer that personally — tap the WhatsApp button above to reach them directly.";
 
       messageHistory.push({ role: "assistant", content: reply });
       typing.remove();
@@ -394,7 +394,7 @@ After 2-3 exchanges, always suggest booking the free WhatsApp strategy call.`;
 
     } catch (err) {
       typing.remove();
-      addBotMessage("Sorry, I'm having a moment! Reach Tarek & Chloe directly on WhatsApp — they'll get back to you personally 💪", true);
+      addBotMessage("Sorry, I'm having a moment! Reach Tarek & Chloe directly on WhatsApp — they'll get back to you personally.", true);
     }
 
     msgs.scrollTop = msgs.scrollHeight;

@@ -134,7 +134,7 @@ nav.app-tabs{display:grid;grid-template-columns:repeat(4,1fr);background:var(--o
 .cat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.55rem;margin-bottom:1.35rem;}
 .cat-card{background:var(--charcoal);border:1px solid rgba(255,255,255,.07);border-radius:10px;padding:.9rem .6rem;text-align:center;cursor:pointer;}
 .cat-card:active,.cat-card.active{border-color:var(--gold);background:rgba(201,168,76,.08);}
-.cat-icon{font-size:1.55rem;margin-bottom:.3rem;}
+.cat-icon{font-size:1.55rem;margin-bottom:.3rem;color:var(--gold);display:flex;justify-content:center;}.cat-icon svg{width:1.4rem;height:1.4rem}
 .cat-name{font-size:.68rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:rgba(255,255,255,.78);}
 .cat-count{font-size:.6rem;color:rgba(255,255,255,.3);margin-top:.12rem;}
 .ex-list{display:grid;grid-template-columns:repeat(2,1fr);gap:.55rem;}
@@ -274,10 +274,10 @@ nav.app-tabs{display:grid;grid-template-columns:repeat(4,1fr);background:var(--o
   </div>
 
   <nav class="app-tabs">
-    <button class="tab-btn active" onclick="switchTab('log')"><span class="ti">📝</span>Log</button>
-    <button class="tab-btn" onclick="switchTab('exercises')"><span class="ti">💪</span>Library</button>
-    <button class="tab-btn" onclick="switchTab('history')"><span class="ti">📅</span>History</button>
-    <button class="tab-btn" onclick="switchTab('progress')"><span class="ti">📈</span>Progress</button>
+    <button class="tab-btn active" onclick="switchTab('log')"><span class="ti"><span class="mm-i" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16v4z"/></svg></span></span>Log</button>
+    <button class="tab-btn" onclick="switchTab('exercises')"><span class="ti"><span class="mm-i" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6.5 6.5v11M17.5 6.5v11M3.5 9v6M20.5 9v6M6.5 12h11"/></svg></span></span>Library</button>
+    <button class="tab-btn" onclick="switchTab('history')"><span class="ti"><span class="mm-i" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></span></span>History</button>
+    <button class="tab-btn" onclick="switchTab('progress')"><span class="ti"><span class="mm-i" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 20h18"/><path d="M5 16l5-5 3.5 3.5L20 8"/><path d="M15 8h5v5"/></svg></span></span>Progress</button>
   </nav>
 
   <div class="app-body">
@@ -286,7 +286,7 @@ nav.app-tabs{display:grid;grid-template-columns:repeat(4,1fr);background:var(--o
       <div class="section-title">Today's Workout</div>
       <p class="section-sub" id="today-date-lbl">—</p>
       <div class="exercise-search-wrap">
-        <span class="search-icon">🔍</span>
+        <span class="search-icon"><span class="mm-i" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg></span></span>
         <input type="text" class="exercise-search" id="ex-search"
           placeholder="Search — Bench Press, Squat, Hip Thrust…"
           oninput="handleSearch()" onfocus="showDropdown()" onblur="setTimeout(hideDropdown,250)"
@@ -348,8 +348,8 @@ nav.app-tabs{display:grid;grid-template-columns:repeat(4,1fr);background:var(--o
       <p class="modal-sub">Enter your name and email — your workout saves to the cloud instantly and you can access it on any device, forever.</p>
       <input class="modal-input" id="modal-name" type="text" placeholder="Your name *" autocomplete="name" inputmode="text">
       <input class="modal-input" id="modal-email" type="email" placeholder="Email address *" autocomplete="email" inputmode="email">
-      <button class="modal-save-btn" id="modal-save-btn" onclick="authEmail()">💾 Save My Workout</button>
-      <p class="modal-disclaimer">🔒 Private &amp; secure. We never share your data or spam you.</p>
+      <button class="modal-save-btn" id="modal-save-btn" onclick="authEmail()"><span class="mm-i" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg></span> Save My Workout</button>
+      <p class="modal-disclaimer"><span class="mm-i" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span> Private &amp; secure. We never share your data or spam you.</p>
     </div>
 
     <!-- RETURNING USER -->
@@ -359,7 +359,7 @@ nav.app-tabs{display:grid;grid-template-columns:repeat(4,1fr);background:var(--o
       <p class="modal-sub">Enter the email you signed up with — your full workout history loads back instantly.</p>
       <input class="modal-input" id="modal-return-email" type="email" placeholder="Your email address *" autocomplete="email" inputmode="email">
       <button class="modal-save-btn" id="modal-return-btn" onclick="authReturn()">▶ Load My History</button>
-      <p class="modal-disclaimer">☁️ Your data is saved to the cloud — works on any device.</p>
+      <p class="modal-disclaimer"><span class="mm-i" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 18a5 5 0 0 1-.6-10A6 6 0 0 1 18 9a4.5 4.5 0 0 1-.5 9H7z"/></svg></span> Your data is saved to the cloud — works on any device.</p>
     </div>
 
   </div>
@@ -500,9 +500,9 @@ const EX=[
   {n:"Turkish Get-Up",c:"Olympic",m:"Full Body, Stability"}
 ];
 const CATS=[
-  {id:"Chest",icon:"🏋️"},{id:"Back",icon:"🔗"},{id:"Shoulders",icon:"🎯"},
-  {id:"Biceps",icon:"💪"},{id:"Triceps",icon:"⚡"},{id:"Legs",icon:"🦵"},
-  {id:"Glutes",icon:"🍑"},{id:"Core",icon:"🔥"},{id:"Cardio",icon:"❤️"},{id:"Olympic",icon:"🏅"}
+  {id:"Chest",icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6.5 6.5v11M17.5 6.5v11M3.5 9v6M20.5 9v6M6.5 12h11"/></svg>'},{id:"Back",icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></svg>'},{id:"Shoulders",icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.2" fill="currentColor"/></svg>'},
+  {id:"Biceps",icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6.5 6.5v11M17.5 6.5v11M3.5 9v6M20.5 9v6M6.5 12h11"/></svg>'},{id:"Triceps",icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z"/></svg>'},{id:"Legs",icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3v8l-2 9h4l2-6 2 6h3l-3-9V3"/></svg>'},
+  {id:"Glutes",icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="9" r="5"/><path d="M12 14v7M9 18h6"/></svg>'},{id:"Core",icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22c4 0 7-2.8 7-6.8 0-3-1.8-5.4-3.4-7.1-.5 1.9-1.6 3-2.8 3.4.6-3.2-.6-6.3-3.3-8.5.2 3.3-1.7 5.5-3.3 7.4C5 12.4 5 13.8 5 15.2 5 19.2 8 22 12 22z"/></svg>'},{id:"Cardio",icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg>'},{id:"Olympic",icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="15" r="5"/><path d="M8.5 11 6 3h4l2 5 2-5h4l-2.5 8"/></svg>'}
 ];
 
 let user=null,activeEx=[],sessions=[],selCat=null,pendingSession=null;
@@ -517,7 +517,7 @@ function hideLoading(){document.getElementById('loading-overlay').style.display=
 let _tt;
 function toast(icon,msg){
   clearTimeout(_tt);
-  document.getElementById('toast-icon').textContent=icon;
+  document.getElementById('toast-icon').innerHTML=icon;
   document.getElementById('toast-msg').textContent=msg;
   const t=document.getElementById('toast');t.classList.add('show');
   _tt=setTimeout(()=>t.classList.remove('show'),3500);
@@ -539,25 +539,25 @@ function switchModalTab(tab){
 
 function authReturn(){
   const email=document.getElementById('modal-return-email').value.trim();
-  if(!email||!email.includes('@')){toast('⚠️','Please enter your email address.');return;}
+  if(!email||!email.includes('@')){toast('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 2 20h20L12 3z"/><path d="M12 10v4M12 17h.01"/></svg>','Please enter your email address.');return;}
   const btn=document.getElementById('modal-return-btn');
   btn.disabled=true;btn.textContent='Loading…';
   showLoading('Loading your history…');
   api.get('users?email=eq.'+encodeURIComponent(email)+'&select=*').then(rows=>{
     if(!rows||!rows.length){
       hideLoading();btn.disabled=false;btn.textContent='▶ Load My History';
-      toast('⚠️','No account found with that email. Check spelling or sign up as new.');
+      toast('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 2 20h20L12 3z"/><path d="M12 10v4M12 17h.01"/></svg>','No account found with that email. Check spelling or sign up as new.');
       return;
     }
     user=rows[0];
     return api.get('workout_sessions?username=eq.'+encodeURIComponent(user.username)+'&order=date.desc&select=*').then(r=>{
       sessions=(r||[]).map(x=>({id:x.id,date:x.date,exercises:x.exercises}));
       saveLocal(user);hideLoading();closeModal();showLoggedInUI();
-      toast('👋','Welcome back, '+user.name.split(' ')[0]+'! 💪');
+      toast('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="m8 12 3 3 5-6"/></svg>','Welcome back, '+user.name.split(' ')[0]+'! ');
     });
   }).catch(e=>{
     console.error(e);hideLoading();
-    toast('⚠️','Connection error — please try again.');
+    toast('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 2 20h20L12 3z"/><path d="M12 10v4M12 17h.01"/></svg>','Connection error — please try again.');
     btn.disabled=false;btn.textContent='▶ Load My History';
   });
 }
@@ -565,8 +565,8 @@ function authReturn(){
 function authEmail(){
   const name=document.getElementById('modal-name').value.trim();
   const email=document.getElementById('modal-email').value.trim();
-  if(!name){toast('⚠️','Please enter your name.');return;}
-  if(!email||!email.includes('@')){toast('⚠️','Please enter a valid email address.');return;}
+  if(!name){toast('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 2 20h20L12 3z"/><path d="M12 10v4M12 17h.01"/></svg>','Please enter your name.');return;}
+  if(!email||!email.includes('@')){toast('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 2 20h20L12 3z"/><path d="M12 10v4M12 17h.01"/></svg>','Please enter a valid email address.');return;}
   const btn=document.getElementById('modal-save-btn');
   btn.disabled=true;btn.textContent='Saving…';
   showLoading('Saving your workout…');
@@ -589,8 +589,8 @@ function authEmail(){
     if(pendingSession){doSave(pendingSession);pendingSession=null;}
   }).catch(e=>{
     console.error(e);hideLoading();
-    toast('⚠️','Could not sign in — check your connection.');
-    btn.disabled=false;btn.textContent='💾 Save My Workout';
+    toast('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 2 20h20L12 3z"/><path d="M12 10v4M12 17h.01"/></svg>','Could not sign in — check your connection.');
+    btn.disabled=false;btn.textContent='Save My Workout';
   });
 }
 
@@ -614,7 +614,7 @@ function handleLogout(){
   document.getElementById('user-header').classList.remove('show');
   document.getElementById('nav-user').classList.remove('show');
   renderHistory();renderProgress();
-  toast('👋','Signed out.');
+  toast('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="m8 12 3 3 5-6"/></svg>','Signed out.');
 }
 
 function switchTab(t){
@@ -665,14 +665,14 @@ function addExByIdx(i){const e=EX[i];addEx(e.n,e.c,e.m);}
 function addEx(name,cat,muscle){
   document.getElementById('ex-search').value='';
   document.getElementById('search-dropdown').classList.remove('open');
-  if(activeEx.find(e=>e.name===name)){toast('⚠️',name+' already added.');return;}
+  if(activeEx.find(e=>e.name===name)){toast('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 2 20h20L12 3z"/><path d="M12 10v4M12 17h.01"/></svg>',name+' already added.');return;}
   const last=getLastSess(name);
   const def=defaultTypes(cat);
   const sets=last?last.sets.map(s=>({w:'',r:'',done:false,hw:s.w2,hr:s.r2})):[{w:'',r:'',done:false,hw:'',hr:''}];
   activeEx.push({name,cat,muscle,sets,last:last||null,loadType:last&&last.loadType?last.loadType:def.loadType,measType:last&&last.measType?last.measType:def.measType});
   renderLog();
   document.getElementById('save-session-wrap').style.display='block';
-  toast('💪',name+' added!');
+  toast('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6.5 6.5v11M17.5 6.5v11M3.5 9v6M20.5 9v6M6.5 12h11"/></svg>',name+' added!');
   switchTab('log');
 }
 
@@ -686,27 +686,27 @@ function renderLog(){
       const rP=(s.r2!==undefined?s.r2:(s.reps||0))+(mt==='time'?' s':mt==='distance'?' km':mt==='calories'?' cal':' reps');
       return '<span class="hint-chip">S'+(i+1)+': '+wP+' × '+rP+'</span>';
     }).join(''):'';
-    const hint=ex.last?'<div class="last-hint"><span>🕒</span><div><strong>'+fmt(ex.last.date)+'</strong><div class="hint-chips">'+chips+'</div></div></div>':'';
+    const hint=ex.last?'<div class="last-hint"><span><span class="mm-i" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span></span><div><strong>'+fmt(ex.last.date)+'</strong><div class="hint-chips">'+chips+'</div></div></div>':'';
     return '<div class="set-logger fade-up">'
       +'<div class="set-logger-header"><div><div class="set-logger-name">'+ex.name+'</div><div class="set-logger-cat">'+ex.cat+' · '+ex.muscle+'</div></div>'
       +'<button class="remove-ex-btn" onclick="removeEx('+ei+')">✕</button></div>'+hint
       +'<div class="unit-row">'
         +'<div><div class="unit-label">Load type</div>'
         +'<select class="unit-select" onchange="setUnit('+ei+',\'loadType\',this.value)">'
-          +'<option value="weight"'+(lt==='weight'?' selected':'')+'>🏋️ Weight (kg)</option>'
-          +'<option value="bodyweight"'+(lt==='bodyweight'?' selected':'')+'>🤸 Bodyweight</option>'
-          +'<option value="barbell"'+(lt==='barbell'?' selected':'')+'>🔩 Barbell (kg)</option>'
-          +'<option value="dumbbell"'+(lt==='dumbbell'?' selected':'')+'>🥊 Dumbbell (kg)</option>'
-          +'<option value="machine"'+(lt==='machine'?' selected':'')+'>⚙️ Machine (kg)</option>'
-          +'<option value="cable"'+(lt==='cable'?' selected':'')+'>🔗 Cable (kg)</option>'
-          +'<option value="band"'+(lt==='band'?' selected':'')+'>🎀 Band</option>'
+          +'<option value="weight"'+(lt==='weight'?' selected':'')+'>Weight (kg)</option>'
+          +'<option value="bodyweight"'+(lt==='bodyweight'?' selected':'')+'>Bodyweight</option>'
+          +'<option value="barbell"'+(lt==='barbell'?' selected':'')+'>Barbell (kg)</option>'
+          +'<option value="dumbbell"'+(lt==='dumbbell'?' selected':'')+'>Dumbbell (kg)</option>'
+          +'<option value="machine"'+(lt==='machine'?' selected':'')+'>Machine (kg)</option>'
+          +'<option value="cable"'+(lt==='cable'?' selected':'')+'>Cable (kg)</option>'
+          +'<option value="band"'+(lt==='band'?' selected':'')+'>Band</option>'
         +'</select></div>'
         +'<div><div class="unit-label">Measure by</div>'
         +'<select class="unit-select" onchange="setUnit('+ei+',\'measType\',this.value)">'
-          +'<option value="reps"'+(mt==='reps'?' selected':'')+'>🔁 Reps</option>'
+          +'<option value="reps"'+(mt==='reps'?' selected':'')+'>Reps</option>'
           +'<option value="time"'+(mt==='time'?' selected':'')+'>⏱ Time (sec)</option>'
-          +'<option value="distance"'+(mt==='distance'?' selected':'')+'>📏 Distance (km)</option>'
-          +'<option value="calories"'+(mt==='calories'?' selected':'')+'>🔥 Calories</option>'
+          +'<option value="distance"'+(mt==='distance'?' selected':'')+'>Distance (km)</option>'
+          +'<option value="calories"'+(mt==='calories'?' selected':'')+'>Calories</option>'
         +'</select></div>'
       +'</div>'
       +'<div class="set-logger-body">'
@@ -734,9 +734,9 @@ function addSet(ei){
 function removeEx(ei){activeEx.splice(ei,1);renderLog();if(!activeEx.length)document.getElementById('save-session-wrap').style.display='none';}
 
 function saveSession(){
-  if(!activeEx.length){toast('⚠️','Add an exercise first.');return;}
+  if(!activeEx.length){toast('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 2 20h20L12 3z"/><path d="M12 10v4M12 17h.01"/></svg>','Add an exercise first.');return;}
   const valid=activeEx.filter(ex=>ex.sets.some(s=>s.done||s.w||s.r));
-  if(!valid.length){toast('⚠️','Enter weight or reps for at least one set.');return;}
+  if(!valid.length){toast('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 2 20h20L12 3z"/><path d="M12 10v4M12 17h.01"/></svg>','Enter weight or reps for at least one set.');return;}
   const sessionData={
     date:new Date().toISOString(),
     exercises:valid.map(ex=>({
@@ -762,8 +762,8 @@ function doSave(sessionData){
     activeEx=[];renderLog();
     document.getElementById('save-session-wrap').style.display='none';
     updateStats();hideLoading();
-    toast('✅','Workout saved to cloud! 💪');
-  }).catch(e=>{console.error(e);hideLoading();toast('⚠️','Could not save — check your connection.');});
+    toast('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="m8 12 3 3 5-6"/></svg>','Workout saved to cloud! ');
+  }).catch(e=>{console.error(e);hideLoading();toast('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 2 20h20L12 3z"/><path d="M12 10v4M12 17h.01"/></svg>','Could not save — check your connection.');});
 }
 
 function renderLib(){
@@ -785,8 +785,8 @@ function selCatF(id){selCat=selCat===id?null:id;renderLib();}
 
 function renderHistory(){
   const wrap=document.getElementById('history-container');
-  if(!user){wrap.innerHTML='<div class="hist-empty"><div class="hist-empty-icon">📅</div><div class="hist-empty-title">Sign in to see your history</div><div class="hist-empty-sub">Save a workout and your full history will appear here.</div></div>';return;}
-  if(!sessions.length){wrap.innerHTML='<div class="hist-empty"><div class="hist-empty-icon">📋</div><div class="hist-empty-title">No sessions yet</div><div class="hist-empty-sub">Log your first workout and it will appear here.</div></div>';return;}
+  if(!user){wrap.innerHTML='<div class="hist-empty"><div class="hist-empty-icon"><span class="mm-i" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></span></div><div class="hist-empty-title">Sign in to see your history</div><div class="hist-empty-sub">Save a workout and your full history will appear here.</div></div>';return;}
+  if(!sessions.length){wrap.innerHTML='<div class="hist-empty"><div class="hist-empty-icon"><span class="mm-i" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V3h6v1M9 10h6M9 14h6M9 18h4"/></svg></span></div><div class="hist-empty-title">No sessions yet</div><div class="hist-empty-sub">Log your first workout and it will appear here.</div></div>';return;}
   wrap.innerHTML=sessions.map((s,si)=>{
     const d=new Date(s.date);
     const ts=s.exercises.reduce((a,e)=>a+e.sets.length,0);
@@ -795,7 +795,7 @@ function renderHistory(){
       +'<div class="date-badge"><div class="db-day">'+d.getDate()+'</div><div class="db-mon">'+d.toLocaleDateString('en-GB',{month:'short'})+'</div></div>'
       +'<div class="hist-info"><div class="hist-date">'+d.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'short'})+'</div>'
       +'<div class="hist-meta">'+d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'})+' · '+s.exercises.length+' exercises · '+ts+' sets · '+vol.toLocaleString()+' kg vol</div></div>'
-      +'<div class="hist-actions"><button class="del-btn" onclick="event.stopPropagation();delSess('+si+',\''+s.id+'\')">🗑</button><span class="chevron" id="chev-'+si+'">▼</span></div></div>'
+      +'<div class="hist-actions"><button class="del-btn" onclick="event.stopPropagation();delSess('+si+',\''+s.id+'\')"><span class="mm-i" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg></span></button><span class="chevron" id="chev-'+si+'">▼</span></div></div>'
       +'<div class="hist-body" id="hb-'+si+'">'
       +s.exercises.map(ex=>{
         const ds=new Date(s.date).toLocaleDateString('en-GB',{day:'numeric',month:'short'});
@@ -820,13 +820,13 @@ function delSess(si,id){
   if(!confirm('Delete this session?'))return;
   showLoading('Deleting…');
   api.delete('workout_sessions?id=eq.'+id).then(()=>{
-    sessions.splice(si,1);updateStats();renderHistory();renderProgress();hideLoading();toast('🗑','Session deleted.');
-  }).catch(()=>{hideLoading();toast('⚠️','Could not delete. Try again.');});
+    sessions.splice(si,1);updateStats();renderHistory();renderProgress();hideLoading();toast('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg>','Session deleted.');
+  }).catch(()=>{hideLoading();toast('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 2 20h20L12 3z"/><path d="M12 10v4M12 17h.01"/></svg>','Could not delete. Try again.');});
 }
 
 function renderProgress(){
   const w1=document.getElementById('prog-grid'),w2=document.getElementById('pb-container');
-  if(!user){w1.innerHTML='';w2.innerHTML='<div class="hist-empty"><div class="hist-empty-icon">📈</div><div class="hist-empty-title">Sign in to track progress</div><div class="hist-empty-sub">Personal bests, volume and streak — all saved to the cloud.</div></div>';return;}
+  if(!user){w1.innerHTML='';w2.innerHTML='<div class="hist-empty"><div class="hist-empty-icon"><span class="mm-i" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 20h18"/><path d="M5 16l5-5 3.5 3.5L20 8"/><path d="M15 8h5v5"/></svg></span></div><div class="hist-empty-title">Sign in to track progress</div><div class="hist-empty-sub">Personal bests, volume and streak — all saved to the cloud.</div></div>';return;}
   const ts=sessions.reduce((a,s)=>a+s.exercises.reduce((b,e)=>b+e.sets.length,0),0);
   const vol=sessions.reduce((a,s)=>a+s.exercises.reduce((b,e)=>b+e.sets.reduce((c,st)=>c+(st.weight||0)*(st.reps||0),0),0),0);
   const uEx=new Set(sessions.flatMap(s=>s.exercises.map(e=>e.name))).size;
@@ -841,7 +841,7 @@ function renderProgress(){
   const bests={};sessions.forEach(s=>s.exercises.forEach(ex=>ex.sets.forEach(st=>{if(!bests[ex.name]||st.weight>bests[ex.name])bests[ex.name]=st.weight;})));
   const sorted=Object.entries(bests).sort((a,b)=>b[1]-a[1]).slice(0,15);
   if(!sorted.length){w2.innerHTML='';return;}
-  w2.innerHTML='<div class="section-title" style="margin-top:1.25rem;margin-bottom:.2rem;">Personal Bests 🏆</div>'
+  w2.innerHTML='<div class="section-title" style="margin-top:1.25rem;margin-bottom:.2rem;">Personal Bests <span class="mm-i" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0V4zM7 6H4a3 3 0 0 0 3 4M17 6h3a3 3 0 0 1-3 4"/></svg></span></div>'
     +'<p class="section-sub">Heaviest weight logged per exercise.</p>'
     +'<div class="pb-list">'+sorted.map(([n,w])=>'<div class="pb-row"><span class="pb-name">'+n+'</span><span class="pb-wt">'+w+' kg</span></div>').join('')+'</div>'
     +'<div class="cta-banner" style="margin-top:1.35rem;"><div><h3>Ready to break more records?</h3><p>Get a custom program from Tarek &amp; Chloe and hit new PBs every week.</p></div><a href="https://www.mrandmrslifestyle.com/#coaching" class="cta-btn">Get My Program →</a></div>';

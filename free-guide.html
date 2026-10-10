@@ -55,7 +55,7 @@ nav { display: flex; align-items: center; justify-content: space-between; paddin
 .form-btn { width: 100%; background: var(--gold); color: var(--black); border: none; border-radius: 4px; padding: 1rem; font-family: var(--font-body); font-size: 0.9rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; transition: background 0.2s, transform 0.15s; margin-bottom: 1rem; }
 .form-btn:hover { background: var(--gold-light); transform: translateY(-1px); }
 .form-trust { display: flex; align-items: center; justify-content: center; gap: 0.5rem; font-size: 0.72rem; color: rgba(255,255,255,0.3); text-align: center; }
-.form-trust::before { content: '🔒'; font-size: 0.8rem; }
+.form-trust::before { content: '';width:12px;height:12px;display:inline-block;background:currentColor;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round'%3E%3Crect x='5' y='11' width='14' height='10' rx='2'/%3E%3Cpath d='M8 11V8a4 4 0 0 1 8 0v3'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round'%3E%3Crect x='5' y='11' width='14' height='10' rx='2'/%3E%3Cpath d='M8 11V8a4 4 0 0 1 8 0v3'/%3E%3C/svg%3E") center/contain no-repeat; font-size: 0.8rem; }
 .guide-preview { margin-top: 2rem; background: rgba(201,168,76,0.06); border: 1px solid rgba(201,168,76,0.15); border-radius: 6px; padding: 1.5rem; }
 .guide-preview h4 { font-family: var(--font-display); font-size: 1rem; margin-bottom: 0.75rem; color: rgba(255,255,255,0.9); }
 .guide-preview ul { list-style: none; display: flex; flex-direction: column; gap: 0.4rem; }
@@ -136,7 +136,7 @@ footer p { font-size: 0.75rem; color: rgba(255,255,255,0.25); }
 </head>
 <body>
 
-<div class="top-bar">🔥 Free Download — No Credit Card Required · Instant Delivery to Your Inbox</div>
+<div class="top-bar"><span class="mm-i" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22c4 0 7-2.8 7-6.8 0-3-1.8-5.4-3.4-7.1-.5 1.9-1.6 3-2.8 3.4.6-3.2-.6-6.3-3.3-8.5.2 3.3-1.7 5.5-3.3 7.4C5 12.4 5 13.8 5 15.2 5 19.2 8 22 12 22z"/></svg></span> Free Download — No Credit Card Required · Instant Delivery to Your Inbox</div>
 
 <nav>
   <a href="/" class="nav-logo"><img src="logo.png" alt="Mr &amp; Mrs Lifestyle" style="height:32px;width:auto;" /></a>
@@ -150,7 +150,7 @@ footer p { font-size: 0.75rem; color: rgba(255,255,255,0.25); }
     <p class="hero-sub">The exact nutrition strategy, training framework, and mindset shifts our clients use to lose fat, build muscle, and finally transform — designed specifically for life in Dubai (and anywhere in the world).</p>
     <div style="display:flex; gap:1.5rem; flex-wrap:wrap; align-items:center; padding-top:0.5rem;">
       <div style="display:flex; align-items:center; gap:0.5rem;"><span style="color:var(--gold); font-size:0.9rem;">★★★★★</span><span style="font-size:0.8rem; color:var(--muted);">Used by 500+ clients</span></div>
-      <div style="font-size:0.8rem; color:var(--muted);">📍 Built for Dubai · Works worldwide</div>
+      <div style="font-size:0.8rem; color:var(--muted);"><span class="mm-i" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s7-6.3 7-12a7 7 0 0 0-14 0c0 5.7 7 12 7 12z"/><circle cx="12" cy="9" r="2.5"/></svg></span> Built for Dubai · Works worldwide</div>
     </div>
   </div>
 
@@ -172,7 +172,7 @@ footer p { font-size: 0.75rem; color: rgba(255,255,255,0.25); }
     <button class="form-btn" onclick="handleSubmit()">✦ Send Me The Blueprint — Free</button>
     <div class="form-trust">100% Free · No Spam · Unsubscribe Anytime</div>
     <div class="guide-preview">
-      <h4>📘 Inside Your Free Blueprint:</h4>
+      <h4><span class="mm-i" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2V5z"/><path d="M4 19a2 2 0 0 1 2-2h13"/></svg></span> Inside Your Free Blueprint:</h4>
       <ul>
         <li>The Dubai Fat-Loss Framework (how to eat well living here)</li>
         <li>7-Day Kickstart Meal Plan with macros included</li>
@@ -183,12 +183,12 @@ footer p { font-size: 0.75rem; color: rgba(255,255,255,0.25); }
       </ul>
     </div>
     <div class="success-state" id="successState" style="text-align:center; padding:1.5rem 0;">
-      <div style="font-size:3rem; margin-bottom:0.75rem;">🎉</div>
+      <div style="font-size:3rem; margin-bottom:0.75rem;"><span class="mm-i" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="m8 12 3 3 5-6"/></svg></span></div>
       <h3 style="font-size:1.4rem; margin-bottom:0.5rem; color:#fff;">Your Blueprint Is Ready!</h3>
       <p style="color:rgba(255,255,255,0.6); margin-bottom:1.5rem; font-size:0.9rem; line-height:1.6;">Click the button below to download your free guide instantly.<br>We've also sent a copy to your email.</p>
       <a id="downloadBtn" href="dubai-transformation-blueprint.pdf" download="Dubai-Transformation-Blueprint.pdf" style="display:inline-block; background:var(--gold); color:var(--black); text-decoration:none; padding:1rem 2rem; border-radius:4px; font-weight:700; font-size:0.9rem; letter-spacing:0.06em; text-transform:uppercase; margin-bottom:1rem; width:100%; text-align:center; box-shadow:0 4px 20px rgba(201,168,76,0.4);">⬇ Download Free Blueprint Now</a>
       <div style="margin:1rem 0; border-top:1px solid rgba(255,255,255,0.1); padding-top:1rem;">
-        <p style="color:rgba(255,255,255,0.4); font-size:0.75rem; margin-bottom:1rem;">📧 A copy has also been sent to your email (check spam if not received within 5 minutes)</p>
+        <p style="color:rgba(255,255,255,0.4); font-size:0.75rem; margin-bottom:1rem;"><span class="mm-i" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></span> A copy has also been sent to your email (check spam if not received within 5 minutes)</p>
         <a href="apply.html" style="display:inline-block; border:1px solid rgba(201,168,76,0.4); color:var(--gold); text-decoration:none; padding:0.75rem 1.5rem; border-radius:4px; font-weight:600; font-size:0.82rem; letter-spacing:0.06em; text-transform:uppercase;">Apply for Free Coaching Call →</a>
       </div>
     </div>
@@ -200,7 +200,7 @@ footer p { font-size: 0.75rem; color: rgba(255,255,255,0.25); }
   <div class="proof-item"><div class="proof-num">10+</div><div class="proof-label">Years Coaching</div></div>
   <div class="proof-item"><div class="proof-num">14kg</div><div class="proof-label">Avg Fat Loss</div></div>
   <div class="proof-item"><div class="proof-num">98%</div><div class="proof-label">Client Satisfaction</div></div>
-  <div class="proof-item"><div class="proof-num">🌍</div><div class="proof-label">30+ Countries Coached</div></div>
+  <div class="proof-item"><div class="proof-num"><span class="mm-i" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg></span></div><div class="proof-label">30+ Countries Coached</div></div>
 </div>
 
 <section class="inside-section">
