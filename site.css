@@ -67,7 +67,7 @@ img { max-width: 100%; }
 }
 .mm-menu.open { display: flex; }
 .mm-menu a {
-  color: #fff; text-decoration: none; font-family: 'Playfair Display', Georgia, serif;
+  color: #fff; text-decoration: none; font-family: 'DM Serif Display', Georgia, serif;
   font-size: 1.3rem; font-weight: 700; padding: 0.55rem 0; text-align: center;
 }
 .mm-menu a.mm-active { color: #C9A84C; }
@@ -109,3 +109,9 @@ img { max-width: 100%; }
 @media (max-width: 900px) { .mm-footer-grid { grid-template-columns: 1fr 1fr; } }
 @media (max-width: 560px) { .mm-footer-grid { grid-template-columns: 1fr; padding: 2.5rem 1.4rem 1.5rem; gap: 2rem; } .mm-footer-bottom { padding: 1.25rem 1.4rem 6rem; } }
 .mm-footer-bottom { padding-right: 6.5rem; } @media (max-width:560px){ .mm-footer-bottom { padding-right: 1.4rem; } }
+
+/* ---------- Brand type standard ----------
+   Headings & accents: 'DM Serif Display' (one weight; never faux-bold)
+   Body, buttons, menus, forms: 'DM Sans' */
+html { font-synthesis-weight: none; }
+em, i { font-synthesis-weight: none; }

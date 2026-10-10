@@ -56,7 +56,7 @@ After 2-3 exchanges, always suggest booking the free WhatsApp strategy call.`;
   /* ── INJECT CSS ── */
   const style = document.createElement("style");
   style.textContent = `
-    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@300;400;500;600&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap');
 
     #mnml-chat-widget * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'DM Sans', sans-serif; }
 
@@ -124,12 +124,12 @@ After 2-3 exchanges, always suggest booking the free WhatsApp strategy call.`;
       width: 38px; height: 38px; border-radius: 50%;
       background: ${GOLD}; border: 2px solid ${CHARCOAL};
       display: flex; align-items: center; justify-content: center;
-      font-family: 'Playfair Display', serif; font-size: 0.85rem;
+      font-family: 'DM Serif Display', serif; font-size: 0.85rem;
       font-weight: 700; color: ${BLACK}; flex-shrink: 0;
     }
     .mnml-avatar:last-child { margin-left: -10px; }
     .mnml-header-info { flex: 1; }
-    .mnml-header-name { font-family: 'Playfair Display', serif; font-size: 0.95rem; font-weight: 700; color: ${WHITE}; }
+    .mnml-header-name { font-family: 'DM Serif Display', serif; font-size: 0.95rem; font-weight: 700; color: ${WHITE}; }
     .mnml-header-status { font-size: 0.72rem; color: rgba(255,255,255,0.5); margin-top: 0.1rem; display: flex; align-items: center; gap: 0.35rem; }
     .mnml-status-dot { width: 6px; height: 6px; border-radius: 50%; background: #2ecc71; flex-shrink: 0; animation: mnml-blink 2s ease-in-out infinite; }
     @keyframes mnml-blink { 0%,100%{opacity:1} 50%{opacity:0.4} }
