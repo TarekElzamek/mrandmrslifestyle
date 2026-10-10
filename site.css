@@ -126,3 +126,6 @@ em, i { font-synthesis-weight: none; }
 .mm-map .mm-dir:hover { background: #d8b95c; }
 .mm-maps-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-top: 1.25rem; }
 @media (max-width: 760px) { .mm-maps-grid { grid-template-columns: 1fr; } .mm-map iframe { height: 200px; } }
+
+/* Coach photos: identical framing everywhere */
+img.coach-pic { display: block; width: 100%; height: auto; aspect-ratio: 1 / 1; object-fit: cover; object-position: 50% 20%; border-radius: 6px; margin: 0 0 1rem; }
