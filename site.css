@@ -129,3 +129,12 @@ em, i { font-synthesis-weight: none; }
 
 /* Coach photos: identical framing everywhere */
 img.coach-pic { display: block; width: 100%; height: auto; aspect-ratio: 1 / 1; object-fit: cover; object-position: 50% 20%; border-radius: 6px; margin: 0 0 1rem; }
+
+/* Gold line icon (replaces emoji icons) */
+.mm-icon { flex-shrink: 0; width: 52px; height: 52px; border: 1px solid rgba(201,168,76,0.45); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; color: #C9A84C; background: rgba(201,168,76,0.06); }
+.mm-icon svg { width: 24px; height: 24px; }
+.mm-feature { display: flex; gap: 1.25rem; align-items: flex-start; background: linear-gradient(180deg, rgba(255,255,255,0.025), rgba(255,255,255,0.005)); border: 1px solid rgba(201,168,76,0.16); border-radius: 6px; padding: 1.6rem 1.6rem 1.5rem; transition: border-color 0.3s, transform 0.3s; }
+.mm-feature:hover { border-color: rgba(201,168,76,0.45); transform: translateY(-3px); }
+.mm-feature h3 { font-family: 'DM Serif Display', Georgia, serif; font-weight: 400; font-size: 1.3rem; color: #fff; margin: 0.1rem 0 0.45rem; line-height: 1.25; }
+.mm-feature p { margin: 0; font-size: 0.88rem; line-height: 1.7; color: rgba(255,255,255,0.6); }
+@media (max-width: 480px) { .mm-feature { padding: 1.3rem 1.1rem; gap: 1rem; } .mm-icon { width: 44px; height: 44px; } .mm-icon svg { width: 20px; height: 20px; } }
