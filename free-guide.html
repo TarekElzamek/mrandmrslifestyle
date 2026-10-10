@@ -48,13 +48,13 @@ nav { display: flex; align-items: center; justify-content: space-between; paddin
 .form-card .subtitle { font-size: 0.88rem; color: var(--muted); margin-bottom: 2rem; line-height: 1.6; }
 .field-group { display: flex; flex-direction: column; gap: 0.85rem; margin-bottom: 1.25rem; }
 .field-group input, .field-group select { width: 100%; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 4px; padding: 0.9rem 1.1rem; color: var(--white); font-family: var(--font-body); font-size: 0.9rem; outline: none; transition: border-color 0.2s; }
-.field-group input::placeholder { color: rgba(255,255,255,0.28); }
+.field-group input::placeholder { color: rgba(255,255,255,0.58); }
 .field-group input:focus, .field-group select:focus { border-color: rgba(201,168,76,0.5); }
 .field-group select { appearance: none; cursor: pointer; color: rgba(255,255,255,0.7); }
 .field-group select option { background: #1a1a1a; }
 .form-btn { width: 100%; background: var(--gold); color: var(--black); border: none; border-radius: 4px; padding: 1rem; font-family: var(--font-body); font-size: 0.9rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; transition: background 0.2s, transform 0.15s; margin-bottom: 1rem; }
 .form-btn:hover { background: var(--gold-light); transform: translateY(-1px); }
-.form-trust { display: flex; align-items: center; justify-content: center; gap: 0.5rem; font-size: 0.72rem; color: rgba(255,255,255,0.3); text-align: center; }
+.form-trust { display: flex; align-items: center; justify-content: center; gap: 0.5rem; font-size: 0.72rem; color: rgba(255,255,255,0.58); text-align: center; }
 .form-trust::before { content: '';width:12px;height:12px;display:inline-block;background:currentColor;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round'%3E%3Crect x='5' y='11' width='14' height='10' rx='2'/%3E%3Cpath d='M8 11V8a4 4 0 0 1 8 0v3'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round'%3E%3Crect x='5' y='11' width='14' height='10' rx='2'/%3E%3Cpath d='M8 11V8a4 4 0 0 1 8 0v3'/%3E%3C/svg%3E") center/contain no-repeat; font-size: 0.8rem; }
 .guide-preview { margin-top: 2rem; background: rgba(201,168,76,0.06); border: 1px solid rgba(201,168,76,0.15); border-radius: 6px; padding: 1.5rem; }
 .guide-preview h4 { font-family: var(--font-display); font-size: 1rem; margin-bottom: 0.75rem; color: rgba(255,255,255,0.9); }
@@ -96,7 +96,7 @@ nav { display: flex; align-items: center; justify-content: space-between; paddin
 .success-state { display: none; text-align: center; padding: 2rem 0; }
 footer { background: #060606; border-top: 1px solid rgba(255,255,255,0.06); padding: 2rem 3rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
 .foot-logo { font-family: var(--font-display); font-size: 1rem; font-weight: 700; color: var(--gold); text-decoration: none; }
-footer p { font-size: 0.75rem; color: rgba(255,255,255,0.25); }
+footer p { font-size: 0.75rem; color: rgba(255,255,255,0.58); }
 @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 .hero-text > * { opacity: 0; animation: slideUp 0.65s ease forwards; }
 .hero-text > *:nth-child(1) { animation-delay: 0.1s; }
@@ -135,6 +135,7 @@ footer p { font-size: 0.75rem; color: rgba(255,255,255,0.25); }
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.mrandmrslifestyle.com/"}, {"@type": "ListItem", "position": 2, "name": "Free Transformation Guide", "item": "https://www.mrandmrslifestyle.com/free-guide.html"}]}</script>
 </head>
 <body>
+<main id="main">
 
 <div class="top-bar"><span class="mm-i" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22c4 0 7-2.8 7-6.8 0-3-1.8-5.4-3.4-7.1-.5 1.9-1.6 3-2.8 3.4.6-3.2-.6-6.3-3.3-8.5.2 3.3-1.7 5.5-3.3 7.4C5 12.4 5 13.8 5 15.2 5 19.2 8 22 12 22z"/></svg></span> Free Download — No Credit Card Required · Instant Delivery to Your Inbox</div>
 
@@ -188,7 +189,7 @@ footer p { font-size: 0.75rem; color: rgba(255,255,255,0.25); }
       <p style="color:rgba(255,255,255,0.6); margin-bottom:1.5rem; font-size:0.9rem; line-height:1.6;">Click the button below to download your free guide instantly.<br>We've also sent a copy to your email.</p>
       <a id="downloadBtn" href="dubai-transformation-blueprint.pdf" download="Dubai-Transformation-Blueprint.pdf" style="display:inline-block; background:var(--gold); color:var(--black); text-decoration:none; padding:1rem 2rem; border-radius:4px; font-weight:700; font-size:0.9rem; letter-spacing:0.06em; text-transform:uppercase; margin-bottom:1rem; width:100%; text-align:center; box-shadow:0 4px 20px rgba(201,168,76,0.4);">⬇ Download Free Blueprint Now</a>
       <div style="margin:1rem 0; border-top:1px solid rgba(255,255,255,0.1); padding-top:1rem;">
-        <p style="color:rgba(255,255,255,0.4); font-size:0.75rem; margin-bottom:1rem;"><span class="mm-i" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></span> A copy has also been sent to your email (check spam if not received within 5 minutes)</p>
+        <p style="color:rgba(255,255,255,0.62); font-size:0.75rem; margin-bottom:1rem;"><span class="mm-i" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></span> A copy has also been sent to your email (check spam if not received within 5 minutes)</p>
         <a href="apply.html" style="display:inline-block; border:1px solid rgba(201,168,76,0.4); color:var(--gold); text-decoration:none; padding:0.75rem 1.5rem; border-radius:4px; font-weight:600; font-size:0.82rem; letter-spacing:0.06em; text-transform:uppercase;">Apply for Free Coaching Call →</a>
       </div>
     </div>
@@ -234,6 +235,7 @@ footer p { font-size: 0.75rem; color: rgba(255,255,255,0.25); }
   <button class="btn-gold" onclick="scrollToForm()">✦ Claim Your Free Blueprint</button>
 </section>
 
+</main>
 <div class="mm-footer" role="contentinfo">
   <div class="mm-footer-grid">
     <div>
@@ -303,5 +305,6 @@ document.querySelectorAll('.chapter-card, .mini-card').forEach(el => { el.style.
 </script>
 <script src="shared.js"></script>
 <script src="chat-widget.js" defer></script>
+<script src="/track.js" defer></script>
 </body>
 </html>

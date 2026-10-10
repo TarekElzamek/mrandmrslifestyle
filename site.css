@@ -104,8 +104,8 @@ img { max-width: 100%; }
 .mm-footer a:hover { color: #C9A84C; }
 .mm-footer .mm-social { display: flex; gap: 0.6rem; }
 .mm-footer .mm-social a { border: 1px solid rgba(201,168,76,0.35); border-radius: 50%; width: 36px; height: 36px; display: inline-flex; align-items: center; justify-content: center; font-size: 0.72rem; font-weight: 700; }
-.mm-footer-bottom { max-width: 1200px; margin: 0 auto; padding: 1.25rem 2rem 2rem; border-top: 1px solid rgba(255,255,255,0.07); display: flex; flex-wrap: wrap; gap: 0.75rem 1.5rem; justify-content: space-between; font-size: 0.8rem; color: rgba(255,255,255,0.45); }
-.mm-footer-bottom a { color: rgba(255,255,255,0.55); }
+.mm-footer-bottom { max-width: 1200px; margin: 0 auto; padding: 1.25rem 2rem 2rem; border-top: 1px solid rgba(255,255,255,0.07); display: flex; flex-wrap: wrap; gap: 0.75rem 1.5rem; justify-content: space-between; font-size: 0.8rem; color: rgba(255,255,255,0.62); }
+.mm-footer-bottom a { color: rgba(255,255,255,0.72); }
 @media (max-width: 900px) { .mm-footer-grid { grid-template-columns: 1fr 1fr; } }
 @media (max-width: 560px) { .mm-footer-grid { grid-template-columns: 1fr; padding: 2.5rem 1.4rem 1.5rem; gap: 2rem; } .mm-footer-bottom { padding: 1.25rem 1.4rem 6rem; } }
 .mm-footer-bottom { padding-right: 6.5rem; } @media (max-width:560px){ .mm-footer-bottom { padding-right: 1.4rem; } }
@@ -166,3 +166,10 @@ button.pkg-btn:hover { background: var(--gold); color: var(--black); }
 /* Inline gold line icons (replaced emojis) */
 .mm-i { display: inline-flex; width: 1.1em; height: 1.1em; vertical-align: -0.18em; color: #C9A84C; flex-shrink: 0; }
 .mm-i svg { width: 100%; height: 100%; display: block; }
+#mm-heard option { background: #1a1a1a; color: #fff; }
+
+/* Readability: links inside running text are underlined, not colour-only */
+p a:not(.btn):not(.mm-cta):not(.cta-btn):not(.btn-primary):not(.btn-ghost), li a:not(.mm-cta):not([class]), .faq details p a, .quick-answer a { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+.mm-footer a, .mm-related a, .mm-header a, .mm-menu a { text-decoration: none !important; }
+.mm-footer-bottom a { text-decoration: underline !important; text-underline-offset: 3px; }
+main { display: block; }

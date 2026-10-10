@@ -104,7 +104,7 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; a
 .form-group label { font-size: .78rem; color: rgba(255,255,255,.6); font-weight: 500; }
 .form-group input, .form-group select { background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.1); border-radius: 6px; padding: .75rem 1rem; color: var(--white); font-family: var(--font-b); font-size: .9rem; outline: none; transition: border-color .2s; -webkit-appearance: none; width: 100%; }
 .form-group input:focus, .form-group select:focus { border-color: rgba(201,168,76,.5); }
-.form-group input::placeholder { color: rgba(255,255,255,.25); }
+.form-group input::placeholder { color: rgba(255,255,255,0.58); }
 .form-group select { cursor: pointer; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23C9A84C' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 1rem center; padding-right: 2.5rem; }
 .form-group select option { background: #1a1a1a; }
 
@@ -164,7 +164,7 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; a
 .pkg-rec-tag { font-size: .65rem; letter-spacing: .15em; text-transform: uppercase; color: var(--gold); font-weight: 700; margin-bottom: .5rem; }
 .pkg-rec-name { font-family: var(--font-d); font-size: 1.1rem; font-weight: 700; margin-bottom: .4rem; }
 .pkg-rec-desc { font-size: .82rem; color: var(--muted); line-height: 1.6; margin-bottom: 1rem; }
-.wa-btn { display: flex; align-items: center; justify-content: center; gap: .6rem; background: #25D366; color: var(--white); border: none; border-radius: 6px; padding: .85rem; font-family: var(--font-b); font-size: .82rem; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; cursor: pointer; text-decoration: none; transition: filter .2s; width: 100%; }
+.wa-btn { display: flex; align-items: center; justify-content: center; gap: .6rem; background: #15803D; color: var(--white); border: none; border-radius: 6px; padding: .85rem; font-family: var(--font-b); font-size: .82rem; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; cursor: pointer; text-decoration: none; transition: filter .2s; width: 100%; }
 .wa-btn:hover { filter: brightness(1.1); }
 
 /* SIDEBAR */
@@ -195,7 +195,7 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; a
 .tip-desc { font-size: .83rem; color: var(--muted); line-height: 1.65; }
 
 /* FOOTER */
-footer { text-align: center; padding: 2rem; font-size: .78rem; color: rgba(255,255,255,.25); border-top: 1px solid rgba(255,255,255,.06); }
+footer { text-align: center; padding: 2rem; font-size: .78rem; color: rgba(255,255,255,0.58); border-top: 1px solid rgba(255,255,255,.06); }
 footer a { color: var(--gold); text-decoration: none; }
 
 /* RESPONSIVE */
@@ -251,6 +251,7 @@ footer a { color: var(--gold); text-decoration: none; }
   <a href="/apply.html" class="mm-cta">Apply Now</a>
 </div>
 <script>function mmMenu(o){var m=document.getElementById('mmMenu');m.classList.toggle('open',o);document.body.style.overflow=o?'hidden':'';var b=document.querySelector('.mm-burger');if(b)b.setAttribute('aria-expanded',o?'true':'false');}document.addEventListener('keydown',function(e){if(e.key==='Escape')mmMenu(false);});document.querySelectorAll('#mmMenu a').forEach(function(l){l.addEventListener('click',function(){mmMenu(false);});});</script>
+<main id="main">
 
 <div class="hero">
   <div class="hero-tag">Free Tool · No Sign-up Required</div>
@@ -493,6 +494,7 @@ footer a { color: var(--gold); text-decoration: none; }
   </div>
 </div>
 
+</main>
 <div class="mm-footer" role="contentinfo">
   <div class="mm-footer-grid">
     <div>
@@ -693,5 +695,6 @@ function calculate() {
 </script>
 <script src="shared.js"></script>
 <script src="chat-widget.js" defer></script>
+<script src="/track.js" defer></script>
 </body>
 </html>
