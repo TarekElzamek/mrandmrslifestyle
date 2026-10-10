@@ -17,7 +17,8 @@
 <meta property="og:description" content="The complete nutrition & training framework for transforming your body in Dubai and worldwide. Free download. Used by 500+ clients.">
 <meta property="og:url" content="https://www.mrandmrslifestyle.com/free-guide.html">
 
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700;1,900&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
 <style>
 :root {
   --gold: #C9A84C; --gold-light: #E8D08A; --gold-dim: rgba(201,168,76,0.15);
@@ -130,6 +131,8 @@ footer p { font-size: 0.75rem; color: rgba(255,255,255,0.25); }
   gtag('js', new Date());
   gtag('config', 'G-2E0EXHN28J');
 </script>
+<link rel="stylesheet" href="/site.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.mrandmrslifestyle.com/"}, {"@type": "ListItem", "position": 2, "name": "Free Transformation Guide", "item": "https://www.mrandmrslifestyle.com/free-guide.html"}]}</script>
 </head>
 <body>
 
@@ -231,12 +234,51 @@ footer p { font-size: 0.75rem; color: rgba(255,255,255,0.25); }
   <button class="btn-gold" onclick="scrollToForm()">✦ Claim Your Free Blueprint</button>
 </section>
 
-<footer>
-  <p style="margin-bottom:8px;"><a href="https://www.mrandmrslifestyle.com/personal-trainer-dubai.html">Personal Trainer Dubai</a> · <a href="https://www.mrandmrslifestyle.com/female-personal-trainer-dubai.html">Female Personal Trainer</a> · <a href="https://www.mrandmrslifestyle.com/online-coaching.html">Online Coaching</a> · <a href="https://www.mrandmrslifestyle.com/packages.html">Packages</a> · <a href="https://www.mrandmrslifestyle.com/transformations.html">Transformations</a> · <a href="https://www.mrandmrslifestyle.com/blog.html">Blog</a></p>
-  <a href="index.html" class="foot-logo"><img src="logo.png" alt="Mr &amp; Mrs Lifestyle" style="height:28px;width:auto;" /></a>
-  <p>© 2026 Mr and Mrs Lifestyle · info@mrandmrslifestyle.com · Dubai, UAE</p>
-  <p style="font-size:0.7rem; color:rgba(255,255,255,0.2);">Privacy Policy · Unsubscribe anytime</p>
-</footer>
+<div class="mm-footer" role="contentinfo">
+  <div class="mm-footer-grid">
+    <div>
+      <a href="/" aria-label="Mr &amp; Mrs Lifestyle home"><img src="/logo.png" alt="Mr &amp; Mrs Lifestyle" width="206" height="140" loading="lazy"></a>
+      <p>1-to-1 personal training in Dubai and online coaching worldwide with husband-and-wife coaches Tarek Elzamek and Chloe Antoniazzi.</p>
+      <div class="mm-social">
+        <a href="https://www.instagram.com/mrandmrslifestyle/" target="_blank" rel="noopener" aria-label="Instagram">IG</a>
+        <a href="https://www.youtube.com/@MrandMrsLifestyle-kw3jz" target="_blank" rel="noopener" aria-label="YouTube">YT</a>
+        <a href="mailto:info@mrandmrslifestyle.com" aria-label="Email">@</a>
+      </div>
+    </div>
+    <div>
+      <h2>Coaching</h2>
+      <ul>
+        <li><a href="/personal-trainer-dubai.html">Personal Trainer Dubai</a></li>
+        <li><a href="/female-personal-trainer-dubai.html">Female Personal Trainer Dubai</a></li>
+        <li><a href="/online-coaching.html">Online Coaching</a></li>
+        <li><a href="/packages.html">Packages &amp; Prices</a></li>
+        <li><a href="/transformations.html">Client Results</a></li>
+      </ul>
+    </div>
+    <div>
+      <h2>Free Resources</h2>
+      <ul>
+        <li><a href="/blog.html">Fitness Blog</a></li>
+        <li><a href="/calculator.html">Calorie &amp; Macro Calculator</a></li>
+        <li><a href="/workout-tracker.html">Workout Tracker</a></li>
+        <li><a href="/free-guide.html">Free Transformation Guide</a></li>
+      </ul>
+    </div>
+    <div>
+      <h2>Train in Dubai</h2>
+      <ul>
+        <li><a href="https://wa.me/971507871515?text=Hi%20Tarek%2C%20I%27d%20like%20to%20book%20personal%20training%20at%20Nogs%20Gym." target="_blank" rel="noopener">Nogs Gym with Tarek · WhatsApp</a></li>
+        <li><a href="https://wa.me/971547011995?text=Hi%20Chloe%2C%20I%27d%20like%20to%20book%20a%20session%20at%20The%20Pilates%20Room." target="_blank" rel="noopener">The Pilates Room with Chloe · WhatsApp</a></li>
+        <li><a href="mailto:info@mrandmrslifestyle.com">info@mrandmrslifestyle.com</a></li>
+        <li><a href="/apply.html">Apply for Coaching</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="mm-footer-bottom">
+    <span>&copy; 2026 Mr &amp; Mrs Lifestyle · Dubai, UAE</span>
+    <span><a href="/privacy.html">Privacy Policy</a> · <a href="/terms.html">Terms &amp; Conditions</a></span>
+  </div>
+</div>
 
 <script>
 function scrollToForm() { document.getElementById('formCard').scrollIntoView({ behavior: 'smooth', block: 'center' }); setTimeout(() => document.getElementById('firstName').focus(), 600); }

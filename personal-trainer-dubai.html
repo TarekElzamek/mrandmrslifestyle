@@ -22,7 +22,8 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Personal Trainer in Dubai | Mr &amp; Mrs Lifestyle">
 <meta name="twitter:description" content="1-to-1 personal training in Dubai with certified coaches Tarek &amp; Chloe. Book a free consultation.">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700;1,900&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
 
 <script type="application/ld+json">
 {
@@ -161,6 +162,7 @@ nav{position:sticky;top:0;z-index:100;background:rgba(10,10,10,0.97);backdrop-fi
 .card img{width:100%;height:280px;object-fit:cover;object-position:center top;border-radius:4px;margin-bottom:16px;}
 .loc{display:flex;gap:16px;align-items:center;}
 .loc img{width:64px;height:64px;object-fit:contain;background:#000;border-radius:6px;margin:0;flex-shrink:0;}
+.loc img.loc-wide{width:128px;height:64px;padding:8px 10px;box-sizing:border-box;}
 .tag{display:inline-block;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;border:1px solid rgba(201,168,76,0.3);color:#E8D08A;padding:3px 8px;border-radius:2px;margin:4px 4px 0 0;}
 
 .table-scroll{overflow-x:auto;}
@@ -215,36 +217,54 @@ th{color:#C9A84C;font-size:13px;letter-spacing:0.05em;text-transform:uppercase;}
 /* mobile menu: full-screen overlay (lives outside the nav so the nav blur cannot clip it) */
 @media (max-width:768px){.mobile-menu{gap:14px!important;overflow-y:auto;justify-content:flex-start!important;padding:90px 24px 48px;}.mobile-menu a{font-size:19px!important;text-transform:none;letter-spacing:0.02em;}.mobile-menu a.current{color:#C9A84C!important;}.mobile-menu .mobile-cta{margin-top:10px;}.mobile-menu{background:#0a0a0a!important;z-index:2147483000!important;}}
 </style>
+<link rel="stylesheet" href="/site.css">
 </head>
 <body>
 
-<nav>
-  <a class="nav-logo" href="https://www.mrandmrslifestyle.com/"><img src="logo.png" alt="Mr &amp; Mrs Lifestyle" width="206" height="140"></a>
-  <div class="nav-links">
-    <a href="https://www.mrandmrslifestyle.com/">Home</a>
-    <a href="https://www.mrandmrslifestyle.com/personal-trainer-dubai.html" class="active">Dubai PT</a>
-    <a href="https://www.mrandmrslifestyle.com/online-coaching.html">Online Coaching</a>
-    <a href="https://www.mrandmrslifestyle.com/transformations.html">Results</a>
-    <a href="https://www.mrandmrslifestyle.com/blog.html">Blog</a>
-    <a href="https://www.mrandmrslifestyle.com/apply.html" class="nav-cta">Apply Now</a>
+<header class="mm-header">
+  <div class="mm-header-inner">
+    <a class="mm-logo" href="/" aria-label="Mr &amp; Mrs Lifestyle home"><img src="/logo.png" alt="Mr &amp; Mrs Lifestyle" width="206" height="140"></a>
+    <div class="mm-nav-wrap" role="navigation" aria-label="Main menu">
+    <ul class="mm-links">
+      <li><a href="/personal-trainer-dubai.html" class="mm-active" aria-current="page">Dubai PT</a></li>
+      <li><a href="/female-personal-trainer-dubai.html">Ladies PT</a></li>
+      <li><a href="/online-coaching.html">Online Coaching</a></li>
+      <li><a href="/packages.html">Packages</a></li>
+      <li><a href="/transformations.html">Results</a></li>
+      <li><a href="/blog.html">Blog</a></li>
+      <li class="mm-dropdown"><button type="button" class="mm-drop-btn" aria-haspopup="true">Free Tools</button>
+        <div class="mm-drop-menu">
+          <a href="/calculator.html">Calorie &amp; Macro Calculator</a>
+          <a href="/workout-tracker.html">Free Workout Tracker</a>
+          <a href="/free-guide.html">Free Transformation Guide</a>
+        </div>
+      </li>
+      <li><a href="/apply.html" class="mm-cta">Apply Now</a></li>
+    </ul>
+    </div>
+    <div class="mm-mobile-actions">
+      <a href="/apply.html" class="mm-cta">Apply Now</a>
+      <button type="button" class="mm-burger" aria-label="Open menu" aria-controls="mmMenu" aria-expanded="false" onclick="mmMenu(true)"><span></span><span></span><span></span></button>
+    </div>
   </div>
-  <button class="mobile-nav-toggle" onclick="openMobileMenu()" aria-label="Open menu"><span></span><span></span><span></span></button>
-</nav>
-<div class="mobile-menu" id="mobileMenu" role="dialog" aria-label="Site menu">
-  <button class="mobile-menu-close" onclick="closeMobileMenu()" aria-label="Close menu">&times;</button>
-  <a href="https://www.mrandmrslifestyle.com/">Home</a>
-  <a href="https://www.mrandmrslifestyle.com/personal-trainer-dubai.html" class="current">Dubai PT</a>
-  <a href="https://www.mrandmrslifestyle.com/female-personal-trainer-dubai.html">Female PT</a>
-  <a href="https://www.mrandmrslifestyle.com/online-coaching.html">Online Coaching</a>
-  <a href="https://www.mrandmrslifestyle.com/packages.html">Packages</a>
-  <a href="https://www.mrandmrslifestyle.com/transformations.html">Results</a>
-  <a href="https://www.mrandmrslifestyle.com/blog.html">Blog</a>
-  <a href="https://www.mrandmrslifestyle.com/free-guide.html">Free Guide</a>
-  <a href="https://www.mrandmrslifestyle.com/calculator.html">Calculator</a>
-  <a href="https://www.mrandmrslifestyle.com/workout-tracker.html">Free Workout Tracker</a>
-  <a href="https://www.mrandmrslifestyle.com/apply.html" class="mobile-cta">Apply Now</a>
+</header>
+<div class="mm-menu" id="mmMenu" role="dialog" aria-modal="true" aria-label="Site menu">
+  <button type="button" class="mm-menu-close" aria-label="Close menu" onclick="mmMenu(false)">&times;</button>
+  <a href="/">Home</a>
+  <a href="/personal-trainer-dubai.html" class="mm-active" aria-current="page">Dubai PT</a>
+  <a href="/female-personal-trainer-dubai.html">Ladies PT</a>
+  <a href="/online-coaching.html">Online Coaching</a>
+  <a href="/packages.html">Packages</a>
+  <a href="/transformations.html">Results</a>
+  <a href="/blog.html">Blog</a>
+  <div class="mm-menu-label">Free Tools</div>
+  <a href="/calculator.html" class="mm-menu-small">Calorie &amp; Macro Calculator</a>
+  <a href="/workout-tracker.html" class="mm-menu-small">Free Workout Tracker</a>
+  <a href="/free-guide.html" class="mm-menu-small">Free Transformation Guide</a>
+  <a href="/apply.html" class="mm-cta">Apply Now</a>
 </div>
-<script>function openMobileMenu(){document.getElementById('mobileMenu').classList.add('open');document.body.style.overflow='hidden';}function closeMobileMenu(){document.getElementById('mobileMenu').classList.remove('open');document.body.style.overflow='';}</script>
+<script>function mmMenu(o){var m=document.getElementById('mmMenu');m.classList.toggle('open',o);document.body.style.overflow=o?'hidden':'';var b=document.querySelector('.mm-burger');if(b)b.setAttribute('aria-expanded',o?'true':'false');}document.addEventListener('keydown',function(e){if(e.key==='Escape')mmMenu(false);});document.querySelectorAll('#mmMenu a').forEach(function(l){l.addEventListener('click',function(){mmMenu(false);});});</script>
+
 
 <header class="lp-hero">
   <div class="crumbs"><a href="https://www.mrandmrslifestyle.com/">Home</a> › Personal Trainer Dubai</div>
@@ -282,7 +302,7 @@ th{color:#C9A84C;font-size:13px;letter-spacing:0.05em;text-transform:uppercase;}
   <p>Choose the setting that suits you. Both locations give you private, hands-on coaching with real-time form correction.</p>
   <div class="grid2">
     <div class="card">
-      <div class="loc"><img src="nogs-gym.jpg" alt="Nogs Gym Dubai logo" width="64" height="64" loading="lazy"><div><h3 style="margin:0">Nogs Gym</h3><span class="tag">Men &amp; women</span><span class="tag">Dubai</span></div></div>
+      <div class="loc"><img src="nogs-gym.jpg" alt="Nogs Gym (Team Nogueira) Dubai logo" width="160" height="160" loading="lazy" class="loc-wide"><div><h3 style="margin:0">Nogs Gym</h3><span class="tag">Men &amp; women</span><span class="tag">Dubai</span></div></div>
       <p style="margin-top:14px">A fully equipped gym for strength, muscle-building and fat-loss sessions with Tarek. Open to men and women.</p>
       <p style="margin-top:6px"><a href="https://wa.me/971507871515?text=Hi%20Tarek%2C%20I%27d%20like%20to%20book%20personal%20training%20with%20you%20at%20Nogs%20Gym%20in%20Dubai." target="_blank" rel="noopener">Chat with Tarek on WhatsApp →</a></p>
     </div>
@@ -401,10 +421,51 @@ th{color:#C9A84C;font-size:13px;letter-spacing:0.05em;text-transform:uppercase;}
 </section>
 </main>
 
-<footer class="site-footer">
-  <p><a href="https://www.mrandmrslifestyle.com/personal-trainer-dubai.html">Personal Trainer Dubai</a> · <a href="https://www.mrandmrslifestyle.com/female-personal-trainer-dubai.html">Female Personal Trainer</a> · <a href="https://www.mrandmrslifestyle.com/online-coaching.html">Online Coaching</a> · <a href="https://www.mrandmrslifestyle.com/packages.html">Packages</a> · <a href="https://www.mrandmrslifestyle.com/transformations.html">Transformations</a> · <a href="https://www.mrandmrslifestyle.com/blog.html">Blog</a></p>
-  <p>© 2026 Mr &amp; Mrs Lifestyle · Dubai, UAE · <a href="tel:+971507871515">+971 50 787 1515</a> · <a href="mailto:info@mrandmrslifestyle.com">info@mrandmrslifestyle.com</a></p>
-</footer>
+<div class="mm-footer" role="contentinfo">
+  <div class="mm-footer-grid">
+    <div>
+      <a href="/" aria-label="Mr &amp; Mrs Lifestyle home"><img src="/logo.png" alt="Mr &amp; Mrs Lifestyle" width="206" height="140" loading="lazy"></a>
+      <p>1-to-1 personal training in Dubai and online coaching worldwide with husband-and-wife coaches Tarek Elzamek and Chloe Antoniazzi.</p>
+      <div class="mm-social">
+        <a href="https://www.instagram.com/mrandmrslifestyle/" target="_blank" rel="noopener" aria-label="Instagram">IG</a>
+        <a href="https://www.youtube.com/@MrandMrsLifestyle-kw3jz" target="_blank" rel="noopener" aria-label="YouTube">YT</a>
+        <a href="mailto:info@mrandmrslifestyle.com" aria-label="Email">@</a>
+      </div>
+    </div>
+    <div>
+      <h2>Coaching</h2>
+      <ul>
+        <li><a href="/personal-trainer-dubai.html">Personal Trainer Dubai</a></li>
+        <li><a href="/female-personal-trainer-dubai.html">Female Personal Trainer Dubai</a></li>
+        <li><a href="/online-coaching.html">Online Coaching</a></li>
+        <li><a href="/packages.html">Packages &amp; Prices</a></li>
+        <li><a href="/transformations.html">Client Results</a></li>
+      </ul>
+    </div>
+    <div>
+      <h2>Free Resources</h2>
+      <ul>
+        <li><a href="/blog.html">Fitness Blog</a></li>
+        <li><a href="/calculator.html">Calorie &amp; Macro Calculator</a></li>
+        <li><a href="/workout-tracker.html">Workout Tracker</a></li>
+        <li><a href="/free-guide.html">Free Transformation Guide</a></li>
+      </ul>
+    </div>
+    <div>
+      <h2>Train in Dubai</h2>
+      <ul>
+        <li><a href="https://wa.me/971507871515?text=Hi%20Tarek%2C%20I%27d%20like%20to%20book%20personal%20training%20at%20Nogs%20Gym." target="_blank" rel="noopener">Nogs Gym with Tarek · WhatsApp</a></li>
+        <li><a href="https://wa.me/971547011995?text=Hi%20Chloe%2C%20I%27d%20like%20to%20book%20a%20session%20at%20The%20Pilates%20Room." target="_blank" rel="noopener">The Pilates Room with Chloe · WhatsApp</a></li>
+        <li><a href="mailto:info@mrandmrslifestyle.com">info@mrandmrslifestyle.com</a></li>
+        <li><a href="/apply.html">Apply for Coaching</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="mm-footer-bottom">
+    <span>&copy; 2026 Mr &amp; Mrs Lifestyle · Dubai, UAE</span>
+    <span><a href="/privacy.html">Privacy Policy</a> · <a href="/terms.html">Terms &amp; Conditions</a></span>
+  </div>
+</div>
 
 <script src="shared.js" defer></script>
 <script src="chat-widget.js" defer></script>
