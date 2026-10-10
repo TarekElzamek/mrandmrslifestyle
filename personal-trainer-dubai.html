@@ -27,89 +27,249 @@
 
 <script type="application/ld+json">
 {
-  "@context": "https://schema.org",
-  "@graph": [
+ "@context": "https://schema.org",
+ "@graph": [
+  {
+   "@type": [
+    "LocalBusiness",
+    "HealthAndBeautyBusiness"
+   ],
+   "@id": "https://www.mrandmrslifestyle.com/#business",
+   "name": "Mr & Mrs Lifestyle",
+   "url": "https://www.mrandmrslifestyle.com/",
+   "logo": "https://www.mrandmrslifestyle.com/logo.png",
+   "image": "https://www.mrandmrslifestyle.com/tarek.jpg",
+   "description": "1-to-1 personal training in Dubai and online coaching worldwide by certified coaches Tarek Elzamek and Chloe Antoniazzi.",
+   "telephone": "+971507871515",
+   "email": "info@mrandmrslifestyle.com",
+   "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Dubai",
+    "addressCountry": "AE"
+   },
+   "areaServed": {
+    "@type": "City",
+    "name": "Dubai"
+   },
+   "priceRange": "AED 299 - AED 1999",
+   "sameAs": [
+    "https://www.instagram.com/mrandmrslifestyle/",
+    "https://www.youtube.com/@MrandMrsLifestyle-kw3jz"
+   ]
+  },
+  {
+   "@type": "Service",
+   "@id": "https://www.mrandmrslifestyle.com/personal-trainer-dubai.html#service",
+   "name": "1-to-1 Personal Training in Dubai",
+   "serviceType": "Personal training",
+   "description": "Face-to-face personal training sessions in Dubai with certified coaches Tarek Elzamek and Chloe Antoniazzi, including a custom training plan and nutrition guidance. Specialisms: fat loss, muscle gain, body recomposition, glute training and pre/postnatal training.",
+   "provider": {
+    "@id": "https://www.mrandmrslifestyle.com/#business"
+   },
+   "areaServed": {
+    "@type": "City",
+    "name": "Dubai"
+   },
+   "audience": {
+    "@type": "PeopleAudience",
+    "audienceType": "Men and women in Dubai, from beginners to experienced lifters"
+   },
+   "hasOfferCatalog": {
+    "@type": "OfferCatalog",
+    "name": "Personal training packages in Dubai",
+    "itemListElement": [
+     {
+      "@type": "Offer",
+      "name": "12 personal training sessions with Tarek at Nogs Gym",
+      "availableAtOrFrom": {
+       "@type": "Place",
+       "name": "Nogs Gym, Dubai"
+      }
+     },
+     {
+      "@type": "Offer",
+      "name": "20 personal training sessions with Tarek at Nogs Gym",
+      "availableAtOrFrom": {
+       "@type": "Place",
+       "name": "Nogs Gym, Dubai"
+      }
+     },
+     {
+      "@type": "Offer",
+      "name": "Single personal training session with Chloe at The Pilates Room",
+      "availableAtOrFrom": {
+       "@type": "Place",
+       "name": "The Pilates Room by Chloe, Meydan, Dubai"
+      }
+     },
+     {
+      "@type": "Offer",
+      "name": "5 personal training sessions with Chloe at The Pilates Room",
+      "availableAtOrFrom": {
+       "@type": "Place",
+       "name": "The Pilates Room by Chloe, Meydan, Dubai"
+      }
+     },
+     {
+      "@type": "Offer",
+      "name": "10 personal training sessions with Chloe at The Pilates Room",
+      "availableAtOrFrom": {
+       "@type": "Place",
+       "name": "The Pilates Room by Chloe, Meydan, Dubai"
+      }
+     },
+     {
+      "@type": "Offer",
+      "name": "20 personal training sessions with Chloe at The Pilates Room",
+      "availableAtOrFrom": {
+       "@type": "Place",
+       "name": "The Pilates Room by Chloe, Meydan, Dubai"
+      }
+     }
+    ]
+   },
+   "url": "https://www.mrandmrslifestyle.com/personal-trainer-dubai.html",
+   "availableAtOrFrom": [
     {
-      "@type": ["LocalBusiness", "HealthAndBeautyBusiness"],
-      "@id": "https://www.mrandmrslifestyle.com/#business",
-      "name": "Mr & Mrs Lifestyle",
-      "url": "https://www.mrandmrslifestyle.com/",
-      "logo": "https://www.mrandmrslifestyle.com/logo.png",
-      "image": "https://www.mrandmrslifestyle.com/tarek.jpg",
-      "description": "1-to-1 personal training in Dubai and online coaching worldwide by certified coaches Tarek Elzamek and Chloe Antoniazzi.",
-      "telephone": "+971507871515",
-      "email": "info@mrandmrslifestyle.com",
-      "address": {"@type": "PostalAddress", "addressLocality": "Dubai", "addressCountry": "AE"},
-      "areaServed": {"@type": "City", "name": "Dubai"},
-      "priceRange": "AED 299 - AED 1999",
-      "sameAs": ["https://www.instagram.com/mrandmrslifestyle/", "https://www.youtube.com/@MrandMrsLifestyle-kw3jz"]
+     "@type": "ExerciseGym",
+     "name": "Nogs Gym (Team Nogueira Dubai)",
+     "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "Al Ghurair Warehouse, Sheikh Zayed Road, Exit 46",
+      "addressLocality": "Al Quoz Industrial Area 3, Dubai",
+      "addressCountry": "AE"
+     },
+     "geo": {
+      "@type": "GeoCoordinates",
+      "latitude": 25.1642337,
+      "longitude": 55.2381656
+     },
+     "hasMap": "https://maps.app.goo.gl/7VxQe5xA5irR6NnX6"
     },
     {
-      "@type": "Service",
-      "@id": "https://www.mrandmrslifestyle.com/personal-trainer-dubai.html#service",
-      "name": "1-to-1 Personal Training in Dubai",
-      "serviceType": "Personal training",
-      "description": "Face-to-face personal training sessions in Dubai with certified coaches Tarek Elzamek and Chloe Antoniazzi, including a custom training plan and nutrition guidance. Specialisms: fat loss, muscle gain, body recomposition, glute training and pre/postnatal training.",
-      "provider": {"@id": "https://www.mrandmrslifestyle.com/#business"},
-      "areaServed": {"@type": "City", "name": "Dubai"},
-      "audience": {"@type": "PeopleAudience", "audienceType": "Men and women in Dubai, from beginners to experienced lifters"},
-      "hasOfferCatalog": {
-        "@type": "OfferCatalog",
-        "name": "Personal training packages in Dubai",
-        "itemListElement": [
-          {"@type": "Offer", "name": "12 personal training sessions with Tarek at Nogs Gym", "availableAtOrFrom": {"@type": "Place", "name": "Nogs Gym, Dubai"}},
-          {"@type": "Offer", "name": "20 personal training sessions with Tarek at Nogs Gym", "availableAtOrFrom": {"@type": "Place", "name": "Nogs Gym, Dubai"}},
-          {"@type": "Offer", "name": "Single personal training session with Chloe at The Pilates Room", "availableAtOrFrom": {"@type": "Place", "name": "The Pilates Room by Chloe, Meydan, Dubai"}},
-          {"@type": "Offer", "name": "5 personal training sessions with Chloe at The Pilates Room", "availableAtOrFrom": {"@type": "Place", "name": "The Pilates Room by Chloe, Meydan, Dubai"}},
-          {"@type": "Offer", "name": "10 personal training sessions with Chloe at The Pilates Room", "availableAtOrFrom": {"@type": "Place", "name": "The Pilates Room by Chloe, Meydan, Dubai"}},
-          {"@type": "Offer", "name": "20 personal training sessions with Chloe at The Pilates Room", "availableAtOrFrom": {"@type": "Place", "name": "The Pilates Room by Chloe, Meydan, Dubai"}}
-        ]
-      },
-      "url": "https://www.mrandmrslifestyle.com/personal-trainer-dubai.html"
-    },
-    {
-      "@type": "Person",
-      "name": "Tarek Elzamek",
-      "telephone": "+971507871515",
-      "jobTitle": "Personal Trainer — Strength & Transformation Specialist",
-      "image": "https://www.mrandmrslifestyle.com/tarek.jpg",
-      "worksFor": {"@id": "https://www.mrandmrslifestyle.com/#business"},
-      "knowsAbout": ["Personal training", "Fat loss", "Muscle gain", "Body recomposition", "Strength training"]
-    },
-    {
-      "@type": "Person",
-      "name": "Chloe Antoniazzi",
-      "jobTitle": "Personal Trainer — Women's, Glutes and Pre/Postnatal Specialist",
-      "telephone": "+971547011995",
-      "image": "https://www.mrandmrslifestyle.com/chloe.jpg",
-      "worksFor": {"@id": "https://www.mrandmrslifestyle.com/#business"},
-      "knowsAbout": ["Personal training for women", "Glute training", "Pre and postnatal exercise", "Reformer Pilates", "Women's nutrition"]
-    },
-    {
-      "@type": "BreadcrumbList",
-      "itemListElement": [
-        {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.mrandmrslifestyle.com/"},
-        {"@type": "ListItem", "position": 2, "name": "Personal Trainer Dubai", "item": "https://www.mrandmrslifestyle.com/personal-trainer-dubai.html"}
-      ]
-    },
-    {
-      "@type": "FAQPage",
-      "mainEntity": [
-        {"@type": "Question", "name": "How much does a personal trainer cost in Dubai?",
-         "acceptedAnswer": {"@type": "Answer", "text": "Personal training prices in Dubai depend on the trainer's experience, the gym and how many sessions you book. At Mr & Mrs Lifestyle, Tarek offers 12-session and 20-session packages at Nogs Gym, and Chloe offers single sessions plus 5, 10 and 20-session packages at The Pilates Room in Meydan. Bigger packages bring the price per session down. Message us for current package prices. If you want coaching at a lower cost, our online coaching starts from AED 299 per month."}},
-        {"@type": "Question", "name": "Where do your Dubai personal training sessions take place?",
-         "acceptedAnswer": {"@type": "Answer", "text": "Sessions take place at Nogs Gym in Dubai, which is open to all clients, and at The Pilates Room by Chloe in Meydan, a ladies-only studio where babies are welcome."}},
-        {"@type": "Question", "name": "Do you have a female personal trainer in Dubai?",
-         "acceptedAnswer": {"@type": "Answer", "text": "Yes. Coach Chloe Antoniazzi trains women 1-to-1 in Dubai. She is a certified personal trainer specialising in glute development, women's nutrition and pre/postnatal training, and a qualified mat, ball and reformer Pilates instructor."}},
-        {"@type": "Question", "name": "Is personal training suitable for complete beginners?",
-         "acceptedAnswer": {"@type": "Answer", "text": "Yes. Beginners often benefit most from 1-to-1 training because a coach teaches correct technique from day one and builds the programme around your current fitness, schedule and any injuries."}},
-        {"@type": "Question", "name": "Can I train with a personal trainer during or after pregnancy?",
-         "acceptedAnswer": {"@type": "Answer", "text": "Yes. Chloe is a certified pre and postnatal specialist and coaches women through pregnancy and postnatal recovery. Always get clearance from your doctor first, and tell us your situation at your consultation."}},
-        {"@type": "Question", "name": "Is there a trial session?",
-         "acceptedAnswer": {"@type": "Answer", "text": "Ask about a trial session when you book your free consultation. The consultation itself is free and there is no commitment."}}
-      ]
+     "@id": "https://www.mrandmrslifestyle.com/#the-pilates-room",
+     "@type": "ExerciseGym",
+     "name": "The Pilates Room by Chloe",
+     "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "Meydan Avenue, Block A, Shop 3",
+      "addressLocality": "Meydan, Dubai",
+      "addressCountry": "AE"
+     },
+     "geo": {
+      "@type": "GeoCoordinates",
+      "latitude": 25.1546775,
+      "longitude": 55.2954026
+     },
+     "hasMap": "https://maps.app.goo.gl/YrUzPbKRkRfiaqFg8"
     }
-  ]
+   ]
+  },
+  {
+   "@type": "Person",
+   "name": "Tarek Elzamek",
+   "telephone": "+971507871515",
+   "jobTitle": "Personal Trainer — Strength & Transformation Specialist",
+   "image": "https://www.mrandmrslifestyle.com/tarek.jpg",
+   "worksFor": {
+    "@id": "https://www.mrandmrslifestyle.com/#business"
+   },
+   "knowsAbout": [
+    "Personal training",
+    "Fat loss",
+    "Muscle gain",
+    "Body recomposition",
+    "Strength training"
+   ]
+  },
+  {
+   "@type": "Person",
+   "name": "Chloe Antoniazzi",
+   "jobTitle": "Personal Trainer — Women's, Glutes and Pre/Postnatal Specialist",
+   "telephone": "+971547011995",
+   "image": "https://www.mrandmrslifestyle.com/chloe.jpg",
+   "worksFor": {
+    "@id": "https://www.mrandmrslifestyle.com/#business"
+   },
+   "knowsAbout": [
+    "Personal training for women",
+    "Glute training",
+    "Pre and postnatal exercise",
+    "Reformer Pilates",
+    "Women's nutrition"
+   ]
+  },
+  {
+   "@type": "BreadcrumbList",
+   "itemListElement": [
+    {
+     "@type": "ListItem",
+     "position": 1,
+     "name": "Home",
+     "item": "https://www.mrandmrslifestyle.com/"
+    },
+    {
+     "@type": "ListItem",
+     "position": 2,
+     "name": "Personal Trainer Dubai",
+     "item": "https://www.mrandmrslifestyle.com/personal-trainer-dubai.html"
+    }
+   ]
+  },
+  {
+   "@type": "FAQPage",
+   "mainEntity": [
+    {
+     "@type": "Question",
+     "name": "How much does a personal trainer cost in Dubai?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Personal training prices in Dubai depend on the trainer's experience, the gym and how many sessions you book. At Mr & Mrs Lifestyle, Tarek offers 12-session and 20-session packages at Nogs Gym, and Chloe offers single sessions plus 5, 10 and 20-session packages at The Pilates Room in Meydan. Bigger packages bring the price per session down. Message us for current package prices. If you want coaching at a lower cost, our online coaching starts from AED 299 per month."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "Where do your Dubai personal training sessions take place?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sessions take place at Nogs Gym in Dubai, which is open to all clients, and at The Pilates Room by Chloe in Meydan, a ladies-only studio where babies are welcome."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "Do you have a female personal trainer in Dubai?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes. Coach Chloe Antoniazzi trains women 1-to-1 in Dubai. She is a certified personal trainer specialising in glute development, women's nutrition and pre/postnatal training, and a qualified mat, ball and reformer Pilates instructor."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "Is personal training suitable for complete beginners?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes. Beginners often benefit most from 1-to-1 training because a coach teaches correct technique from day one and builds the programme around your current fitness, schedule and any injuries."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "Can I train with a personal trainer during or after pregnancy?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Yes. Chloe is a certified pre and postnatal specialist and coaches women through pregnancy and postnatal recovery. Always get clearance from your doctor first, and tell us your situation at your consultation."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "Is there a trial session?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Ask about a trial session when you book your free consultation. The consultation itself is free and there is no commitment."
+     }
+    }
+   ]
+  }
+ ]
 }
 </script>
 
@@ -305,10 +465,18 @@ th{color:#C9A84C;font-size:13px;letter-spacing:0.05em;text-transform:uppercase;}
       <div class="loc"><img src="nogs-gym.jpg" alt="Nogs Gym (Team Nogueira) Dubai logo" width="480" height="244" loading="lazy" class="loc-wide"><div><h3 style="margin:0">Nogs Gym</h3><span class="tag">Men &amp; women</span><span class="tag">Dubai</span></div></div>
       <p style="margin-top:14px">A fully equipped gym for strength, muscle-building and fat-loss sessions with Tarek. Open to men and women.</p>
       <p style="margin-top:6px"><a href="https://wa.me/971507871515?text=Hi%20Tarek%2C%20I%27d%20like%20to%20book%20personal%20training%20with%20you%20at%20Nogs%20Gym%20in%20Dubai." target="_blank" rel="noopener">Chat with Tarek on WhatsApp →</a></p>
+      <div class="mm-map">
+        <iframe src="https://maps.google.com/maps?q=25.1642337,55.2381656&amp;z=16&amp;hl=en&amp;output=embed" title="Map: Nogs Gym (Team Nogueira Dubai)" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+        <div class="mm-map-body"><p class="mm-map-addr"><strong>Nogs Gym (Team Nogueira Dubai)</strong>Al Ghurair Warehouse, Sheikh Zayed Road (Exit 46), Al Quoz Industrial Area 3, Dubai</p><a class="mm-dir" href="https://maps.app.goo.gl/7VxQe5xA5irR6NnX6" target="_blank" rel="noopener"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z"/></svg> Get Directions</a></div>
+      </div>
     </div>
     <div class="card">
       <div class="loc"><img src="pilates-room-logo.jpg" alt="The Pilates Room by Chloe logo, Meydan Dubai" width="64" height="64" loading="lazy"><div><h3 style="margin:0">The Pilates Room by Chloe</h3><span class="tag">Ladies only</span><span class="tag">Meydan</span></div></div>
       <p style="margin-top:14px">A boutique, ladies-only studio in Meydan for personal training and reformer Pilates with Chloe. Babies are welcome, which makes it easy for new mums. <a href="https://www.mrandmrslifestyle.com/female-personal-trainer-dubai.html">More about ladies-only training →</a><br><a href="https://wa.me/971547011995?text=Hi%20Chloe%2C%20I%27d%20like%20to%20book%20a%20session%20at%20The%20Pilates%20Room%20in%20Meydan." target="_blank" rel="noopener">Chat with Chloe on WhatsApp →</a></p>
+      <div class="mm-map">
+        <iframe src="https://maps.google.com/maps?q=25.1546775,55.2954026&amp;z=16&amp;hl=en&amp;output=embed" title="Map: The Pilates Room by Chloe" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+        <div class="mm-map-body"><p class="mm-map-addr"><strong>The Pilates Room by Chloe</strong>Meydan Avenue, Block A, Shop 3, Nad Al Sheba 1 (Meydan), Dubai</p><a class="mm-dir" href="https://maps.app.goo.gl/YrUzPbKRkRfiaqFg8" target="_blank" rel="noopener"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z"/></svg> Get Directions</a></div>
+      </div>
     </div>
   </div>
 </section>
