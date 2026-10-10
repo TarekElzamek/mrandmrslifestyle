@@ -1,21 +1,180 @@
 {
   "redirects": [
-    { "source": "/(.*)", "has": [{ "type": "host", "value": "mrandmrslifestyle.vercel.app" }], "destination": "https://www.mrandmrslifestyle.com/$1", "permanent": true },
-
-    { "source": "/faq", "destination": "/#faq", "permanent": true },
-    { "source": "/terms-and-conditions", "destination": "/terms.html", "permanent": true },
-    { "source": "/transformations", "destination": "/transformations.html", "permanent": true },
-    { "source": "/calorie-calculator", "destination": "/calculator.html", "permanent": true },
-
-    { "source": "/about-us", "destination": "/#coaches", "permanent": true },
-    { "source": "/contact-us", "destination": "/apply.html", "permanent": true },
-    { "source": "/privacy-policy", "destination": "/privacy.html", "permanent": true },
-    { "source": "/book-online", "destination": "/apply.html", "permanent": true },
-    { "source": "/services-5", "destination": "/packages.html", "permanent": true },
-    { "source": "/shop", "destination": "/packages.html", "permanent": true },
-    { "source": "/product-page/free-download-macro-cheat-sheet", "destination": "/free-guide.html", "permanent": true },
-    { "source": "/product-page/high-protein-recipe-pack", "destination": "/free-guide.html", "permanent": true },
-    { "source": "/product-page/:slug*", "destination": "/packages.html", "permanent": true },
-    { "source": "/product-page-:num", "destination": "/packages.html", "permanent": true }
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "mrandmrslifestyle.vercel.app"
+        }
+      ],
+      "destination": "https://www.mrandmrslifestyle.com/$1",
+      "permanent": true
+    },
+    {
+      "source": "/index.html",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/blog-glutes-training-women_1.html",
+      "destination": "/blog-glutes-training-women.html",
+      "permanent": true
+    },
+    {
+      "source": "/personal-trainer-dubai",
+      "destination": "/personal-trainer-dubai.html",
+      "permanent": true
+    },
+    {
+      "source": "/female-personal-trainer-dubai",
+      "destination": "/female-personal-trainer-dubai.html",
+      "permanent": true
+    },
+    {
+      "source": "/online-coaching",
+      "destination": "/online-coaching.html",
+      "permanent": true
+    },
+    {
+      "source": "/packages",
+      "destination": "/packages.html",
+      "permanent": true
+    },
+    {
+      "source": "/blog",
+      "destination": "/blog.html",
+      "permanent": true
+    },
+    {
+      "source": "/calculator",
+      "destination": "/calculator.html",
+      "permanent": true
+    },
+    {
+      "source": "/workout-tracker",
+      "destination": "/workout-tracker.html",
+      "permanent": true
+    },
+    {
+      "source": "/free-guide",
+      "destination": "/free-guide.html",
+      "permanent": true
+    },
+    {
+      "source": "/apply",
+      "destination": "/apply.html",
+      "permanent": true
+    },
+    {
+      "source": "/privacy",
+      "destination": "/privacy.html",
+      "permanent": true
+    },
+    {
+      "source": "/terms",
+      "destination": "/terms.html",
+      "permanent": true
+    },
+    {
+      "source": "/blog-how-to-lose-fat-dubai",
+      "destination": "/blog-how-to-lose-fat-dubai.html",
+      "permanent": true
+    },
+    {
+      "source": "/blog-ramadan-fitness",
+      "destination": "/blog-ramadan-fitness.html",
+      "permanent": true
+    },
+    {
+      "source": "/blog-glutes-training-women",
+      "destination": "/blog-glutes-training-women.html",
+      "permanent": true
+    },
+    {
+      "source": "/blog-muscle-building-men",
+      "destination": "/blog-muscle-building-men.html",
+      "permanent": true
+    },
+    {
+      "source": "/blog-couples-training",
+      "destination": "/blog-couples-training.html",
+      "permanent": true
+    },
+    {
+      "source": "/blog-identity-transformation",
+      "destination": "/blog-identity-transformation.html",
+      "permanent": true
+    },
+    {
+      "source": "/faq",
+      "destination": "/#faq",
+      "permanent": true
+    },
+    {
+      "source": "/terms-and-conditions",
+      "destination": "/terms.html",
+      "permanent": true
+    },
+    {
+      "source": "/transformations",
+      "destination": "/transformations.html",
+      "permanent": true
+    },
+    {
+      "source": "/calorie-calculator",
+      "destination": "/calculator.html",
+      "permanent": true
+    },
+    {
+      "source": "/about-us",
+      "destination": "/#coaches",
+      "permanent": true
+    },
+    {
+      "source": "/contact-us",
+      "destination": "/apply.html",
+      "permanent": true
+    },
+    {
+      "source": "/privacy-policy",
+      "destination": "/privacy.html",
+      "permanent": true
+    },
+    {
+      "source": "/book-online",
+      "destination": "/apply.html",
+      "permanent": true
+    },
+    {
+      "source": "/services-5",
+      "destination": "/packages.html",
+      "permanent": true
+    },
+    {
+      "source": "/shop",
+      "destination": "/packages.html",
+      "permanent": true
+    },
+    {
+      "source": "/product-page/free-download-macro-cheat-sheet",
+      "destination": "/free-guide.html",
+      "permanent": true
+    },
+    {
+      "source": "/product-page/high-protein-recipe-pack",
+      "destination": "/free-guide.html",
+      "permanent": true
+    },
+    {
+      "source": "/product-page/:slug*",
+      "destination": "/packages.html",
+      "permanent": true
+    },
+    {
+      "source": "/product-page-:num",
+      "destination": "/packages.html",
+      "permanent": true
+    }
   ]
 }
