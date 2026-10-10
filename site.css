@@ -16,8 +16,8 @@ img { max-width: 100%; }
 }
 .mm-header.mm-fixed { position: fixed; left: 0; right: 0; }
 .mm-header-inner {
-  max-width: 1320px; margin: 0 auto;
-  padding: 0.9rem 2.5rem;
+  max-width: none; margin: 0;
+  padding: 0.9rem 3rem;
   display: flex; align-items: center; justify-content: space-between; gap: 1.5rem;
 }
 .mm-logo { display: flex; align-items: center; flex-shrink: 0; line-height: 0; }
