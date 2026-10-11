@@ -8,7 +8,7 @@ const CONFIG = {
   whatsappMsg: "Hi Tarek & Chloe! I just visited your website and I'm interested in coaching. Can we chat?",
   instagram:   'mrandmrslifestyle',
   email:       'info@mrandmrslifestyle.com',
-  gaId:        'G-2E0EXHN28J',
+  gaId:        'G-1QXTWXK4LB',
   formspreeApply: 'mdayvono',
   formspreeGuide: 'xvzdnogv',
 };
