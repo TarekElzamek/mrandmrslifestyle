@@ -8,6 +8,7 @@
 (function () {
   var CFG = {
     ga: 'G-2E0EXHN28J',
+    ga2: 'G-1QXTWXK4LB',   // second GA4 property (Google Ads account) — receives the same events
     metaPixel: '2190415675224378',
     googleAds: '',
     adsLabels: { lead: '', whatsapp: '', checkout: '', purchase: '' }
@@ -23,6 +24,7 @@
     window.gtag('js', new Date());
     window.gtag('config', CFG.ga);
   }
+  if (CFG.ga2) window.gtag('config', CFG.ga2);
   if (CFG.googleAds) window.gtag('config', CFG.googleAds);
 
   /* ---------- Meta Pixel (only when an ID is set) ---------- */
