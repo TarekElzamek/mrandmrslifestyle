@@ -8,7 +8,7 @@
 (function () {
   var CFG = {
     ga: 'G-2E0EXHN28J',
-    metaPixel: '',
+    metaPixel: '2190415675224378',
     googleAds: '',
     adsLabels: { lead: '', whatsapp: '', checkout: '', purchase: '' }
   };
