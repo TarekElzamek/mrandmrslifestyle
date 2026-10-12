@@ -257,7 +257,8 @@
   .lead-perks li::before { content: '✓'; position: absolute; left: 0; color: var(--gold); font-weight: 700; }
   .transformations-section { background: var(--off-black); }
   .transforms-header { text-align: center; margin-bottom: 4rem; }
-  .transforms-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; max-width: 1100px; margin: 0 auto 3rem; }
+  .transforms-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.25rem; max-width: 1240px; margin: 0 auto 3rem; }
+  @media (max-width: 1100px) { .transforms-grid { grid-template-columns: repeat(2, 1fr); } }
   .transform-card { background: var(--charcoal); border-radius: 4px; overflow: hidden; border: 1px solid rgba(255,255,255,0.06); transition: transform 0.3s, border-color 0.3s; }
   .transform-card:hover { transform: translateY(-4px); border-color: rgba(201,168,76,0.3); }
   .transform-info { padding: 1.25rem; }
@@ -542,6 +543,14 @@
         <div class="transform-name">Max</div>
         <div class="transform-result">↑ 12kg Muscle · 20 Weeks · Ultimate Muscle Gain</div>
         <div class="transform-quote">"I trained for years without seeing real progress. In 20 weeks with Tarek I completely transformed. The programming, the nutrition, the accountability — nothing comes close to what Mr &amp; Mrs Lifestyle delivers."</div>
+      </div>
+    </div>
+    <div class="transform-card">
+      <div class="transform-full-img"><img src="transform4.jpg" alt="Female fat loss transformation with Mr and Mrs Lifestyle coaching — waist visibly smaller, old jeans now too big" style="width:100%; display:block; border-bottom: 3px solid var(--gold);" loading="lazy"></div>
+      <div class="transform-info">
+        <div class="transform-name">Private Client</div>
+        <div class="transform-result">↓ Body Fat · Inches Off The Waist</div>
+        <div class="transform-quote">She asked us to keep her name private, so we'll let the jeans do the talking.</div>
       </div>
     </div>
   </div>
