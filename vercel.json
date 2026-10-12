@@ -1,6 +1,11 @@
 {
   "redirects": [
     {
+      "source": "/personal-trainer-meydan.html",
+      "destination": "/reformer-pilates-meydan.html",
+      "permanent": true
+    },
+    {
       "source": "/(.*)",
       "has": [
         {
@@ -123,7 +128,7 @@
     },
     {
       "source": "/personal-trainer-meydan",
-      "destination": "/personal-trainer-meydan.html",
+      "destination": "/reformer-pilates-meydan.html",
       "permanent": true
     },
     {
