@@ -222,6 +222,7 @@ footer a { color: var(--gold); text-decoration: none; }
       <li class="mm-dropdown"><button type="button" class="mm-drop-btn mm-active" aria-haspopup="true">Free Tools</button>
         <div class="mm-drop-menu">
           <a href="/calculator.html" class="mm-active" aria-current="page">Calorie &amp; Macro Calculator</a>
+          <a href="/dubai-food-calories.html">Dubai Food Calories</a>
           <a href="/workout-tracker.html">Free Workout Tracker</a>
           <a href="/free-guide.html">Free Transformation Guide</a>
         </div>
@@ -246,6 +247,7 @@ footer a { color: var(--gold); text-decoration: none; }
   <a href="/blog.html">Blog</a>
   <div class="mm-menu-label">Free Tools</div>
   <a href="/calculator.html" class="mm-menu-small mm-active">Calorie &amp; Macro Calculator</a>
+  <a href="/dubai-food-calories.html" class="mm-menu-small">Dubai Food Calories</a>
   <a href="/workout-tracker.html" class="mm-menu-small">Free Workout Tracker</a>
   <a href="/free-guide.html" class="mm-menu-small">Free Transformation Guide</a>
   <a href="/apply.html" class="mm-cta">Apply Now</a>
@@ -428,6 +430,7 @@ footer a { color: var(--gold); text-decoration: none; }
           <div id="mpPlan" style="display:none"></div>
         </div>
 
+        <a href="/dubai-food-calories.html" style="display:block;margin:0 0 1.5rem;padding:1rem 1.25rem;border:1px solid rgba(201,168,76,.25);border-radius:10px;color:#fff;text-decoration:none;font-size:.9rem;line-height:1.5"><strong style="color:#c9a84c">New:</strong> see how your favourite Dubai foods (shawarma, karak, machboos…) fit into your daily calories →</a>
         <!-- PACKAGE RECOMMENDATION -->
         <div class="pkg-rec" id="pkgRec">
           <div class="pkg-rec-tag">✦ Personalised Recommendation</div>
@@ -540,6 +543,7 @@ footer a { color: var(--gold); text-decoration: none; }
       <ul>
         <li><a href="/blog.html">Fitness Blog</a></li>
         <li><a href="/calculator.html">Calorie &amp; Macro Calculator</a></li>
+        <li><a href="/dubai-food-calories.html">Dubai Food Calories</a></li>
         <li><a href="/workout-tracker.html">Workout Tracker</a></li>
         <li><a href="/free-guide.html">Free Transformation Guide</a></li>
       </ul>
@@ -681,6 +685,7 @@ function calculate() {
 
   // UPDATE UI
   window.mmCalc = { kcal: target, p: proteinG, c: carbG, f: fatG, goal: goalLabels[selectedGoal] };
+  try { localStorage.setItem('mmTarget', target); } catch (e) {}
   document.getElementById('calorieNum').textContent = target.toLocaleString();
   document.getElementById('calorieSub').textContent = `${goalLabels[selectedGoal]} · ${Math.abs(adj)} kcal ${adj < 0 ? 'below' : adj > 0 ? 'above' : 'at'} maintenance`;
   document.getElementById('bmrVal').textContent = Math.round(bmr).toLocaleString();
@@ -720,7 +725,7 @@ function mpSubmit(e){
   var k=r.kcal||2000,p=r.p||150,split=[['Breakfast',.25,'Eggs or Greek yoghurt, oats or wholegrain toast, fruit'],['Lunch',.35,'Grilled chicken or fish, rice or potatoes, big salad'],['Snack',.10,'Protein shake or laban, a handful of nuts or dates'],['Dinner',.30,'Lean meat, fish or tofu, vegetables, a fist of carbs']];
   var rows=split.map(function(s){return '<tr><td style="padding:.55rem 0;font-weight:600">'+s[0]+'</td><td style="padding:.55rem .5rem;color:#c9a84c;white-space:nowrap">~'+Math.round(k*s[1]/10)*10+' kcal · '+Math.round(p*s[1])+'g protein</td></tr><tr><td colspan="2" style="padding:0 0 .7rem;font-size:.82rem;color:rgba(255,255,255,.6);border-bottom:1px solid rgba(255,255,255,.08)">'+s[2]+'</td></tr>';}).join('');
   var el=document.getElementById('mpPlan');
-  el.innerHTML='<div style="font-weight:700;font-size:1.02rem;margin-bottom:.35rem">✅ Thanks '+n.replace(/[<>&"]/g,'')+', here\'s your 1-day plan</div><p style="font-size:.85rem;color:rgba(255,255,255,.6);margin:0 0 .8rem">Built around '+k.toLocaleString()+' kcal and '+p+'g protein. Screenshot it for later.</p><table style="width:100%;border-collapse:collapse;font-size:.88rem">'+rows+'</table><p style="font-size:.8rem;color:rgba(255,255,255,.55);margin:.9rem 0 0">Want a full week built for you, with training and weekly check-ins? <a href="/online-coaching.html" style="color:#c9a84c">See online coaching</a> or <a href="/personal-trainer-dubai.html" style="color:#c9a84c">train in person</a>.</p>';
+  el.innerHTML='<div style="font-weight:700;font-size:1.02rem;margin-bottom:.35rem">✅ Thanks '+n.replace(/[<>&"]/g,'')+', here\'s your 1-day plan</div><p style="font-size:.85rem;color:rgba(255,255,255,.6);margin:0 0 .8rem">Built around '+k.toLocaleString()+' kcal and '+p+'g protein. Screenshot it for later.</p><table style="width:100%;border-collapse:collapse;font-size:.88rem">'+rows+'</table><p style="font-size:.85rem;margin:.9rem 0 0"><a href="/dubai-food-calories.html" style="color:#c9a84c;font-weight:600">See how shawarma, karak and 70 Dubai foods fit your '+k.toLocaleString()+' kcal →</a></p><p style="font-size:.8rem;color:rgba(255,255,255,.55);margin:.9rem 0 0">Want a full week built for you, with training and weekly check-ins? <a href="/online-coaching.html" style="color:#c9a84c">See online coaching</a> or <a href="/personal-trainer-dubai.html" style="color:#c9a84c">train in person</a>.</p>';
   document.getElementById('mpForm').style.display='none'; el.style.display='block';
   return false;
 }
