@@ -343,7 +343,10 @@ def build_hub(lang):
     cards = []
     for f in FOODS:
         name, alt = (f['en'], f['ar']) if lang == 'en' else (f['ar'], f['en'])
-        q = ' '.join([f['en'], f['ar'], f['cat'], CAT_AR[f['cat']], f['slug'].replace('-', ' ')]).lower()
+        extra = ''
+        if f['cat'] == 'Pasta & Pizza': extra = 'pizza بيتزا' if 'pizza' in f['slug'] else 'pasta باستا معكرونة'
+        elif f['cat'] == 'Chocolates': extra = 'chocolate شوكولاتة'
+        q = ' '.join([f['en'], f['ar'], f['slug'].replace('-', ' '), extra]).lower()
         cards.append(f'''<article class="fc-card" data-cat="{esc(f['cat'])}" data-q="{esc(q)}" data-kcal="{f['kcal']}">
   <div class="fc-top"><div><div class="fc-cat">{esc(L(f, lang, 'cat'))}</div><h2 class="fc-name"><a href="{url(f, lang)}">{esc(name)}</a></h2><div class="fc-alt" lang="{'ar' if lang == 'en' else 'en'}">{esc(alt)}</div></div>
   <div class="fc-kcal"><b>{num(f['kcal'])}</b><span>{t['kcal']}</span></div></div>

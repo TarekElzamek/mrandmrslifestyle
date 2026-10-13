@@ -40,6 +40,6 @@ Key facts:
 ## Free tools
 
 - [Calorie & Macro Calculator](https://www.mrandmrslifestyle.com/calculator.html)
-- [Dubai Food Calories](https://www.mrandmrslifestyle.com/dubai-food-calories.html): calories, protein, carbs, fat and a lighter swap for 95 popular foods in Dubai (shawarma, karak chai, machboos, luqaimat, biryani, burgers, popcorn, chocolate bars, breakfast cereals and more), each with its own page, in English and Arabic (https://www.mrandmrslifestyle.com/ar/dubai-food-calories.html). Values are estimates for a typical Dubai restaurant portion.
+- [Dubai Food Calories](https://www.mrandmrslifestyle.com/dubai-food-calories.html): calories, protein, carbs, fat and a lighter swap for 113 popular foods in Dubai (shawarma, karak chai, machboos, luqaimat, biryani, pasta, pizza, burgers, popcorn, chocolate bars, breakfast cereals and more), each with its own page, in English and Arabic (https://www.mrandmrslifestyle.com/ar/dubai-food-calories.html). Values are estimates for a typical Dubai restaurant portion.
 - [Workout Tracker](https://www.mrandmrslifestyle.com/workout-tracker.html)
 - [Free Dubai Transformation Blueprint](https://www.mrandmrslifestyle.com/free-guide.html)
