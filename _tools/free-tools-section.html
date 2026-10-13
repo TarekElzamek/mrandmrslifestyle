@@ -1,0 +1,161 @@
+<section class="ft" id="lead-section" aria-labelledby="ftTitle">
+<style>
+.ft{position:relative;overflow:hidden;background:#0b0b0b;padding:6rem clamp(1.25rem,5vw,3rem) 6.5rem;border-top:1px solid rgba(201,168,76,.18);border-bottom:1px solid rgba(201,168,76,.18)}
+.ft:before{content:'';position:absolute;inset:-20% -10% auto;height:620px;background:radial-gradient(ellipse 55% 60% at 50% 0%,rgba(201,168,76,.22),transparent 70%);pointer-events:none}
+.ft:after{content:'FREE';position:absolute;left:50%;top:1.2rem;transform:translateX(-50%);font-family:var(--font-display);font-size:clamp(7rem,20vw,17rem);line-height:1;color:transparent;-webkit-text-stroke:1px rgba(201,168,76,.07);letter-spacing:.05em;pointer-events:none;white-space:nowrap}
+.ft-head{position:relative;z-index:1;text-align:center;max-width:760px;margin:0 auto 3.25rem}
+.ft-badge{display:inline-flex;align-items:center;gap:.55rem;background:rgba(201,168,76,.12);border:1px solid rgba(201,168,76,.45);color:var(--gold);border-radius:999px;padding:.45rem 1rem;font-size:.72rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;margin-bottom:1.3rem}
+.ft-badge i{width:7px;height:7px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 0 rgba(201,168,76,.7);animation:ftPulse 2s infinite}
+@keyframes ftPulse{0%{box-shadow:0 0 0 0 rgba(201,168,76,.6)}70%{box-shadow:0 0 0 10px rgba(201,168,76,0)}100%{box-shadow:0 0 0 0 rgba(201,168,76,0)}}
+.ft-head h2{font-family:var(--font-display);font-weight:400;font-size:clamp(2.4rem,5.5vw,4rem);line-height:1.05;margin:0 0 1rem}
+.ft-head h2 em{color:var(--gold)}
+.ft-head p{color:rgba(255,255,255,.68);font-size:1.05rem;line-height:1.7;margin:0 auto;max-width:560px}
+.ft-perks{display:flex;justify-content:center;flex-wrap:wrap;gap:.5rem 1.5rem;margin-top:1.25rem;font-size:.82rem;color:rgba(255,255,255,.75)}
+.ft-perks span{display:inline-flex;align-items:center;gap:.4rem}
+.ft-perks svg{flex-shrink:0}
+.ft-grid{position:relative;z-index:1;display:grid;grid-template-columns:repeat(4,1fr);gap:1.25rem;max-width:1280px;margin:0 auto}
+.ft-card{position:relative;display:flex;flex-direction:column;border-radius:18px;overflow:hidden;text-decoration:none;color:#fff;background:linear-gradient(180deg,#181818,#101010);border:1px solid rgba(201,168,76,.28);box-shadow:0 18px 40px rgba(0,0,0,.45);transition:transform .3s cubic-bezier(.2,.8,.2,1),border-color .3s,box-shadow .3s}
+.ft-card:before{content:'';position:absolute;inset:0 0 auto;height:3px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:.9}
+.ft-card:hover,.ft-card:focus-visible{transform:translateY(-8px);border-color:var(--gold);box-shadow:0 26px 60px rgba(0,0,0,.55),0 0 0 1px rgba(201,168,76,.35),0 0 50px rgba(201,168,76,.18)}
+.ft-pill{position:absolute;top:14px;right:14px;z-index:2;background:var(--gold);color:#0a0a0a;font-size:.64rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;padding:.32rem .6rem;border-radius:4px}
+.ft-pill.new{background:#fff}
+.ft-screen{position:relative;height:190px;margin:12px 12px 0;border-radius:12px;overflow:hidden;background:radial-gradient(circle at 70% 0%,rgba(201,168,76,.18),transparent 60%),#0c0c0c;border:1px solid rgba(255,255,255,.07);display:flex;align-items:center;justify-content:center;padding:1rem}
+.ft-screen:after{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);background-size:22px 22px;pointer-events:none}
+.ft-body{padding:1.4rem 1.4rem 1.5rem;display:flex;flex-direction:column;flex:1}
+.ft-tag{font-size:.66rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);font-weight:700;margin-bottom:.45rem}
+.ft-title{font-family:var(--font-display);font-size:1.5rem;line-height:1.15;margin-bottom:.55rem}
+.ft-desc{font-size:.88rem;line-height:1.6;color:rgba(255,255,255,.66);margin:0 0 1.3rem;flex:1}
+.ft-btn{display:flex;align-items:center;justify-content:center;gap:.6rem;background:var(--gold);color:#0a0a0a;font-weight:800;font-size:.8rem;letter-spacing:.1em;text-transform:uppercase;padding:1rem 1rem;border-radius:8px;transition:background .2s}
+.ft-btn svg{transition:transform .25s}
+.ft-card:hover .ft-btn{background:#E8D08A}
+.ft-card:hover .ft-btn svg{transform:translateX(5px)}
+/* mock 1: calculator */
+.m-calc{position:relative;z-index:1;width:100%;text-align:center}
+.m-lbl{font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.55)}
+.m-num{font-family:var(--font-display);font-size:3rem;line-height:1;color:var(--gold);margin:.3rem 0 .1rem}
+.m-unit{font-size:.66rem;color:rgba(255,255,255,.55);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.8rem}
+.m-bars{display:grid;grid-template-columns:repeat(3,1fr);gap:.45rem;text-align:left}
+.m-bars div{font-size:.6rem;color:rgba(255,255,255,.6);text-transform:uppercase;letter-spacing:.08em}
+.m-bars b{display:block;height:5px;border-radius:5px;background:rgba(255,255,255,.1);margin-top:.3rem;overflow:hidden}
+.m-bars b i{display:block;height:100%;width:0;background:var(--gold);border-radius:5px;transition:width 1.2s cubic-bezier(.2,.8,.2,1)}
+.ft.on .m-bars b i{width:var(--w)}
+/* mock 2: food search */
+.m-food{position:relative;z-index:1;width:100%}
+.m-search{display:flex;align-items:center;gap:.5rem;background:#151515;border:1px solid rgba(201,168,76,.45);border-radius:8px;padding:.55rem .7rem;font-size:.82rem;margin-bottom:.6rem}
+.m-type{border-right:2px solid var(--gold);padding-right:2px;white-space:nowrap;overflow:hidden;animation:ftCaret .8s step-end infinite}
+@keyframes ftCaret{50%{border-color:transparent}}
+.m-row{display:flex;justify-content:space-between;align-items:center;background:rgba(255,255,255,.04);border-radius:7px;padding:.5rem .7rem;font-size:.78rem;margin-top:.4rem;opacity:0;transform:translateY(6px);transition:opacity .4s,transform .4s}
+.m-row b{color:var(--gold);font-family:var(--font-display);font-weight:400;font-size:1.05rem}
+.m-row small{display:block;color:rgba(255,255,255,.5);font-size:.64rem}
+.ft.on .m-row{opacity:1;transform:none}
+.ft.on .m-row:nth-child(3){transition-delay:.15s}
+/* mock 3: tracker */
+.m-track{position:relative;z-index:1;width:100%;height:100%;display:flex;flex-direction:column;padding-top:1.6rem}
+.m-track-top{display:flex;justify-content:space-between;font-size:.62rem;color:rgba(255,255,255,.55);letter-spacing:.1em;text-transform:uppercase}
+.m-track-top b{color:var(--gold);letter-spacing:0}
+.m-chart{flex:1;display:flex;align-items:flex-end;gap:7px;padding-top:.7rem}
+.m-chart i{flex:1;height:0;border-radius:5px 5px 2px 2px;background:linear-gradient(180deg,var(--gold),rgba(201,168,76,.35));transition:height 1s cubic-bezier(.2,.8,.2,1)}
+.ft.on .m-chart i{height:var(--h)}
+.m-chart i:nth-child(2){transition-delay:.08s}.m-chart i:nth-child(3){transition-delay:.16s}.m-chart i:nth-child(4){transition-delay:.24s}.m-chart i:nth-child(5){transition-delay:.32s}.m-chart i:nth-child(6){transition-delay:.4s}
+.m-weeks{display:flex;gap:7px;margin-top:.35rem}
+.m-weeks span{flex:1;text-align:center;font-size:.55rem;color:rgba(255,255,255,.4)}
+/* mock 4: guide */
+.m-book{position:relative;z-index:1;width:126px;height:160px;border-radius:4px 10px 10px 4px;background:linear-gradient(135deg,#d9bb63,#a8862f);box-shadow:-6px 0 0 #7a6122 inset,10px 14px 30px rgba(0,0,0,.6);transform:perspective(500px) rotateY(-16deg) rotate(-3deg);transition:transform .4s;padding:1rem .8rem .8rem 1rem;display:flex;flex-direction:column;color:#0a0a0a}
+.ft-card:hover .m-book{transform:perspective(500px) rotateY(-4deg) rotate(0)}
+.m-book small{font-size:.48rem;letter-spacing:.18em;font-weight:800;text-transform:uppercase}
+.m-book strong{font-family:var(--font-display);font-weight:400;font-size:.92rem;line-height:1.05;margin-top:.45rem}
+.m-book span{margin-top:auto;font-size:.5rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;border-top:1px solid rgba(0,0,0,.35);padding-top:.35rem}
+.m-pages{position:absolute;z-index:0;width:120px;height:154px;border-radius:4px 10px 10px 4px;background:#e9e2cf;transform:perspective(500px) rotateY(-16deg) rotate(3deg) translate(14px,4px);box-shadow:8px 10px 24px rgba(0,0,0,.5)}
+.m-chips{position:absolute;z-index:2;right:14px;bottom:14px;display:flex;flex-direction:column;gap:.3rem;align-items:flex-end}
+.m-chips span{background:rgba(10,10,10,.85);border:1px solid rgba(201,168,76,.45);color:#fff;font-size:.6rem;border-radius:999px;padding:.25rem .55rem}
+@media (max-width:1100px){.ft-grid{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:640px){.ft{padding:4.5rem 1.1rem 5rem}.ft-grid{grid-template-columns:1fr;gap:1rem}.ft-screen{height:170px}.ft-head p{font-size:.98rem}}
+@media (prefers-reduced-motion:reduce){.ft *{animation:none!important;transition:none!important}.m-bars b i{width:var(--w)}.m-chart i{height:var(--h)}.m-row{opacity:1;transform:none}}
+</style>
+  <div class="ft-head">
+    <div class="ft-badge"><i></i>100% Free · No card needed</div>
+    <h2 id="ftTitle">Free Tools To <em>Start Today</em></h2>
+    <p>The same tools our clients use, free for everyone. Pick one and get your answer in under a minute.</p>
+    <div class="ft-perks">
+      <span><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C9A84C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Built by Dubai coaches</span>
+      <span><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C9A84C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Works on your phone</span>
+      <span><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C9A84C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>No app to download</span>
+    </div>
+  </div>
+
+  <div class="ft-grid">
+    <a class="ft-card" href="/calculator.html">
+      <span class="ft-pill">Free</span>
+      <div class="ft-screen" aria-hidden="true">
+        <div class="m-calc">
+          <div class="m-lbl">Your daily target</div>
+          <div class="m-num" data-count="1850">1,850</div>
+          <div class="m-unit">kcal per day</div>
+          <div class="m-bars"><div>Protein<b><i style="--w:72%"></i></b></div><div>Carbs<b><i style="--w:88%"></i></b></div><div>Fat<b><i style="--w:46%"></i></b></div></div>
+        </div>
+      </div>
+      <div class="ft-body">
+        <div class="ft-tag">Takes 30 seconds</div>
+        <div class="ft-title">Calorie &amp; Macro Calculator</div>
+        <p class="ft-desc">Find exactly how many calories and grams of protein, carbs and fat you need to lose fat or build muscle.</p>
+        <span class="ft-btn">Calculate My Numbers <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+      </div>
+    </a>
+
+    <a class="ft-card" href="/dubai-food-calories.html">
+      <span class="ft-pill new">New</span>
+      <div class="ft-screen" aria-hidden="true">
+        <div class="m-food">
+          <div class="m-search"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#C9A84C" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><span class="m-type">shawarma</span></div>
+          <div class="m-row"><span>Chicken Shawarma<small>1 wrap</small></span><b>550</b></div>
+          <div class="m-row"><span>Karak Chai<small>1 cup</small></span><b>140</b></div>
+        </div>
+      </div>
+      <div class="ft-body">
+        <div class="ft-tag">70 Dubai foods</div>
+        <div class="ft-title">Dubai Food Calories</div>
+        <p class="ft-desc">Shawarma, karak, machboos, luqaimat and more. See the calories, protein and a lighter swap for the foods you actually eat.</p>
+        <span class="ft-btn">Search Dubai Foods <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+      </div>
+    </a>
+
+    <a class="ft-card" href="/workout-tracker.html">
+      <span class="ft-pill">Free</span>
+      <div class="ft-screen" aria-hidden="true">
+        <div class="m-track">
+          <div class="m-track-top"><span>Your strength</span><b>▲ every week</b></div>
+          <div class="m-chart"><i style="--h:30%"></i><i style="--h:42%"></i><i style="--h:50%"></i><i style="--h:63%"></i><i style="--h:74%"></i><i style="--h:92%"></i></div>
+          <div class="m-weeks"><span>W1</span><span>W2</span><span>W3</span><span>W4</span><span>W5</span><span>W6</span></div>
+        </div>
+      </div>
+      <div class="ft-body">
+        <div class="ft-tag">Free forever</div>
+        <div class="ft-title">Workout Tracker</div>
+        <p class="ft-desc">Log every set and rep and watch your strength go up week by week. Works on your phone, no app to download.</p>
+        <span class="ft-btn">Start Tracking Free <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+      </div>
+    </a>
+
+    <a class="ft-card" href="/free-guide.html">
+      <span class="ft-pill">Free</span>
+      <div class="ft-screen" aria-hidden="true">
+        <div class="m-pages"></div>
+        <div class="m-book"><small>Mr &amp; Mrs Lifestyle</small><strong>Dubai Trans&shy;formation Blueprint</strong><span>Free PDF guide</span></div>
+      </div>
+      <div class="ft-body">
+        <div class="ft-tag">Free download</div>
+        <div class="ft-title">Dubai Transformation Blueprint</div>
+        <p class="ft-desc">Our fat-loss framework, 7-day meal plan and beginner training template, built for life in Dubai.</p>
+        <span class="ft-btn">Get The Free Guide <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+      </div>
+    </a>
+  </div>
+<script>
+(function(){var s=document.getElementById('lead-section');if(!s)return;
+ function go(){s.classList.add('on');var n=s.querySelector('[data-count]');if(!n||n.dataset.done)return;n.dataset.done=1;var end=+n.dataset.count,t0=null;
+  if(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  function step(t){if(!t0)t0=t;var p=Math.min((t-t0)/1200,1),v=Math.round(end*(1-Math.pow(1-p,3)));n.textContent=v.toLocaleString('en-US');if(p<1)requestAnimationFrame(step);}requestAnimationFrame(step);}
+ if('IntersectionObserver' in window){var io=new IntersectionObserver(function(e){if(e[0].isIntersecting){go();io.disconnect();}},{threshold:.25});io.observe(s);}else go();
+})();
+</script>
+</section>
