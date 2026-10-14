@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:video="http://www.google.com/schemas/sitemap-video/1.1"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
         http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
@@ -7,21 +8,53 @@
   <!-- ── MAIN PAGES ─────────────────────────────────────────── -->
   <url>
     <loc>https://www.mrandmrslifestyle.com/</loc>
-    <lastmod>2026-10-12</lastmod>
+    <lastmod>2026-10-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
+    <video:video>
+      <video:thumbnail_loc>https://www.mrandmrslifestyle.com/client-transformations-poster.jpg</video:thumbnail_loc>
+      <video:title>Real client transformations with Mr &amp; Mrs Lifestyle</video:title>
+      <video:description>A montage of real before and after transformations from Mr &amp; Mrs Lifestyle personal training and online coaching clients in Dubai and worldwide.</video:description>
+      <video:content_loc>https://www.mrandmrslifestyle.com/client-transformations-v2.mp4</video:content_loc>
+      <video:duration>28</video:duration>
+      <video:family_friendly>yes</video:family_friendly>
+    </video:video>
+    <video:video>
+      <video:thumbnail_loc>https://www.mrandmrslifestyle.com/video-poster.jpg</video:thumbnail_loc>
+      <video:title>Client testimonial: coaching with Mr &amp; Mrs Lifestyle</video:title>
+      <video:description>A real Mr &amp; Mrs Lifestyle client talks about their experience of personal training and coaching with Tarek and Chloe in Dubai.</video:description>
+      <video:content_loc>https://www.mrandmrslifestyle.com/client-testimonial.mp4</video:content_loc>
+      <video:duration>14</video:duration>
+      <video:family_friendly>yes</video:family_friendly>
+    </video:video>
   </url>
   <url>
     <loc>https://www.mrandmrslifestyle.com/personal-trainer-dubai.html</loc>
-    <lastmod>2026-10-12</lastmod>
+    <lastmod>2026-10-14</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.95</priority>
+    <video:video>
+      <video:thumbnail_loc>https://www.mrandmrslifestyle.com/personal-training-tarek-nogs-gym-poster.jpg</video:thumbnail_loc>
+      <video:title>Personal training with Tarek Elzamek at Nogs Gym, Dubai</video:title>
+      <video:description>Dubai personal trainer Tarek Elzamek training at Nogs Gym in Al Quoz: squats, dips, pull-ups and push-ups.</video:description>
+      <video:content_loc>https://www.mrandmrslifestyle.com/personal-training-tarek-nogs-gym.mp4</video:content_loc>
+      <video:duration>23</video:duration>
+      <video:family_friendly>yes</video:family_friendly>
+    </video:video>
   </url>
   <url>
     <loc>https://www.mrandmrslifestyle.com/female-personal-trainer-dubai.html</loc>
-    <lastmod>2026-10-12</lastmod>
+    <lastmod>2026-10-14</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
+    <video:video>
+      <video:thumbnail_loc>https://www.mrandmrslifestyle.com/private-reformer-pilates-chloe-poster.jpg</video:thumbnail_loc>
+      <video:title>Private reformer Pilates with Chloe in Dubai</video:title>
+      <video:description>What a private, ladies-only reformer Pilates session looks like with Chloe Antoniazzi at The Pilates Room by Chloe in Meydan, Dubai.</video:description>
+      <video:content_loc>https://www.mrandmrslifestyle.com/private-reformer-pilates-chloe.mp4</video:content_loc>
+      <video:duration>24</video:duration>
+      <video:family_friendly>yes</video:family_friendly>
+    </video:video>
   </url>
   <url>
     <loc>https://www.mrandmrslifestyle.com/online-coaching.html</loc>
@@ -37,9 +70,17 @@
   </url>
   <url>
     <loc>https://www.mrandmrslifestyle.com/transformations.html</loc>
-    <lastmod>2026-10-12</lastmod>
+    <lastmod>2026-10-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
+    <video:video>
+      <video:thumbnail_loc>https://www.mrandmrslifestyle.com/client-transformations-poster.jpg</video:thumbnail_loc>
+      <video:title>Real client transformations with Mr &amp; Mrs Lifestyle</video:title>
+      <video:description>A montage of real before and after transformations from Mr &amp; Mrs Lifestyle personal training and online coaching clients in Dubai and worldwide.</video:description>
+      <video:content_loc>https://www.mrandmrslifestyle.com/client-transformations-v2.mp4</video:content_loc>
+      <video:duration>28</video:duration>
+      <video:family_friendly>yes</video:family_friendly>
+    </video:video>
   </url>
   <url>
     <loc>https://www.mrandmrslifestyle.com/calculator.html</loc>
@@ -134,7 +175,7 @@
   </url>
   <url>
     <loc>https://www.mrandmrslifestyle.com/reformer-pilates-meydan.html</loc>
-    <lastmod>2026-10-12</lastmod>
+    <lastmod>2026-10-13</lastmod>
   </url>
   <url>
     <loc>https://www.mrandmrslifestyle.com/ar/</loc>
