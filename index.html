@@ -360,7 +360,22 @@
   .location-icon { font-size: 1.4rem; }
   .location-name { font-weight: 600; font-size: 0.95rem; }
   .location-type { font-size: 0.75rem; color: rgba(255,255,255,0.5); margin-top: 0.15rem; }
-  .urgency-section { background: linear-gradient(135deg, var(--charcoal), var(--dark-gray)); border-top: 1px solid rgba(201,168,76,0.2); border-bottom: 1px solid rgba(201,168,76,0.2); text-align: center; padding: 5rem 3rem; }
+  .urgency-section { background: radial-gradient(120% 90% at 50% 0%, #2a1d12 0%, #141414 55%, #0f0f0f 100%); border-top: 1px solid rgba(201,168,76,0.2); border-bottom: 1px solid rgba(201,168,76,0.2); text-align: center; padding: 5rem 1.25rem; }
+  .us-card { position: relative; max-width: 760px; margin: 0 auto; padding: 2.75rem 1.75rem 2.25rem; border-radius: 14px; background: linear-gradient(180deg, rgba(30,30,30,0.92), rgba(16,16,16,0.96)); border: 1px solid rgba(201,168,76,0.45); box-shadow: 0 0 0 1px rgba(201,168,76,0.08), 0 30px 80px rgba(0,0,0,0.6); animation: usEdge 3s ease-in-out infinite; }
+  @keyframes usEdge { 50% { box-shadow: 0 0 0 1px rgba(201,168,76,0.25), 0 0 46px rgba(201,168,76,0.22), 0 30px 80px rgba(0,0,0,0.6); } }
+  .us-pill { display: inline-flex; align-items: center; gap: 0.55rem; padding: 0.4rem 0.9rem; border-radius: 999px; background: rgba(229,72,77,0.12); border: 1px solid rgba(229,72,77,0.45); color: #ff8a8d; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; }
+  .us-big { display: flex; align-items: center; justify-content: center; gap: 1rem; margin: 1.5rem 0 1rem; }
+  .us-n { font-family: var(--font-display); font-size: clamp(5rem, 16vw, 7.5rem); line-height: 0.85; color: #fff; text-shadow: 0 0 30px rgba(229,72,77,0.45); }
+  .us-of { text-align: left; font-size: 0.95rem; line-height: 1.35; color: rgba(255,255,255,0.75); }
+  .us-of strong { display: block; font-size: 1.3rem; color: #fff; }
+  .us-cd { display: flex; flex-wrap: wrap; justify-content: center; align-items: baseline; gap: 0.35rem; font-variant-numeric: tabular-nums; color: rgba(255,255,255,0.7); font-size: 0.9rem; margin-bottom: 2rem; }
+  .us-cd b { font-family: var(--font-display); font-weight: 400; font-size: 1.6rem; color: var(--gold-light); }
+  .us-title { margin-bottom: 0.9rem; }
+  .us-sub { color: rgba(255,255,255,0.6); max-width: 470px; margin: 0 auto 2rem; font-size: 0.95rem; line-height: 1.7; }
+  .us-ctas { display: flex; gap: 1rem; justify-content: center; align-items: center; flex-wrap: wrap; }
+  .us-cta { font-size: 0.9rem; padding: 1.1rem 2.4rem; animation: ubNudge 3.5s ease-in-out infinite; }
+  .us-small { display: block; margin-top: 1.1rem; font-size: 0.78rem; color: rgba(255,255,255,0.45); }
+  @media (prefers-reduced-motion: reduce) { .us-card, .us-cta { animation: none; } }
   .spots-counter { display: inline-flex; flex-direction: column; align-items: center; background: rgba(192,57,43,0.12); border: 1px solid rgba(192,57,43,0.4); border-radius: 4px; padding: 1rem 2rem; margin-bottom: 2rem; }
   .spots-num { font-family: var(--font-display); font-size: 3rem; font-weight: 900; color: #e74c3c; line-height: 1; }
   .spots-label { font-size: 0.72rem; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(255,255,255,0.6); margin-top: 0.25rem; }
@@ -430,7 +445,9 @@
     .pt-photo { min-height: 440px; background-position: center 18% !important; }
     @media (min-width: 481px) { .pt-photo { min-height: 580px; } }
     .pt-content { padding: 2.5rem 1.4rem; }
-    .urgency-section { padding: 3rem 1.4rem; }
+    .urgency-section { padding: 3rem 1rem; }
+    .us-card { padding: 2.25rem 1.1rem 1.9rem; }
+    .us-ctas .btn-primary { width: 100%; text-align: center; }
     .spots-num { font-size: 2.2rem; }
     .faq-container { padding: 0; }
     .faq-q { font-size: 0.9rem; }
@@ -956,19 +973,17 @@
 </section>
 
 <section class="urgency-section" id="contact">
-  <div class="spots-counter"><div class="spots-num" data-spots>3</div><div class="spots-label">Online Coaching Spots Left This Month</div></div>
-  <div style="display:flex;gap:1rem;justify-content:center;margin:1.5rem 0 2rem;flex-wrap:wrap;">
-    <div style="background:rgba(0,0,0,0.4);border:1px solid rgba(201,168,76,0.3);border-radius:6px;padding:0.75rem 1.25rem;min-width:70px;text-align:center;"><div id="cd-days" style="font-family:var(--font-display);font-size:2rem;font-weight:700;color:var(--gold);line-height:1;">--</div><div style="font-size:0.6rem;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.62);margin-top:0.2rem;">Days</div></div>
-    <div style="background:rgba(0,0,0,0.4);border:1px solid rgba(201,168,76,0.3);border-radius:6px;padding:0.75rem 1.25rem;min-width:70px;text-align:center;"><div id="cd-hrs" style="font-family:var(--font-display);font-size:2rem;font-weight:700;color:var(--gold);line-height:1;">--</div><div style="font-size:0.6rem;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.62);margin-top:0.2rem;">Hours</div></div>
-    <div style="background:rgba(0,0,0,0.4);border:1px solid rgba(201,168,76,0.3);border-radius:6px;padding:0.75rem 1.25rem;min-width:70px;text-align:center;"><div id="cd-min" style="font-family:var(--font-display);font-size:2rem;font-weight:700;color:var(--gold);line-height:1;">--</div><div style="font-size:0.6rem;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.62);margin-top:0.2rem;">Mins</div></div>
-    <div style="background:rgba(0,0,0,0.4);border:1px solid rgba(201,168,76,0.3);border-radius:6px;padding:0.75rem 1.25rem;min-width:70px;text-align:center;"><div id="cd-sec" style="font-family:var(--font-display);font-size:2rem;font-weight:700;color:var(--gold);line-height:1;">--</div><div style="font-size:0.6rem;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.62);margin-top:0.2rem;">Secs</div></div>
-  </div>
-  <p style="font-size:0.78rem;color:rgba(255,255,255,0.58);margin-bottom:1.5rem;">Until spots reset at end of month</p>
-  <h2 class="section-title" style="margin-bottom:1rem;">Your Transformation <em>Starts Today</em></h2>
-  <p style="color:rgba(255,255,255,0.55); max-width:480px; margin:0 auto 2.5rem; font-size:0.95rem; line-height:1.7;">We limit new clients each month so every person gets the attention they deserve. When spots are gone, they're gone.</p>
-  <div style="display:flex; gap:1rem; justify-content:center; flex-wrap:wrap;">
-    <a href="apply.html" class="btn-primary" style="font-size:0.9rem; padding:1.1rem 2.5rem;">Apply for Coaching — Free Call</a>
-    <a href="free-guide.html" class="btn-ghost" style="font-size:0.9rem;">Download Free Blueprint</a>
+  <div class="us-card">
+    <span class="us-pill"><span class="ub-dot" aria-hidden="true"></span><span data-month-name>October</span> intake closing</span>
+    <div class="us-big"><span class="us-n" data-spots>3</span><span class="us-of"><strong><span data-spots-word-lc>spots</span> left</strong>for online coaching<br>this month</span></div>
+    <div class="us-cd">Intake closes in <b id="cd-days">--</b>d <b id="cd-hrs">--</b>h <b id="cd-min">--</b>m <b id="cd-sec">--</b>s</div>
+    <h2 class="section-title us-title">Your Transformation <em>Starts Today</em></h2>
+    <p class="us-sub">We cap new clients each month so every person gets real attention from Tarek and Chloe. Once this month's spots are filled, the next intake opens on the 1st.</p>
+    <div class="us-ctas">
+      <a href="apply.html" class="btn-primary us-cta">Apply for Coaching — Free Call</a>
+      <a href="free-guide.html" class="btn-ghost">Download Free Blueprint</a>
+    </div>
+    <span class="us-small">Free consultation call · no commitment</span>
   </div>
 </section>
 
