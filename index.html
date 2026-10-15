@@ -1227,7 +1227,6 @@ document.getElementById('intake-modal').addEventListener('click', function(e) {
 <script src="shared.js"></script>
 <script src="chat-widget.js" defer></script>
 <script src="/spots.js" defer></script>
-<script>(function(){try{fetch('/api/google-reviews').then(function(r){return r.ok?r.json():null}).then(function(d){if(!d||typeof d.count!=='number'||d.count<1)return;document.querySelectorAll('[data-g-count]').forEach(function(e){e.textContent=d.count});if(typeof d.rating==='number')document.querySelectorAll('[data-g-rating]').forEach(function(e){e.textContent=d.rating.toFixed(1)})}).catch(function(){})}catch(e){}})();</script>
 
 <script src="/track.js" defer></script>
 </body>
