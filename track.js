@@ -69,13 +69,15 @@
     var a = e.target.closest && e.target.closest('a');
     if (a) {
       var h = a.getAttribute('href') || '', label = (a.textContent || '').trim().slice(0, 60);
-      if (h.indexOf('wa.me/') !== -1) ev('whatsapp_click', { coach: h.indexOf('971547011995') !== -1 ? 'Chloe' : 'Tarek', link_text: label }, 'Contact', 'whatsapp');
+      var sec = a.closest('section[id],div[id]'), at0 = attribution();
+      var ctx = { link_text: label, page_path: location.pathname, cta_section: sec ? sec.id : '', first_source: at0.first_source, latest_source: at0.latest_source, landing_page: at0.landing_page };
+      if (h.indexOf('wa.me/') !== -1) ev('whatsapp_click', Object.assign({ coach: h.indexOf('971547011995') !== -1 ? 'Chloe' : 'Tarek' }, ctx), 'Contact', 'whatsapp');
       else if (h.indexOf('tel:') === 0) ev('phone_click', { link_text: label }, 'Contact');
       else if (h.indexOf('mailto:') === 0) ev('email_click', { link_text: label }, 'Contact');
       else if (h.indexOf('maps.app.goo.gl') !== -1 || h.indexOf('google.com/maps') !== -1) ev('directions_click', { link_text: label }, 'FindLocation');
       else if (h.indexOf('thepilatesroombychloe.com') !== -1) ev('booking_site_click', { link_text: label }, 'Schedule');
       else if (h.indexOf('instagram.com') !== -1 || h.indexOf('youtube.com') !== -1) ev('social_click', { network: h.indexOf('instagram') !== -1 ? 'Instagram' : 'YouTube' });
-      else if (/apply\.html/.test(h)) ev('apply_click', { link_text: label });
+      else if (/apply\.html/.test(h)) ev('apply_click', ctx);
       return;
     }
     var b = e.target.closest && e.target.closest('button[onclick*="openIntakeModal"]');

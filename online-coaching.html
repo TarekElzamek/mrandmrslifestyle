@@ -344,6 +344,30 @@ th{color:#C9A84C;font-size:13px;letter-spacing:0.05em;text-transform:uppercase;}
 @media (max-width:768px){.mobile-menu{gap:14px!important;overflow-y:auto;justify-content:flex-start!important;padding:90px 24px 48px;}.mobile-menu a{font-size:19px!important;text-transform:none;letter-spacing:0.02em;}.mobile-menu a.current{color:#C9A84C!important;}.mobile-menu .mobile-cta{margin-top:10px;}.mobile-menu{background:#0a0a0a!important;z-index:2147483000!important;}}
 </style>
 <link rel="stylesheet" href="/site.css">
+<style>
+.vf-who{border-left:3px solid #C9A84C;background:rgba(201,168,76,0.07);padding:16px 20px;border-radius:3px;margin:8px 0 6px;}
+.vf-who p{margin:0;}
+.vf-quals{list-style:none;padding:0!important;display:grid;gap:6px;}
+.vf-quals li{font-size:15px;margin:0;padding-left:18px;position:relative;}
+.vf-quals li::before{content:"";position:absolute;left:0;top:.75em;width:7px;height:7px;background:#C9A84C;border-radius:50%;}
+.vf-rev{background:#1C1C1C;border:1px solid rgba(255,255,255,0.07);border-radius:6px;padding:22px;}
+.vf-rev .vf-stars{color:#C9A84C;letter-spacing:2px;font-size:14px;}
+.vf-rev blockquote{margin:8px 0 12px;font-size:15px;color:rgba(232,224,208,0.88);font-style:italic;line-height:1.65;}
+.vf-rev cite{font-style:normal;font-size:13px;color:rgba(255,255,255,0.6);}
+.vf-rev cite b{color:#fff;}
+.vf-case{display:block;margin-top:20px;background:#1C1C1C;border:1px solid rgba(201,168,76,0.3);border-radius:6px;padding:20px 22px;color:#e8e0d0;}
+.vf-case:hover{text-decoration:none;border-color:#C9A84C;}
+.vf-case b{display:block;color:#fff;font-family:'DM Serif Display',Georgia,serif;font-size:1.2rem;margin:4px 0;}
+.vf-case span{color:#C9A84C;font-size:14px;}
+.vf-small{font-size:14px;color:rgba(255,255,255,0.6)!important;}
+.vf-cta{margin-top:22px;display:flex;flex-wrap:wrap;gap:14px 18px;align-items:center;}
+.vf-cta .btn-ghost{margin-left:0;}
+@media(max-width:640px){#how-we-coach thead{display:none;}#how-we-coach table,#how-we-coach tbody,#how-we-coach tr,#how-we-coach td{display:block;width:100%;}
+#how-we-coach tr{background:#1C1C1C;border:1px solid rgba(255,255,255,0.07);border-radius:6px;padding:12px 16px;margin-bottom:12px;}
+#how-we-coach td{border:0;padding:4px 0;display:grid;grid-template-columns:7.2rem 1fr;gap:10px;}
+#how-we-coach td::before{content:attr(data-l);color:#C9A84C;font-size:11px;letter-spacing:.08em;text-transform:uppercase;padding-top:4px;}
+#how-we-coach td:first-child{grid-template-columns:1fr;font-size:16px;}#how-we-coach td:first-child::before{display:none;}}
+</style>
 </head>
 <body>
 
@@ -398,7 +422,7 @@ th{color:#C9A84C;font-size:13px;letter-spacing:0.05em;text-transform:uppercase;}
   <div class="crumbs"><a href="https://www.mrandmrslifestyle.com/">Home</a> › Online Coaching</div>
   <div class="eyebrow">Online Coaching · Dubai, UAE &amp; Worldwide</div>
   <h1>Online Fitness Coaching — <em>Real Coaches, Wherever You Are</em></h1>
-  <p class="sub">On Elite, VIP and Couples: a custom training plan, nutrition built around your life, and direct access to Tarek &amp; Chloe on WhatsApp, with two certified coaches checking in, adjusting your plan and keeping you accountable. New to training? Start with the ready-made Economy Pack.</p>
+  <p class="sub">On Elite, VIP and Couples: a custom training plan, nutrition built around your life, and direct WhatsApp access to your coach (Chloe for women, Tarek for men, both for couples), who checks in, adjusts your plan and keeps you accountable. New to training? Start with the ready-made Economy Pack.</p>
   <a class="btn" href="https://wa.me/971507871515?text=Hi%20Tarek%20%26%20Chloe%2C%20I%27m%20interested%20in%20online%20coaching.%20Can%20we%20book%20a%20free%20strategy%20call%3F">Book a Free Strategy Call</a>
   <a class="btn-ghost" href="#packages">See packages &amp; prices ↓</a>
   <div class="stats">
@@ -482,6 +506,40 @@ th{color:#C9A84C;font-size:13px;letter-spacing:0.05em;text-transform:uppercase;}
     </div>
     <p style="margin-top:20px"><a href="https://www.mrandmrslifestyle.com/transformations.html">See more client transformations →</a></p>
   </div>
+</section>
+
+
+<!-- verify: how we coach / who / proof / enquire -->
+<section class="wrap" id="how-we-coach">
+  <h2>How we <em>coach you</em>, and how to check us out</h2>
+  <h3>Who coaches you</h3>
+  <div class="vf-who"><p><strong>Women are coached by Chloe and men by Tarek.</strong> Couples get both. On Elite and VIP your coach builds and updates your plan personally. Economy and the self-guided programmes are written by our team and supported by email, with no coach check-ins.</p></div>
+  <h3>Check-ins and plan updates</h3>
+  <div class="table-scroll"><table>
+    <thead><tr><th>Service</th><th>Check-ins</th><th>Plan updated</th><th>Support</th></tr></thead>
+    <tbody><tr><td data-l="Service"><strong>Elite online coaching</strong></td><td data-l="Check-ins">Weekly 1-to-1 check-in call</td><td data-l="Plan updated">Every 2 weeks</td><td data-l="Support">WhatsApp 24/7</td></tr><tr><td data-l="Service"><strong>VIP online coaching</strong></td><td data-l="Check-ins">Weekly check-in plus a video session every 2 weeks</td><td data-l="Plan updated">Every 2 weeks; nutrition rebuilt each phase</td><td data-l="Support">Priority WhatsApp, replies within 2 hours</td></tr><tr><td data-l="Service"><strong>Couples online coaching</strong></td><td data-l="Check-ins">Shared check-in call every 2 weeks</td><td data-l="Plan updated">Every 2 weeks, separate plan for each partner</td><td data-l="Support">WhatsApp 24/7</td></tr><tr><td data-l="Service"><strong>Economy and self-guided programmes</strong></td><td data-l="Check-ins">No coach check-ins</td><td data-l="Plan updated">Fixed programme; you track yourself</td><td data-l="Support">Email (Economy: replies within 24 hours)</td></tr></tbody>
+  </table></div>
+  <p><strong>How your plan changes:</strong> at each check-in your coach looks at your progress (weight, measurements or photos), energy, how training felt and how closely you followed the plan. Every 2 weeks they update your training and your calorie and macro targets based on that.</p>
+  <h3>Our qualifications</h3>
+  <p class="vf-small" style="margin-bottom:10px">We coach as one team, Mr &amp; Mrs Lifestyle. Each qualification below is listed with the body that awarded it.</p>
+  <ul class="vf-quals">
+      <li><strong>Diploma in Personal Training</strong> &middot; Personal Training Academy Global (PTA Global)</li>
+      <li><strong>Diploma in Pilates on Reformer Teaching</strong> &middot; EREPS Level 4, Gayo Fitness Sport Academy</li>
+      <li><strong>Award in Pre &amp; Postnatal Exercise Instructing</strong> &middot; PD:Approval</li>
+      <li><strong>Nutritionist certification</strong> &middot; International Sports Sciences Association (ISSA)</li>
+      <li><strong>First Aid certificate</strong> &middot; Highfield Level 2</li>
+      <li><strong>Registered exercise professional</strong> &middot; REPs UAE</li>
+      <li><strong>Certified Life Coach</strong> &middot; American Union of NLP</li>
+      <li><strong>BA (Hons) Dance</strong> &middot; University of Salford; <strong>Foundation Degree in Dance</strong> &middot; University of West London</li>
+      <li><strong>Finalist, Personal Trainer of the Year</strong> &middot; REPs UAE Industry Awards 2024</li>
+    </ul>
+  <h3>Proof you can check</h3>
+  <a class="vf-case" href="/transformations.html"><span>Client results</span><b>See our online clients&rsquo; results</b><span>Before and after results from our clients &rarr;</span></a>
+  <div class="grid2"><div class="vf-rev"><div class="vf-stars" aria-label="5 out of 5 stars">&#9733;&#9733;&#9733;&#9733;&#9733; <span style="color:rgba(255,255,255,.55);letter-spacing:0;font-size:12px">Google review</span></div><blockquote>&ldquo;Coach Tarek has helped me gain muscle, lose body fat and get really strong in the gym. I&rsquo;ve been following the Mr and Mrs online plan for quite some time now and the results keep coming.&rdquo;</blockquote><cite><b>Anis F.</b> &middot; Online plan with Tarek</cite></div><div class="vf-rev"><div class="vf-stars" aria-label="5 out of 5 stars">&#9733;&#9733;&#9733;&#9733;&#9733; <span style="color:rgba(255,255,255,.55);letter-spacing:0;font-size:12px">Google review</span></div><blockquote>&ldquo;Since working with them, I&rsquo;ve lost weight, toned up, and finally reached a place where I feel really confident in my body. It doesn&rsquo;t feel like a quick fix. It&rsquo;s something that&rsquo;s actually sustainable.&rdquo;</blockquote><cite><b>Fatima F.</b> &middot; In person &amp; online coaching</cite></div></div>
+  <p style="margin-top:16px"><a href="https://www.google.com/maps?cid=2909583114513034830" target="_blank" rel="noopener">Read all 28 reviews on Google &rarr;</a></p>
+  <h3>Enquire: what happens next</h3>
+  <ol class="steps"><li><strong>Apply online</strong> or message us on WhatsApp.</li><li><strong>Free consultation call</strong> to choose the right package for your goal and budget.</li><li><strong>Your plan within 48 hours</strong> of your intake form, built by your coach.</li><li><strong>Check-ins begin</strong> on the schedule shown above: weekly on Elite and VIP, every 2 weeks for Couples.</li></ol>
+  <div class="vf-cta"><a href="https://wa.me/971507871515?text=Hi%2C%20I%27m%20interested%20in%20online%20coaching.%20Can%20we%20book%20a%20free%20consultation%20call%3F" class="btn" target="_blank" rel="noopener">Enquire on WhatsApp</a><a href="/apply.html" class="btn-ghost">Or apply online</a></div>
 </section>
 
 <section class="wrap faq">
