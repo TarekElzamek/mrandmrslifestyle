@@ -988,7 +988,7 @@
         <div class="pkg-tag">Best Starter Value</div>
         <div class="pkg-name">Economy Pack</div>
         <div class="pkg-tagline">For beginners — a clear, ready-made structure to follow for 4 weeks.</div>
-        <div class="pkg-price"><span class="currency">AED </span><span class="amount">299</span><div class="period">per month · auto-renewal · cancel anytime</div></div>
+        <div class="pkg-price"><span class="currency">AED </span><span class="amount">299</span><div class="period">per month · monthly subscription · cancel with 14 days&rsquo; notice</div></div>
         <ul class="pkg-features"><li>Ready-made 4-week beginner programme</li><li>Macro & calorie targets</li><li>Progress tracking templates</li><li>Exercise video library</li><li>Email support</li></ul>
         <button type="button" onclick="openIntakeModal('https://buy.stripe.com/eVqeVd1Uaensa3z2STdMI1b', 'Economy Pack', 'AED 299/month');" class="pkg-btn" style="margin-bottom:0.5rem;">Buy Now — AED 299/mo</button>
         <a href="apply.html" style="display:block;text-align:center;font-size:0.75rem;color:rgba(255,255,255,0.62);margin-top:0.25rem;">or apply for a free call first →</a>
@@ -998,18 +998,18 @@
         <div class="pkg-tag">Best Results</div>
         <div class="pkg-name">Elite Coaching Experience</div>
         <div class="pkg-tagline">Work directly with Coach Tarek & Coach Chloe. The full Mr & Mrs Lifestyle experience.</div>
-        <div class="pkg-price"><span class="currency">AED </span><span class="amount">899</span><div class="period">per month · no auto-renewal</div></div>
+        <div class="pkg-price"><span class="currency">AED </span><span class="amount">899</span><div class="period">per month · monthly subscription · cancel with 14 days&rsquo; notice</div></div>
         <ul class="pkg-features"><li>Fully personalised training plan</li><li>Custom nutrition & meal planning</li><li>Weekly check-in calls with Tarek or Chloe</li><li>WhatsApp / 24-7 direct coach access</li><li>Progress photos & body composition tracking</li><li>Plan adjustments every 2 weeks</li><li>Lifetime access to resources</li></ul>
-        <button type="button" onclick="openIntakeModal('https://buy.stripe.com/fZu7sL6aqa7cgrX2STdMI0Z', 'Elite Coaching Experience', 'AED 899/month');" class="pkg-btn" style="margin-bottom:0.5rem;">Buy Now — AED 899/mo</button>
+        <button type="button" onclick="openIntakeModal('https://buy.stripe.com/7sYcN59mCgvAejP655dMI1c', 'Elite Coaching Experience', 'AED 899/month');" class="pkg-btn" style="margin-bottom:0.5rem;">Buy Now — AED 899/mo</button>
         <a href="apply.html" style="display:block;text-align:center;font-size:0.75rem;color:rgba(255,255,255,0.62);margin-top:0.25rem;">or apply for a free call first →</a>
       </div>
       <div class="pkg-card">
         <div class="pkg-tag">Full Transformation</div>
         <div class="pkg-name">VIP Online Coaching</div>
         <div class="pkg-tagline">The complete premium experience — for those who want maximum results and maximum support.</div>
-        <div class="pkg-price"><span class="currency">AED </span><span class="amount">1,999</span><div class="period">per month · no auto-renewal</div></div>
+        <div class="pkg-price"><span class="currency">AED </span><span class="amount">1,999</span><div class="period">per month · monthly subscription · cancel with 14 days&rsquo; notice</div></div>
         <ul class="pkg-features"><li>Everything in Elite, plus:</li><li>Bi-weekly video coaching sessions</li><li>Tailor-made nutrition plan (new each phase)</li><li>Supplement protocol & guidance</li><li>Priority response — under 2 hours</li><li>Full lifestyle & mindset coaching</li><li>Post-programme maintenance plan</li></ul>
-        <button type="button" onclick="openIntakeModal('https://buy.stripe.com/3cIeVdgP46V0b7D511dMI10', 'VIP Online Coaching', 'AED 1,999/month');" class="pkg-btn" style="margin-bottom:0.5rem;">Buy Now — AED 1,999/mo</button>
+        <button type="button" onclick="openIntakeModal('https://buy.stripe.com/dRm9AT8iy4MS6Rn3WXdMI1d', 'VIP Online Coaching', 'AED 1,999/month');" class="pkg-btn" style="margin-bottom:0.5rem;">Buy Now — AED 1,999/mo</button>
         <a href="apply.html" style="display:block;text-align:center;font-size:0.75rem;color:rgba(255,255,255,0.62);margin-top:0.25rem;">or apply for a free call first →</a>
       </div>
     </div>
@@ -1318,6 +1318,11 @@ async function sendContact() { const name = document.getElementById('cf-name').v
       <input id="im-location" type="text" placeholder="City / Country" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);color:#fff;padding:0.85rem 1rem;border-radius:6px;font-size:0.9rem;font-family:inherit;outline:none;width:100%;">
     </div>
     <div id="im-error" style="display:none;color:#e74c3c;font-size:0.82rem;margin-top:0.75rem;">Please fill in all required fields.</div>
+    <div id="im-consent-error" style="display:none;color:#e74c3c;font-size:0.82rem;margin-top:0.75rem;">Please tick the box to confirm you agree to the Subscription &amp; Cancellation Policy.</div>
+    <label id="im-consent-wrap" style="display:flex;gap:0.65rem;align-items:flex-start;margin-top:1.1rem;font-size:0.8rem;line-height:1.55;color:rgba(255,255,255,0.75);cursor:pointer;text-align:left;">
+      <input id="im-consent" type="checkbox" style="margin-top:0.2rem;width:18px;height:18px;flex-shrink:0;accent-color:#C9A84C;">
+      <span id="im-consent-text"></span>
+    </label>
     <button onclick="submitIntake()" id="im-submit-btn" style="margin-top:1.25rem;width:100%;background:#C9A84C;color:#0A0A0A;border:none;padding:1rem;border-radius:6px;font-family:inherit;font-size:0.88rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;transition:background 0.2s;">Continue to Payment →</button>
     <p style="text-align:center;font-size:0.72rem;color:rgba(255,255,255,0.58);margin-top:0.85rem;"><span class="mm-i" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span> Secure checkout powered by Stripe. Your details are sent to Tarek & Chloe before payment.</p>
   </div>
@@ -1340,6 +1345,13 @@ function openIntakeModal(stripeUrl, pkg, price) {
   document.getElementById('im-goal').value = '';
   document.getElementById('im-location').value = '';
   document.getElementById('im-error').style.display = 'none';
+  document.getElementById('im-consent').checked = false;
+  document.getElementById('im-consent-error').style.display = 'none';
+  var fixed = { 'Booty Builder Programme': '3 months (12-week programme)', 'Ultimate Fat Burn': '3 months (12-week programme)', 'Ultimate Muscle Gain': '4 months (16-week programme)', 'Tailor-Made Nutrition Plan': '2 months (8-week meal plan)' }[pkg];
+  var POL = '<a href="/terms.html#subscription-policy" target="_blank" rel="noopener" style="color:#C9A84C;text-decoration:underline;">Subscription &amp; Cancellation Policy</a>';
+  document.getElementById('im-consent-text').innerHTML = fixed
+    ? 'I agree to the ' + POL + '. I&rsquo;ll be charged ' + price.replace(/\/month$/, '') + ' a month for ' + fixed + ', then it ends automatically. Payments are non-refundable.'
+    : 'I agree to the ' + POL + '. This is a monthly subscription charged automatically each month until I cancel. Payments are non-refundable, and I must give 14 days&rsquo; notice before my renewal date to cancel.';
   document.getElementById('im-submit-btn').textContent = 'Continue to Payment →';
   document.getElementById('im-submit-btn').disabled = false;
   var modal = document.getElementById('intake-modal');
@@ -1362,6 +1374,11 @@ async function submitIntake() {
     return;
   }
   document.getElementById('im-error').style.display = 'none';
+  if (!document.getElementById('im-consent').checked) {
+    document.getElementById('im-consent-error').style.display = 'block';
+    return;
+  }
+  document.getElementById('im-consent-error').style.display = 'none';
   var btn = document.getElementById('im-submit-btn');
   btn.textContent = 'Sending...';
   btn.disabled = true;
@@ -1377,13 +1394,14 @@ async function submitIntake() {
         email: email,
         phone: phone,
         goal: goal,
+        policy_agreed: 'Yes, Subscription & Cancellation Policy (14 days notice, non-refundable), ' + new Date().toISOString(),
         location: document.getElementById('im-location').value.trim() || 'Not provided',
         source: 'Buy Now — Home Page'
       })
     });
   } catch(e) { console.error('Formspree error:', e); }
   closeIntakeModal();
-  window.location.href = _intakeStripeUrl;
+  window.location.href = _intakeStripeUrl + (_intakeStripeUrl.indexOf('?') === -1 ? '?' : '&') + 'prefilled_email=' + encodeURIComponent(email);
 }
 
 document.getElementById('intake-modal').addEventListener('click', function(e) {
