@@ -58,7 +58,6 @@ After 2-3 exchanges, always suggest booking the free WhatsApp strategy call.`;
   /* ── INJECT CSS ── */
   const style = document.createElement("style");
   style.textContent = `
-    @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap');
 
     #mnml-chat-widget * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'DM Sans', sans-serif; }
 

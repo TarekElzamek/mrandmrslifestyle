@@ -26,10 +26,22 @@
   if (CFG.googleAds) window.gtag('config', CFG.googleAds);
 
   /* ---------- Meta Pixel (only when an ID is set) ---------- */
+  /* Events are queued immediately; the 200 KB Meta script itself loads after the page
+     has finished loading (or on first interaction), so it never delays the first view. */
   if (CFG.metaPixel && !window.fbq) {
-    !function (f, b, e, v, n, t, s) { if (f.fbq) return; n = f.fbq = function () { n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments); }; if (!f._fbq) f._fbq = n; n.push = n; n.loaded = !0; n.version = '2.0'; n.queue = []; t = b.createElement(e); t.async = !0; t.src = v; s = b.getElementsByTagName(e)[0]; s.parentNode.insertBefore(t, s); }(window, document, 'script', 'https://connect.facebook.net/en_US/fbevents.js');
+    var n = window.fbq = function () { n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments); };
+    if (!window._fbq) window._fbq = n; n.push = n; n.loaded = !0; n.version = '2.0'; n.queue = [];
     window.fbq('init', CFG.metaPixel);
     window.fbq('track', 'PageView');
+    var fbLoaded = false;
+    var loadFb = function () {
+      if (fbLoaded) return; fbLoaded = true;
+      var t = document.createElement('script'); t.async = true; t.src = 'https://connect.facebook.net/en_US/fbevents.js';
+      document.head.appendChild(t);
+    };
+    var later = function () { setTimeout(loadFb, 2500); };
+    if (document.readyState === 'complete') later(); else window.addEventListener('load', later);
+    ['pointerdown', 'keydown', 'scroll', 'touchstart'].forEach(function (ev) { window.addEventListener(ev, loadFb, { once: true, passive: true }); });
   }
 
   /* ---------- Where did this visitor come from? (first + latest visit) ---------- */
