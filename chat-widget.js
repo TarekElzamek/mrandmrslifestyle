@@ -27,14 +27,15 @@ KEY FACTS:
 - Online coaching available worldwide
 
 PACKAGES (be exact; never say every package is personalised):
-- Economy Pack: AED 299/month, auto-renews, cancel anytime. READY-MADE 4-week beginner programme (same for everyone) plus your calorie & macro targets. No coach check-ins (self-tracking sheets). Support by email within 24 hours.
-- Elite Coaching Experience: AED 899/month, paid month by month. PERSONALISED training + nutrition by Tarek or Chloe. Weekly 1-to-1 check-in call, plan adjusted every 2 weeks, WhatsApp 24/7. MOST POPULAR.
-- VIP Online Coaching: AED 1,999/month, month by month. Everything in Elite plus a video coaching session every 2 weeks, nutrition rebuilt each phase, supplement protocol, lifestyle coaching, priority WhatsApp replies within 2 hours.
-- Couples Transformation: AED 1,499/month for both. Separate personalised plans for each partner, shared check-in call every 2 weeks, WhatsApp 24/7.
-- Booty Builder (women, Chloe): AED 649/month, 12-week self-guided programme, exercise selection for your body and equipment, email support, no coach check-ins.
-- Ultimate Muscle Gain (Tarek): AED 480/month, 16-week self-guided programme with calorie & protein targets, email support, no coach check-ins.
-- Ultimate Fat Burn: AED 480/month, 12-week self-guided programme with calorie & macro targets, gym or home, email support, no coach check-ins.
-- Tailor-Made Nutrition Plan: AED 750/month, personalised 8-week meal plan, self-guided, email support.
+- Economy Pack: AED 299/month, monthly subscription. READY-MADE 4-week beginner programme (same for everyone) plus your calorie & macro targets. No coach check-ins (self-tracking sheets). Support by email within 24 hours.
+- Elite Coaching Experience: AED 899/month, monthly subscription. PERSONALISED training + nutrition by Tarek or Chloe. Weekly 1-to-1 check-in call, plan adjusted every 2 weeks, WhatsApp 24/7. MOST POPULAR.
+- VIP Online Coaching: AED 1,999/month, monthly subscription. Everything in Elite plus a video coaching session every 2 weeks, nutrition rebuilt each phase, supplement protocol, lifestyle coaching, priority WhatsApp replies within 2 hours.
+- Couples Transformation: AED 1,499/month for both, monthly subscription. Separate personalised plans for each partner, shared check-in call every 2 weeks, WhatsApp 24/7.
+- Booty Builder (women, Chloe): AED 649/month for 3 months (ends automatically), 12-week self-guided programme, exercise selection for your body and equipment, email support, no coach check-ins.
+- Ultimate Muscle Gain (Tarek): AED 480/month for 4 months (ends automatically), 16-week self-guided programme with calorie & protein targets, email support, no coach check-ins.
+- Ultimate Fat Burn: AED 480/month for 3 months (ends automatically), 12-week self-guided programme with calorie & macro targets, gym or home, email support, no coach check-ins.
+- Tailor-Made Nutrition Plan: AED 750/month for 2 months (ends automatically), personalised 8-week meal plan, self-guided, email support.
+- BILLING: all online packages are monthly subscriptions charged automatically on the same date each month. Cancel by email or WhatsApp at least 14 days before the next renewal date; coaching continues to the end of the paid month. Payments are non-refundable (except billing mistakes or where UAE law requires). Fixed-length programmes end automatically. Full policy: mrandmrslifestyle.com/terms.html#subscription-policy
 - No money-back guarantee. Satisfaction commitment: free strategy call before paying; if after onboarding and 7 days on the plan it isn't right, message us and we'll adjust the plan, switch coach or find another solution.
 - Free strategy call before any commitment
 
