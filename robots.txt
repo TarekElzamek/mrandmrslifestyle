@@ -1,7 +1,6 @@
 # Mr & Mrs Lifestyle — all search engines and AI assistants are welcome.
 User-agent: *
 Allow: /
-Disallow: /thank-you.html
 
 # AI search and assistant crawlers (explicitly allowed)
 User-agent: OAI-SearchBot
