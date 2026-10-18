@@ -1010,7 +1010,7 @@
         <div class="pkg-tag">Best Results</div>
         <div class="pkg-name">Elite Coaching Experience</div>
         <div class="pkg-tagline">Work directly with Coach Tarek & Coach Chloe. The full Mr & Mrs Lifestyle experience.</div>
-        <div class="pkg-price"><span class="currency">AED </span><span class="amount">899</span><div class="period">per month · monthly subscription · cancel with 14 days&rsquo; notice</div></div>
+        <div class="pkg-price"><span class="currency">AED </span><span class="amount">899</span><div class="period">per month · 12-week programme · 3 monthly payments, then ends automatically</div></div>
         <ul class="pkg-features"><li>Fully personalised training plan</li><li>Custom nutrition & meal planning</li><li>Weekly check-in calls with Tarek or Chloe</li><li>WhatsApp / 24-7 direct coach access</li><li>Progress photos & body composition tracking</li><li>Plan adjustments every 2 weeks</li><li>Lifetime access to resources</li></ul>
         <button type="button" onclick="openIntakeModal('https://buy.stripe.com/7sYcN59mCgvAejP655dMI1c', 'Elite Coaching Experience', 'AED 899/month');" class="pkg-btn" style="margin-bottom:0.5rem;">Buy Now — AED 899/mo</button>
         <a href="apply.html" style="display:block;text-align:center;font-size:0.75rem;color:rgba(255,255,255,0.62);margin-top:0.25rem;">or apply for a free call first →</a>
@@ -1019,7 +1019,7 @@
         <div class="pkg-tag">Full Transformation</div>
         <div class="pkg-name">VIP Online Coaching</div>
         <div class="pkg-tagline">The complete premium experience — for those who want maximum results and maximum support.</div>
-        <div class="pkg-price"><span class="currency">AED </span><span class="amount">1,999</span><div class="period">per month · monthly subscription · cancel with 14 days&rsquo; notice</div></div>
+        <div class="pkg-price"><span class="currency">AED </span><span class="amount">1,999</span><div class="period">per month · 12-week programme · 3 monthly payments, then ends automatically</div></div>
         <ul class="pkg-features"><li>Everything in Elite, plus:</li><li>Bi-weekly video coaching sessions</li><li>Tailor-made nutrition plan (new each phase)</li><li>Supplement protocol & guidance</li><li>Priority response — under 2 hours</li><li>Full lifestyle & mindset coaching</li><li>Post-programme maintenance plan</li></ul>
         <button type="button" onclick="openIntakeModal('https://buy.stripe.com/dRm9AT8iy4MS6Rn3WXdMI1d', 'VIP Online Coaching', 'AED 1,999/month');" class="pkg-btn" style="margin-bottom:0.5rem;">Buy Now — AED 1,999/mo</button>
         <a href="apply.html" style="display:block;text-align:center;font-size:0.75rem;color:rgba(255,255,255,0.62);margin-top:0.25rem;">or apply for a free call first →</a>
@@ -1359,7 +1359,7 @@ function openIntakeModal(stripeUrl, pkg, price) {
   document.getElementById('im-error').style.display = 'none';
   document.getElementById('im-consent').checked = false;
   document.getElementById('im-consent-error').style.display = 'none';
-  var fixed = { 'Booty Builder Programme': '3 months (12-week programme)', 'Ultimate Fat Burn': '3 months (12-week programme)', 'Ultimate Muscle Gain': '4 months (16-week programme)', 'Tailor-Made Nutrition Plan': '2 months (8-week meal plan)' }[pkg];
+  var fixed = pkg === 'Economy Pack' ? null : '3 months (12-week programme)';
   var POL = '<a href="/terms.html#subscription-policy" target="_blank" rel="noopener" style="color:#C9A84C;text-decoration:underline;">Subscription &amp; Cancellation Policy</a>';
   document.getElementById('im-consent-text').innerHTML = fixed
     ? 'I agree to the ' + POL + '. I&rsquo;ll be charged ' + price.replace(/\/month$/, '') + ' a month for ' + fixed + ', then it ends automatically. Payments are non-refundable.'
