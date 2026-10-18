@@ -1,0 +1,66 @@
+# Tells Bing (and other IndexNow search engines: Yandex, Seznam, Naver)
+# about changed pages straight after each deploy, so they recrawl in hours
+# instead of weeks. Key file: /88aec6501b6a0e28bbbd2c1fc71c246e.txt
+name: IndexNow ping
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "**.html"
+      - "sitemap.xml"
+  workflow_dispatch:
+    inputs:
+      all:
+        description: "Submit every page in sitemap.xml"
+        type: boolean
+        default: false
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Wait for Vercel to finish deploying
+        run: sleep 120
+
+      - name: Collect changed URLs
+        id: urls
+        env:
+          ALL: ${{ github.event.inputs.all }}
+          BEFORE: ${{ github.event.before }}
+        run: |
+          BASE="https://www.mrandmrslifestyle.com"
+          if [ "$ALL" = "true" ] || [ -z "$BEFORE" ] || ! git cat-file -e "$BEFORE" 2>/dev/null; then
+            grep -o '<loc>[^<]*</loc>' sitemap.xml | sed 's#</\?loc>##g' > urls.txt
+          else
+            git diff --name-only --diff-filter=AM "$BEFORE" HEAD -- '*.html' \
+              | grep -v -E '^(_pilatesroom-site|_tools)/' \
+              | grep -v -E '(^|/)(404|thank-you|apply|blueprint-guide)\.html$' \
+              | sed -E 's#(^|/)index\.html$#\1#' \
+              | sed "s#^#$BASE/#" > urls.txt || true
+          fi
+          sort -u urls.txt | head -10000 > urls_sorted.txt
+          echo "count=$(wc -l < urls_sorted.txt)" >> "$GITHUB_OUTPUT"
+          cat urls_sorted.txt
+
+      - name: Ping IndexNow
+        if: steps.urls.outputs.count != '0'
+        run: |
+          python3 - <<'PY'
+          import json, urllib.request
+          urls = [u.strip() for u in open("urls_sorted.txt") if u.strip()]
+          body = json.dumps({
+              "host": "www.mrandmrslifestyle.com",
+              "key": "88aec6501b6a0e28bbbd2c1fc71c246e",
+              "keyLocation": "https://www.mrandmrslifestyle.com/88aec6501b6a0e28bbbd2c1fc71c246e.txt",
+              "urlList": urls,
+          }).encode()
+          req = urllib.request.Request("https://api.indexnow.org/indexnow", data=body,
+                                       headers={"Content-Type": "application/json; charset=utf-8"})
+          with urllib.request.urlopen(req, timeout=30) as r:
+              print("IndexNow response:", r.status, "for", len(urls), "URLs")
+          PY
