@@ -148,7 +148,7 @@ img.coach-pic { display: block; width: 100%; height: auto; aspect-ratio: 1 / 1; 
 .mm-related a:hover { border-color: rgba(201,168,76,0.5); background: rgba(201,168,76,0.06); }
 .mm-related a span { color: #C9A84C; flex-shrink: 0; }
 .mm-food-links { margin-bottom: 0; }
-.mm-food-links ul { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
+.mm-food-links ul { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
 
 /* Long-form text block used on visual pages */
 .mm-prose { max-width: 860px; margin: 0 auto; padding: 4.5rem 1.5rem 2rem; font-family: 'DM Sans', sans-serif; color: rgba(232,224,208,0.85); line-height: 1.75; }
