@@ -137,6 +137,16 @@
       "permanent": true
     },
     {
+      "source": "/personal-trainer-cost-calculator",
+      "destination": "/personal-trainer-cost-calculator.html",
+      "permanent": true
+    },
+    {
+      "source": "/ar/personal-trainer-cost-calculator",
+      "destination": "/ar/personal-trainer-cost-calculator.html",
+      "permanent": true
+    },
+    {
       "source": "/blog-personal-trainer-cost-dubai",
       "destination": "/blog-personal-trainer-cost-dubai.html",
       "permanent": true
