@@ -76,6 +76,12 @@ T = {
         ('Can I eat {name} and still lose weight?', 'Yes. Fat loss depends on your total calories across the day, not one food. {name} is about {pct}% of a 2,000 kcal day. {swap}'),
         ('How long does it take to burn off {name}?', 'About {walk} minutes of brisk walking for a 75 kg adult. It\'s easier to adjust the portion than to try to burn it off, which is why we build favourite foods into our clients\' plans.')],
    wa_text='Hi Tarek & Chloe! I was looking at your Dubai food calories page and I\'d like help with my nutrition.',
+   pt_tag='1-to-1 Personal Training · Al Quoz, Dubai',
+   pt_h='Love {name}? Keep it, and still get in shape.',
+   pt_p='Train 1-to-1 with Tarek at Nogs Gym, Al Quoz. He builds your training and nutrition around the food you actually eat in Dubai, and reviews your progress every 4 weeks. Men and women welcome.',
+   pt_facts=['From AED 275 per session', 'Free first consultation', 'Nutrition plan included'],
+   pt_btn='WhatsApp Tarek', pt_btn2=('Work out your cost', '/personal-trainer-cost-calculator.html'),
+   pt_wa='Hi Tarek! I found you through your {name} calories page. I\'m interested in 1-to-1 personal training at Nogs Gym.',
  ),
  'ar': dict(
    g=' غ', kcal='سعرة', protein='بروتين', carbs='كربوهيدرات', fat='دهون', swap='بديل أخف:', more='التفاصيل الكاملة ←',
@@ -113,6 +119,12 @@ T = {
         ('هل يمكنني أكل {name} وخسارة الوزن؟', 'نعم. خسارة الدهون تعتمد على مجموع سعراتك خلال اليوم، وليس على أكلة واحدة. {name} تعادل حوالي {pct}% من يوم 2,000 سعرة. {swap}'),
         ('كم أحتاج لحرق {name}؟', 'حوالي {walk} دقيقة من المشي السريع لشخص وزنه 75 كغ. تعديل الحصة أسهل من محاولة حرقها، ولهذا ندخل الأكلات المفضلة في خطط عملائنا.')],
    wa_text='مرحبًا طارق وكلوي! كنت أتصفح صفحة سعرات أكلات دبي وأحتاج مساعدة في نظامي الغذائي.',
+   pt_tag='تدريب شخصي 1 لـ 1 · القوز، دبي',
+   pt_h='تحب {name}؟ احتفظ بها وابنِ جسمك في نفس الوقت.',
+   pt_p='تدرّب 1 لـ 1 مع طارق في نادي Nogs في القوز. يبني لك خطة التمرين والتغذية حول الأكل الذي تأكله فعلًا في دبي، ويراجع تقدمك كل 4 أسابيع. للرجال والسيدات.',
+   pt_facts=['من 275 درهم للجلسة', 'استشارة أولى مجانية', 'خطة تغذية مشمولة'],
+   pt_btn='راسل طارق على واتساب', pt_btn2=('التدريب الشخصي في دبي', '/ar/personal-trainer-dubai.html'),
+   pt_wa='مرحبًا طارق! وجدتك من صفحة سعرات {name}. أنا مهتم بالتدريب الشخصي 1 لـ 1 في نادي Nogs.',
  ),
 }
 
@@ -195,6 +207,14 @@ a{color:inherit}
 .fc-cta h2{font-family:var(--font-d);font-weight:400;font-size:1.8rem;margin-bottom:.6rem}
 .fc-cta p{color:var(--muted);margin-bottom:1.4rem;line-height:1.6}
 .fc-ghost{background:none;border:1px solid var(--gold);color:var(--gold);margin-left:.5rem}
+.fc-pt{margin-top:1.5rem;border:1px solid rgba(201,168,76,.45);background:linear-gradient(135deg,rgba(201,168,76,.13),rgba(201,168,76,.03));border-radius:14px;padding:1.75rem;display:grid;grid-template-columns:1.4fr 1fr;gap:1.5rem;align-items:center}
+.fc-pt h2{font-family:var(--font-d);font-weight:400;font-size:1.6rem;line-height:1.2;margin:.5rem 0 .6rem}
+.fc-pt p{color:rgba(255,255,255,.82);font-size:.92rem;line-height:1.6}
+.fc-pt ul{list-style:none;display:flex;flex-wrap:wrap;gap:.4rem .9rem;margin-top:.9rem;font-size:.8rem;color:var(--gold);font-weight:600}
+.fc-pt li:before{content:'✓ ';}
+.fc-pt-act{display:flex;flex-direction:column;gap:.6rem}
+.fc-pt-act .fc-ghost{margin:0}
+@media(max-width:760px){.fc-pt{grid-template-columns:1fr;padding:1.35rem}}
 .sr{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 .fp-crumb{font-size:.75rem;color:var(--muted);margin-bottom:1rem}
 .fp-crumb a{color:var(--gold);text-decoration:none}
@@ -232,7 +252,7 @@ a{color:inherit}
 '''
 CSS_AR = '''
 body{font-family:'Tajawal','DM Sans',sans-serif}
-.fc-hero h1,.fc-name,.fc-lead h2,.fc-cta h2,.fp-h,.fc-kcal b,.fp-big b,.fp-walk b,.fp-rel a b{font-family:'Tajawal',sans-serif!important;font-weight:800}
+.fc-hero h1,.fc-name,.fc-lead h2,.fc-pt h2,.fc-cta h2,.fp-h,.fc-kcal b,.fp-big b,.fp-walk b,.fp-rel a b{font-family:'Tajawal',sans-serif!important;font-weight:800}
 .fc-hero h1{line-height:1.35}
 .fc-hero h1 em,.fc-lead h2 em{font-style:normal}
 .fc-tag,.fc-cat,.fc-m span,.fc-kcal span,.fc-more,.fc-chip,.fc-lead button,.fc-btn,.fp-back{letter-spacing:0!important;text-transform:none!important}
@@ -254,8 +274,7 @@ def head(lang, title, desc, path, alt_path, ld):
     t_en = f'{SITE}{alt_path if lang == "ar" else path}'
     t_ar = f'{SITE}{path if lang == "ar" else alt_path}'
     canon = f'{SITE}{path}'
-    fonts = ('<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">'
-             + ('\n<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">' if lang == 'ar' else ''))
+    fonts = read(f'_tools/food/fonts_{lang}.html').strip()  # self-hosted fonts, same as the rest of the site
     lds = '\n'.join(f'<script type="application/ld+json">{json.dumps(x, ensure_ascii=False)}</script>' for x in ld)
     return f'''<!DOCTYPE html>
 <html lang="{lang}"{' dir="rtl"' if lang == 'ar' else ''}>
@@ -276,7 +295,6 @@ def head(lang, title, desc, path, alt_path, ld):
 <meta property="og:type" content="website"><meta property="og:url" content="{canon}"><meta property="og:title" content="{title}"><meta property="og:description" content="{desc}">
 <meta property="og:image" content="{SITE}/og-home.jpg"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:site_name" content="Mr &amp; Mrs Lifestyle"><meta property="og:locale" content="{'ar_AE' if lang == 'ar' else 'en_AE'}">
 <meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="{SITE}/og-home.jpg">
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 {fonts}
 <style>{CSS}</style>
 <link rel="stylesheet" href="/site.css">
@@ -406,6 +424,34 @@ def build_hub(lang):
     s += tail(lang)
     write(path.lstrip('/'), s)
 
+# Hand-tuned titles/descriptions (Search Console work) that the templates must not overwrite.
+META_OVERRIDES = {
+    ('chicken-shawarma', 'en'): dict(
+        title='Chicken Shawarma Wrap Calories: 550 kcal (With Garlic Sauce)',
+        desc='About 550 kcal with garlic sauce &amp; fries inside. Skip the fries and get the sauce on the side and it drops to 400 kcal. Every option compared + full macros.'),
+    ('chicken-shawarma', 'ar'): dict(
+        desc='شاورما دجاج: حوالي 550 سعرة لـ ساندويش عادي (مع الثوم والبطاطا داخله)، لكنها تتراوح من 400 إلى 950 سعرة حسب طريقة الطلب. قارن كل الخيارات واحصل على بديل أخف.'),
+}
+
+def pt_box(f, lang, name):
+    """1-to-1 PT box shown under the calorie numbers: turns calorie readers into gym enquiries."""
+    t = T[lang]
+    from urllib.parse import quote
+    wa = 'https://wa.me/971507871515?text=' + quote(t['pt_wa'].format(name=name))
+    facts = ''.join(f'<li>{x}</li>' for x in t['pt_facts'])
+    return f'''<section class="fc-pt" aria-label="{esc(t['pt_tag'])}">
+    <div>
+      <div class="fc-tag">{t['pt_tag']}</div>
+      <h2>{t['pt_h'].format(name=esc(name))}</h2>
+      <p>{t['pt_p']}</p>
+      <ul>{facts}</ul>
+    </div>
+    <div class="fc-pt-act">
+      <a class="fc-btn" href="{esc(wa)}" target="_blank" rel="noopener" onclick="if(window.gtag)gtag('event','pt_whatsapp_click',{{source:'food_{f['slug']}_{lang}'}})">{t['pt_btn']}</a>
+      <a class="fc-btn fc-ghost" href="{t['pt_btn2'][1]}">{t['pt_btn2'][0]}</a>
+    </div>
+  </section>'''
+
 # ---------- FOOD PAGE ----------
 def build_page(f, lang):
     t = T[lang]; n = len(FOODS)
@@ -423,6 +469,8 @@ def build_page(f, lang):
           crumbs_ld(lang, [(t['home'], '/ar/' if lang == 'ar' else '/'), (t['tag_page'], hub), (name, path)])]
     title = t['page_title'].format(name=esc(name), kcal=num(f['kcal']))
     desc = t['page_desc'].format(name=esc(name), kcal=num(f['kcal']), p=f['p'], portion=esc(portion_l))
+    ov = META_OVERRIDES.get((f['slug'], lang), {})
+    title, desc = ov.get('title', title), ov.get('desc', desc)
     s = head(lang, title, desc, path, alt, ld)
     mx = max(f['p'] * 4, f['c'] * 4, f['f'] * 9, 1)
     def row(lbl, g, kc): return f'<div class="fp-row"><span>{lbl}</span><div class="fc-bar"><i style="width:{kc / mx * 100:.0f}%"></i></div><b>{g}{t['g']}</b></div>'
@@ -464,6 +512,7 @@ def build_page(f, lang):
       <div class="fc-small" style="margin-top:.3rem">{t['walk_note']}</div>
     </div>
   </div>
+  {pt_box(f, lang, name)}
   <div class="fp-main fp-sec">
     <div class="fp-box">
       <h2 class="fp-h">{t['swap_h']}</h2>
