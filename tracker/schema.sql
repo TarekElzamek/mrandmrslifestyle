@@ -129,3 +129,17 @@ create policy "photos insert" on storage.objects for insert
 drop policy if exists "photos delete" on storage.objects;
 create policy "photos delete" on storage.objects for delete
   using (bucket_id = 'progress-photos' and (storage.foldername(name))[1] = auth.uid()::text);
+
+-- ---------- v2: InBody fields + coach can attach photos for clients ----------
+alter table public.body_logs
+  add column if not exists muscle_mass numeric(5,1),
+  add column if not exists fat_mass numeric(5,1),
+  add column if not exists inbody_score int,
+  add column if not exists visceral_fat int,
+  add column if not exists bmr int;
+drop policy if exists "photos insert" on storage.objects;
+create policy "photos insert" on storage.objects for insert
+  with check (bucket_id = 'progress-photos' and ((storage.foldername(name))[1] = auth.uid()::text or public.is_coach()));
+drop policy if exists "photos delete" on storage.objects;
+create policy "photos delete" on storage.objects for delete
+  using (bucket_id = 'progress-photos' and ((storage.foldername(name))[1] = auth.uid()::text or public.is_coach()));
