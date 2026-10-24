@@ -38,6 +38,12 @@ a{color:#C9A84C}
 .pc-total b{color:#fff}
 .pc-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem}
 .pc-save{margin-top:.7rem;font-size:.85rem;font-weight:700;color:#C9A84C}
+.pc-pk{list-style:none;margin-top:1rem;border-top:1px solid rgba(201,168,76,.25);padding-top:.6rem}
+.pc-pk li{display:flex;justify-content:space-between;align-items:center;gap:1rem;padding:.45rem .6rem;border-radius:6px;font-size:.88rem;color:rgba(232,224,208,.85)}
+.pc-pk small{display:block;font-size:.75rem;color:rgba(232,224,208,.6)}
+.pc-pk b{color:#fff;white-space:nowrap}
+.pc-pk li.on{background:rgba(201,168,76,.16)}
+.pc-pk li.on b{color:#C9A84C}
 .pc-res{background:#141414;border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:1.5rem}
 .pc-res-h{font-size:.8rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:rgba(232,224,208,.7)}
 .pc-big{font-family:'DM Serif Display',serif;font-size:1.6rem;color:#fff;line-height:1.2;margin:.6rem 0 .4rem}
@@ -168,6 +174,11 @@ a{color:#C9A84C}
       <div class="pc-small" id="pcUsNote">2 × 12-session packages · AED 317 per session</div>
       <div class="pc-small" id="pcUsMonth"></div>
       <div class="pc-save" id="pcSave"></div>
+      <ul class="pc-pk" aria-label="Tarek's prices at Nogs Gym">
+        <li id="pk1"><span>Single session</span><b>AED 400</b></li>
+        <li id="pk12"><span>12-session package <small>AED 317 per session</small></span><b>AED 3,800</b></li>
+        <li id="pk20"><span>20-session package <small>AED 275 per session</small></span><b>AED 5,500</b></li>
+      </ul>
     </div>
   </section>
   <p class="pc-note">Dubai ranges are from <a href="https://servicemarket.com/en/blog/?p=37954" target="_blank" rel="noopener">ServiceMarket's Dubai price guide</a> (April 2026). Our prices: single session AED 400, 12 sessions AED 3,800 or 20 sessions AED 5,500. All sessions are at Nogs Gym, Al Quoz. Every package includes a nutrition plan and a progress review every 4 weeks.</p>
@@ -235,6 +246,7 @@ a{color:#C9A84C}
     document.getElementById('pcUsNote').textContent=parts.join(' + ')+' · AED '+Math.round(b.cost/b.sess)+' per session';
     var extra=b.sess-n;
     document.getElementById('pcUsMonth').textContent=extra>0?'Covers '+b.sess+' sessions, so you have '+extra+' extra to use later.':'';
+    document.getElementById('pk1').classList.toggle('on',b.s>0);document.getElementById('pk12').classList.toggle('on',b.c>0);document.getElementById('pk20').classList.toggle('on',b.a>0);
     var payg=b.sess*SINGLE,save=payg-b.cost;
     document.getElementById('pcSave').textContent=save>0?'You save '+fmt(save)+' ('+Math.round(save/payg*100)+'%) compared with paying AED 400 per session.':'Train '+(12-n>0?(12-n)+' more session'+(12-n>1?'s':'')+' and':'')+' a 12-session package brings it down to AED 317 per session.';
     document.getElementById('pcGoalH').textContent=S.goal.toLowerCase();
