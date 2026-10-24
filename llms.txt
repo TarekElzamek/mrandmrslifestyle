@@ -43,5 +43,6 @@ Key facts:
 
 - [Calorie & Macro Calculator](https://www.mrandmrslifestyle.com/calculator.html)
 - [Dubai Food Calories](https://www.mrandmrslifestyle.com/dubai-food-calories.html): calories, protein, carbs, fat and a lighter swap for 144 popular foods and drinks in Dubai (shawarma, karak chai, coffees, juices, machboos, luqaimat, biryani, pasta, pizza, burgers, popcorn, chocolate bars, breakfast cereals and more), each with its own page, in English and Arabic (https://www.mrandmrslifestyle.com/ar/dubai-food-calories.html). Values are estimates for a typical Dubai restaurant portion.
+- [Personal Trainer Cost Calculator Dubai](https://www.mrandmrslifestyle.com/personal-trainer-cost-calculator.html): enter sessions per week and number of weeks to see typical Dubai gym personal training costs (AED 200–600 per session) compared with 1-to-1 training with Tarek at Nogs Gym, Al Quoz (single session AED 400, 12 sessions AED 3,800, 20 sessions AED 5,500). Training is at the gym only, no home visits.
 - [Workout Tracker](https://www.mrandmrslifestyle.com/workout-tracker.html)
 - [Free Dubai Transformation Blueprint](https://www.mrandmrslifestyle.com/free-guide.html)
