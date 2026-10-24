@@ -469,43 +469,78 @@
   }
 
   // ---------- BODY ----------
-  var MEAS = [['weight', 'Weight', 'kg'], ['body_fat', 'Body fat', '%'], ['waist', 'Waist', 'cm'], ['chest', 'Chest', 'cm'], ['hips', 'Hips', 'cm'], ['arm', 'Arm', 'cm'], ['thigh', 'Thigh', 'cm']];
+  // [field, label, unit, group, good direction (+1 up is good, -1 down is good, 0 neutral), min, max]
+  var MEAS = [
+    ['weight', 'Weight', 'kg', 'scan', 0, 25, 350],
+    ['muscle_mass', 'Skeletal muscle mass', 'kg', 'scan', 1, 5, 120],
+    ['fat_mass', 'Body fat mass', 'kg', 'scan', -1, 1, 200],
+    ['body_fat', 'Body fat', '%', 'scan', -1, 2, 75],
+    ['inbody_score', 'InBody score', '/100', 'scan', 1, 0, 120],
+    ['visceral_fat', 'Visceral fat level', '', 'scan', -1, 1, 30],
+    ['bmr', 'BMR', 'kcal', 'scan', 0, 500, 5000],
+    ['waist', 'Waist', 'cm', 'tape', -1, 30, 250],
+    ['chest', 'Chest', 'cm', 'tape', 0, 30, 250],
+    ['hips', 'Hips', 'cm', 'tape', -1, 30, 250],
+    ['arm', 'Arm', 'cm', 'tape', 1, 10, 80],
+    ['thigh', 'Thigh', 'cm', 'tape', 0, 20, 120]
+  ];
+  function mUnit(m, v) { return m[2] === '/100' ? v + '/100' : m[2] === '' ? String(v) : v + ' ' + m[2]; }
+  function mLabel(m) { return m[1] + (m[2] === '/100' ? ' (out of 100)' : m[2] ? ' (' + m[2] + ')' : ''); }
+  function series(B, k) { return B.filter(function (b) { return b[k] != null; }); }
   function renderBody() {
-    var v = $('view'), B = S.body, withW = B.filter(function (b) { return b.weight != null; });
+    var v = $('view'), B = S.body, withW = series(B, 'weight');
     var first = withW[0], last = withW[withW.length - 1];
-    var h = '<h1 class="tk-h1">Body <em>progress</em></h1><p class="tk-sub">Weigh in once or twice a week, same time of day, for the clearest trend.</p>';
-    if (withW.length) {
-      var ch = r1(last.weight - first.weight), low = Math.min.apply(null, withW.map(function (b) { return +b.weight; }));
-      h += '<div class="tk-grid3" style="margin-top:14px"><div class="tk-stat"><b>' + last.weight + '</b><span>Now (kg)</span></div><div class="tk-stat"><b>' + (ch > 0 ? '+' : '') + ch + '</b><span>Since ' + fmtDay(first.date, { day: 'numeric', month: 'short' }) + '</span></div><div class="tk-stat"><b>' + low + '</b><span>Lowest (kg)</span></div></div>';
-      h += '<div class="tk-card"><span class="tk-tag">Weight trend</span><div class="chart-box"><canvas id="wChart" role="img" aria-label="Body weight over time"></canvas></div></div>';
+    var mm = series(B, 'muscle_mass'), fm = series(B, 'fat_mass'), pf = series(B, 'body_fat'), sc = series(B, 'inbody_score');
+    var h = '<h1 class="tk-h1">Body <em>progress</em></h1><p class="tk-sub">Log an InBody scan every 4 weeks, same time of day, ideally before training and before eating. Weigh in once or twice a week in between.</p>';
+    function stat(arr, k, label, unit) {
+      if (!arr.length) return '';
+      var a = arr[0][k], n = arr[arr.length - 1][k], d = r1(n - a);
+      return '<div class="tk-stat"><b>' + n + (unit || '') + '</b><span>' + label + (arr.length > 1 ? ' · ' + (d > 0 ? '+' : '') + d : '') + '</span></div>';
     }
-    h += '<div class="tk-card"><h2 class="tk-h2" style="margin-top:0">Log measurements</h2><div class="tk-grid2"><div class="tk-field"><label for="bDate">Date</label><input class="tk-input" type="date" id="bDate" value="' + today() + '" max="' + today() + '"></div>';
-    MEAS.forEach(function (m) { h += '<div class="tk-field"><label for="m_' + m[0] + '">' + m[1] + ' (' + m[2] + ')</label><input class="tk-input" inputmode="decimal" id="m_' + m[0] + '" placeholder="' + (m[0] === 'weight' && last ? last.weight : '') + '"></div>'; });
-    h += '</div>';
-    if (!viewingOther()) h += '<div class="tk-field"><label for="bPhoto">Progress photo (optional, private)</label><input class="tk-input" type="file" id="bPhoto" accept="image/*"></div>';
-    h += '<div class="tk-field"><label for="bNote">Notes</label><input class="tk-input" id="bNote" placeholder="e.g. after holiday, started new plan"></div><button type="button" class="tk-btn block" id="bSaveLog" style="margin-top:14px">Save</button><p class="tk-small" style="margin-top:8px">Only you and your coach can see your measurements and photos.</p></div>';
-    var cols = MEAS.filter(function (m) { return B.some(function (b) { return b[m[0]] != null; }); });
+    if (withW.length || mm.length || pf.length) {
+      h += '<div class="tk-grid2" style="margin-top:14px">' + stat(withW, 'weight', 'Weight kg') + stat(mm, 'muscle_mass', 'Muscle kg') + stat(fm, 'fat_mass', 'Fat mass kg') + stat(pf, 'body_fat', 'Body fat', '%') + stat(sc, 'inbody_score', 'InBody score') + '</div>';
+    }
+    if (mm.length > 1 || fm.length > 1) h += '<div class="tk-card"><span class="tk-tag">Muscle vs fat (kg)</span><div class="chart-box"><canvas id="cChart" role="img" aria-label="Skeletal muscle mass and body fat mass over time"></canvas></div><p class="tk-small">The goal for most clients: the gold line (muscle) rising or holding while the blue line (fat) drops.</p></div>';
+    if (pf.length > 1) h += '<div class="tk-card"><span class="tk-tag">Body fat %</span><div class="chart-box"><canvas id="pChartB" role="img" aria-label="Body fat percentage over time"></canvas></div></div>';
+    if (withW.length > 1) h += '<div class="tk-card"><span class="tk-tag">Weight trend</span><div class="chart-box"><canvas id="wChart" role="img" aria-label="Body weight over time"></canvas></div></div>';
+    h += '<div class="tk-card"><h2 class="tk-h2" style="margin-top:0">Log a scan or weigh-in</h2><div class="tk-field"><label for="bDate">Date</label><input class="tk-input" type="date" id="bDate" value="' + today() + '" max="' + today() + '"></div>';
+    h += '<h3 class="tk-tag" style="display:block;margin-top:16px">InBody scan</h3><p class="tk-small">Copy the numbers from the InBody result sheet. Fill in only what you have; weight alone is fine for a quick weigh-in.</p><div class="tk-grid2">';
+    MEAS.filter(function (m) { return m[3] === 'scan'; }).forEach(function (m) { var ls = series(B, m[0]), pl = ls.length ? ls[ls.length - 1][m[0]] : ''; h += '<div class="tk-field"><label for="m_' + m[0] + '">' + mLabel(m) + '</label><input class="tk-input" inputmode="decimal" id="m_' + m[0] + '" placeholder="' + esc(pl) + '"></div>'; });
+    h += '</div><details style="margin-top:14px"><summary class="tk-link" style="cursor:pointer">Tape measurements (optional)</summary><div class="tk-grid2">';
+    MEAS.filter(function (m) { return m[3] === 'tape'; }).forEach(function (m) { h += '<div class="tk-field"><label for="m_' + m[0] + '">' + mLabel(m) + '</label><input class="tk-input" inputmode="decimal" id="m_' + m[0] + '"></div>'; });
+    h += '</div></details>';
+    h += '<div class="tk-field"><label for="bPhoto">Photo: progress photo or the InBody result sheet (optional, private)</label><input class="tk-input" type="file" id="bPhoto" accept="image/*"></div>';
+    h += '<div class="tk-field"><label for="bNote">Notes</label><input class="tk-input" id="bNote" placeholder="e.g. scan after 4 weeks, started new plan"></div><button type="button" class="tk-btn block" id="bSaveLog" style="margin-top:14px">Save</button><p class="tk-small" style="margin-top:8px">Only you and your coach can see your measurements and photos.</p></div>';
+    var cols = MEAS.filter(function (m) { return series(B, m[0]).length; });
     if (B.length && cols.length) {
-      var f = B[0], l = B[B.length - 1];
       h += '<div class="tk-card"><span class="tk-tag">Start vs now</span>';
       cols.forEach(function (m) {
-        var a = B.filter(function (b) { return b[m[0]] != null; }); if (!a.length) return; var s = a[0][m[0]], n = a[a.length - 1][m[0]], d = r1(n - s);
-        h += '<div class="li"><div class="grow"><b>' + m[1] + '</b><span class="tk-small">' + s + ' → ' + n + ' ' + m[2] + '</span></div><span class="pill' + (d < 0 ? ' ok' : d > 0 ? ' gold' : '') + '">' + (d > 0 ? '+' : '') + d + ' ' + m[2] + '</span></div>';
+        var a = series(B, m[0]), s = a[0][m[0]], n = a[a.length - 1][m[0]], d = r1(n - s);
+        var cls = d === 0 || m[4] === 0 ? (d === 0 ? '' : ' gold') : (d * m[4] > 0 ? ' ok' : ' warn');
+        h += '<div class="li"><div class="grow"><b>' + m[1] + '</b><span class="tk-small">' + esc(mUnit(m, s)) + ' → ' + esc(mUnit(m, n)) + (a.length > 1 ? ' · since ' + fmtDay(a[0].date, { day: 'numeric', month: 'short' }) : '') + '</span></div>' + (a.length > 1 ? '<span class="pill' + cls + '">' + (d > 0 ? '+' : '') + d + (m[2] && m[2] !== '/100' ? ' ' + m[2] : '') + '</span>' : '') + '</div>';
       });
       h += '</div>';
     }
     var ph = B.filter(function (b) { return b.photo_path; });
-    if (ph.length) h += '<div class="tk-card"><span class="tk-tag">Progress photos</span><div class="photos" id="photos"></div></div>';
+    if (ph.length) h += '<div class="tk-card"><span class="tk-tag">Photos</span><div class="photos" id="photos"></div></div>';
     if (B.length) {
       h += '<div class="tk-card"><span class="tk-tag">History</span>';
       B.slice().reverse().slice(0, 60).forEach(function (b) {
-        var bits = MEAS.filter(function (m) { return b[m[0]] != null; }).map(function (m) { return m[1] + ' ' + b[m[0]] + m[2]; });
+        var bits = MEAS.filter(function (m) { return b[m[0]] != null; }).map(function (m) { return m[1] + ' ' + mUnit(m, b[m[0]]); });
         h += '<div class="li"><div class="grow"><b>' + fmtDay(b.date) + '</b><span class="tk-small">' + esc(bits.join(' · ') || (b.photo_path ? 'Photo' : '')) + (b.notes ? ' · ' + esc(b.notes) : '') + '</span></div><button type="button" class="tk-icon-btn" data-delb="' + b.id + '" aria-label="Delete entry from ' + fmtDay(b.date) + '">' + ICON.trash + '</button></div>';
       });
       h += '</div>';
     }
     v.innerHTML = h;
-    if (withW.length > 1 && window.Chart) S.chart.w = lineChart('wChart', withW.map(function (b) { return fmtDay(b.date, { day: 'numeric', month: 'short' }); }), [{ label: 'Weight (kg)', data: withW.map(function (b) { return +b.weight; }) }]);
+    var lab = function (arr) { return arr.map(function (b) { return fmtDay(b.date, { day: 'numeric', month: 'short' }); }); };
+    if (window.Chart) {
+      if (withW.length > 1) S.chart.w = lineChart('wChart', lab(withW), [{ label: 'Weight (kg)', data: withW.map(function (b) { return +b.weight; }) }]);
+      if (pf.length > 1) S.chart.pf = lineChart('pChartB', lab(pf), [{ label: 'Body fat (%)', data: pf.map(function (b) { return +b.body_fat; }) }]);
+      if (mm.length > 1 || fm.length > 1) {
+        var comp = B.filter(function (b) { return b.muscle_mass != null || b.fat_mass != null; });
+        S.chart.c = lineChart('cChart', lab(comp), [{ label: 'Muscle (kg)', data: comp.map(function (b) { return b.muscle_mass == null ? null : +b.muscle_mass; }) }, { label: 'Fat (kg)', data: comp.map(function (b) { return b.fat_mass == null ? null : +b.fat_mass; }) }]);
+      }
+    }
     if (ph.length) loadPhotos(ph);
     $('bSaveLog').onclick = saveBody;
     v.querySelectorAll('[data-delb]').forEach(function (b) {
@@ -532,14 +567,15 @@
   }
   async function saveBody() {
     var row = { user_id: S.target.id, date: $('bDate').value || today(), notes: $('bNote').value.trim() || null }, any = false;
-    MEAS.forEach(function (m) { var x = num($('m_' + m[0]).value); if (x != null) { row[m[0]] = x; any = true; } });
+    var bad = null;
+    MEAS.forEach(function (m) { var x = num($('m_' + m[0]).value); if (x != null) { if (x < m[5] || x > m[6]) bad = bad || m; row[m[0]] = m[0] === 'inbody_score' || m[0] === 'visceral_fat' || m[0] === 'bmr' ? Math.round(x) : x; any = true; } });
     var file = $('bPhoto') && $('bPhoto').files[0];
     if (!any && !file) { toast('Enter at least one measurement'); return; }
-    if (row.weight != null && (row.weight < 25 || row.weight > 350)) { toast('Check the weight (in kg)'); return; }
+    if (bad) { toast('Check ' + bad[1] + ': it looks out of range'); $('m_' + bad[0]).focus(); return; }
     $('bSaveLog').disabled = true;
     if (file) {
       try {
-        var blob = await compress(file), path = S.me.id + '/' + row.date + '-' + Date.now() + '.jpg';
+        var blob = await compress(file), path = S.target.id + '/' + row.date + '-' + Date.now() + '.jpg';
         var up = await sb.storage.from('progress-photos').upload(path, blob, { contentType: 'image/jpeg' });
         if (up.error) throw up.error; row.photo_path = path;
       } catch (e) { $('bSaveLog').disabled = false; toast('Photo upload failed: ' + e.message); return; }
