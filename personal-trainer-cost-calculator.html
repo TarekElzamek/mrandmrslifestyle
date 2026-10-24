@@ -36,7 +36,8 @@ a{color:#C9A84C}
 .pc-chips button.on{background:#C9A84C;color:#0a0a0a;border-color:#C9A84C;font-weight:700}
 .pc-total{text-align:center;margin:1.75rem 0 1rem;font-size:1.1rem;color:rgba(232,224,208,.85)}
 .pc-total b{color:#fff}
-.pc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
+.pc-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem}
+.pc-save{margin-top:.7rem;font-size:.85rem;font-weight:700;color:#C9A84C}
 .pc-res{background:#141414;border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:1.5rem}
 .pc-res-h{font-size:.8rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:rgba(232,224,208,.7)}
 .pc-big{font-family:'DM Serif Display',serif;font-size:1.6rem;color:#fff;line-height:1.2;margin:.6rem 0 .4rem}
@@ -62,7 +63,7 @@ a{color:#C9A84C}
 </style>
 <link rel="stylesheet" href="/site.css">
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebApplication", "name": "Personal Trainer Cost Calculator Dubai", "url": "https://www.mrandmrslifestyle.com/personal-trainer-cost-calculator.html", "applicationCategory": "HealthApplication", "operatingSystem": "Any", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "AED"}, "provider": {"@id": "https://www.mrandmrslifestyle.com/#business"}}</script>
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "How much is one personal training session in Dubai?", "acceptedAnswer": {"@type": "Answer", "text": "Typically AED 200 to 600 at a gym and AED 250 to 450 at home. Packages usually lower the price per session. With Tarek at Nogs Gym it works out at AED 275 to 317 per session."}}, {"@type": "Question", "name": "Is it cheaper to buy a bigger package?", "acceptedAnswer": {"@type": "Answer", "text": "Yes, usually. Our 20-session package costs AED 275 per session, compared with about AED 317 per session on the 12-session package."}}, {"@type": "Question", "name": "How many personal training sessions a week should I do?", "acceptedAnswer": {"@type": "Answer", "text": "Two to three sessions a week suits most people. It gives your body time to recover and is easier to keep up long term."}}, {"@type": "Question", "name": "Is there a free consultation?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Your first consultation with Tarek is free, so you can ask questions and agree a plan before you buy a package."}}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "How much is one personal training session in Dubai?", "acceptedAnswer": {"@type": "Answer", "text": "Typically AED 200 to 600 at a Dubai gym. Packages usually lower the price per session. With Tarek at Nogs Gym a single session is AED 400, or AED 275 to 317 per session on a package."}}, {"@type": "Question", "name": "Is it cheaper to buy a bigger package?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. A single session with Tarek is AED 400. The 12-session package brings it down to about AED 317 per session, and the 20-session package to AED 275, saving you AED 2,500 compared with paying per session."}}, {"@type": "Question", "name": "How many personal training sessions a week should I do?", "acceptedAnswer": {"@type": "Answer", "text": "Two to three sessions a week suits most people. It gives your body time to recover and is easier to keep up long term."}}, {"@type": "Question", "name": "Is there a free consultation?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Your first consultation with Tarek is free, so you can ask questions and agree a plan before you buy a package."}}]}</script>
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.mrandmrslifestyle.com"}, {"@type": "ListItem", "position": 2, "name": "Personal Trainer Cost Calculator", "item": "https://www.mrandmrslifestyle.com/personal-trainer-cost-calculator.html"}]}</script>
 </head>
 <body>
@@ -118,7 +119,7 @@ a{color:#C9A84C}
 <section class="pc-hero">
   <div class="pc-tag">Free Tool · Dubai · 2026 Prices</div>
   <h1>Personal Trainer Cost Calculator: <em>Dubai</em></h1>
-  <p class="pc-sub">Pick how often you want to train and for how long. See what personal training typically costs in Dubai, and what it would cost with Tarek at Nogs Gym, Al Quoz.</p>
+  <p class="pc-sub">Pick how often you want to train and for how long. See what a personal trainer at a Dubai gym typically costs, and what it would cost with Tarek at Nogs Gym, Al Quoz.</p>
 </section>
 
 <div class="pc-wrap">
@@ -161,19 +162,15 @@ a{color:#C9A84C}
       <div class="pc-big" id="pcGym">AED 4,800–14,400</div>
       <div class="pc-small">At AED 200–600 per session</div>
     </div>
-    <div class="pc-res">
-      <div class="pc-res-h">Typical home trainer</div>
-      <div class="pc-big" id="pcHome">AED 6,000–10,800</div>
-      <div class="pc-small">At AED 250–450 per session</div>
-    </div>
     <div class="pc-res pc-us">
       <div class="pc-res-h">With Tarek at Nogs Gym</div>
       <div class="pc-big" id="pcUs">AED 7,600</div>
       <div class="pc-small" id="pcUsNote">2 × 12-session packages · AED 317 per session</div>
       <div class="pc-small" id="pcUsMonth"></div>
+      <div class="pc-save" id="pcSave"></div>
     </div>
   </section>
-  <p class="pc-note">Dubai ranges are from <a href="https://servicemarket.com/en/blog/?p=37954" target="_blank" rel="noopener">ServiceMarket's Dubai price guide</a> (April 2026). Our prices: 12 sessions AED 3,800 or 20 sessions AED 5,500. Every package includes a nutrition plan and a progress review every 4 weeks.</p>
+  <p class="pc-note">Dubai ranges are from <a href="https://servicemarket.com/en/blog/?p=37954" target="_blank" rel="noopener">ServiceMarket's Dubai price guide</a> (April 2026). Our prices: single session AED 400, 12 sessions AED 3,800 or 20 sessions AED 5,500. All sessions are at Nogs Gym, Al Quoz. Every package includes a nutrition plan and a progress review every 4 weeks.</p>
 
   <section class="pc-cta">
     <h2>Get your <em id="pcGoalH">fat loss</em> plan with Tarek</h2>
@@ -184,7 +181,7 @@ a{color:#C9A84C}
 
   <article class="pc-copy">
     <h2>How much does a personal trainer cost in Dubai?</h2>
-    <p>Most 1-to-1 sessions in Dubai gyms cost between AED 200 and AED 600, depending on the trainer's experience, the gym and the size of the package. Home sessions usually cost AED 250 to 450. Two sessions a week for 12 weeks (24 sessions) therefore costs roughly AED 4,800 to AED 14,400 at a gym.</p>
+    <p>Most 1-to-1 sessions in Dubai gyms cost between AED 200 and AED 600, depending on the trainer's experience, the gym and the size of the package. Two sessions a week for 12 weeks (24 sessions) therefore costs roughly AED 4,800 to AED 14,400 at a gym.</p>
     <p>The price per session matters less than what you get for it. Before you pay, check that the trainer gives you a written plan, nutrition guidance and a way to track progress. Our full <a href="/blog-personal-trainer-cost-dubai.html">Dubai personal trainer cost guide</a> explains what affects the price, and our <a href="/blog-how-to-choose-personal-trainer-dubai.html">checklist for choosing a trainer</a> shows what to ask.</p>
 
     <h2>How many sessions do I need?</h2>
@@ -192,17 +189,18 @@ a{color:#C9A84C}
 
     <h2>How we price personal training</h2>
     <ul>
-      <li><strong>12 sessions:</strong> AED 3,800 (about AED 317 per session)</li>
-      <li><strong>20 sessions:</strong> AED 5,500 (AED 275 per session)</li>
-      <li>Training at <a href="/personal-trainer-al-quoz.html">Nogs Gym, Al Quoz</a>, with Tarek. Men and women.</li>
+      <li><strong>Single session:</strong> AED 400</li>
+      <li><strong>12 sessions:</strong> AED 3,800 (about AED 317 per session, save AED 1,000)</li>
+      <li><strong>20 sessions:</strong> AED 5,500 (AED 275 per session, save AED 2,500)</li>
+      <li>All sessions are at <a href="/personal-trainer-al-quoz.html">Nogs Gym, Al Quoz</a>, with Tarek. Men and women. No home visits.</li>
       <li>Nutrition plan included, with a progress review and plan update every 4 weeks.</li>
     </ul>
     <p>Prefer to train on your own schedule? <a href="/online-coaching.html">Online coaching</a> starts from AED 299 per month. See every option on our <a href="/packages.html#personal-training">packages page</a>.</p>
 
     <h2>Frequently asked questions</h2>
     <div class="pc-faq">
-      <details><summary>How much is one personal training session in Dubai?</summary><p>Typically AED 200 to 600 at a gym and AED 250 to 450 at home. Packages usually lower the price per session. With Tarek at Nogs Gym it works out at AED 275 to 317 per session.</p></details>
-      <details><summary>Is it cheaper to buy a bigger package?</summary><p>Yes, usually. Our 20-session package costs AED 275 per session, compared with about AED 317 per session on the 12-session package.</p></details>
+      <details><summary>How much is one personal training session in Dubai?</summary><p>Typically AED 200 to 600 at a Dubai gym. Packages usually lower the price per session. With Tarek at Nogs Gym a single session is AED 400, or AED 275 to 317 per session on a package.</p></details>
+      <details><summary>Is it cheaper to buy a bigger package?</summary><p>Yes. A single session with Tarek is AED 400. The 12-session package brings it down to about AED 317 per session, and the 20-session package to AED 275, saving you AED 2,500 compared with paying per session.</p></details>
       <details><summary>How many personal training sessions a week should I do?</summary><p>Two to three sessions a week suits most people. It gives your body time to recover and is easier to keep up long term.</p></details>
       <details><summary>Is there a free consultation?</summary><p>Yes. Your first consultation with Tarek is free, so you can ask questions and agree a plan before you buy a package.</p></details>
     </div>
@@ -213,12 +211,15 @@ a{color:#C9A84C}
 (function(){
   var S={spw:2,wk:12,goal:'Fat loss'};
   function fmt(n){return 'AED '+Math.round(n).toLocaleString('en-US');}
+  var SINGLE=400;
   function best(n){
-    // cheapest mix of 12 (AED 3,800) and 20 (AED 5,500) session packages that covers n sessions
+    // cheapest mix of 20-session (AED 5,500), 12-session (AED 3,800) packages and single sessions (AED 400)
     var b=null;
-    for(var a=0;a<=Math.ceil(n/20)+1;a++){
-      var rest=Math.max(0,n-a*20),c=Math.ceil(rest/12),cost=a*5500+c*3800,sess=a*20+c*12;
-      if(sess>=n&&(!b||cost<b.cost||(cost===b.cost&&sess>b.sess)))b={a:a,c:c,cost:cost,sess:sess};
+    for(var a=0;a<=Math.ceil(n/20);a++){
+      for(var c=0;c<=Math.ceil(n/12);c++){
+        var s=Math.max(0,n-a*20-c*12),cost=a*5500+c*3800+s*SINGLE,sess=a*20+c*12+s;
+        if(!b||cost<b.cost||(cost===b.cost&&sess<b.sess))b={a:a,c:c,s:s,cost:cost,sess:sess};
+      }
     }
     return b;
   }
@@ -226,14 +227,16 @@ a{color:#C9A84C}
     var n=S.spw*S.wk,b=best(n),parts=[];
     if(b.a)parts.push(b.a+' × 20-session package'+(b.a>1?'s':''));
     if(b.c)parts.push(b.c+' × 12-session package'+(b.c>1?'s':''));
+    if(b.s)parts.push(b.s+' single session'+(b.s>1?'s':''));
     document.getElementById('pcN').textContent=n;
     document.getElementById('pcW').textContent=S.wk===24?'6 months':S.wk+' weeks';
     document.getElementById('pcGym').textContent=fmt(n*200)+'–'+Math.round(n*600).toLocaleString('en-US');
-    document.getElementById('pcHome').textContent=fmt(n*250)+'–'+Math.round(n*450).toLocaleString('en-US');
     document.getElementById('pcUs').textContent=fmt(b.cost);
     document.getElementById('pcUsNote').textContent=parts.join(' + ')+' · AED '+Math.round(b.cost/b.sess)+' per session';
     var extra=b.sess-n;
     document.getElementById('pcUsMonth').textContent=extra>0?'Covers '+b.sess+' sessions, so you have '+extra+' extra to use later.':'';
+    var payg=b.sess*SINGLE,save=payg-b.cost;
+    document.getElementById('pcSave').textContent=save>0?'You save '+fmt(save)+' ('+Math.round(save/payg*100)+'%) compared with paying AED 400 per session.':'Train '+(12-n>0?(12-n)+' more session'+(12-n>1?'s':'')+' and':'')+' a 12-session package brings it down to AED 317 per session.';
     document.getElementById('pcGoalH').textContent=S.goal.toLowerCase();
     var msg='Hi Tarek! I used your personal trainer cost calculator. My goal: '+S.goal+'. I\'m thinking '+S.spw+' session'+(S.spw>1?'s':'')+' a week for '+(S.wk===24?'6 months':S.wk+' weeks')+'. I\'d like to book a free consultation at Nogs Gym.';
     document.getElementById('pcWa').href='https://wa.me/971507871515?text='+encodeURIComponent(msg);
