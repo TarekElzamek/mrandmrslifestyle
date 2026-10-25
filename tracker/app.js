@@ -147,12 +147,12 @@
   function lastPerformance(name) {
     for (var i = 0; i < S.workouts.length; i++) {
       var w = S.workouts[i]; var ex = (w.exercises || []).filter(function (e) { return e.name === name; })[0];
-      if (ex && ex.sets && ex.sets.length) return { date: w.date, sets: ex.sets };
+      if (ex && ex.sets && ex.sets.length) return { date: w.date, sets: ex.sets, mode: ex.mode };
     }
     return null;
   }
   function bests(name) {
-    var b = { e1: 0, w: 0, r: 0, set: null, date: null };
+    var b = { e1: 0, w: 0, r: 0, set: null, date: null, wmax: null, wset: null, wdate: null };
     S.workouts.forEach(function (wk) {
       (wk.exercises || []).forEach(function (e) {
         if (e.name !== name) return;
@@ -160,6 +160,7 @@
           var w = num(s.w) || 0, r = num(s.r) || 0, x = e1rm(w, r);
           if (x > b.e1) { b.e1 = x; b.set = s; b.date = wk.date; }
           if (w > b.w) b.w = w; if (r > b.r) b.r = r;
+          if (s.r != null && (b.wmax == null || w > b.wmax || (w === b.wmax && r > (num(b.wset && b.wset.r) || 0)))) { b.wmax = w; b.wset = s; b.wdate = wk.date; }
         });
       });
     });
@@ -169,7 +170,7 @@
     var w = num(s.w), r = num(s.r);
     if (type === 't') return (r || 0) + 's';
     if (type === 'c') return (r || 0) + ' min' + (w ? ' · ' + w + ' km' : '');
-    if (type === 'b') return (w ? '+' + w + 'kg × ' : '') + (r || 0);
+    if (type === 'b') return (w > 0 ? '+' + w + 'kg × ' : w < 0 ? Math.abs(w) + 'kg assist × ' : '') + (r || 0) + (w ? '' : ' reps');
     return (w || 0) + 'kg × ' + (r || 0);
   }
   function workoutVolume(w) { var v = 0; (w.exercises || []).forEach(function (e) { if ((e.type || typeOf(e.name)) !== 'w') return; (e.sets || []).forEach(function (s) { v += (num(s.w) || 0) * (num(s.r) || 0); }); }); return v; }
@@ -237,14 +238,31 @@
     var info = EXMAP[name] || { cat: 'Custom', type: 'w', how: '' };
     var n = target && parseInt(target.sets, 10) > 0 ? parseInt(target.sets, 10) : 3;
     var sets = []; for (var i = 0; i < n; i++) sets.push({ w: '', r: '', done: false });
-    return { name: name, cat: info.cat, type: info.type, target: target ? { sets: target.sets, reps: target.reps, rest: target.rest, notes: target.notes } : null, sets: sets };
+    return { name: name, cat: info.cat, type: info.type, mode: info.type === 'b' ? modeFromHistory(name) : undefined, target: target ? { sets: target.sets, reps: target.reps, rest: target.rest, notes: target.notes } : null, sets: sets };
   }
   function saveDraft() { lsSet('mm_draft_' + S.target.id, S.draft); }
 
-  function fieldsFor(type) {
+  var MODES = [['bw', 'Bodyweight'], ['add', 'Added weight (+kg)'], ['assist', 'Assisted (machine or band)']];
+  function modeOf(ex) {
+    if (ex.mode) return ex.mode;
+    return ex.sets && ex.sets.some(function (s) { return num(s.w) > 0; }) ? 'add' : 'bw';
+  }
+  function modeFromHistory(name) {
+    var last = lastPerformance(name); if (!last) return 'bw';
+    if (last.mode) return last.mode;
+    var ws = last.sets.map(function (s) { return num(s.w) || 0; });
+    return ws.some(function (w) { return w < 0; }) ? 'assist' : ws.some(function (w) { return w > 0; }) ? 'add' : 'bw';
+  }
+  function signedW(ex, s) {
+    if (ex.type !== 'b') return num(s.w);
+    var m = modeOf(ex), w = num(s.w);
+    if (m === 'bw' || w == null || w === 0) return null;
+    return m === 'assist' ? -Math.abs(w) : Math.abs(w);
+  }
+  function fieldsFor(type, mode) {
     if (type === 't') return [null, ['r', 'Sec']];
     if (type === 'c') return [['r', 'Min'], ['w', 'Km']];
-    if (type === 'b') return [['w', '+kg'], ['r', 'Reps']];
+    if (type === 'b') return mode === 'bw' ? [null, ['r', 'Reps']] : [['w', mode === 'assist' ? 'Assist kg' : '+kg'], ['r', 'Reps']];
     return [['w', 'Kg'], ['r', 'Reps']];
   }
 
@@ -254,13 +272,14 @@
     var h = '<div class="tk-row"><div class="grow" style="flex:1"><label class="sr" for="wTitle">Workout name</label><input class="tk-input" id="wTitle" value="' + esc(d.title) + '" style="font-weight:700;font-size:1.1rem"></div></div>';
     h += '<div class="tk-row tk-small" style="margin-top:6px"><span>' + fmtDay(d.date) + '</span><span>· ' + mins + ' min</span>' + (viewingOther() ? '<span class="pill gold">Logging for ' + esc(S.target.name || 'client') + '</span>' : '') + '</div>';
     d.exercises.forEach(function (ex, xi) {
-      var info = EXMAP[ex.name] || {}, last = lastPerformance(ex.name), f = fieldsFor(ex.type);
+      var info = EXMAP[ex.name] || {}, last = lastPerformance(ex.name), mode = ex.type === 'b' ? modeOf(ex) : null, f = fieldsFor(ex.type, mode);
       h += '<section class="ex" aria-label="' + esc(ex.name) + '"><div class="ex-head"><div><h3>' + esc(ex.name) + '</h3><div class="tk-small">' + esc(info.m || ex.cat || '') + (last ? ' · last ' + daysAgo(last.date) : '') + '</div></div><div class="ex-act">' +
         (info.how || vidsFor(ex.name).length ? '<button type="button" class="tk-icon-btn' + (vidsFor(ex.name).length ? ' has-vid' : '') + '" data-how="' + xi + '" aria-label="' + (vidsFor(ex.name).length ? 'Watch demo of ' : 'How to do ') + esc(ex.name) + '">' + (vidsFor(ex.name).length ? ICON_PLAY : ICON.info) + '</button>' : '') +
         (xi > 0 ? '<button type="button" class="tk-icon-btn" data-mvex="' + xi + ':-1" aria-label="Move ' + esc(ex.name) + ' up">' + ICON.up + '</button>' : '') +
         (xi < d.exercises.length - 1 ? '<button type="button" class="tk-icon-btn" data-mvex="' + xi + ':1" aria-label="Move ' + esc(ex.name) + ' down">' + ICON.down + '</button>' : '') +
         '<button type="button" class="tk-icon-btn" data-rmex="' + xi + '" aria-label="Remove ' + esc(ex.name) + '">' + ICON.trash + '</button></div></div>';
       h += '<div class="ex-how" id="how' + xi + '" hidden>' + videoBox(ex.name, xi + '|' + ex.name) + (info.how ? '<p>' + esc(info.how) + '</p>' : '') + '</div>';
+      if (ex.type === 'b') h += '<div class="ex-mode"><label for="mode' + xi + '">Load</label><select class="tk-select" id="mode' + xi + '" data-mode="' + xi + '">' + MODES.map(function (m) { return '<option value="' + m[0] + '"' + (m[0] === mode ? ' selected' : '') + '>' + m[1] + '</option>'; }).join('') + '</select></div>';
       if (ex.target) h += '<div class="ex-target">Target: ' + esc(ex.target.sets || '') + ' × ' + esc(ex.target.reps || '') + (ex.target.rest ? ' · rest ' + esc(ex.target.rest) + 's' : '') + (ex.target.notes ? ' · ' + esc(ex.target.notes) : '') + '</div>';
       h += '<table class="sets"><thead><tr><th scope="col">Set</th><th scope="col">Last</th>' + (f[0] ? '<th scope="col">' + f[0][1] + '</th>' : '') + '<th scope="col">' + f[1][1] + '</th><th scope="col"><span class="sr">Done</span></th></tr></thead><tbody>';
       ex.sets.forEach(function (s, si) {
@@ -268,7 +287,7 @@
         h += '<tr class="' + (s.done ? 'done' : '') + '"><td>' + (si + 1) + (s.pr ? '<span class="pr-badge">PR</span>' : '') + '</td><td class="prev">' + (p ? esc(setLabel(p, ex.type)) : '–') + '</td>';
         f.forEach(function (fd) {
           if (!fd) return;
-          var ph = p ? (num(p[fd[0]]) != null ? p[fd[0]] : '') : '';
+          var ph = p ? (num(p[fd[0]]) != null ? (ex.type === 'b' && fd[0] === 'w' ? Math.abs(num(p.w)) : p[fd[0]]) : '') : '';
           h += '<td><input inputmode="decimal" aria-label="Set ' + (si + 1) + ' ' + fd[1] + '" data-x="' + xi + '" data-s="' + si + '" data-f="' + fd[0] + '" value="' + esc(s[fd[0]]) + '" placeholder="' + esc(ph) + '"></td>';
         });
         h += '<td><button type="button" class="chk" data-done="' + xi + ',' + si + '" aria-pressed="' + (s.done ? 'true' : 'false') + '" aria-label="Mark set ' + (si + 1) + ' done">' + ICON.check + '</button></td></tr>';
@@ -287,6 +306,7 @@
     v.querySelectorAll('[data-done]').forEach(function (b) { b.onclick = function () { var p = b.dataset.done.split(','); toggleSet(+p[0], +p[1]); }; });
     v.querySelectorAll('[data-how]').forEach(function (b) { b.onclick = function () { openHow($('how' + b.dataset.how)); }; });
     wireVideos(v);
+    v.querySelectorAll('[data-mode]').forEach(function (sel) { sel.onchange = function () { var ex = d.exercises[+sel.dataset.mode]; ex.mode = sel.value; if (sel.value === 'bw') ex.sets.forEach(function (s) { s.w = ''; }); saveDraft(); render(); }; });
     v.querySelectorAll('[data-mvex]').forEach(function (b) { b.onclick = function () {
       var p = b.dataset.mvex.split(':'), i = +p[0], j = i + (+p[1]); if (j < 0 || j >= d.exercises.length) return;
       var t = d.exercises[i]; d.exercises[i] = d.exercises[j]; d.exercises[j] = t; saveDraft(); render();
@@ -313,16 +333,16 @@
     var ex = S.draft.exercises[xi], s = ex.sets[si];
     if (!s.done) {
       var last = lastPerformance(ex.name), p = last && last.sets[si];
-      fieldsFor(ex.type).forEach(function (fd) { if (fd && (s[fd[0]] === '' || s[fd[0]] == null) && p && p[fd[0]] != null && p[fd[0]] !== '') s[fd[0]] = String(p[fd[0]]); });
+      fieldsFor(ex.type, ex.type === 'b' ? modeOf(ex) : null).forEach(function (fd) { if (fd && (s[fd[0]] === '' || s[fd[0]] == null) && p && p[fd[0]] != null && p[fd[0]] !== '') s[fd[0]] = String(ex.type === 'b' && fd[0] === 'w' ? Math.abs(num(p.w)) : p[fd[0]]); });
       if (num(s.r) == null || num(s.r) <= 0) { toast('Enter ' + (ex.type === 't' ? 'the seconds' : ex.type === 'c' ? 'the minutes' : 'your reps') + ' first'); return; }
       s.done = true;
       s.pr = false;
       if (ex.type === 'w' || ex.type === 'b') {
-        var b = bests(ex.name), w = num(s.w) || 0, r = num(s.r) || 0;
+        var b = bests(ex.name), w = signedW(ex, s) || 0, r = num(s.r) || 0;
         var prior = lastPerformance(ex.name);
-        var isPr = !!prior && ((ex.type === 'w' && b.e1 > 0 && e1rm(w, r) > b.e1 + 0.01) || (ex.type === 'b' && (w > b.w || (w === b.w && r > b.r))));
+        var isPr = !!prior && ((ex.type === 'w' && b.e1 > 0 && e1rm(w, r) > b.e1 + 0.01) || (ex.type === 'b' && b.wmax != null && (w > b.wmax || (w === b.wmax && r > (num(b.wset && b.wset.r) || 0)))));
         var already = ex.sets.some(function (o, i) { return i !== si && o.pr; });
-        if (isPr && !already) { s.pr = true; toast('New personal record! ' + ex.name + ' ' + setLabel(s, ex.type), true); confetti(); ev('tracker_pr', { exercise: ex.name }); }
+        if (isPr && !already) { s.pr = true; toast('New personal record! ' + ex.name + ' ' + setLabel({ w: w, r: r }, ex.type), true); confetti(); ev('tracker_pr', { exercise: ex.name }); }
       }
       var rest = (ex.target && parseInt(ex.target.rest, 10)) || lsGet('mm_rest', 90);
       if (ex.type !== 'c') startRest(rest);
@@ -352,7 +372,9 @@
   async function finishWorkout() {
     var d = S.draft;
     var exs = d.exercises.map(function (e) {
-      return { name: e.name, cat: e.cat, type: e.type, sets: e.sets.filter(function (s) { return s.done || num(s.r) != null; }).map(function (s) { var o = { w: num(s.w), r: num(s.r) }; if (s.pr) o.pr = true; return o; }) };
+      var o2 = { name: e.name, cat: e.cat, type: e.type, sets: e.sets.filter(function (s) { return s.done || num(s.r) != null; }).map(function (s) { var o = { w: signedW(e, s), r: num(s.r) }; if (s.pr) o.pr = true; return o; }) };
+      if (e.type === 'b') o2.mode = modeOf(e);
+      return o2;
     }).filter(function (e) { return e.sets.length; });
     if (!exs.length) { toast('Log at least one set before finishing'); return; }
     $('finish').disabled = true;
@@ -646,18 +668,20 @@
     h += '<div class="tk-card"><div class="tk-field" style="margin-top:0"><label for="pEx">Exercise</label><select class="tk-select" id="pEx">' + names.map(function (n) { return '<option' + (n === S.progEx ? ' selected' : '') + '>' + esc(n) + '</option>'; }).join('') + '</select></div>';
     var pts = [];
     W.slice().reverse().forEach(function (w) {
-      var best = 0, top = 0, reps = 0;
-      (w.exercises || []).forEach(function (e) { if (e.name !== S.progEx) return; (e.sets || []).forEach(function (s) { var a = num(s.w) || 0, r = num(s.r) || 0; best = Math.max(best, e1rm(a, r)); top = Math.max(top, a); reps = Math.max(reps, r); }); });
-      if (best || top || reps) pts.push({ d: w.date, e1: r1(best), top: top, reps: reps });
+      var best = 0, top = 0, reps = 0, sm = null;
+      (w.exercises || []).forEach(function (e) { if (e.name !== S.progEx) return; (e.sets || []).forEach(function (s) { var a = num(s.w) || 0, r = num(s.r) || 0; best = Math.max(best, e1rm(a, r)); top = Math.max(top, a); reps = Math.max(reps, r); sm = sm == null ? a : Math.max(sm, a); }); });
+      if (best || top || reps) pts.push({ d: w.date, e1: r1(best), top: top, reps: reps, sm: sm || 0 });
     });
-    var t = typeOf(S.progEx), useReps = t === 'b' && !pts.some(function (p) { return p.top > 0; });
+    var t = typeOf(S.progEx), assistMode = t === 'b' && pts.some(function (p) { return p.sm < 0; }) && !pts.some(function (p) { return p.top > 0; }), useReps = t === 'b' && !assistMode && !pts.some(function (p) { return p.top > 0; });
     var b = bests(S.progEx);
-    h += '<div class="tk-grid2" style="margin-top:10px"><div class="tk-stat"><b>' + (useReps ? b.r : b.w) + '</b><span>' + (useReps ? 'Best reps' : 'Heaviest (kg)') + '</span></div><div class="tk-stat"><b>' + (useReps ? pts.length : r1(b.e1) || '–') + '</b><span>' + (useReps ? 'Sessions' : 'Est. 1-rep max') + '</span></div></div>';
-    h += '<div class="chart-box"><canvas id="pChart" role="img" aria-label="' + esc(S.progEx) + ' progress over time"></canvas></div><p class="tk-small">' + (useReps ? 'Most reps in a set per session.' : 'Est. 1-rep max uses your best set each session (weight × reps), so you can compare sessions with different rep ranges.') + '</p></div>';
+    if (assistMode) h += '<div class="tk-grid2" style="margin-top:10px"><div class="tk-stat"><b>' + Math.abs(b.wmax || 0) + '</b><span>Least assistance (kg)</span></div><div class="tk-stat"><b>' + b.r + '</b><span>Best reps</span></div></div>';
+    else h += '<div class="tk-grid2" style="margin-top:10px"><div class="tk-stat"><b>' + (useReps ? b.r : b.w) + '</b><span>' + (useReps ? 'Best reps' : 'Heaviest (kg)') + '</span></div><div class="tk-stat"><b>' + (useReps ? pts.length : r1(b.e1) || '–') + '</b><span>' + (useReps ? 'Sessions' : 'Est. 1-rep max') + '</span></div></div>';
+    h += '<div class="chart-box"><canvas id="pChart" role="img" aria-label="' + esc(S.progEx) + ' progress over time"></canvas></div><p class="tk-small">' + (assistMode ? 'Assistance used on the best set each session. Lower means stronger: the goal is zero.' : useReps ? 'Most reps in a set per session.' : 'Est. 1-rep max uses your best set each session (weight × reps), so you can compare sessions with different rep ranges.') + '</p></div>';
     h += '<div class="tk-card"><span class="tk-tag">Personal records</span>';
     names.slice(0, 25).forEach(function (n) {
       var bb = bests(n), tt = typeOf(n);
       if (!bb.set && !bb.r) return;
+      if (tt === 'b' && bb.wset) { bb.set = bb.wset; bb.date = bb.wdate; }
       h += '<div class="li"><div class="grow"><b>' + esc(n) + '</b><span class="tk-small">' + (bb.set ? esc(setLabel(bb.set, tt)) + (tt === 'w' ? ' · est. 1RM ' + r1(bb.e1) + 'kg' : '') : bb.r + ' reps') + (bb.date ? ' · ' + fmtDay(bb.date, { day: 'numeric', month: 'short' }) : '') + '</span></div></div>';
     });
     h += '</div>';
@@ -665,7 +689,7 @@
     $('pEx').onchange = function () { S.progEx = this.value; render(); };
     if (pts.length && window.Chart) {
       var labels = pts.map(function (p) { return fmtDay(p.d, { day: 'numeric', month: 'short' }); });
-      S.chart.p = useReps ? lineChart('pChart', labels, [{ label: 'Reps', data: pts.map(function (p) { return p.reps; }) }]) : lineChart('pChart', labels, [{ label: 'Est. 1RM (kg)', data: pts.map(function (p) { return p.e1; }) }, { label: 'Top weight (kg)', data: pts.map(function (p) { return p.top; }) }]);
+      S.chart.p = assistMode ? lineChart('pChart', labels, [{ label: 'Assistance (kg)', data: pts.map(function (p) { return Math.abs(p.sm); }) }, { label: 'Reps', data: pts.map(function (p) { return p.reps; }) }]) : useReps ? lineChart('pChart', labels, [{ label: 'Reps', data: pts.map(function (p) { return p.reps; }) }]) : lineChart('pChart', labels, [{ label: 'Est. 1RM (kg)', data: pts.map(function (p) { return p.e1; }) }, { label: 'Top weight (kg)', data: pts.map(function (p) { return p.top; }) }]);
     }
   }
 
