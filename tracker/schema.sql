@@ -162,3 +162,17 @@ create policy "live read" on public.live_workouts for select using (user_id = au
 drop policy if exists "live write" on public.live_workouts;
 create policy "live write" on public.live_workouts for all using (user_id = auth.uid() or public.is_coach()) with check (user_id = auth.uid() or public.is_coach());
 -- alter publication supabase_realtime add table public.live_workouts;
+
+-- ---------- v5: programme templates (coach library, reusable for any client) ----------
+create table if not exists public.program_templates (
+  id uuid primary key default gen_random_uuid(),
+  name text not null,
+  notes text,
+  days jsonb not null default '[]'::jsonb,
+  created_by uuid references public.profiles(id) on delete set null,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+alter table public.program_templates enable row level security;
+drop policy if exists "templates coach only" on public.program_templates;
+create policy "templates coach only" on public.program_templates for all using (public.is_coach()) with check (public.is_coach());

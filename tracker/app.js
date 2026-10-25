@@ -522,11 +522,11 @@
     var v = $('view');
     var h = '<h1 class="tk-h1">' + (viewingOther() ? esc(S.target.name || 'Client') + '\'s <em>programmes</em>' : 'Your <em>programme</em>') + '</h1>';
     h += '<p class="tk-sub">' + (isCoach() ? 'Build a programme with training days, sets, reps and rest. The client sees it straight away and taps Start at the gym.' : 'Follow the plan your coach builds for you, or create your own routine.') + '</p>';
-    if (isCoach()) h += '<button type="button" class="tk-btn block" id="newProg" style="margin-top:14px">+ New programme</button>';
+    if (isCoach()) h += '<div class="tk-grid2" style="margin-top:14px"><button type="button" class="tk-btn" id="newProg">+ New programme</button><button type="button" class="tk-btn ghost" id="useTpl">Use a template</button></div>';
     if (!S.programs.length) h += '<div class="tk-empty">No programmes yet.</div>';
     S.programs.forEach(function (p) {
       h += '<div class="tk-card' + (p.active ? ' gold' : '') + '"><div class="tk-row"><div style="flex:1"><span class="tk-tag">' + (p.active ? 'Active' : 'Archived') + '</span><h2 class="tk-h2" style="margin:2px 0 4px">' + esc(p.name) + '</h2></div>' +
-        (canEditProgram(p) ? '<button type="button" class="tk-btn sm plain" data-edit="' + p.id + '">Edit</button>' : '') + '</div>' + (p.notes ? '<p class="tk-muted">' + esc(p.notes) + '</p>' : '');
+        (canEditProgram(p) ? '<button type="button" class="tk-btn sm plain" data-tpl="' + p.id + '">Save as template</button><button type="button" class="tk-btn sm plain" data-edit="' + p.id + '">Edit</button>' : '') + '</div>' + (p.notes ? '<p class="tk-muted">' + esc(p.notes) + '</p>' : '');
       (p.days || []).forEach(function (d, i) {
         h += '<details class="wk"><summary><div style="flex:1"><b>' + esc(d.name || 'Day ' + (i + 1)) + '</b><span class="tk-small"> · ' + (d.exercises || []).length + ' exercises</span></div><button type="button" class="tk-btn sm" data-start="' + p.id + ':' + i + '">Start</button></summary><div class="wk-body">';
         (d.exercises || []).forEach(function (e) { h += '<p><b>' + esc(e.name) + '</b> · ' + esc(e.sets || '') + ' × ' + esc(e.reps || '') + (e.rest ? ' · rest ' + esc(e.rest) + 's' : '') + (e.notes ? ' · ' + esc(e.notes) : '') + '</p>'; });
@@ -536,13 +536,69 @@
     });
     v.innerHTML = h;
     if ($('newProg')) $('newProg').onclick = function () { openBuilder(null); };
+    if ($('useTpl')) $('useTpl').onclick = openTemplates;
+    v.querySelectorAll('[data-tpl]').forEach(function (b) { b.onclick = function () { saveAsTemplate(S.programs.filter(function (p) { return p.id === b.dataset.tpl; })[0]); }; });
     v.querySelectorAll('[data-edit]').forEach(function (b) { b.onclick = function () { openBuilder(S.programs.filter(function (p) { return p.id === b.dataset.edit; })[0]); }; });
     v.querySelectorAll('[data-start]').forEach(function (b) { b.onclick = function (e) { e.preventDefault(); var p = b.dataset.start.split(':'); if (S.draft && !confirmBox('You have a workout in progress. Replace it?')) return; startDraft(S.programs.filter(function (x) { return x.id === p[0]; })[0], +p[1]); }; });
   }
 
-  function openBuilder(prog) {
-    var P = prog ? JSON.parse(JSON.stringify(prog)) : { name: '', notes: '', days: [{ name: 'Day 1', exercises: [] }], active: true };
-    var m = modal(prog ? 'Edit programme' : 'New programme', '<div id="bld"></div>');
+  // ---------- TEMPLATES (coach only) ----------
+  function tplCount(t) { return (t.days || []).reduce(function (n, d) { return n + (d.exercises || []).length; }, 0); }
+  async function loadTemplates() {
+    var r = await sb.from('program_templates').select('*').order('name');
+    if (r.error) { toast('Could not load templates: ' + r.error.message); return null; }
+    S.templates = r.data || []; return S.templates;
+  }
+  function saveAsTemplate(p) {
+    if (!p || !isCoach()) return;
+    var m = modal('Save as template', '<p class="tk-muted">Saves the days, exercises, sets, reps and notes of <b>' + esc(p.name) + '</b> so you can assign it to any client later. Logged weights are not included.</p>' +
+      '<div class="tk-field"><label for="tName">Template name</label><input class="tk-input" id="tName" value="' + esc(p.name) + '"></div>' +
+      '<div class="tk-grid2" style="margin-top:16px"><button type="button" class="tk-btn plain" data-close>Cancel</button><button type="button" class="tk-btn" id="tSave">Save template</button></div>');
+    $('tName').focus(); $('tName').select();
+    $('tSave').onclick = async function () {
+      var name = $('tName').value.trim(); if (!name) { toast('Give the template a name'); return $('tName').focus(); }
+      var btn = this; btn.disabled = true;
+      var list = S.templates || await loadTemplates() || [];
+      var same = list.filter(function (t) { return t.name.toLowerCase() === name.toLowerCase(); })[0];
+      if (same && !confirmBox('A template called "' + same.name + '" already exists. Replace it?')) { btn.disabled = false; return; }
+      var row = { name: name, notes: p.notes || null, days: JSON.parse(JSON.stringify(p.days || [])), updated_at: new Date().toISOString() };
+      var r = same ? await sb.from('program_templates').update(row).eq('id', same.id).select().single()
+        : await sb.from('program_templates').insert(Object.assign(row, { created_by: S.me.id })).select().single();
+      btn.disabled = false;
+      if (r.error) return toast('Could not save: ' + r.error.message);
+      S.templates = list.filter(function (t) { return t.id !== r.data.id; }).concat([r.data]).sort(function (a, b) { return a.name.localeCompare(b.name); });
+      ev('tracker_template_saved', {}); m.close(); toast('Template saved');
+    };
+  }
+  async function openTemplates() {
+    var m = modal('Programme templates', '<div id="tplList"><p class="tk-muted">Loading…</p></div>');
+    var list = await loadTemplates(); if (!list) return m.close();
+    var who = viewingOther() ? (S.target.name || 'this client') : 'yourself';
+    function draw() {
+      var h = '';
+      if (!S.templates.length) h = '<div class="tk-empty">No templates yet. Open any programme in the Plan tab and tap <b>Save as template</b>.</div>';
+      S.templates.forEach(function (t) {
+        h += '<div class="tk-card"><h2 class="tk-h2" style="margin:0 0 4px">' + esc(t.name) + '</h2><p class="tk-small">' + (t.days || []).length + ' days · ' + tplCount(t) + ' exercises</p>' +
+          '<p class="tk-muted" style="margin:6px 0 10px">' + (t.days || []).map(function (d) { return esc(d.name || 'Day'); }).join(' · ') + '</p>' +
+          '<div class="tk-grid2"><button type="button" class="tk-btn danger sm" data-tdel="' + t.id + '">Delete</button><button type="button" class="tk-btn sm" data-tuse="' + t.id + '">Assign to ' + esc(who) + '</button></div></div>';
+      });
+      $('tplList').innerHTML = h;
+      m.querySelectorAll('[data-tuse]').forEach(function (b) { b.onclick = function () { var t = S.templates.filter(function (x) { return x.id === b.dataset.tuse; })[0]; m.close(); openBuilder(null, t); }; });
+      m.querySelectorAll('[data-tdel]').forEach(function (b) { b.onclick = async function () {
+        var t = S.templates.filter(function (x) { return x.id === b.dataset.tdel; })[0];
+        if (!confirmBox('Delete the template "' + t.name + '"? Programmes already assigned are not affected.')) return;
+        var r = await sb.from('program_templates').delete().eq('id', t.id); if (r.error) return toast(r.error.message);
+        S.templates = S.templates.filter(function (x) { return x.id !== t.id; }); draw(); toast('Template deleted');
+      }; });
+    }
+    draw();
+  }
+
+  function openBuilder(prog, seed) {
+    var P = prog ? JSON.parse(JSON.stringify(prog)) : seed ? { name: seed.name, notes: seed.notes || '', days: JSON.parse(JSON.stringify(seed.days || [])), active: true } : { name: '', notes: '', days: [{ name: 'Day 1', exercises: [] }], active: true };
+    if (!P.days.length) P.days.push({ name: 'Day 1', exercises: [] });
+    P.days.forEach(function (d) { d.exercises = d.exercises || []; });
+    var m = modal(prog ? 'Edit programme' : seed ? 'New programme from template' : 'New programme', '<div id="bld"></div>');
     function draw() {
       var h = '<div class="tk-field"><label for="bName">Programme name</label><input class="tk-input" id="bName" value="' + esc(P.name) + '" placeholder="e.g. 12-week fat loss, 3 days a week"></div>' +
         '<div class="tk-field"><label for="bNotes">Notes for the client</label><textarea class="tk-textarea" id="bNotes" placeholder="Warm-up, cardio after weights, steps target…">' + esc(P.notes || '') + '</textarea></div>' +
