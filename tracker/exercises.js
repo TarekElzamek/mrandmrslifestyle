@@ -69,6 +69,7 @@ window.MM_EXERCISES = [
 ["Machine Lateral Raise","Shoulders","Side delts","w","Pads on the outside of the arms, raise to shoulder height."],
 ["Front Raises","Shoulders","Front delts","w","Raise dumbbells or a plate to eye level in front of you, lower slowly."],
 ["Rear Delt Flyes","Shoulders","Rear delts","w","Hinge forward, open the arms out to the sides, squeeze the back of the shoulders."],
+["Rope Face Pull","Shoulders","Rear delts, upper back, rotator cuff","w","Rope at face height, thumbs back. Pull towards your forehead, split the rope and pull the hands past your ears, elbows high. Squeeze the rear delts, return slowly."],
 ["Reverse Pec Deck","Shoulders","Rear delts","w","Face the machine, open the arms back, keep elbows soft."],
 ["Upright Row","Shoulders","Side delts, traps","w","Pull the bar up to chest height, elbows lead, grip shoulder-width."],
 ["Barbell Shrugs","Shoulders","Traps","w","Shrug straight up towards your ears, pause, lower slowly."],
