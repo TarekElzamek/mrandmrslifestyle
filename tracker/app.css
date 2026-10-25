@@ -68,6 +68,13 @@ button{cursor:pointer}
 .ex-head h3{font-size:1.02rem;font-weight:700;line-height:1.3}
 .ex-head .tk-small{margin-top:2px}
 .ex-head .ex-act{margin-left:auto;display:flex;gap:4px}
+.ex-how p{margin:0}
+.ex-vid{margin:0 0 8px}
+.ex-vid-frame{position:relative;width:100%;aspect-ratio:16/9;border-radius:10px;overflow:hidden;background:#000}
+.ex-vid-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.ex-vid-tabs{margin:8px 0 2px;justify-content:center;flex-wrap:wrap;overflow:visible}
+.tk-icon-btn.has-vid{color:var(--gold)}
+.vid-pill{font-size:.62rem;vertical-align:middle;margin-left:4px}
 .ex-how{margin:0 14px 8px;font-size:.85rem;color:var(--muted);background:rgba(201,168,76,.06);border-left:2px solid var(--gold);padding:8px 10px;border-radius:0 8px 8px 0}
 .ex-target{margin:0 14px 6px;font-size:.82rem;color:var(--gold-2)}
 .sets{width:100%;border-collapse:collapse}

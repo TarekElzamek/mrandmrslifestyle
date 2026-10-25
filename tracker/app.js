@@ -9,6 +9,30 @@
 
   var EX = (window.MM_EXERCISES || []).map(function (e) { return { name: e[0], cat: e[1], m: e[2], type: e[3], how: e[4] }; });
   var EXMAP = {}; EX.forEach(function (e) { EXMAP[e.name] = e; });
+  var VIDS = window.MM_VIDEOS || {};
+  function vidsFor(name) { return VIDS[name] || []; }
+  function videoBox(name, key) {
+    var vs = vidsFor(name); if (!vs.length) return '';
+    var h = '<div class="ex-vid" data-vbox="' + key + '"><div class="ex-vid-frame"></div>';
+    if (vs.length > 1) h += '<div class="chips ex-vid-tabs" role="group" aria-label="Choose demo video">' + vs.map(function (v, i) { return '<button type="button" aria-pressed="' + (i ? 'false' : 'true') + '" data-vid="' + esc(v[0]) + '">' + esc(v[1]) + '</button>'; }).join('') + '</div>';
+    return h + '</div>';
+  }
+  function playVideo(box, id) {
+    var vs = box.querySelectorAll('[data-vid]'); vs.forEach(function (b) { b.setAttribute('aria-pressed', b.dataset.vid === id ? 'true' : 'false'); });
+    box.querySelector('.ex-vid-frame').innerHTML = '<iframe src="https://www.youtube-nocookie.com/embed/' + encodeURIComponent(id) + '?rel=0&modestbranding=1&playsinline=1&loop=1&playlist=' + encodeURIComponent(id) + '" title="Exercise demo video" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen loading="lazy"></iframe>';
+  }
+  function wireVideos(root) {
+    root.querySelectorAll('[data-vbox]').forEach(function (box) {
+      box.querySelectorAll('[data-vid]').forEach(function (b) { b.onclick = function () { playVideo(box, b.dataset.vid); }; });
+    });
+  }
+  function openHow(el) {
+    el.hidden = !el.hidden;
+    var box = el.querySelector('[data-vbox]');
+    if (box && !el.hidden && !box.querySelector('iframe')) { var first = box.querySelector('[data-vid]'); playVideo(box, first ? first.dataset.vid : vidsFor(box.dataset.vbox.split('|')[1])[0][0]); ev('tracker_video_play'); }
+    if (box && el.hidden) box.querySelector('.ex-vid-frame').innerHTML = '';
+  }
+  var ICON_PLAY = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M10 8.5v7l5.5-3.5z" fill="currentColor" stroke="none"/></svg>';
   var CATS = []; EX.forEach(function (e) { if (CATS.indexOf(e.cat) < 0) CATS.push(e.cat); });
 
   var S = { user: null, me: null, target: null, tab: 'today', programs: [], workouts: [], body: [], clients: null, draft: null, cal: null, calDay: null, chart: {}, progEx: null, rest: null };
@@ -230,9 +254,9 @@
     d.exercises.forEach(function (ex, xi) {
       var info = EXMAP[ex.name] || {}, last = lastPerformance(ex.name), f = fieldsFor(ex.type);
       h += '<section class="ex" aria-label="' + esc(ex.name) + '"><div class="ex-head"><div><h3>' + esc(ex.name) + '</h3><div class="tk-small">' + esc(info.m || ex.cat || '') + (last ? ' · last ' + daysAgo(last.date) : '') + '</div></div><div class="ex-act">' +
-        (info.how ? '<button type="button" class="tk-icon-btn" data-how="' + xi + '" aria-label="How to do ' + esc(ex.name) + '">' + ICON.info + '</button>' : '') +
+        (info.how || vidsFor(ex.name).length ? '<button type="button" class="tk-icon-btn' + (vidsFor(ex.name).length ? ' has-vid' : '') + '" data-how="' + xi + '" aria-label="' + (vidsFor(ex.name).length ? 'Watch demo of ' : 'How to do ') + esc(ex.name) + '">' + (vidsFor(ex.name).length ? ICON_PLAY : ICON.info) + '</button>' : '') +
         '<button type="button" class="tk-icon-btn" data-rmex="' + xi + '" aria-label="Remove ' + esc(ex.name) + '">' + ICON.trash + '</button></div></div>';
-      h += '<div class="ex-how" id="how' + xi + '" hidden>' + esc(info.how || '') + '</div>';
+      h += '<div class="ex-how" id="how' + xi + '" hidden>' + videoBox(ex.name, xi + '|' + ex.name) + (info.how ? '<p>' + esc(info.how) + '</p>' : '') + '</div>';
       if (ex.target) h += '<div class="ex-target">Target: ' + esc(ex.target.sets || '') + ' × ' + esc(ex.target.reps || '') + (ex.target.rest ? ' · rest ' + esc(ex.target.rest) + 's' : '') + (ex.target.notes ? ' · ' + esc(ex.target.notes) : '') + '</div>';
       h += '<table class="sets"><thead><tr><th scope="col">Set</th><th scope="col">Last</th>' + (f[0] ? '<th scope="col">' + f[0][1] + '</th>' : '') + '<th scope="col">' + f[1][1] + '</th><th scope="col"><span class="sr">Done</span></th></tr></thead><tbody>';
       ex.sets.forEach(function (s, si) {
@@ -257,7 +281,8 @@
       inp.oninput = function () { d.exercises[+inp.dataset.x].sets[+inp.dataset.s][inp.dataset.f] = inp.value; saveDraft(); };
     });
     v.querySelectorAll('[data-done]').forEach(function (b) { b.onclick = function () { var p = b.dataset.done.split(','); toggleSet(+p[0], +p[1]); }; });
-    v.querySelectorAll('[data-how]').forEach(function (b) { b.onclick = function () { var el = $('how' + b.dataset.how); el.hidden = !el.hidden; }; });
+    v.querySelectorAll('[data-how]').forEach(function (b) { b.onclick = function () { openHow($('how' + b.dataset.how)); }; });
+    wireVideos(v);
     v.querySelectorAll('[data-rmex]').forEach(function (b) { b.onclick = function () { if (confirmBox('Remove ' + d.exercises[+b.dataset.rmex].name + ' from this workout?')) { d.exercises.splice(+b.dataset.rmex, 1); saveDraft(); render(); } }; });
     v.querySelectorAll('[data-addset]').forEach(function (b) { b.onclick = function () { var ex = d.exercises[+b.dataset.addset], l = ex.sets[ex.sets.length - 1] || {}; ex.sets.push({ w: l.w || '', r: '', done: false }); saveDraft(); render(); }; });
     v.querySelectorAll('[data-rmset]').forEach(function (b) { b.onclick = function () { d.exercises[+b.dataset.rmset].sets.pop(); saveDraft(); render(); }; });
@@ -369,7 +394,7 @@
     function list() {
       var ql = q.toLowerCase().trim();
       var items = EX.filter(function (e) { return (cat === 'All' || e.cat === cat) && (!ql || (e.name + ' ' + e.m + ' ' + e.cat).toLowerCase().indexOf(ql) > -1); });
-      var html = items.slice(0, 120).map(function (e) { return '<button type="button" class="pick-item" data-n="' + esc(e.name) + '"><div><b>' + esc(e.name) + '</b><span>' + esc(e.cat) + ' · ' + esc(e.m) + '</span></div><span class="plus" aria-hidden="true">+</span></button>'; }).join('');
+      var html = items.slice(0, 120).map(function (e) { return '<button type="button" class="pick-item" data-n="' + esc(e.name) + '"><div><b>' + esc(e.name) + (vidsFor(e.name).length ? ' <span class="pill gold vid-pill">▶ Video</span>' : '') + '</b><span>' + esc(e.cat) + ' · ' + esc(e.m) + '</span></div><span class="plus" aria-hidden="true">+</span></button>'; }).join('');
       if (ql && !EXMAP[q.trim()]) html += '<button type="button" class="pick-item" data-n="' + esc(q.trim()) + '" data-custom="1"><div><b>Add "' + esc(q.trim()) + '"</b><span>Custom exercise</span></div><span class="plus" aria-hidden="true">+</span></button>';
       if (!html) html = '<div class="tk-empty">No exercises found</div>';
       $('pkList').innerHTML = html;
