@@ -137,7 +137,7 @@
       sb.from('body_logs').select('*').eq('user_id', id).order('date', { ascending: true }).limit(1000)
     ]);
     S.programs = q[0].data || []; S.workouts = q[1].data || []; S.body = q[2].data || [];
-    S.draft = lsGet('mm_draft_' + id, null);
+    S.draft = lsGet('mm_draft_' + id, null); S.overview = false;
     S.progEx = null; S.calDay = null;
     if (S.draft && S.tab !== 'clients') S.tab = 'today';
     render();
@@ -202,11 +202,13 @@
 
   // ---------- TODAY ----------
   function renderToday() {
-    if (S.draft) return renderWorkout();
+    if (S.draft && !S.overview) return renderWorkout();
     var v = $('view'), name = (S.target.name || '').split(' ')[0];
     var prog = S.programs.filter(function (p) { return p.active; })[0];
     var lastW = S.workouts[0], lastB = S.body[S.body.length - 1];
-    var h = '<h1 class="tk-h1">' + (viewingOther() ? esc(S.target.name || 'Client') + '\'s <em>training</em>' : 'Hi ' + esc(name || 'there') + ', ready to <em>train?</em>') + '</h1>';
+    var h = '';
+    if (S.draft) h += '<div class="tk-card gold resume"><div class="li"><div class="grow"><b>Workout in progress: ' + esc(S.draft.title || 'Workout') + '</b><span class="tk-small">' + S.draft.exercises.length + ' exercises · started ' + Math.max(0, Math.round((Date.now() - S.draft.started) / 60000)) + ' min ago. Nothing is lost.</span></div><button type="button" class="tk-btn sm" id="resumeW">Resume</button></div></div>';
+    h += '<h1 class="tk-h1">' + (viewingOther() ? esc(S.target.name || 'Client') + '\'s <em>training</em>' : 'Hi ' + esc(name || 'there') + ', ready to <em>train?</em>') + '</h1>';
     h += '<div class="tk-grid3" style="margin-top:14px"><div class="tk-stat"><b>' + thisWeekCount() + '</b><span>This week</span></div><div class="tk-stat"><b>' + weekStreak() + '</b><span>Week streak</span></div><div class="tk-stat"><b>' + S.workouts.length + '</b><span>Workouts</span></div></div>';
     if (prog && (prog.days || []).length) {
       h += '<div class="tk-card gold"><span class="tk-tag">Your programme</span><h2 class="tk-h2" style="margin:4px 0 6px">' + esc(prog.name) + '</h2>' + (prog.notes ? '<p class="tk-muted">' + esc(prog.notes) + '</p>' : '');
@@ -221,24 +223,27 @@
     if (lastW) h += '<div class="tk-card"><span class="tk-tag">Last workout</span><div class="li"><div class="grow"><b>' + esc(lastW.title || 'Workout') + '</b><span class="tk-small">' + fmtDay(lastW.date) + ' · ' + (lastW.exercises || []).length + ' exercises' + (lastW.duration_min ? ' · ' + lastW.duration_min + ' min' : '') + '</span></div></div></div>';
     h += '<div class="tk-card"><span class="tk-tag">Body weight</span><div class="li"><div class="grow"><b>' + (lastB && lastB.weight ? lastB.weight + ' kg' : 'Not logged yet') + '</b><span class="tk-small">' + (lastB ? 'Last logged ' + daysAgo(lastB.date) : 'Track your weight weekly for the clearest trend') + '</span></div><button type="button" class="tk-btn sm plain" id="goBody">Log</button></div></div>';
     v.innerHTML = h;
-    v.querySelectorAll('[data-startday]').forEach(function (b) { b.onclick = function () { startDraft(prog, +b.dataset.startday); }; });
-    $('startEmpty').onclick = function () { startDraft(null); };
+    v.querySelectorAll('[data-startday]').forEach(function (b) { b.onclick = function () { if (S.draft && !confirmBox('You have a workout in progress (' + (S.draft.title || 'Workout') + '). Discard it and start ' + (prog.days[+b.dataset.startday].name || 'this day') + '?')) return; startDraft(prog, +b.dataset.startday); }; });
+    $('startEmpty').onclick = function () { if (S.draft && !confirmBox('You have a workout in progress. Discard it and start an empty one?')) return; startDraft(null); };
+    if ($('resumeW')) $('resumeW').onclick = function () { S.overview = false; render(); window.scrollTo(0, 0); };
     $('goBody').onclick = function () { S.tab = 'body'; render(); };
   }
 
   function startDraft(prog, dayIdx) {
     var d = { started: Date.now(), date: today(), title: 'Workout', programId: null, exercises: [], notes: '' };
     if (prog) {
-      var day = prog.days[dayIdx]; d.title = day.name || prog.name; d.programId = prog.id;
+      var day = prog.days[dayIdx]; d.title = day.name || prog.name; d.programId = prog.id; d.dayIdx = dayIdx;
       (day.exercises || []).forEach(function (pe) { d.exercises.push(newDraftEx(pe.name, pe)); });
     }
-    S.draft = d; saveDraft(); ev('tracker_workout_start', { from_programme: !!prog }); render(); window.scrollTo(0, 0);
+    S.draft = d; S.overview = false; S.tab = 'today'; saveDraft(); ev('tracker_workout_start', { from_programme: !!prog }); render(); window.scrollTo(0, 0);
   }
   function newDraftEx(name, target) {
     var info = EXMAP[name] || { cat: 'Custom', type: 'w', how: '' };
     var n = target && parseInt(target.sets, 10) > 0 ? parseInt(target.sets, 10) : 3;
     var sets = []; for (var i = 0; i < n; i++) sets.push({ w: '', r: '', done: false });
-    return { name: name, cat: info.cat, type: info.type, mode: info.type === 'b' ? modeFromHistory(name) : undefined, target: target ? { sets: target.sets, reps: target.reps, rest: target.rest, notes: target.notes } : null, sets: sets };
+    var o = { name: name, cat: info.cat, type: info.type, mode: info.type === 'b' ? modeFromHistory(name) : undefined, target: target ? { sets: target.sets, reps: target.reps, rest: target.rest, notes: target.notes } : null, sets: sets };
+    if (info.type === 'b' && target && target.mode) o.mode = target.mode;
+    return o;
   }
   function saveDraft() { lsSet('mm_draft_' + S.target.id, S.draft); }
 
@@ -269,7 +274,8 @@
   function renderWorkout() {
     var d = S.draft, v = $('view');
     var mins = Math.max(0, Math.round((Date.now() - d.started) / 60000));
-    var h = '<div class="tk-row"><div class="grow" style="flex:1"><label class="sr" for="wTitle">Workout name</label><input class="tk-input" id="wTitle" value="' + esc(d.title) + '" style="font-weight:700;font-size:1.1rem"></div></div>';
+    var h = '<button type="button" class="tk-btn sm plain" id="allDays" style="margin-bottom:10px">← All workouts</button>';
+    h += '<div class="tk-row"><div class="grow" style="flex:1"><label class="sr" for="wTitle">Workout name</label><input class="tk-input" id="wTitle" value="' + esc(d.title) + '" style="font-weight:700;font-size:1.1rem"></div></div>';
     h += '<div class="tk-row tk-small" style="margin-top:6px"><span>' + fmtDay(d.date) + '</span><span>· ' + mins + ' min</span>' + (viewingOther() ? '<span class="pill gold">Logging for ' + esc(S.target.name || 'client') + '</span>' : '') + '</div>';
     d.exercises.forEach(function (ex, xi) {
       var info = EXMAP[ex.name] || {}, last = lastPerformance(ex.name), mode = ex.type === 'b' ? modeOf(ex) : null, f = fieldsFor(ex.type, mode);
@@ -296,6 +302,8 @@
     });
     h += '<button type="button" class="tk-btn ghost block" id="addEx" style="margin-top:14px">+ Add exercise</button>';
     h += '<div class="tk-field"><label for="wNotes">Notes (how it felt, energy, anything for your coach)</label><textarea class="tk-textarea" id="wNotes">' + esc(d.notes) + '</textarea></div>';
+    var srcProg = d.programId && S.programs.filter(function (x) { return x.id === d.programId; })[0];
+    if (srcProg && d.dayIdx != null && srcProg.days[d.dayIdx] && canEditProgram(srcProg)) h += '<button type="button" class="tk-btn ghost block" id="saveToProg" style="margin-top:16px">Save these exercises & order to the programme</button><p class="tk-small" style="margin-top:6px">Updates ' + esc(srcProg.days[d.dayIdx].name || 'this day') + ' in ' + esc(srcProg.name) + ' so next time starts the same way. Weights you logged are not affected.</p>';
     h += '<div class="tk-grid2" style="margin-top:16px"><button type="button" class="tk-btn danger" id="discard">Discard</button><button type="button" class="tk-btn" id="finish">Finish workout</button></div>';
     v.innerHTML = h;
     $('wTitle').oninput = function () { d.title = this.value; saveDraft(); };
@@ -316,6 +324,23 @@
     v.querySelectorAll('[data-addset]').forEach(function (b) { b.onclick = function () { var ex = d.exercises[+b.dataset.addset], l = ex.sets[ex.sets.length - 1] || {}; ex.sets.push({ w: l.w || '', r: '', done: false }); saveDraft(); render(); }; });
     v.querySelectorAll('[data-rmset]').forEach(function (b) { b.onclick = function () { d.exercises[+b.dataset.rmset].sets.pop(); saveDraft(); render(); }; });
     $('addEx').onclick = function () { openPicker(function (name) { d.exercises.push(newDraftEx(name, null)); saveDraft(); render(); setTimeout(function () { var all = document.querySelectorAll('.ex'); if (all.length) all[all.length - 1].scrollIntoView({ block: 'center' }); }, 30); }); };
+    $('allDays').onclick = function () { S.overview = true; render(); window.scrollTo(0, 0); };
+    if ($('saveToProg')) $('saveToProg').onclick = async function () {
+      var btn = this, pr = S.programs.filter(function (x) { return x.id === d.programId; })[0]; if (!pr) return;
+      var days = JSON.parse(JSON.stringify(pr.days)), old = days[d.dayIdx].exercises || [];
+      days[d.dayIdx].exercises = d.exercises.map(function (ex) {
+        var prev = old.filter(function (o) { return o.name === ex.name; })[0] || {};
+        var t = ex.target || prev, o = { name: ex.name, sets: ex.sets.length || parseInt(t.sets, 10) || 1, reps: String(t.reps || (ex.type === 't' ? '30-45s' : ex.type === 'c' ? '20 min' : '8-12')), rest: parseInt(t.rest, 10) || null, notes: t.notes || '' };
+        if (ex.type === 'b') o.mode = modeOf(ex);
+        return o;
+      });
+      btn.disabled = true;
+      var r = await sb.from('programs').update({ days: days, updated_at: new Date().toISOString() }).eq('id', pr.id).select().single();
+      btn.disabled = false;
+      if (r.error) return toast('Could not save: ' + r.error.message);
+      S.programs = S.programs.map(function (x) { return x.id === pr.id ? r.data : x; });
+      toast('Programme updated'); ev('tracker_programme_saved_from_workout');
+    };
     $('discard').onclick = function () { if (confirmBox('Discard this workout? Nothing will be saved.')) { S.draft = null; saveDraft(); stopRest(); render(); } };
     $('finish').onclick = finishWorkout;
   }
@@ -508,7 +533,7 @@
     }
     async function saveProg() {
       if (!P.name.trim()) { toast('Give the programme a name'); $('bName').focus(); return; }
-      var days = P.days.map(function (d) { return { name: d.name || 'Day', exercises: d.exercises.map(function (e) { return { name: e.name, sets: parseInt(e.sets, 10) || 1, reps: String(e.reps || ''), rest: parseInt(e.rest, 10) || null, notes: e.notes || '' }; }) }; });
+      var days = P.days.map(function (d) { return { name: d.name || 'Day', exercises: d.exercises.map(function (e) { return { name: e.name, sets: parseInt(e.sets, 10) || 1, reps: String(e.reps || ''), rest: parseInt(e.rest, 10) || null, notes: e.notes || '', mode: e.mode || undefined }; }) }; });
       var row = { name: P.name.trim(), notes: P.notes || null, days: days, active: !!P.active, updated_at: new Date().toISOString() };
       var r;
       if (prog) r = await sb.from('programs').update(row).eq('id', prog.id).select().single();
