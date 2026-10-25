@@ -176,3 +176,37 @@ create table if not exists public.program_templates (
 alter table public.program_templates enable row level security;
 drop policy if exists "templates coach only" on public.program_templates;
 create policy "templates coach only" on public.program_templates for all using (public.is_coach()) with check (public.is_coach());
+
+-- ---------- v6: coach notifications (client started / finished a workout) + phone push subscriptions ----------
+create table if not exists public.coach_notifications (
+  id uuid primary key default gen_random_uuid(),
+  client_id uuid references public.profiles(id) on delete cascade,
+  kind text not null,
+  title text not null,
+  body text,
+  created_at timestamptz not null default now(),
+  read_at timestamptz
+);
+create index if not exists coach_notifications_created_idx on public.coach_notifications(created_at desc);
+alter table public.coach_notifications enable row level security;
+drop policy if exists "notif coach read" on public.coach_notifications;
+create policy "notif coach read" on public.coach_notifications for select using (public.is_coach());
+drop policy if exists "notif coach update" on public.coach_notifications;
+create policy "notif coach update" on public.coach_notifications for update using (public.is_coach()) with check (public.is_coach());
+-- inserts only via the notify-coach edge function (secret key)
+
+create table if not exists public.push_subscriptions (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references public.profiles(id) on delete cascade,
+  endpoint text not null unique,
+  p256dh text not null,
+  auth text not null,
+  created_at timestamptz not null default now()
+);
+alter table public.push_subscriptions enable row level security;
+drop policy if exists "push own" on public.push_subscriptions;
+create policy "push own" on public.push_subscriptions for all using (user_id = auth.uid()) with check (user_id = auth.uid());
+-- alter publication supabase_realtime add table public.coach_notifications;
+-- private VAPID key pair for phone push, created by the notify-coach function on first use (no policies = not readable from the app)
+create table if not exists public.push_config (id int primary key, public_key text not null, private_key text not null);
+alter table public.push_config enable row level security;
