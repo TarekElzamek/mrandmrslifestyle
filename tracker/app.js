@@ -137,7 +137,9 @@
       sb.from('body_logs').select('*').eq('user_id', id).order('date', { ascending: true }).limit(1000)
     ]);
     S.programs = q[0].data || []; S.workouts = q[1].data || []; S.body = q[2].data || [];
-    S.draft = lsGet('mm_draft_' + id, null); S.overview = false;
+    S.draft = lsGet('mm_draft_' + id, null); S.overview = false; LIVE.lastRev = (S.draft && S.draft.rev) || 0;
+    try { var lv = await sb.from('live_workouts').select('*').eq('user_id', id).maybeSingle(); if (lv && lv.data && (+lv.data.rev || 0) > LIVE.lastRev) { LIVE.lastRev = +lv.data.rev; S.draft = lv.data.data || null; lsSet('mm_draft_' + id, S.draft); } else if (S.draft) pushLive(); } catch (e) {}
+    startLive();
     S.progEx = null; S.calDay = null;
     if (S.draft && S.tab !== 'clients') S.tab = 'today';
     render();
@@ -245,7 +247,59 @@
     if (info.type === 'b' && target && target.mode) o.mode = target.mode;
     return o;
   }
-  function saveDraft() { lsSet('mm_draft_' + S.target.id, S.draft); }
+  // ---------- live shared workout (coach + client see the same open workout) ----------
+  var LIVE = { timer: null, chan: null, poll: null, lastRev: 0, uid: null };
+  function saveDraft() {
+    if (S.draft) S.draft.rev = Date.now();
+    LIVE.lastRev = S.draft ? S.draft.rev : Date.now();
+    lsSet('mm_draft_' + S.target.id, S.draft);
+    pushLive();
+  }
+  function pushLive() {
+    clearTimeout(LIVE.timer);
+    var uid = S.target.id, data = S.draft ? JSON.parse(JSON.stringify(S.draft)) : null, rev = LIVE.lastRev;
+    LIVE.timer = setTimeout(function () {
+      try { sb.from('live_workouts').upsert({ user_id: uid, data: data, rev: rev, updated_by: S.me.id, updated_at: new Date().toISOString() }).then(function () {}, function () {}); } catch (e) {}
+    }, data ? 400 : 0);
+  }
+  function captureFocus() {
+    var a = document.activeElement; if (!a || !a.dataset) return null;
+    return { x: a.dataset.x, s: a.dataset.s, f: a.dataset.f, id: a.id, pos: a.selectionStart };
+  }
+  function restoreFocus(fc) {
+    if (!fc) return;
+    var el = fc.id ? $(fc.id) : document.querySelector('input[data-x="' + fc.x + '"][data-s="' + fc.s + '"][data-f="' + fc.f + '"]');
+    if (el) { el.focus(); try { if (fc.pos != null) el.setSelectionRange(fc.pos, fc.pos); } catch (e) {} }
+  }
+  async function applyLive(row) {
+    if (!row || row.user_id !== S.target.id) return;
+    var rev = +row.rev || 0;
+    if (rev <= LIVE.lastRev) return;
+    if (LIVE.timer && row.updated_by !== S.me.id) { /* our own newer edit is about to be sent */ }
+    var had = !!S.draft;
+    LIVE.lastRev = rev;
+    S.draft = row.data || null;
+    lsSet('mm_draft_' + S.target.id, S.draft);
+    if (had && !S.draft) {
+      var w = await sb.from('workouts').select('*').eq('user_id', S.target.id).order('date', { ascending: false }).order('created_at', { ascending: false }).limit(1000);
+      if (w.data) S.workouts = w.data;
+      stopRest(); S.overview = false;
+      toast(row.updated_by === S.me.id ? 'Workout closed' : 'The workout was finished on another device');
+    }
+    if (S.tab === 'today' || (had && !S.draft)) { var fc = captureFocus(); render(); restoreFocus(fc); }
+  }
+  function startLive() {
+    stopLive(); LIVE.uid = S.target.id;
+    try {
+      if (sb.channel) LIVE.chan = sb.channel('live-' + LIVE.uid).on('postgres_changes', { event: '*', schema: 'public', table: 'live_workouts', filter: 'user_id=eq.' + LIVE.uid }, function (p) { applyLive(p.new); }).subscribe();
+    } catch (e) {}
+    LIVE.poll = setInterval(function () { if (document.hidden) return; fetchLive(); }, 8000);
+  }
+  document.addEventListener('visibilitychange', function () { if (!document.hidden && LIVE.uid) fetchLive(); });
+  function stopLive() { try { if (LIVE.chan) sb.removeChannel(LIVE.chan); } catch (e) {} LIVE.chan = null; clearInterval(LIVE.poll); LIVE.poll = null; }
+  async function fetchLive() {
+    try { var r = await sb.from('live_workouts').select('*').eq('user_id', S.target.id).maybeSingle(); if (r && r.data) await applyLive(r.data); } catch (e) {}
+  }
 
   var MODES = [['bw', 'Bodyweight'], ['add', 'Added weight (+kg)'], ['assist', 'Assisted (machine or band)']];
   function modeOf(ex) {

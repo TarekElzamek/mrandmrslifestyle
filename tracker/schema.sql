@@ -147,3 +147,18 @@ create policy "photos delete" on storage.objects for delete
 -- ---------- v3: only coaches create or edit programmes ----------
 drop policy if exists "programs write" on public.programs;
 create policy "programs write" on public.programs for all using (public.is_coach()) with check (public.is_coach());
+
+-- ---------- v4: live shared open workout (coach and client see the same sets as they type) ----------
+create table if not exists public.live_workouts (
+  user_id uuid primary key references public.profiles(id) on delete cascade,
+  data jsonb,
+  rev bigint not null default 0,
+  updated_by uuid references public.profiles(id),
+  updated_at timestamptz not null default now()
+);
+alter table public.live_workouts enable row level security;
+drop policy if exists "live read" on public.live_workouts;
+create policy "live read" on public.live_workouts for select using (user_id = auth.uid() or public.is_coach());
+drop policy if exists "live write" on public.live_workouts;
+create policy "live write" on public.live_workouts for all using (user_id = auth.uid() or public.is_coach()) with check (user_id = auth.uid() or public.is_coach());
+-- alter publication supabase_realtime add table public.live_workouts;
