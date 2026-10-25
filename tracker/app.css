@@ -182,3 +182,7 @@ details.wk .wk-body b{color:var(--text);font-weight:600}
 @media(max-width:760px){.feat{grid-template-columns:1fr}}
 @media(max-width:420px){.tk-stat{padding:10px}.tk-stat b{font-size:1.35rem}.tk-stat span{font-size:.68rem}}
 .chart-box{position:relative;height:220px;margin-top:8px}
+
+.bex-top{display:flex;align-items:center;gap:6px;justify-content:space-between}
+.bex-mv{display:inline-flex;gap:4px;flex-shrink:0}
+.tk-icon-btn.sm{min-width:32px;min-height:32px;border-radius:8px}

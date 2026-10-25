@@ -85,6 +85,8 @@
     x: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>',
     check: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>',
     info: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 7.5v.5"/></svg>',
+    up: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6-6 6 6"/></svg>',
+    down: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>',
     trash: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg>'
   };
 
@@ -255,6 +257,8 @@
       var info = EXMAP[ex.name] || {}, last = lastPerformance(ex.name), f = fieldsFor(ex.type);
       h += '<section class="ex" aria-label="' + esc(ex.name) + '"><div class="ex-head"><div><h3>' + esc(ex.name) + '</h3><div class="tk-small">' + esc(info.m || ex.cat || '') + (last ? ' · last ' + daysAgo(last.date) : '') + '</div></div><div class="ex-act">' +
         (info.how || vidsFor(ex.name).length ? '<button type="button" class="tk-icon-btn' + (vidsFor(ex.name).length ? ' has-vid' : '') + '" data-how="' + xi + '" aria-label="' + (vidsFor(ex.name).length ? 'Watch demo of ' : 'How to do ') + esc(ex.name) + '">' + (vidsFor(ex.name).length ? ICON_PLAY : ICON.info) + '</button>' : '') +
+        (xi > 0 ? '<button type="button" class="tk-icon-btn" data-mvex="' + xi + ':-1" aria-label="Move ' + esc(ex.name) + ' up">' + ICON.up + '</button>' : '') +
+        (xi < d.exercises.length - 1 ? '<button type="button" class="tk-icon-btn" data-mvex="' + xi + ':1" aria-label="Move ' + esc(ex.name) + ' down">' + ICON.down + '</button>' : '') +
         '<button type="button" class="tk-icon-btn" data-rmex="' + xi + '" aria-label="Remove ' + esc(ex.name) + '">' + ICON.trash + '</button></div></div>';
       h += '<div class="ex-how" id="how' + xi + '" hidden>' + videoBox(ex.name, xi + '|' + ex.name) + (info.how ? '<p>' + esc(info.how) + '</p>' : '') + '</div>';
       if (ex.target) h += '<div class="ex-target">Target: ' + esc(ex.target.sets || '') + ' × ' + esc(ex.target.reps || '') + (ex.target.rest ? ' · rest ' + esc(ex.target.rest) + 's' : '') + (ex.target.notes ? ' · ' + esc(ex.target.notes) : '') + '</div>';
@@ -283,6 +287,11 @@
     v.querySelectorAll('[data-done]').forEach(function (b) { b.onclick = function () { var p = b.dataset.done.split(','); toggleSet(+p[0], +p[1]); }; });
     v.querySelectorAll('[data-how]').forEach(function (b) { b.onclick = function () { openHow($('how' + b.dataset.how)); }; });
     wireVideos(v);
+    v.querySelectorAll('[data-mvex]').forEach(function (b) { b.onclick = function () {
+      var p = b.dataset.mvex.split(':'), i = +p[0], j = i + (+p[1]); if (j < 0 || j >= d.exercises.length) return;
+      var t = d.exercises[i]; d.exercises[i] = d.exercises[j]; d.exercises[j] = t; saveDraft(); render();
+      setTimeout(function () { var el = document.querySelectorAll('.ex')[j]; if (el) el.scrollIntoView({ block: 'center' }); var fb = document.querySelector('[data-mvex^="' + j + ':' + p[1] + '"]') || document.querySelector('[data-mvex^="' + j + ':"]'); if (fb) fb.focus(); }, 30);
+    }; });
     v.querySelectorAll('[data-rmex]').forEach(function (b) { b.onclick = function () { if (confirmBox('Remove ' + d.exercises[+b.dataset.rmex].name + ' from this workout?')) { d.exercises.splice(+b.dataset.rmex, 1); saveDraft(); render(); } }; });
     v.querySelectorAll('[data-addset]').forEach(function (b) { b.onclick = function () { var ex = d.exercises[+b.dataset.addset], l = ex.sets[ex.sets.length - 1] || {}; ex.sets.push({ w: l.w || '', r: '', done: false }); saveDraft(); render(); }; });
     v.querySelectorAll('[data-rmset]').forEach(function (b) { b.onclick = function () { d.exercises[+b.dataset.rmset].sets.pop(); saveDraft(); render(); }; });
@@ -440,7 +449,7 @@
         h += '<div class="bday"><div class="tk-row"><label class="sr" for="dn' + di + '">Day name</label><input class="tk-input" id="dn' + di + '" data-dn="' + di + '" value="' + esc(d.name) + '" style="flex:1;font-weight:700"><button type="button" class="tk-icon-btn" data-rmday="' + di + '" aria-label="Remove day">' + ICON.trash + '</button></div>';
         if (d.exercises.length) h += '<div class="bex-h"><span>Exercise</span><span>Sets</span><span>Reps</span><span>Rest s</span><span></span></div>';
         d.exercises.forEach(function (e, ei) {
-          h += '<div class="bex"><div class="nm">' + esc(e.name) + '<input class="tk-input" style="margin-top:4px;text-align:left;font-size:.8rem;min-height:34px" aria-label="Notes for ' + esc(e.name) + '" placeholder="Notes (optional)" data-f="notes" data-d="' + di + '" data-e="' + ei + '" value="' + esc(e.notes || '') + '"></div>' +
+          h += '<div class="bex"><div class="nm"><div class="bex-top"><span>' + esc(e.name) + '</span><span class="bex-mv">' + (ei > 0 ? '<button type="button" class="tk-icon-btn sm" data-mvx="' + di + ':' + ei + ':-1" aria-label="Move ' + esc(e.name) + ' up">' + ICON.up + '</button>' : '') + (ei < d.exercises.length - 1 ? '<button type="button" class="tk-icon-btn sm" data-mvx="' + di + ':' + ei + ':1" aria-label="Move ' + esc(e.name) + ' down">' + ICON.down + '</button>' : '') + '</span></div><input class="tk-input" style="margin-top:4px;text-align:left;font-size:.8rem;min-height:34px" aria-label="Notes for ' + esc(e.name) + '" placeholder="Notes (optional)" data-f="notes" data-d="' + di + '" data-e="' + ei + '" value="' + esc(e.notes || '') + '"></div>' +
             '<input class="tk-input" inputmode="numeric" aria-label="Sets" data-f="sets" data-d="' + di + '" data-e="' + ei + '" value="' + esc(e.sets) + '">' +
             '<input class="tk-input" aria-label="Reps" data-f="reps" data-d="' + di + '" data-e="' + ei + '" value="' + esc(e.reps) + '">' +
             '<input class="tk-input" inputmode="numeric" aria-label="Rest seconds" data-f="rest" data-d="' + di + '" data-e="' + ei + '" value="' + esc(e.rest) + '">' +
@@ -457,6 +466,7 @@
       m.querySelectorAll('[data-dn]').forEach(function (i) { i.oninput = function () { P.days[+i.dataset.dn].name = i.value; }; });
       m.querySelectorAll('input[data-f]').forEach(function (i) { i.oninput = function () { P.days[+i.dataset.d].exercises[+i.dataset.e][i.dataset.f] = i.value; }; });
       m.querySelectorAll('[data-rmday]').forEach(function (b) { b.onclick = function () { if (P.days.length > 1 || confirmBox('Remove the only day?')) { P.days.splice(+b.dataset.rmday, 1); if (!P.days.length) P.days.push({ name: 'Day 1', exercises: [] }); draw(); } }; });
+      m.querySelectorAll('[data-mvx]').forEach(function (b) { b.onclick = function () { var p = b.dataset.mvx.split(':'), ex = P.days[+p[0]].exercises, i = +p[1], j = i + (+p[2]); if (j < 0 || j >= ex.length) return; var t = ex[i]; ex[i] = ex[j]; ex[j] = t; draw(); }; });
       m.querySelectorAll('[data-rmx]').forEach(function (b) { b.onclick = function () { var p = b.dataset.rmx.split(':'); P.days[+p[0]].exercises.splice(+p[1], 1); draw(); }; });
       m.querySelectorAll('[data-addx]').forEach(function (b) {
         b.onclick = function () {
