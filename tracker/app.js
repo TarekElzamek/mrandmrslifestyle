@@ -75,6 +75,7 @@
   }
 
   var ICON = {
+    bell: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 8 3 8H3s3-1 3-8"/><path d="M10.3 20a1.9 1.9 0 0 0 3.4 0"/></svg>',
     today: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M6.5 6.5v11M17.5 6.5v11M3.5 9v6M20.5 9v6M6.5 12h11"/></svg>',
     plan: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>',
     body: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8 10a4 4 0 0 1 8 0M12 10l2-2"/></svg>',
@@ -119,6 +120,8 @@
     if (!me) { $('view').innerHTML = '<div class="tk-empty">We couldn\'t load your profile. Please refresh the page.</div>'; return; }
     S.me = me;
     var saved = lsGet('mm_target', null);
+    var qp = new URLSearchParams(location.search), qc = qp.get('client');
+    if (qc) { qp.delete('client'); history.replaceState(null, '', location.pathname + (qp.toString() ? '?' + qp : '') + location.hash); if (me.role === 'coach') saved = qc; }
     S.target = me;
     if (isCoach() && saved && saved !== me.id) {
       var t = await sb.from('profiles').select('*').eq('id', saved).maybeSingle();
@@ -126,6 +129,7 @@
     }
     S.tab = isCoach() && !viewingOther() ? 'clients' : 'today';
     ev('tracker_open', { role: me.role });
+    if (isCoach()) startNotifs();
     await loadTarget();
   }
 
@@ -238,6 +242,7 @@
       (day.exercises || []).forEach(function (pe) { d.exercises.push(newDraftEx(pe.name, pe)); });
     }
     S.draft = d; S.overview = false; S.tab = 'today'; saveDraft(); ev('tracker_workout_start', { from_programme: !!prog }); render(); window.scrollTo(0, 0);
+    notifyCoach('started', d.title, d.exercises.length ? d.exercises.length + (d.exercises.length === 1 ? ' exercise' : ' exercises') : '');
   }
   function newDraftEx(name, target) {
     var info = EXMAP[name] || { cat: 'Custom', type: 'w', how: '' };
@@ -464,6 +469,8 @@
     if (r.error) { $('finish').disabled = false; toast('Could not save: ' + r.error.message); return; }
     stopRest(); S.draft = null; saveDraft(); S.workouts.unshift(r.data);
     ev('tracker_workout_saved', { exercises: exs.length, prs: prs, coach_logged: viewingOther() });
+    var nSets = 0; exs.forEach(function (e) { nSets += e.sets.length; });
+    notifyCoach('finished', row.title, exs.length + (exs.length === 1 ? ' exercise · ' : ' exercises · ') + nSets + (nSets === 1 ? ' set · ' : ' sets · ') + row.duration_min + ' min' + (prs ? ' · ' + prs + ' new PR' + (prs > 1 ? 's' : '') : ''));
     summaryModal(r.data, prs);
     render();
   }
@@ -514,6 +521,108 @@
     $('pkQ').oninput = function () { q = this.value; list(); };
     m.querySelectorAll('.chips button').forEach(function (b) { b.onclick = function () { m.querySelectorAll('.chips button').forEach(function (x) { x.setAttribute('aria-pressed', 'false'); }); b.setAttribute('aria-pressed', 'true'); cat = b.dataset.c; list(); }; });
     list(); $('pkQ').focus();
+  }
+
+  // ---------- COACH NOTIFICATIONS (client started / finished a workout) ----------
+  var N = { list: [], chan: null, swReg: null };
+  function notifyCoach(kind, workout, detail) {
+    if (!S.me || isCoach() || viewingOther()) return;
+    try { sb.functions.invoke('notify-coach', { body: { kind: kind, workout: workout || 'Workout', detail: detail || '' } }).catch(function () {}); } catch (e) {}
+  }
+  function timeAgo(t) {
+    var m = Math.round((Date.now() - new Date(t).getTime()) / 60000);
+    if (m < 1) return 'just now'; if (m < 60) return m + ' min ago';
+    var h = Math.round(m / 60); if (h < 24) return h + ' h ago';
+    return new Date(t).toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' }) + ' ' + new Date(t).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+  }
+  function drawBell() {
+    var b = $('bell'); if (!b) return;
+    var n = N.list.filter(function (x) { return !x.read_at; }).length;
+    b.hidden = !isCoach();
+    b.innerHTML = ICON.bell + (n ? '<span class="tk-badge">' + (n > 9 ? '9+' : n) + '</span>' : '');
+    b.setAttribute('aria-label', n ? 'Notifications, ' + n + ' new' : 'Notifications');
+  }
+  async function startNotifs() {
+    var r = await sb.from('coach_notifications').select('*').order('created_at', { ascending: false }).limit(40);
+    N.list = r.data || []; drawBell();
+    $('bell').onclick = openNotifs;
+    if (N.chan) return;
+    try {
+      N.chan = sb.channel('coach-notifs').on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'coach_notifications' }, function (p) {
+        var row = p.new; if (!row || N.list.some(function (x) { return x.id === row.id; })) return;
+        N.list.unshift(row); drawBell(); toast(row.title + (row.body ? ' · ' + row.body : ''));
+      }).subscribe();
+    } catch (e) {}
+    if ('serviceWorker' in navigator) navigator.serviceWorker.register('/tracker-sw.js').then(function (reg) { N.swReg = reg; }).catch(function () {});
+  }
+  function pushSupported() { return 'serviceWorker' in navigator && 'PushManager' in window && 'Notification' in window; }
+  function isIOS() { return /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1); }
+  function isStandalone() { return window.matchMedia('(display-mode: standalone)').matches || navigator.standalone === true; }
+  async function currentSub() {
+    if (!pushSupported()) return null;
+    var reg = N.swReg || await navigator.serviceWorker.getRegistration('/'); if (!reg) return null;
+    return reg.pushManager.getSubscription();
+  }
+  function keyBytes(b64) { var s = b64.replace(/-/g, '+').replace(/_/g, '/'); while (s.length % 4) s += '='; var bin = atob(s), out = new Uint8Array(bin.length); for (var i = 0; i < bin.length; i++) out[i] = bin.charCodeAt(i); return out; }
+  async function enablePush() {
+    if (Notification.permission === 'denied') { toast('Notifications are blocked for this site. Allow them in your browser or phone settings, then try again.'); return false; }
+    var perm = await Notification.requestPermission();
+    if (perm !== 'granted') { toast('Notifications were not allowed'); return false; }
+    var reg = N.swReg || await navigator.serviceWorker.register('/tracker-sw.js'); N.swReg = reg;
+    await navigator.serviceWorker.ready;
+    var cfg = await sb.functions.invoke('notify-coach', { body: { kind: 'config' } });
+    if (cfg.error || !cfg.data || !cfg.data.publicKey) { toast('Could not set up notifications. Please try again.'); return false; }
+    var sub = await reg.pushManager.getSubscription();
+    if (!sub) sub = await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: keyBytes(cfg.data.publicKey) });
+    var j = sub.toJSON();
+    var r = await sb.from('push_subscriptions').upsert({ user_id: S.me.id, endpoint: j.endpoint, p256dh: j.keys.p256dh, auth: j.keys.auth }, { onConflict: 'endpoint' });
+    if (r.error) { toast('Could not save: ' + r.error.message); return false; }
+    ev('tracker_push_enabled'); return true;
+  }
+  async function disablePush() {
+    var sub = await currentSub(); if (!sub) return;
+    await sb.from('push_subscriptions').delete().eq('endpoint', sub.endpoint);
+    await sub.unsubscribe().catch(function () {});
+  }
+  async function openNotifs() {
+    var m = modal('Notifications', '<div id="pushBox"></div><div id="nList"></div>');
+    async function drawPush() {
+      var box = $('pushBox'); if (!box) return;
+      var h = '';
+      if (!pushSupported()) {
+        h = isIOS() && !isStandalone()
+          ? '<div class="tk-card"><b>Get alerts on your iPhone</b><p class="tk-muted" style="margin:6px 0 0">Open this page in Safari, tap <b>Share</b> → <b>Add to Home Screen</b>, then open the tracker from your home screen and come back here to turn notifications on.</p></div>'
+          : '<div class="tk-card"><p class="tk-muted" style="margin:0">This browser can\'t show phone notifications. You\'ll still see them here.</p></div>';
+      } else {
+        var sub = await currentSub();
+        if (sub && Notification.permission === 'granted') h = '<div class="tk-card"><div class="tk-row"><div style="flex:1"><b>Phone notifications are on</b><p class="tk-small" style="margin:2px 0 0">On this device. You\'ll get an alert when a client starts or finishes a workout.</p></div></div><div class="tk-grid2" style="margin-top:10px"><button type="button" class="tk-btn plain sm" id="pushOff">Turn off</button><button type="button" class="tk-btn ghost sm" id="pushTest">Send a test</button></div></div>';
+        else h = '<div class="tk-card gold"><b>Get an alert on this phone</b><p class="tk-muted" style="margin:6px 0 10px">Be notified when a client starts or finishes a workout, even when the tracker is closed.</p><button type="button" class="tk-btn block" id="pushOn">Turn on notifications</button></div>';
+      }
+      box.innerHTML = h;
+      if ($('pushOn')) $('pushOn').onclick = async function () { this.disabled = true; var ok = await enablePush().catch(function (e) { toast('Could not turn on: ' + (e && e.message || e)); return false; }); if (ok) { toast('Notifications are on'); sb.functions.invoke('notify-coach', { body: { kind: 'test' } }).catch(function () {}); } drawPush(); };
+      if ($('pushOff')) $('pushOff').onclick = async function () { await disablePush(); toast('Notifications turned off on this device'); drawPush(); };
+      if ($('pushTest')) $('pushTest').onclick = async function () { this.disabled = true; var r = await sb.functions.invoke('notify-coach', { body: { kind: 'test' } }); this.disabled = false; toast(r.error ? 'Could not send the test' : 'Test sent. It should arrive in a few seconds.'); };
+    }
+    function drawList() {
+      var h = '';
+      if (!N.list.length) h = '<div class="tk-empty">No notifications yet. When a client starts or finishes a workout it shows here.</div>';
+      N.list.forEach(function (x) {
+        h += '<button type="button" class="tk-notif' + (x.read_at ? '' : ' new') + '" data-nid="' + x.id + '"><span class="tk-notif-dot" aria-hidden="true"></span><span style="flex:1;text-align:left"><b>' + esc(x.title) + '</b>' + (x.body ? '<span class="tk-small" style="display:block">' + esc(x.body) + '</span>' : '') + '<span class="tk-small" style="display:block;opacity:.8">' + esc(timeAgo(x.created_at)) + '</span></span></button>';
+      });
+      $('nList').innerHTML = h;
+      m.querySelectorAll('[data-nid]').forEach(function (b) { b.onclick = async function () {
+        var x = N.list.filter(function (y) { return y.id === b.dataset.nid; })[0]; if (!x || !x.client_id) return;
+        var r = await sb.from('profiles').select('*').eq('id', x.client_id).maybeSingle(); if (!r.data) return toast('Client not found');
+        m.close(); await openClient(r.data); if (x.kind === 'finished') { S.tab = 'history'; render(); }
+      }; });
+    }
+    drawPush(); drawList();
+    var unread = N.list.filter(function (x) { return !x.read_at; });
+    if (unread.length) {
+      var now = new Date().toISOString();
+      sb.from('coach_notifications').update({ read_at: now }).in('id', unread.map(function (x) { return x.id; })).then(function () {});
+      unread.forEach(function (x) { x.read_at = now; }); drawBell();
+    }
   }
 
   // ---------- PLAN ----------

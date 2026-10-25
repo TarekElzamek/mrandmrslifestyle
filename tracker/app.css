@@ -190,3 +190,12 @@ details.wk .wk-body b{color:var(--text);font-weight:600}
 .ex-mode label{font-size:.8rem;color:var(--muted);flex-shrink:0}
 .ex-mode .tk-select{min-height:38px;padding-top:6px;padding-bottom:6px;font-size:.9rem}
 .bex-mode{margin-top:4px;min-height:34px;font-size:.8rem;padding-top:4px;padding-bottom:4px}
+
+/* coach notifications */
+.tk-bell{position:relative}
+.tk-badge{position:absolute;top:-6px;right:-6px;min-width:20px;height:20px;padding:0 5px;border-radius:10px;background:var(--gold);color:#0a0a0a;font-size:.72rem;font-weight:700;display:flex;align-items:center;justify-content:center;line-height:1}
+.tk-notif{display:flex;gap:12px;align-items:flex-start;width:100%;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-top:8px;color:var(--text);font:inherit;cursor:pointer}
+.tk-notif b{display:block;font-weight:600}
+.tk-notif-dot{width:8px;height:8px;border-radius:50%;margin-top:7px;flex-shrink:0;background:transparent}
+.tk-notif.new{border-color:rgba(201,168,76,.45)}
+.tk-notif.new .tk-notif-dot{background:var(--gold)}
