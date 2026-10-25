@@ -189,3 +189,4 @@ details.wk .wk-body b{color:var(--text);font-weight:600}
 .ex-mode{display:flex;align-items:center;gap:10px;margin:0 14px 8px}
 .ex-mode label{font-size:.8rem;color:var(--muted);flex-shrink:0}
 .ex-mode .tk-select{min-height:38px;padding-top:6px;padding-bottom:6px;font-size:.9rem}
+.bex-mode{margin-top:4px;min-height:34px;font-size:.8rem;padding-top:4px;padding-bottom:4px}

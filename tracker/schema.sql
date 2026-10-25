@@ -143,3 +143,7 @@ create policy "photos insert" on storage.objects for insert
 drop policy if exists "photos delete" on storage.objects;
 create policy "photos delete" on storage.objects for delete
   using (bucket_id = 'progress-photos' and ((storage.foldername(name))[1] = auth.uid()::text or public.is_coach()));
+
+-- ---------- v3: only coaches create or edit programmes ----------
+drop policy if exists "programs write" on public.programs;
+create policy "programs write" on public.programs for all using (public.is_coach()) with check (public.is_coach());
