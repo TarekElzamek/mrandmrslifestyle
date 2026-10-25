@@ -98,7 +98,16 @@
     var r = await sb.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: location.origin + location.pathname } });
     if (r.error) toast('Sign-in failed: ' + r.error.message);
   }
-  async function signOut() { await sb.auth.signOut(); location.reload(); }
+  async function signOut() {
+    var btn = $('sOut'); if (btn) { btn.disabled = true; btn.textContent = 'Signing out…'; }
+    try { stopLive(); } catch (e) {}
+    try { if (N.chan) sb.removeChannel(N.chan); N.chan = null; } catch (e) {}
+    // Sign out on this device only, and never wait forever for the server
+    try { await Promise.race([sb.auth.signOut({ scope: 'local' }), new Promise(function (ok) { setTimeout(ok, 2500); })]); } catch (e) {}
+    try { Object.keys(localStorage).forEach(function (k) { if (/^sb-.+-auth-token/.test(k)) localStorage.removeItem(k); }); } catch (e) {}
+    lsSet('mm_target', null); ev('tracker_sign_out');
+    location.replace(location.pathname);
+  }
 
   async function boot() {
     document.querySelectorAll('[data-google]').forEach(function (b) { b.addEventListener('click', signInGoogle); });
