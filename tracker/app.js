@@ -52,6 +52,8 @@
   function lsSet(k, v) { try { if (v == null) localStorage.removeItem(k); else localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
   function ev(name, p) { try { if (window.gtag) gtag('event', name, p || {}); } catch (e) {} }
   function isCoach() { return S.me && S.me.role === 'coach'; }
+  // A workout started from a coach's programme can only be restructured by the coach; your own workouts are yours to edit.
+  function canEditWorkout(d) { return isCoach() || !(d && d.programId); }
   function viewingOther() { return S.target && S.me && S.target.id !== S.me.id; }
   function weekKey(d) { var x = parseDay(d); var day = (x.getDay() + 6) % 7; x.setDate(x.getDate() - day); return iso(x); }
   function e1rm(w, r) { return w > 0 && r > 0 ? w * (1 + Math.min(r, 15) / 30) : 0; }
@@ -109,12 +111,35 @@
     location.replace(location.pathname);
   }
 
+  // Exercise library pages link here with ?ex=<exercise name>: start (or add to) a workout with it after sign-in.
+  function capturePendingEx() {
+    var qp = new URLSearchParams(location.search), ex = qp.get('ex');
+    if (!ex || !EXMAP[ex]) return;
+    lsSet('mm_pending_ex', ex); qp.delete('ex');
+    history.replaceState(null, '', location.pathname + (qp.toString() ? '?' + qp : '') + location.hash);
+  }
+  function applyPendingEx() {
+    var ex = lsGet('mm_pending_ex', null); if (!ex) return; lsSet('mm_pending_ex', null);
+    if (!EXMAP[ex] || viewingOther()) return;
+    if (!S.draft) { startDraft(null); S.draft.exercises.push(newDraftEx(ex, null)); saveDraft(); render(); toast(ex + ' is ready to log. Add more exercises below.'); }
+    else if (canEditWorkout(S.draft)) { if (!S.draft.exercises.some(function (e) { return e.name === ex; })) S.draft.exercises.push(newDraftEx(ex, null)); S.overview = false; S.tab = 'today'; saveDraft(); render(); toast(ex + ' added to your workout'); }
+    else toast('Finish your current workout first, then add ' + ex);
+    ev('tracker_start_from_library', { exercise: ex });
+  }
+  function pendingBanner() {
+    var ex = lsGet('mm_pending_ex', null), land = $('landing'); if (!ex || !land || $('pendBanner')) return;
+    var b = document.createElement('div'); b.id = 'pendBanner'; b.className = 'tk-card gold'; b.style.margin = '16px auto 0'; b.style.maxWidth = '640px';
+    b.innerHTML = '<b>Sign in free to log ' + esc(ex) + '</b><p class="tk-muted" style="margin-top:4px">Your workout opens with ' + esc(ex) + ' ready, and the tracker remembers your weights for next time.</p>';
+    land.insertBefore(b, land.firstChild);
+  }
+
   async function boot() {
+    capturePendingEx();
     document.querySelectorAll('[data-google]').forEach(function (b) { b.addEventListener('click', signInGoogle); });
     var res = await sb.auth.getSession();
     var session = res.data && res.data.session;
     sb.auth.onAuthStateChange(function (e, s) { if (e === 'SIGNED_OUT') showLanding(); if (e === 'SIGNED_IN' && !S.user && s) start(s.user); });
-    if (session) start(session.user); else showLanding();
+    if (session) start(session.user); else { showLanding(); pendingBanner(); }
   }
 
   async function start(user) {
@@ -140,6 +165,7 @@
     ev('tracker_open', { role: me.role });
     if (isCoach()) startNotifs();
     await loadTarget();
+    applyPendingEx();
   }
 
   async function loadTarget() {
@@ -232,9 +258,9 @@
       });
       h += '</div>';
     } else if (!viewingOther()) {
-      h += '<div class="tk-card"><b>No programme yet</b><p class="tk-muted" style="margin-top:4px">Training with Tarek or Chloe? Your coach will add your programme here.</p></div>';
+      h += '<div class="tk-card"><b>No programme yet</b><p class="tk-muted" style="margin-top:4px">Training on your own? Start a workout below and add any of 200+ exercises. Training with Tarek or Chloe? Your coach will add your programme here.</p></div>';
     }
-    if (isCoach()) h += '<div class="tk-row" style="margin-top:14px"><button type="button" class="tk-btn ghost block" id="startEmpty">Start an empty workout</button></div>';
+    h += '<div class="tk-row" style="margin-top:14px"><button type="button" class="tk-btn ' + (prog && !viewingOther() ? 'ghost ' : '') + 'block" id="startEmpty">' + (isCoach() ? 'Start an empty workout' : 'Start a workout') + '</button></div>';
     if (lastW) h += '<div class="tk-card"><span class="tk-tag">Last workout</span><div class="li"><div class="grow"><b>' + esc(lastW.title || 'Workout') + '</b><span class="tk-small">' + fmtDay(lastW.date) + ' · ' + (lastW.exercises || []).length + ' exercises' + (lastW.duration_min ? ' · ' + lastW.duration_min + ' min' : '') + '</span></div></div></div>';
     h += '<div class="tk-card"><span class="tk-tag">Body weight</span><div class="li"><div class="grow"><b>' + (lastB && lastB.weight ? lastB.weight + ' kg' : 'Not logged yet') + '</b><span class="tk-small">' + (lastB ? 'Last logged ' + daysAgo(lastB.date) : 'Track your weight weekly for the clearest trend') + '</span></div><button type="button" class="tk-btn sm plain" id="goBody">Log</button></div></div>';
     v.innerHTML = h;
@@ -341,7 +367,7 @@
 
   function renderWorkout() {
     var d = S.draft, v = $('view');
-    var mins = Math.max(0, Math.round((Date.now() - d.started) / 60000));
+    var mins = Math.max(0, Math.round((Date.now() - d.started) / 60000)), ed = canEditWorkout(d);
     var h = '<button type="button" class="tk-btn sm plain" id="allDays" style="margin-bottom:10px">← All workouts</button>';
     h += '<div class="tk-row"><div class="grow" style="flex:1"><label class="sr" for="wTitle">Workout name</label><input class="tk-input" id="wTitle" value="' + esc(d.title) + '" style="font-weight:700;font-size:1.1rem"></div></div>';
     h += '<div class="tk-row tk-small" style="margin-top:6px"><span>' + fmtDay(d.date) + '</span><span>· ' + mins + ' min</span>' + (viewingOther() ? '<span class="pill gold">Logging for ' + esc(S.target.name || 'client') + '</span>' : '') + '</div>';
@@ -349,12 +375,12 @@
       var info = EXMAP[ex.name] || {}, last = lastPerformance(ex.name), mode = ex.type === 'b' ? modeOf(ex) : null, f = fieldsFor(ex.type, mode);
       h += '<section class="ex" aria-label="' + esc(ex.name) + '"><div class="ex-head"><div><h3>' + esc(ex.name) + '</h3><div class="tk-small">' + esc(info.m || ex.cat || '') + (last ? ' · last ' + daysAgo(last.date) : '') + '</div></div><div class="ex-act">' +
         (info.how || vidsFor(ex.name).length ? '<button type="button" class="tk-icon-btn' + (vidsFor(ex.name).length ? ' has-vid' : '') + '" data-how="' + xi + '" aria-label="' + (vidsFor(ex.name).length ? 'Watch demo of ' : 'How to do ') + esc(ex.name) + '">' + (vidsFor(ex.name).length ? ICON_PLAY : ICON.info) + '</button>' : '') +
-        (isCoach() && xi > 0 ? '<button type="button" class="tk-icon-btn" data-mvex="' + xi + ':-1" aria-label="Move ' + esc(ex.name) + ' up">' + ICON.up + '</button>' : '') +
-        (isCoach() && xi < d.exercises.length - 1 ? '<button type="button" class="tk-icon-btn" data-mvex="' + xi + ':1" aria-label="Move ' + esc(ex.name) + ' down">' + ICON.down + '</button>' : '') +
-        (isCoach() ? '<button type="button" class="tk-icon-btn" data-rmex="' + xi + '" aria-label="Remove ' + esc(ex.name) + '">' + ICON.trash + '</button>' : '') + '</div></div>';
+        (ed && xi > 0 ? '<button type="button" class="tk-icon-btn" data-mvex="' + xi + ':-1" aria-label="Move ' + esc(ex.name) + ' up">' + ICON.up + '</button>' : '') +
+        (ed && xi < d.exercises.length - 1 ? '<button type="button" class="tk-icon-btn" data-mvex="' + xi + ':1" aria-label="Move ' + esc(ex.name) + ' down">' + ICON.down + '</button>' : '') +
+        (ed ? '<button type="button" class="tk-icon-btn" data-rmex="' + xi + '" aria-label="Remove ' + esc(ex.name) + '">' + ICON.trash + '</button>' : '') + '</div></div>';
       h += '<div class="ex-how" id="how' + xi + '" hidden>' + videoBox(ex.name, xi + '|' + ex.name) + (info.how ? '<p>' + esc(info.how) + '</p>' : '') + '</div>';
-      if (ex.type === 'b' && !isCoach()) h += '<div class="ex-mode"><span class="tk-small">Load: <b>' + esc((MODES.filter(function (m) { return m[0] === mode; })[0] || MODES[0])[1]) + '</b> (set by your coach)</span></div>';
-      if (ex.type === 'b' && isCoach()) h += '<div class="ex-mode"><label for="mode' + xi + '">Load</label><select class="tk-select" id="mode' + xi + '" data-mode="' + xi + '">' + MODES.map(function (m) { return '<option value="' + m[0] + '"' + (m[0] === mode ? ' selected' : '') + '>' + m[1] + '</option>'; }).join('') + '</select></div>';
+      if (ex.type === 'b' && !ed) h += '<div class="ex-mode"><span class="tk-small">Load: <b>' + esc((MODES.filter(function (m) { return m[0] === mode; })[0] || MODES[0])[1]) + '</b> (set by your coach)</span></div>';
+      if (ex.type === 'b' && ed) h += '<div class="ex-mode"><label for="mode' + xi + '">Load</label><select class="tk-select" id="mode' + xi + '" data-mode="' + xi + '">' + MODES.map(function (m) { return '<option value="' + m[0] + '"' + (m[0] === mode ? ' selected' : '') + '>' + m[1] + '</option>'; }).join('') + '</select></div>';
       if (ex.target) h += '<div class="ex-target">Target: ' + esc(ex.target.sets || '') + ' × ' + esc(ex.target.reps || '') + (ex.target.rest ? ' · rest ' + esc(ex.target.rest) + 's' : '') + (ex.target.notes ? ' · ' + esc(ex.target.notes) : '') + '</div>';
       h += '<table class="sets"><thead><tr><th scope="col">Set</th><th scope="col">Last</th>' + (f[0] ? '<th scope="col">' + f[0][1] + '</th>' : '') + '<th scope="col">' + f[1][1] + '</th><th scope="col"><span class="sr">Done</span></th></tr></thead><tbody>';
       ex.sets.forEach(function (s, si) {
@@ -369,7 +395,7 @@
       });
       h += '</tbody></table><div class="ex-foot"><button type="button" class="tk-btn sm plain" data-addset="' + xi + '">+ Add set</button>' + (ex.sets.length > 1 ? '<button type="button" class="tk-btn sm plain" data-rmset="' + xi + '">Remove last set</button>' : '') + '</div></section>';
     });
-    if (isCoach()) h += '<button type="button" class="tk-btn ghost block" id="addEx" style="margin-top:14px">+ Add exercise</button>';
+    if (ed) h += '<button type="button" class="tk-btn ghost block" id="addEx" style="margin-top:14px">+ Add exercise</button>';
     h += '<div class="tk-field"><label for="wNotes">Notes (how it felt, energy, anything for your coach)</label><textarea class="tk-textarea" id="wNotes">' + esc(d.notes) + '</textarea></div>';
     var srcProg = d.programId && S.programs.filter(function (x) { return x.id === d.programId; })[0];
     if (srcProg && d.dayIdx != null && srcProg.days[d.dayIdx] && canEditProgram(srcProg)) h += '<button type="button" class="tk-btn ghost block" id="saveToProg" style="margin-top:16px">Save these exercises & order to the programme</button><p class="tk-small" style="margin-top:6px">Updates ' + esc(srcProg.days[d.dayIdx].name || 'this day') + ' in ' + esc(srcProg.name) + ' so next time starts the same way. Weights you logged are not affected.</p>';
