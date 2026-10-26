@@ -42,8 +42,11 @@ GROUP_OVERRIDE = {'Romanian Deadlift': 'Legs'}
 GROUPS = ['Glutes', 'Legs', 'Back', 'Chest', 'Shoulders', 'Biceps', 'Triceps', 'Core']
 GROUP_LABEL = {'Glutes': 'Glutes', 'Legs': 'Legs & Hamstrings', 'Back': 'Back', 'Chest': 'Chest', 'Shoulders': 'Shoulders', 'Biceps': 'Biceps', 'Triceps': 'Triceps', 'Core': 'Abs & Core'}
 
+# Only the free exercises in tracker/videos.js get public pages. The rest of the coach video
+# library is private (Supabase exercise_videos, clients only); their content stays here for later.
 ITEMS = []
 for name, d in X.items():
+    if name not in VIDS: continue
     d = dict(d); d['name'] = name; d['title'] = d.get('display', name)
     d['slug'] = d.get('slug') or slugify(d['title'])
     d['group'] = GROUP_OVERRIDE.get(name, EXS[name][1])
@@ -53,6 +56,9 @@ for name, d in X.items():
     ITEMS.append(d)
 ITEMS.sort(key=lambda d: (GROUPS.index(d['group']), d['title']))
 BY_NAME = {d['name']: d for d in ITEMS}
+for d in ITEMS:  # similar exercises = the other free guides
+    d['alts'] = [a for a in d['alts'] if a in BY_NAME] + [x['name'] for x in ITEMS if x is not d and x['name'] not in d['alts']]
+    d['alts'] = d['alts'][:4]
 assert len({d['slug'] for d in ITEMS}) == len(ITEMS), 'duplicate slugs'
 
 def url(d): return f'/exercises/{d["slug"]}.html'
@@ -111,6 +117,8 @@ CSS = '''
 .ex-card b{display:block;font-family:var(--font-d);font-weight:400;font-size:1.12rem;line-height:1.2;color:#fff}
 .ex-card span{display:block;font-size:.76rem;color:var(--muted);margin-top:.3rem}
 .ex-group{margin-top:2.5rem}
+.ex-rel5{grid-template-columns:repeat(5,1fr)}
+@media(max-width:960px){.ex-rel5{grid-template-columns:repeat(2,1fr)}}
 .ex-group h2{font-family:var(--font-d);font-weight:400;font-size:1.7rem;margin-bottom:1rem;display:flex;align-items:baseline;gap:.6rem}
 .ex-group h2 small{font-family:var(--font-b);font-size:.75rem;color:var(--muted);letter-spacing:.08em;text-transform:uppercase}
 .ex-intro{max-width:780px;margin:3rem auto 0;color:rgba(255,255,255,.8);line-height:1.75;font-size:.95rem}
@@ -288,7 +296,7 @@ def build_page(d):
       <p>Our tracker remembers what you lifted last time, flags new personal records and charts your strength week by week. This demo video is built in, so you can check your form between sets.</p>
     </div>
     <div>
-      <ul><li>200+ exercises, {sum(len(x['vids']) for x in ITEMS)} coach demo videos</li><li>Rest timer, PRs and progress charts</li><li>Works on iPhone and Android, no download</li></ul>
+      <ul><li>200+ exercises with how-to tips</li><li>Rest timer, PRs and progress charts</li><li>Coach demo video for every exercise when you train with us</li></ul>
       <a class="fc-btn" href="{trk}" data-trk="{esc(d['name'])}" style="margin-top:1rem;width:100%">Start logging free</a>
     </div>
   </section>
@@ -299,7 +307,7 @@ def build_page(d):
   <div class="fp-sec" style="margin-top:3rem">
     <h2 class="fp-h">Similar exercises</h2>
     <div class="ex-rel">{rel}</div>
-    <a class="fp-back" href="{HUB}">See all {len(ITEMS)} exercises with video →</a>
+    <a class="fp-back" href="{HUB}">See all free exercise guides →</a>
   </div>
   <p class="fc-note">Demonstrated by Mr &amp; Mrs Lifestyle coaches in Dubai. If you have an injury or pain, check with a doctor or physio before starting a new exercise.</p>
   {cta('Want results faster? Train with a coach.')}
@@ -310,57 +318,53 @@ def build_page(d):
     write(path.lstrip('/'), s)
 
 def build_hub():
-    n = len(ITEMS); nv = sum(len(d['vids']) for d in ITEMS)
-    title = f'Exercise Library: {n} Gym Exercises with Video Demos | Mr &amp; Mrs'
-    desc = f'How to do {n} gym exercises with good form: glutes, legs, back, chest, shoulders, arms and abs. Free demo videos by Dubai coaches Tarek &amp; Chloe, plus a free workout tracker.'
-    ld = [{"@context": "https://schema.org", "@type": "CollectionPage", "name": "Mr & Mrs Lifestyle Exercise Library", "url": SITE + HUB, "description": html.unescape(desc),
+    n = len(ITEMS)
+    title = 'How to Squat, Deadlift &amp; Hip Thrust: Free Video Guides | Mr &amp; Mrs'
+    desc = 'Free video guides to the big lifts: squat, deadlift, hip thrust, Bulgarian split squat and pull-up. Form, muscles worked and sets &amp; reps from Dubai coaches Tarek &amp; Chloe.'
+    ld = [{"@context": "https://schema.org", "@type": "CollectionPage", "name": "Mr & Mrs Lifestyle Free Exercise Guides", "url": SITE + HUB, "description": html.unescape(desc),
            "mainEntity": {"@type": "ItemList", "numberOfItems": n, "itemListElement": [{"@type": "ListItem", "position": i + 1, "url": SITE + url(d), "name": d['title']} for i, d in enumerate(ITEMS)]}},
           food.crumbs_ld('en', [('Home', '/'), ('Exercise Library', HUB)])]
     s = head(title, desc, HUB, ld, thumb(BY_NAME['Barbell Hip Thrust']['vids'][0][0]))
-    chips = '<button class="fc-chip on" type="button" data-g="all">All</button>' + ''.join(f'<button class="fc-chip" type="button" data-g="{g}">{esc(GROUP_LABEL[g])}</button>' for g in GROUPS)
-    groups = ''
-    for g in GROUPS:
-        items = [d for d in ITEMS if d['group'] == g]
-        if not items: continue
-        cards = ''.join(card(d).replace('<a class="ex-card"', f'<a class="ex-card" data-q="{esc((d["title"] + " " + d["name"] + " " + " ".join(d["primary"] + d["secondary"])).lower())}"', 1) for d in items)
-        groups += f'<section class="ex-group" data-group="{g}"><h2>{esc(GROUP_LABEL[g])} <small>{len(items)} exercises</small></h2><div class="ex-rel">{cards}</div></section>'
+    cards = ''.join(card(d) for d in ITEMS)
+    msg = quote("Hi Tarek! I saw your exercise guides. I'd like a programme with your full coach video library. Can you tell me about coaching?")
     s += f'''
 <div class="fc-hero">
   <div class="fc-tag">Free Tool · Exercise Library</div>
-  <h1>How to Do Every Exercise, <em>Shown by Real Coaches</em></h1>
-  <p class="fc-sub">{n} gym exercises with {nv} demo videos filmed by Tarek &amp; Chloe at the gym in Dubai. Learn the form, the muscles worked and the sets and reps for your goal, then log it free in our workout tracker.</p>
+  <h1>Master the Big Lifts, <em>Shown by Real Coaches</em></h1>
+  <p class="fc-sub">Free video guides to the {n} exercises people ask us about most, filmed by Tarek &amp; Chloe at the gym in Dubai. Learn the form, the muscles worked and the sets and reps for your goal.</p>
 </div>
 <div class="fc-wrap">
-  <div class="fc-tools ex-tools">
-    <label class="fc-search"><span class="sr">Search exercises</span>{food.SEARCH_ICON}<input id="exQ" type="search" placeholder="Search an exercise or muscle, e.g. hip thrust or glutes" autocomplete="off"></label>
-    <a class="fc-btn" href="/workout-tracker.html?utm_source=exercise_library&amp;utm_medium=referral&amp;utm_campaign=hub" style="display:flex;align-items:center">Open free tracker</a>
-  </div>
-  <div class="fc-chips" role="group" aria-label="Filter by muscle">{chips}</div>
-  <div id="exNone" class="fc-none">No exercise matches that. <a href="https://wa.me/{WA_TAREK}?text=Please%20add%20this%20exercise%20to%20your%20library%3A%20" style="color:var(--gold)">Ask us on WhatsApp</a> and we'll film it.</div>
-  {groups}
-  <section class="ex-track" aria-label="Free workout tracker" style="margin-top:3rem">
+  <nav class="fp-crumb" aria-label="breadcrumb"><a href="/">Home</a> › Exercise Library</nav>
+  <section class="ex-group" style="margin-top:1rem"><h2>Free exercise guides <small>{n} exercises</small></h2><div class="ex-rel ex-rel5">{cards}</div></section>
+  <section class="fc-pt" aria-label="Coach video library" style="margin-top:2.5rem">
+    <div>
+      <div class="fc-tag">For Mr &amp; Mrs Lifestyle Clients</div>
+      <h2>Get our full library of 100+ coach demo videos</h2>
+      <p>When you train with us, every exercise in your programme comes with a demo video filmed by Tarek or Chloe, right inside your workout tracker. Your coach builds your plan, checks your progress and adjusts it as you get stronger.</p>
+      <ul><li>100+ demo videos</li><li>Programme built for you</li><li>Coach sees every session</li></ul>
+    </div>
+    <div class="fc-pt-act">
+      <a class="fc-btn" href="/online-coaching.html">See online coaching</a>
+      <a class="fc-btn fc-ghost" href="https://wa.me/{WA_TAREK}?text={msg}" target="_blank" rel="noopener" onclick="if(window.gtag)gtag('event','pt_whatsapp_click',{{source:'exercise_hub'}})">WhatsApp Tarek</a>
+    </div>
+  </section>
+  <section class="ex-track" aria-label="Free workout tracker" style="margin-top:1.5rem">
     <div>
       <div class="fc-tag">Free Workout Tracker</div>
-      <h2>Every video here is built into our free tracker</h2>
+      <h2>Log your lifts free</h2>
       <p>Log your sets and reps, see what you lifted last time, set personal records and watch your progress on a chart. Free for everyone, no app to download.</p>
     </div>
     <div><ul><li>200+ exercises with how-to tips</li><li>Rest timer, PRs and progress charts</li><li>Body weight and InBody tracking</li></ul>
     <a class="fc-btn" href="/workout-tracker.html?utm_source=exercise_library&amp;utm_medium=referral&amp;utm_campaign=hub" style="margin-top:1rem;width:100%">Start tracking free</a></div>
   </section>
   <div class="ex-intro">
-    <h2>About this exercise library</h2>
+    <h2>About these guides</h2>
     <p>Every exercise here is demonstrated by Tarek or Chloe, the husband-and-wife coaching team behind Mr &amp; Mrs Lifestyle. Tarek coaches 1-to-1 personal training at Nogs Gym in Al Quoz, Dubai, and both coach clients online around the world.</p>
-    <p>Each page explains how to do the exercise step by step, the muscles it works, the mistakes we see most often in the gym, and how many sets and reps to do for building muscle, getting stronger or losing fat.</p>
+    <p>Each guide explains how to do the exercise step by step, the muscles it works, the mistakes we see most often in the gym, and how many sets and reps to do for building muscle, getting stronger or losing fat.</p>
   </div>
   {pt_box({'title': 'exercise', 'slug': 'hub'}, 'Want a coach to check your form?')}
   {cta('Want a programme built for you?')}
 </div>
-<script>
-(function(){{var q=document.getElementById('exQ'),g='all',none=document.getElementById('exNone');
-function run(){{var t=q.value.trim().toLowerCase(),any=0;document.querySelectorAll('.ex-group').forEach(function(s){{var on=g==='all'||s.getAttribute('data-group')===g,vis=0;s.querySelectorAll('.ex-card').forEach(function(c){{var ok=on&&(!t||c.getAttribute('data-q').indexOf(t)>-1);c.style.display=ok?'':'none';if(ok)vis++;}});s.style.display=vis?'':'none';any+=vis;}});none.style.display=any?'none':'block';}}
-q.addEventListener('input',run);document.querySelectorAll('.fc-chip').forEach(function(c){{c.addEventListener('click',function(){{document.querySelectorAll('.fc-chip').forEach(function(x){{x.classList.toggle('on',x===c)}});g=c.getAttribute('data-g');run();}});}});
-var h=location.hash.slice(1);if(h){{var c=document.querySelector('.fc-chip[data-g="'+h+'"]');if(c)c.click();}}}})();
-</script>
 '''
     s += tail()
     write(HUB.lstrip('/'), s)
@@ -384,7 +388,21 @@ def update_sitemap():
         sm = sm.replace('<urlset ', '<urlset xmlns:video="http://www.google.com/schemas/sitemap-video/1.1" ', 1)
     open(p, 'w', encoding='utf-8').write(sm)
 
+def prune_and_redirect():
+    keep = {d['slug'] + '.html' for d in ITEMS}
+    d0 = os.path.join(ROOT, 'exercises'); gone = []
+    for f in sorted(os.listdir(d0)):
+        if f.endswith('.html') and f not in keep: os.remove(os.path.join(d0, f)); gone.append(f)
+    # every slug we ever published but no longer serve -> hub (301)
+    allslugs = {(v.get('slug') or slugify(v.get('display', k))) + '.html' for k, v in X.items()} - keep
+    vp = os.path.join(ROOT, 'vercel.json'); vj = json.load(open(vp, encoding='utf-8'))
+    vj['redirects'] = [r for r in vj.get('redirects', []) if not r.get('source', '').startswith('/exercises/')]
+    vj['redirects'] += [{"source": '/exercises/' + f, "destination": HUB, "permanent": True} for f in sorted(allslugs)]
+    json.dump(vj, open(vp, 'w', encoding='utf-8'), indent=2, ensure_ascii=False); open(vp, 'a').write('\n')
+    return gone
+
 if __name__ == '__main__':
+    print('removed', len(prune_and_redirect()), 'pages')
     build_hub()
     for d in ITEMS: build_page(d)
     update_sitemap()
