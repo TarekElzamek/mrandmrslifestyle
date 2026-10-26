@@ -9,7 +9,16 @@
 
   var EX = (window.MM_EXERCISES || []).map(function (e) { return { name: e[0], cat: e[1], m: e[2], type: e[3], how: e[4] }; });
   var EXMAP = {}; EX.forEach(function (e) { EXMAP[e.name] = e; });
-  var VIDS = window.MM_VIDEOS || {};
+  // Free demo videos come from videos.js; the full coach library loads from Supabase for coaches and clients with a programme.
+  var VIDS = JSON.parse(JSON.stringify(window.MM_VIDEOS || {}));
+  async function loadVideos() {
+    try {
+      var r = await sb.from('exercise_videos').select('exercise,youtube_id,label,sort').order('sort');
+      if (!r.data || !r.data.length) return;
+      r.data.forEach(function (v) { var a = VIDS[v.exercise] = VIDS[v.exercise] || []; if (!a.some(function (x) { return x[0] === v.youtube_id; })) a.push([v.youtube_id, v.label || '']); });
+      if (S.me && !document.querySelector('.modal') && !(document.activeElement && /INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName))) render();
+    } catch (e) {}
+  }
   function vidsFor(name) { return VIDS[name] || []; }
   function videoBox(name, key) {
     var vs = vidsFor(name); if (!vs.length) return '';
@@ -164,6 +173,7 @@
     S.tab = isCoach() && !viewingOther() ? 'clients' : 'today';
     ev('tracker_open', { role: me.role });
     if (isCoach()) startNotifs();
+    loadVideos();
     await loadTarget();
     applyPendingEx();
   }

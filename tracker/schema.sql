@@ -210,3 +210,19 @@ create policy "push own" on public.push_subscriptions for all using (user_id = a
 -- private VAPID key pair for phone push, created by the notify-coach function on first use (no policies = not readable from the app)
 create table if not exists public.push_config (id int primary key, public_key text not null, private_key text not null);
 alter table public.push_config enable row level security;
+
+-- ---------- v7: private coach video library (only coaches and clients with a programme can read it) ----------
+create table if not exists public.exercise_videos (
+  id bigint generated always as identity primary key,
+  exercise text not null,
+  youtube_id text not null unique,
+  label text,
+  sort int not null default 0
+);
+alter table public.exercise_videos enable row level security;
+drop policy if exists "videos coach and clients" on public.exercise_videos;
+create policy "videos coach and clients" on public.exercise_videos for select
+  using (public.is_coach() or exists (select 1 from public.programs p where p.client_id = auth.uid()));
+drop policy if exists "videos coach write" on public.exercise_videos;
+create policy "videos coach write" on public.exercise_videos for all using (public.is_coach()) with check (public.is_coach());
+-- rows: one per video (exercise name must match tracker/exercises.js). Free videos stay in tracker/videos.js.

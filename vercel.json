@@ -255,6 +255,421 @@
       "source": "/product-page-:num",
       "destination": "/packages.html",
       "permanent": true
+    },
+    {
+      "source": "/exercises/45-degree-back-extension.html",
+      "destination": "/exercise-library.html",
+      "permanent": true
+    },
+    {
+      "source": "/exercises/alternating-dumbbell-curl.html",
+      "destination": "/exercise-library.html",
+      "permanent": true
+    },
+    {
+      "source": "/exercises/arnold-press.html",
+      "destination": "/exercise-library.html",
+      "permanent": true
+    },
+    {
+      "source": "/exercises/barbell-curl.html",
+      "destination": "/exercise-library.html",
+      "permanent": true
+    },
+    {
+      "source": "/exercises/barbell-row.html",
+      "destination": "/exercise-library.html",
+      "permanent": true
+    },
+    {
+      "source": "/exercises/bayesian-cable-curl.html",
+      "destination": "/exercise-library.html",
+      "permanent": true
+    },
+    {
+      "source": "/exercises/belt-squat-romanian-deadlift.html",
+      "destination": "/exercise-library.html",
+      "permanent": true
+    },
+    {
+      "source": "/exercises/belt-sumo-squat.html",
+      "destination": "/exercise-library.html",
+      "permanent": true
+    },
+    {
+      "source": "/exercises/bench-dip.html",
+      "destination": "/exercise-library.html",
+      "permanent": true
+    },
+    {
+      "source": "/exercises/bodyweight-lunges.html",
+      "destination": "/exercise-library.html",
+      "permanent": true
+    },
+    {
+      "source": "/exercises/bodyweight-squat.html",
+      "destination": "/exercise-library.html",
+      "permanent": true
+    },
+    {
+      "source": "/exercises/cable-curl.html",
+      "destination": "/exercise-library.html",
+      "permanent": true
+    },
+    {
+      "source": "/exercises/cable-hip-abduction.html",
+      "destination": "/exercise-library.html",
+      "permanent": true
+    },
+    {
+      "source": "/exercises/cable-kickbacks.html",
+      "destination": "/exercise-library.html",
+      "permanent": true
+    },
+    {
+      "source": "/exercises/cable-rear-delt-fly.html",
+      "destination": "/exercise-library.html",
+      "permanent": true
+    },
+    {
+      "source": "/exercises/cable-rope-hammer-curl.html",
+      "destination": "/exercise-library.html",
+      "permanent": true
+    },
+    {
+      "source": "/exercises/cable-rope-standing-row.html",
+      "destination": "/exercise-library.html",
+      "permanent": true
+    },
+    {
+      "source": "/exercises/chest-dip.html",
+      "destination": "/exercise-library.html",
+      "permanent": true
+    },
+    {
+      "source": "/exercises/chest-supported-dumbbell-row.html",
+      "destination": "/exercise-library.html",
+      "permanent": true
+    },
+    {
+      "source": "/exercises/crunch.html",
+      "destination": "/exercise-library.html",
+      "permanent": true
+    },
+    {
+      "source": "/exercises/decline-sit-up.html",
+      "destination": "/exercise-library.html",
+      "permanent": true
+    },
+    {
+      "source": "/exercises/deficit-deadlift.html",
+      "destination": "/exercise-library.html",
+      "permanent": true
+    },
+    {
+      "source": "/exercises/deficit-romanian-deadlift.html",
+      "destination": "/exercise-library.html",
+      "permanent": true
+    },
+    {
+      "source": "/exercises/diamond-push-up.html",
+      "destination": "/exercise-library.html",
+      "permanent": true
+    },
+    {
+      "source": "/exercises/dumbbell-bicep-curl.html",
+      "destination": "/exercise-library.html",
+      "permanent": true
+    },
+    {
+      "source": "/exercises/dumbbell-lateral-raise.html",
+      "destination": "/exercise-library.html",
+      "permanent": true
+    },
+    {
+      "source": "/exercises/dumbbell-romanian-deadlift.html",
+      "destination": "/exercise-library.html",
+      "permanent": true
+    },
+    {
+      "source": "/exercises/dumbbell-split-squat.html",
+      "destination": "/exercise-library.html",
+      "permanent": true
+    },
+    {
+      "source": "/exercises/front-raise.html",
+      "destination": "/exercise-library.html",
+      "permanent": true
+    },
+    {
+      "source": "/exercises/gluteator-machine.html",
+      "destination": "/exercise-library.html",
+      "permanent": true
+    },
+    {
+      "source": "/exercises/hack-squat.html",
+      "destination": "/exercise-library.html",
+      "permanent": true
+    },
+    {
+      "source": "/exercises/hammer-curl.html",
+      "destination": "/exercise-library.html",
+      "permanent": true
+    },
+    {
+      "source": "/exercises/hanging-knee-raise.html",
+      "destination": "/exercise-library.html",
+      "permanent": true
+    },
+    {
+      "source": "/exercises/hanging-leg-raise.html",
+      "destination": "/exercise-library.html",
+      "permanent": true
+    },
+    {
+      "source": "/exercises/heel-elevated-barbell-squat.html",
+      "destination": "/exercise-library.html",
+      "permanent": true
+    },
+    {
+      "source": "/exercises/heel-elevated-dumbbell-squat.html",
+      "destination": "/exercise-library.html",
+      "permanent": true
+    },
+    {
+      "source": "/exercises/heel-elevated-goblet-squat.html",
+      "destination": "/exercise-library.html",
+      "permanent": true
+    },
+    {
+      "source": "/exercises/high-to-low-cable-fly.html",
+      "destination": "/exercise-library.html",
+      "permanent": true
+    },
+    {
+      "source": "/exercises/hip-abduction-machine.html",
+      "destination": "/exercise-library.html",
+      "permanent": true
+    },
+    {
+      "source": "/exercises/incline-dumbbell-curl.html",
+      "destination": "/exercise-library.html",
+      "permanent": true
+    },
+    {
+      "source": "/exercises/lat-pulldown.html",
+      "destination": "/exercise-library.html",
+      "permanent": true
+    },
+    {
+      "source": "/exercises/leg-extension.html",
+      "destination": "/exercise-library.html",
+      "permanent": true
+    },
+    {
+      "source": "/exercises/leg-press.html",
+      "destination": "/exercise-library.html",
+      "permanent": true
+    },
+    {
+      "source": "/exercises/lying-leg-curl.html",
+      "destination": "/exercise-library.html",
+      "permanent": true
+    },
+    {
+      "source": "/exercises/lying-leg-raise.html",
+      "destination": "/exercise-library.html",
+      "permanent": true
+    },
+    {
+      "source": "/exercises/machine-hip-thrust.html",
+      "destination": "/exercise-library.html",
+      "permanent": true
+    },
+    {
+      "source": "/exercises/machine-kickbacks.html",
+      "destination": "/exercise-library.html",
+      "permanent": true
+    },
+    {
+      "source": "/exercises/machine-preacher-curl.html",
+      "destination": "/exercise-library.html",
+      "permanent": true
+    },
+    {
+      "source": "/exercises/machine-shoulder-press.html",
+      "destination": "/exercise-library.html",
+      "permanent": true
+    },
+    {
+      "source": "/exercises/overhead-cable-tricep-extension.html",
+      "destination": "/exercise-library.html",
+      "permanent": true
+    },
+    {
+      "source": "/exercises/pendulum-squat.html",
+      "destination": "/exercise-library.html",
+      "permanent": true
+    },
+    {
+      "source": "/exercises/push-up.html",
+      "destination": "/exercise-library.html",
+      "permanent": true
+    },
+    {
+      "source": "/exercises/reverse-curl.html",
+      "destination": "/exercise-library.html",
+      "permanent": true
+    },
+    {
+      "source": "/exercises/reverse-grip-lat-pulldown.html",
+      "destination": "/exercise-library.html",
+      "permanent": true
+    },
+    {
+      "source": "/exercises/reverse-grip-tricep-pushdown.html",
+      "destination": "/exercise-library.html",
+      "permanent": true
+    },
+    {
+      "source": "/exercises/romanian-deadlift.html",
+      "destination": "/exercise-library.html",
+      "permanent": true
+    },
+    {
+      "source": "/exercises/rope-tricep-pushdown.html",
+      "destination": "/exercise-library.html",
+      "permanent": true
+    },
+    {
+      "source": "/exercises/seated-cable-row.html",
+      "destination": "/exercise-library.html",
+      "permanent": true
+    },
+    {
+      "source": "/exercises/seated-calf-raise.html",
+      "destination": "/exercise-library.html",
+      "permanent": true
+    },
+    {
+      "source": "/exercises/seated-dumbbell-shoulder-press.html",
+      "destination": "/exercise-library.html",
+      "permanent": true
+    },
+    {
+      "source": "/exercises/seated-leg-curl.html",
+      "destination": "/exercise-library.html",
+      "permanent": true
+    },
+    {
+      "source": "/exercises/single-arm-dumbbell-row.html",
+      "destination": "/exercise-library.html",
+      "permanent": true
+    },
+    {
+      "source": "/exercises/single-arm-tricep-pushdown.html",
+      "destination": "/exercise-library.html",
+      "permanent": true
+    },
+    {
+      "source": "/exercises/single-leg-hip-abduction-machine.html",
+      "destination": "/exercise-library.html",
+      "permanent": true
+    },
+    {
+      "source": "/exercises/single-leg-hip-thrust.html",
+      "destination": "/exercise-library.html",
+      "permanent": true
+    },
+    {
+      "source": "/exercises/single-leg-leg-curl.html",
+      "destination": "/exercise-library.html",
+      "permanent": true
+    },
+    {
+      "source": "/exercises/single-leg-leg-extension.html",
+      "destination": "/exercise-library.html",
+      "permanent": true
+    },
+    {
+      "source": "/exercises/single-leg-romanian-deadlift.html",
+      "destination": "/exercise-library.html",
+      "permanent": true
+    },
+    {
+      "source": "/exercises/sit-up.html",
+      "destination": "/exercise-library.html",
+      "permanent": true
+    },
+    {
+      "source": "/exercises/smith-machine-bench-press.html",
+      "destination": "/exercise-library.html",
+      "permanent": true
+    },
+    {
+      "source": "/exercises/smith-machine-incline-press.html",
+      "destination": "/exercise-library.html",
+      "permanent": true
+    },
+    {
+      "source": "/exercises/spider-curl.html",
+      "destination": "/exercise-library.html",
+      "permanent": true
+    },
+    {
+      "source": "/exercises/standing-calf-raise.html",
+      "destination": "/exercise-library.html",
+      "permanent": true
+    },
+    {
+      "source": "/exercises/stiff-leg-deadlift.html",
+      "destination": "/exercise-library.html",
+      "permanent": true
+    },
+    {
+      "source": "/exercises/straight-arm-pulldown.html",
+      "destination": "/exercise-library.html",
+      "permanent": true
+    },
+    {
+      "source": "/exercises/sumo-deadlift.html",
+      "destination": "/exercise-library.html",
+      "permanent": true
+    },
+    {
+      "source": "/exercises/superman.html",
+      "destination": "/exercise-library.html",
+      "permanent": true
+    },
+    {
+      "source": "/exercises/tricep-pushdown.html",
+      "destination": "/exercise-library.html",
+      "permanent": true
+    },
+    {
+      "source": "/exercises/underhand-barbell-row.html",
+      "destination": "/exercise-library.html",
+      "permanent": true
+    },
+    {
+      "source": "/exercises/walking-lunges.html",
+      "destination": "/exercise-library.html",
+      "permanent": true
+    },
+    {
+      "source": "/exercises/wide-dumbbell-curl.html",
+      "destination": "/exercise-library.html",
+      "permanent": true
+    },
+    {
+      "source": "/exercises/wide-grip-bicep-curl.html",
+      "destination": "/exercise-library.html",
+      "permanent": true
+    },
+    {
+      "source": "/exercises/wide-grip-lat-pulldown.html",
+      "destination": "/exercise-library.html",
+      "permanent": true
     }
   ],
   "headers": [
