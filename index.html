@@ -724,6 +724,11 @@
     <h1 class="hero-eyebrow">Personal Trainer in Dubai &amp; Online Coaching</h1>
     <div class="hero-title">Stop <em>Trying.</em><br>Start<br><em>Transforming.</em></div>
     <p class="hero-sub">Real coaches. Real results. Whether you're in Dubai or anywhere in the world, Tarek & Chloe deliver the plan, nutrition guidance, and relentless support that finally makes the difference.</p>
+    <div class="hero-services" role="list" aria-label="Our three services">
+      <a role="listitem" href="#services"><b>01</b><span>Dubai Personal Training<small>1-to-1 with Tarek · Al Quoz</small></span></a>
+      <a role="listitem" href="#services"><b>02</b><span>Ladies-Only Private Pilates<small>With Chloe · Meydan</small></span></a>
+      <a role="listitem" href="#services"><b>03</b><span>Worldwide Online Coaching<small>Train anywhere, coached by us</small></span></a>
+    </div>
     <div class="hero-stats">
       <div><div class="stat-num">500+</div><div class="stat-label">Lives Changed</div></div>
       <div><div class="stat-num">10+</div><div class="stat-label">Years Experience</div></div>
@@ -737,6 +742,103 @@
     </div>
   </div>
   <div class="scroll-indicator">Scroll</div>
+</section>
+
+<style>
+/* ---- three services ---- */
+.hero-services{display:grid;grid-template-columns:repeat(3,auto);gap:.6rem;margin:-1rem 0 2.2rem;max-width:760px}
+.hero-services a{display:flex;align-items:center;gap:.7rem;padding:.75rem 1rem;border:1px solid rgba(201,168,76,.35);background:rgba(10,10,10,.55);backdrop-filter:blur(6px);border-radius:4px;color:#fff;text-decoration:none;font-size:.82rem;font-weight:600;letter-spacing:.02em;line-height:1.25;transition:border-color .2s,background .2s}
+.hero-services a:hover{border-color:var(--gold);background:rgba(201,168,76,.1)}
+.hero-services b{font-family:var(--font-display);font-weight:400;color:var(--gold);font-size:1.05rem;letter-spacing:0}
+.hero-services small{display:block;font-weight:400;font-size:.7rem;color:rgba(255,255,255,.55);letter-spacing:.03em;margin-top:.15rem}
+.svc-section{background:var(--black);padding:6rem clamp(1.25rem,5vw,3rem) 5rem;border-top:1px solid rgba(201,168,76,.12);position:relative}
+.svc-section:before{content:'';position:absolute;inset:0 0 auto;height:420px;background:radial-gradient(ellipse 60% 70% at 50% 0%,rgba(201,168,76,.10),transparent 70%);pointer-events:none}
+.svc-head{text-align:center;max-width:720px;margin:0 auto 3.25rem;position:relative}
+.svc-head p{color:rgba(255,255,255,.65);font-size:1.02rem;line-height:1.7;margin:0}
+.svc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;max-width:1200px;margin:0 auto;position:relative}
+.svc-card{display:flex;flex-direction:column;background:linear-gradient(180deg,#151515,#0e0e0e);border:1px solid rgba(201,168,76,.22);border-radius:14px;overflow:hidden;transition:transform .3s cubic-bezier(.2,.8,.2,1),border-color .3s,box-shadow .3s}
+.svc-card:hover{transform:translateY(-6px);border-color:rgba(201,168,76,.6);box-shadow:0 24px 50px rgba(0,0,0,.5),0 0 40px rgba(201,168,76,.10)}
+.svc-media{position:relative;aspect-ratio:4/3.2;overflow:hidden;background:#0a0a0a}
+.svc-media img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .6s}
+.svc-card:hover .svc-media img{transform:scale(1.04)}
+.svc-media:after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,10,10,0) 45%,rgba(10,10,10,.92) 100%)}
+.svc-num{font-family:var(--font-display);font-size:.95rem;line-height:1;color:var(--gold);letter-spacing:.12em;margin-bottom:.55rem;display:flex;align-items:center;gap:.6rem}.svc-num:after{content:'';width:28px;height:1px;background:rgba(201,168,76,.6)}
+.svc-badge{position:absolute;top:16px;right:14px;z-index:2;background:var(--gold);color:#0a0a0a;font-size:.62rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;padding:.35rem .6rem;border-radius:3px}
+.svc-where{position:absolute;left:16px;bottom:14px;z-index:2;display:flex;align-items:center;gap:.4rem;font-size:.72rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--gold-light)}
+.svc-body{padding:1.5rem 1.5rem 1.6rem;display:flex;flex-direction:column;flex:1}
+.svc-body h3{font-family:var(--font-display);font-weight:700;font-size:1.6rem;line-height:1.15;margin:0 0 .5rem;color:#fff}
+.svc-who{font-size:.9rem;color:rgba(255,255,255,.72);line-height:1.6;margin:0 0 1.1rem}
+.svc-list{list-style:none;padding:0;margin:0 0 1.3rem;display:flex;flex-direction:column;gap:.55rem}
+.svc-list li{position:relative;padding-left:1.5rem;font-size:.87rem;color:rgba(255,255,255,.82);line-height:1.5}
+.svc-list li:before{content:'';position:absolute;left:0;top:.45em;width:.8rem;height:.45rem;border-left:2px solid var(--gold);border-bottom:2px solid var(--gold);transform:rotate(-45deg)}
+.svc-price{margin-top:auto;padding-top:1rem;border-top:1px solid rgba(255,255,255,.08);display:flex;align-items:baseline;gap:.4rem;margin-bottom:1.1rem}
+.svc-price span{font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.5)}
+.svc-price b{font-family:var(--font-display);font-weight:400;font-size:1.7rem;color:var(--gold)}
+.svc-price em{font-style:normal;font-size:.85rem;color:rgba(255,255,255,.6)}
+.svc-acts{display:grid;grid-template-columns:1fr 1fr;gap:.6rem}
+.svc-acts a{display:flex;align-items:center;justify-content:center;gap:.45rem;text-align:center;padding:.85rem .6rem;border-radius:3px;font-size:.74rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;text-decoration:none;transition:background .2s,color .2s,border-color .2s}
+.svc-acts .p{background:var(--gold);color:#0a0a0a}
+.svc-acts .p:hover{background:var(--gold-light)}
+.svc-acts .g{border:1px solid rgba(201,168,76,.55);color:var(--gold)}
+.svc-acts .g:hover{background:rgba(201,168,76,.1);border-color:var(--gold)}
+.svc-foot{text-align:center;margin-top:2.25rem;font-size:.88rem;color:rgba(255,255,255,.55);position:relative}
+.svc-foot a{color:var(--gold)}
+@media(max-width:1000px){.svc-grid{grid-template-columns:1fr;max-width:560px}.svc-media{aspect-ratio:16/10}}
+@media(max-width:768px){.hero-services{grid-template-columns:1fr;margin:-1rem 0 1.75rem}.hero-services a{padding:.65rem .9rem}.svc-section{padding:4.5rem 1.25rem 4rem}.svc-body h3{font-size:1.45rem}}
+@media(max-width:380px){.svc-acts{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){.svc-card,.svc-media img{transition:none}}
+</style>
+<section class="svc-section" id="services" aria-labelledby="svcTitle">
+  <div class="svc-head">
+    <div class="section-eyebrow" style="justify-content:center">Our Services</div>
+    <h2 class="section-title" id="svcTitle">Three Ways To Train <em>With Us</em></h2>
+    <p>In person in Dubai or online from anywhere in the world. Pick the coaching that fits your life, and we'll take it from there.</p>
+  </div>
+  <div class="svc-grid">
+    <article class="svc-card">
+      <div class="svc-media">
+        <img src="/services-dubai-pt.jpg" alt="Tarek coaching a barbell squat at Nogs Gym, Al Quoz, Dubai" width="720" height="900" loading="lazy">
+        <span class="svc-badge">Men &amp; Women</span>
+        <span class="svc-where"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg> Nogs Gym · Al Quoz, Dubai</span>
+      </div>
+      <div class="svc-body">
+        <div class="svc-num" aria-hidden="true">01</div><h3>Dubai Personal Training</h3>
+        <p class="svc-who">1-to-1 sessions with Tarek at Nogs Gym. For anyone in Dubai who wants a coach next to them, fixing their form and pushing every rep.</p>
+        <ul class="svc-list"><li>Training and nutrition plan built for you</li><li>Progress reviewed every 4 weeks, with InBody scans</li><li>Every session logged in your free workout tracker</li></ul>
+        <div class="svc-price"><span>From</span><b>AED 275</b><em>/ session</em></div>
+        <div class="svc-acts"><a class="p" href="/personal-trainer-dubai.html">Explore <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a><a class="g" href="https://wa.me/971507871515?text=Hi%20Tarek%21%20I%20found%20Mr%20%26%20Mrs%20Lifestyle%20online%20and%20I%27m%20interested%20in%201-to-1%20personal%20training%20at%20Nogs%20Gym%2C%20Al%20Quoz.%20Can%20you%20tell%20me%20more%3F" target="_blank" rel="noopener" onclick="if(window.gtag)gtag('event','pt_whatsapp_click',{source:'home_services'})">WhatsApp Tarek</a></div>
+      </div>
+    </article>
+    <article class="svc-card">
+      <div class="svc-media">
+        <img src="/services-ladies-pilates.jpg" alt="Private reformer Pilates session at The Pilates Room, Meydan, Dubai" width="720" height="900" loading="lazy">
+        <span class="svc-badge">Ladies Only</span>
+        <span class="svc-where"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg> The Pilates Room · Meydan</span>
+      </div>
+      <div class="svc-body">
+        <div class="svc-num" aria-hidden="true">02</div><h3>Ladies-Only Private Pilates</h3>
+        <p class="svc-who">Private reformer Pilates with Chloe in an exclusive, ladies-only studio. Sculpt, strengthen and feel better in a calm, private space.</p>
+        <ul class="svc-list"><li>1-to-1 or buddy sessions, never a crowded class</li><li>Strength work with dumbbells blended in</li><li>Adjusted to your body session by session</li></ul>
+        <div class="svc-price"><span>From</span><b>AED 429</b><em>/ session</em></div>
+        <div class="svc-acts"><a class="p" href="/reformer-pilates-meydan.html">Explore <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a><a class="g" href="https://wa.me/971547011995?text=Hi%20Chloe%21%20I%20found%20Mr%20%26%20Mrs%20Lifestyle%20online%20and%20I%27m%20interested%20in%20private%20ladies-only%20reformer%20Pilates%20at%20The%20Pilates%20Room%2C%20Meydan.%20Can%20you%20tell%20me%20more%3F" target="_blank" rel="noopener" onclick="if(window.gtag)gtag('event','pilates_whatsapp_click',{source:'home_services'})">WhatsApp Chloe</a></div>
+      </div>
+    </article>
+    <article class="svc-card">
+      <div class="svc-media">
+        <img src="/services-online-coaching.jpg" alt="Online coaches Tarek and Chloe of Mr &amp; Mrs Lifestyle" width="720" height="900" loading="lazy">
+        <span class="svc-badge">Worldwide</span>
+        <span class="svc-where"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.8 3.2 2.8 14.8 0 18M12 3c-2.8 3.2-2.8 14.8 0 18"/></svg> Online · Anywhere in the world</span>
+      </div>
+      <div class="svc-body">
+        <div class="svc-num" aria-hidden="true">03</div><h3>Worldwide Online Coaching</h3>
+        <p class="svc-who">Your own coach in your pocket, wherever you live. Men are coached by Tarek, women by Chloe, and couples by both.</p>
+        <ul class="svc-list"><li>Ready-made beginner plans, or fully personalised coaching</li><li>Personalised plans include weekly check-ins and updates in our coaching app</li><li>Training and nutrition that fit your life, wherever you are</li></ul>
+        <div class="svc-price"><span>From</span><b>AED 299</b><em>/ month</em></div>
+        <div class="svc-acts"><a class="p" href="/online-coaching.html">Explore <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a><a class="g" href="/apply.html">Apply Now</a></div>
+      </div>
+    </article>
+  </div>
+  <p class="svc-foot">Not sure which is right for you? <a href="/apply.html">Book a free call</a> and we'll point you the right way · Wondering about cost? Read <a href="/blog-personal-trainer-cost-dubai.html">how much a personal trainer costs in Dubai</a> · <a href="/ar/" lang="ar">بالعربية</a></p>
 </section>
 
 <section class="transformations-section" id="transformations">
@@ -1105,19 +1207,6 @@
   </div>
 
   <div class="team-quals" style="max-width:1100px;margin:2.5rem auto 0;text-align:center;"><div class="section-eyebrow" style="justify-content:center">Our Team&rsquo;s Qualifications</div><div class="coach-certs" style="justify-content:center;margin-top:1rem;"><span class="cert-tag">Diploma in Personal Training (PTA Global)</span><span class="cert-tag">Reformer Pilates Teacher (EREPS Level 4)</span><span class="cert-tag">Pre &amp; Postnatal Exercise</span><span class="cert-tag">ISSA Nutritionist</span><span class="cert-tag">First Aid (Highfield Level 2)</span><span class="cert-tag">REPs UAE Registered</span><span class="cert-tag">REPs UAE PT of the Year Finalist 2024</span><span class="cert-tag">10+ Years Coaching</span></div></div>
-</section>
-
-<section style="background:var(--off-black);padding:4.5rem clamp(1.25rem,5vw,3rem);border-top:1px solid rgba(255,255,255,0.05);" id="locations">
-  <div style="text-align:center;margin-bottom:2.5rem;">
-    <div class="section-eyebrow" style="justify-content:center">Ways To Train</div>
-    <h2 class="section-title">How To Train <em>With Us</em></h2>
-  </div>
-  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:1rem;max-width:1100px;margin:0 auto;">
-    <a href="/personal-trainer-al-quoz.html" style="display:block;padding:1.5rem;border:1px solid rgba(201,168,76,0.18);border-radius:12px;background:var(--black);color:inherit;text-decoration:none;"><div style="font-family:var(--font-display);font-size:1.25rem;color:var(--gold);margin-bottom:0.4rem;">Personal Trainer Al Quoz</div><p style="font-size:0.85rem;line-height:1.6;color:rgba(255,255,255,0.6);margin:0;">1-to-1 with Tarek at Nogs Gym, Sheikh Zayed Road Exit 46. Men &amp; women, from AED 3,800.</p></a>
-    <a href="/reformer-pilates-meydan.html" style="display:block;padding:1.5rem;border:1px solid rgba(201,168,76,0.18);border-radius:12px;background:var(--black);color:inherit;text-decoration:none;"><div style="font-family:var(--font-display);font-size:1.25rem;color:var(--gold);margin-bottom:0.4rem;">Ladies Reformer Pilates</div><p style="font-size:0.85rem;line-height:1.6;color:rgba(255,255,255,0.6);margin:0;">Private 1-to-1 or buddy sessions with Chloe at The Pilates Room, Meydan, with strength work built in. Ladies only, babies welcome.</p></a>
-    <a href="/online-coaching.html" style="display:block;padding:1.5rem;border:1px solid rgba(201,168,76,0.18);border-radius:12px;background:var(--black);color:inherit;text-decoration:none;"><div style="font-family:var(--font-display);font-size:1.25rem;color:var(--gold);margin-bottom:0.4rem;">Online Coaching</div><p style="font-size:0.85rem;line-height:1.6;color:rgba(255,255,255,0.6);margin:0;">Ready-made beginner plan from AED 299, or personalised coaching with weekly check-ins from Tarek or Chloe from AED 899.</p></a>
-  </div>
-  <p style="text-align:center;margin-top:1.75rem;font-size:0.88rem;color:rgba(255,255,255,0.55);">Wondering about cost? Read <a href="/blog-personal-trainer-cost-dubai.html" style="color:var(--gold);">how much a personal trainer costs in Dubai</a> · <a href="/ar/" style="color:var(--gold);" lang="ar">بالعربية</a></p>
 </section>
 
 <section class="testimonials-section" id="reviews" aria-labelledby="reviewsTitle">
