@@ -677,10 +677,13 @@ th{color:#C9A84C;font-size:13px;letter-spacing:0.05em;text-transform:uppercase;}
   "https://www.instagram.com/thepilatesroombychloe/"
  ]
 }</script>
-<link rel="preload" href="/fonts/jost-latin-300-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/cormorant-garamond-latin-500-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/fonts/manrope-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
 <style id="tpr-theme">
-/* The Pilates Room by Chloe brand: cream, sand, espresso; Jost + Manrope (matches thepilatesroombychloe.com) */
+@font-face{font-family:'Cormorant Garamond';font-style:normal;font-weight:500;font-display:swap;src:url(/fonts/cormorant-garamond-latin-500-normal.woff2) format('woff2')}
+@font-face{font-family:'Cormorant Garamond';font-style:normal;font-weight:600;font-display:swap;src:url(/fonts/cormorant-garamond-latin-600-normal.woff2) format('woff2')}
+
+/* The Pilates Room by Chloe brand: cream, sand, espresso; Cormorant Garamond headings + Manrope text */
 @font-face{font-family:'Jost';font-style:normal;font-weight:300;font-display:swap;src:url(/fonts/jost-latin-300-normal.woff2) format('woff2')}
 @font-face{font-family:'Jost';font-style:normal;font-weight:400;font-display:swap;src:url(/fonts/jost-latin-400-normal.woff2) format('woff2')}
 @font-face{font-family:'Jost';font-style:normal;font-weight:500;font-display:swap;src:url(/fonts/jost-latin-500-normal.woff2) format('woff2')}
@@ -689,7 +692,7 @@ th{color:#C9A84C;font-size:13px;letter-spacing:0.05em;text-transform:uppercase;}
 @font-face{font-family:'Manrope';font-style:normal;font-weight:600;font-display:swap;src:url(/fonts/manrope-latin-600-normal.woff2) format('woff2')}
 body.tpr{--cream:#F6F1EA;--sand:#E9DED2;--line:#D8C4B1;--ink:#3A2617;--muted:#6F5A48;--esp:#795033;--card:#FBF8F3;background:var(--cream)!important;color:var(--ink)!important;font-family:'Manrope',system-ui,sans-serif!important}
 body.tpr a{color:var(--esp)}
-body.tpr h1,body.tpr h2,body.tpr h3{font-family:'Jost',system-ui,sans-serif!important;font-weight:300!important;letter-spacing:-0.01em;color:var(--ink)!important}
+body.tpr h1,body.tpr h2,body.tpr h3{font-family:'Cormorant Garamond',Georgia,serif!important;font-weight:500!important;letter-spacing:0;color:var(--ink)!important}
 body.tpr h1 em,body.tpr h2 em{font-style:normal!important;color:var(--esp)!important}
 /* header */
 .tpr-head{position:sticky;top:0;z-index:100;background:rgba(246,241,234,.94);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
@@ -711,7 +714,7 @@ body.tpr .tpr-book:hover{background:#5f3e27}
 .tpr-burger span{display:block;width:26px;height:1.5px;background:var(--ink)}
 .tpr-menu{display:none;position:fixed;inset:0;z-index:2147483000;background:var(--cream);flex-direction:column;align-items:center;justify-content:center;gap:22px;padding:40px 24px}
 .tpr-menu.open{display:flex}
-.tpr-menu a{font-family:'Jost',sans-serif;font-weight:300;font-size:24px;color:var(--ink)!important;text-decoration:none!important}
+.tpr-menu a{font-family:'Cormorant Garamond',Georgia,serif;font-weight:500;font-size:24px;color:var(--ink)!important;text-decoration:none!important}
 .tpr-menu a.tpr-book{font-family:'Manrope',sans-serif;font-size:12px;letter-spacing:.2em;text-transform:uppercase;margin-top:8px}
 .tpr-menu .tpr-menu-back{font-family:'Manrope',sans-serif;font-size:13px;color:var(--muted)!important;margin-top:18px}
 .tpr-menu-close{position:absolute;top:18px;right:22px;background:none;border:0;font-size:34px;color:var(--ink);cursor:pointer}
@@ -726,7 +729,7 @@ body.tpr .eyebrow{color:var(--esp)!important;letter-spacing:.24em!important;font
 .tpr-hero-img img{display:block;width:100%;height:auto;aspect-ratio:4/5;object-fit:cover;border-radius:999px 999px 0 0;border:1px solid var(--line)}
 body.tpr .hero-app,body.tpr .hero-ig{justify-content:flex-start!important}
 body.tpr .stats{max-width:1140px;margin:48px auto 0!important;justify-content:flex-start;gap:56px;border-top:1px solid var(--line);padding-top:28px}
-body.tpr .stat b{font-family:'Jost',sans-serif!important;font-weight:300!important;color:var(--ink)!important}
+body.tpr .stat b{font-family:'Cormorant Garamond',Georgia,serif!important;font-weight:500!important;color:var(--ink)!important}
 body.tpr .stat span{color:var(--muted)!important}
 /* buttons and links */
 body.tpr .btn{background:var(--esp)!important;color:var(--cream)!important;border-radius:0!important;font-family:'Manrope',sans-serif;font-weight:500!important;font-size:11.5px!important;letter-spacing:.2em!important;padding:16px 28px!important}
@@ -748,7 +751,7 @@ body.tpr .card h3{color:var(--esp)!important}
 body.tpr .card p,body.tpr .vf-rev blockquote{color:var(--ink)!important}
 body.tpr .vf-rev .vf-stars,body.tpr .vf-case span{color:var(--esp)!important}
 body.tpr .vf-rev cite,body.tpr .vf-small{color:var(--muted)!important}
-body.tpr .vf-rev cite b,body.tpr .vf-case b{color:var(--ink)!important;font-family:'Jost',sans-serif!important;font-weight:400!important}
+body.tpr .vf-rev cite b,body.tpr .vf-case b{color:var(--ink)!important;font-family:'Cormorant Garamond',Georgia,serif!important;font-weight:500!important}
 body.tpr .vf-case{color:var(--ink)!important}
 body.tpr .vf-quals li::before{background:var(--esp)!important}
 body.tpr .tag{border-color:var(--line)!important;color:var(--esp)!important;border-radius:0}
@@ -792,6 +795,7 @@ body.tpr #mnml-chat-bubble{background:var(--card)!important;color:var(--ink)!imp
 @media(max-width:768px){body.tpr .lp-hero{padding:36px 18px 40px}body.tpr .lp-hero h1{font-size:2.1rem!important}body.tpr .stats{gap:22px;justify-content:space-between;margin-top:34px!important}.tpr-head-in{padding:10px 16px;gap:12px}.tpr-mm img{height:34px}.tpr-x{height:30px}.tpr-icon{height:38px}.tpr-word{height:18px}.tpr-brands{gap:10px}}
 @media(max-width:600px){.tpr-back-more{display:none}}
 @media(max-width:400px){.tpr-word{height:15px}.tpr-mm img{height:30px}}
+body.tpr h1{line-height:1.08!important}body.tpr h1,body.tpr h2,body.tpr h3,body.tpr .stat b{font-variant-numeric:lining-nums;font-feature-settings:"lnum" 1}body.tpr h3,body.tpr .card h3,body.tpr h3 a{font-weight:600!important;font-size:1.35em}body.tpr .tpr-hero-text h1{font-size:clamp(2.5rem,5.2vw,3.9rem)!important}
 </style>
 </head>
 <body class="tpr" id="top">
