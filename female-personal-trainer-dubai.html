@@ -677,61 +677,152 @@ th{color:#C9A84C;font-size:13px;letter-spacing:0.05em;text-transform:uppercase;}
   "https://www.instagram.com/thepilatesroombychloe/"
  ]
 }</script>
+<link rel="preload" href="/fonts/jost-latin-300-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/manrope-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<style id="tpr-theme">
+/* The Pilates Room by Chloe brand: cream, sand, espresso; Jost + Manrope (matches thepilatesroombychloe.com) */
+@font-face{font-family:'Jost';font-style:normal;font-weight:300;font-display:swap;src:url(/fonts/jost-latin-300-normal.woff2) format('woff2')}
+@font-face{font-family:'Jost';font-style:normal;font-weight:400;font-display:swap;src:url(/fonts/jost-latin-400-normal.woff2) format('woff2')}
+@font-face{font-family:'Jost';font-style:normal;font-weight:500;font-display:swap;src:url(/fonts/jost-latin-500-normal.woff2) format('woff2')}
+@font-face{font-family:'Manrope';font-style:normal;font-weight:400;font-display:swap;src:url(/fonts/manrope-latin-400-normal.woff2) format('woff2')}
+@font-face{font-family:'Manrope';font-style:normal;font-weight:500;font-display:swap;src:url(/fonts/manrope-latin-500-normal.woff2) format('woff2')}
+@font-face{font-family:'Manrope';font-style:normal;font-weight:600;font-display:swap;src:url(/fonts/manrope-latin-600-normal.woff2) format('woff2')}
+body.tpr{--cream:#F6F1EA;--sand:#E9DED2;--line:#D8C4B1;--ink:#3A2617;--muted:#6F5A48;--esp:#795033;--card:#FBF8F3;background:var(--cream)!important;color:var(--ink)!important;font-family:'Manrope',system-ui,sans-serif!important}
+body.tpr a{color:var(--esp)}
+body.tpr h1,body.tpr h2,body.tpr h3{font-family:'Jost',system-ui,sans-serif!important;font-weight:300!important;letter-spacing:-0.01em;color:var(--ink)!important}
+body.tpr h1 em,body.tpr h2 em{font-style:normal!important;color:var(--esp)!important}
+/* header */
+.tpr-head{position:sticky;top:0;z-index:100;background:rgba(246,241,234,.94);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.tpr-head-in{max-width:1200px;margin:0 auto;padding:12px 28px;display:flex;align-items:center;justify-content:space-between;gap:24px}
+.tpr-brands{display:flex;align-items:center;gap:16px;min-width:0}
+.tpr-mm img{height:44px;width:auto;display:block}
+.tpr-x{width:1px;height:40px;background:var(--line);flex-shrink:0}
+.tpr-logo{display:flex;align-items:center;gap:12px;text-decoration:none!important}
+.tpr-icon{height:48px;width:auto;display:block}
+.tpr-word{height:26px;width:auto;display:block}
+body.tpr nav.tpr-nav{display:flex;align-items:center;gap:28px;position:static;background:none;backdrop-filter:none;border:0;padding:0;z-index:auto}
+.tpr-nav a{font-size:11.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)!important;text-decoration:none!important}
+.tpr-nav a:hover{color:var(--ink)!important}
+body.tpr .tpr-book,body.tpr .tpr-nav a.tpr-book{background:var(--esp);color:var(--cream)!important;padding:12px 20px;font-weight:500}
+body.tpr .tpr-book:hover{background:#5f3e27}
+.tpr-back{text-align:center;background:var(--sand);font-size:12px;letter-spacing:.04em;padding:6px 16px;border-top:1px solid var(--line)}
+.tpr-back a{color:var(--muted)!important}
+.tpr-burger{display:none;background:none;border:0;padding:8px;cursor:pointer;flex-direction:column;gap:7px}
+.tpr-burger span{display:block;width:26px;height:1.5px;background:var(--ink)}
+.tpr-menu{display:none;position:fixed;inset:0;z-index:2147483000;background:var(--cream);flex-direction:column;align-items:center;justify-content:center;gap:22px;padding:40px 24px}
+.tpr-menu.open{display:flex}
+.tpr-menu a{font-family:'Jost',sans-serif;font-weight:300;font-size:24px;color:var(--ink)!important;text-decoration:none!important}
+.tpr-menu a.tpr-book{font-family:'Manrope',sans-serif;font-size:12px;letter-spacing:.2em;text-transform:uppercase;margin-top:8px}
+.tpr-menu .tpr-menu-back{font-family:'Manrope',sans-serif;font-size:13px;color:var(--muted)!important;margin-top:18px}
+.tpr-menu-close{position:absolute;top:18px;right:22px;background:none;border:0;font-size:34px;color:var(--ink);cursor:pointer}
+/* hero */
+body.tpr .lp-hero{background:var(--cream)!important;border-bottom:1px solid var(--line)!important;text-align:left;padding:64px 28px 56px}
+.tpr-hero-grid{max-width:1140px;margin:0 auto;display:grid;grid-template-columns:1.15fr .85fr;gap:56px;align-items:center}
+body.tpr .lp-hero h1{font-size:clamp(2.3rem,4.4vw,3.6rem)!important;line-height:1.08!important;margin:0 0 20px!important;max-width:none!important}
+body.tpr .lp-hero .sub{margin:0 0 30px!important;max-width:560px!important;color:var(--muted)!important;font-size:1.08rem!important;line-height:1.75}
+body.tpr .crumbs{color:var(--muted)!important}body.tpr .crumbs a{color:var(--esp)!important}
+body.tpr .eyebrow{color:var(--esp)!important;letter-spacing:.24em!important;font-weight:500!important;font-family:'Manrope',sans-serif}
+.tpr-hero-img{margin:0}
+.tpr-hero-img img{display:block;width:100%;height:auto;aspect-ratio:4/5;object-fit:cover;border-radius:999px 999px 0 0;border:1px solid var(--line)}
+body.tpr .hero-app,body.tpr .hero-ig{justify-content:flex-start!important}
+body.tpr .stats{max-width:1140px;margin:48px auto 0!important;justify-content:flex-start;gap:56px;border-top:1px solid var(--line);padding-top:28px}
+body.tpr .stat b{font-family:'Jost',sans-serif!important;font-weight:300!important;color:var(--ink)!important}
+body.tpr .stat span{color:var(--muted)!important}
+/* buttons and links */
+body.tpr .btn{background:var(--esp)!important;color:var(--cream)!important;border-radius:0!important;font-family:'Manrope',sans-serif;font-weight:500!important;font-size:11.5px!important;letter-spacing:.2em!important;padding:16px 28px!important}
+body.tpr .btn:hover{background:#5f3e27!important}
+body.tpr .btn-ghost{color:var(--ink)!important;border-bottom-color:var(--esp)!important}
+body.tpr .ig-link{border-color:var(--esp)!important;color:var(--esp)!important}
+body.tpr .ig-link:hover{background:rgba(121,80,51,.08)!important}
+body.tpr .app-badge{border-radius:8px}
+body.tpr .hero-app{color:var(--muted)!important}
+/* sections */
+body.tpr .band{background:var(--sand)!important;border-color:var(--line)!important}
+body.tpr .wrap p,body.tpr .wrap li{color:var(--ink)!important}
+body.tpr .wrap strong{color:var(--ink)!important;font-weight:600}
+body.tpr .wrap h2{font-size:clamp(2rem,3.6vw,2.8rem)!important;line-height:1.15!important}
+body.tpr .wrap h3{color:var(--esp)!important;font-weight:400!important;font-size:1.3rem!important}
+body.tpr .quick-answer,body.tpr .vf-who{background:var(--card)!important;border-left-color:var(--esp)!important;border-radius:0!important}
+body.tpr .card,body.tpr .vf-rev,body.tpr .vf-case{background:var(--card)!important;border:1px solid var(--line)!important;border-radius:0!important;box-shadow:none}
+body.tpr .card h3{color:var(--esp)!important}
+body.tpr .card p,body.tpr .vf-rev blockquote{color:var(--ink)!important}
+body.tpr .vf-rev .vf-stars,body.tpr .vf-case span{color:var(--esp)!important}
+body.tpr .vf-rev cite,body.tpr .vf-small{color:var(--muted)!important}
+body.tpr .vf-rev cite b,body.tpr .vf-case b{color:var(--ink)!important;font-family:'Jost',sans-serif!important;font-weight:400!important}
+body.tpr .vf-case{color:var(--ink)!important}
+body.tpr .vf-quals li::before{background:var(--esp)!important}
+body.tpr .tag{border-color:var(--line)!important;color:var(--esp)!important;border-radius:0}
+body.tpr .loc img{background:var(--cream)!important;border:1px solid var(--line)}
+body.tpr th{color:var(--esp)!important}
+body.tpr th,body.tpr td{border-bottom-color:var(--line)!important}
+body.tpr .steps li::before{background:var(--esp)!important;color:var(--cream)!important}
+body.tpr .faq details{border-bottom-color:var(--line)!important}
+body.tpr .faq summary{color:var(--ink)!important;font-weight:500}
+body.tpr .faq summary::after{color:var(--esp)!important}
+body.tpr .cta-box{background:var(--card)!important;border:1px solid var(--line)!important;border-radius:0!important}
+body.tpr .cta-box p{color:var(--muted)!important}
+body.tpr .vid-fig video{border-color:var(--line)!important;border-radius:999px 999px 0 0!important;box-shadow:none!important;background:var(--sand)!important}
+body.tpr .vid-fig figcaption{color:var(--muted)!important}
+body.tpr .app-box{background:var(--card)!important;border-color:var(--line)!important;border-radius:0!important}
+body.tpr .app-steps li{color:var(--ink)!important}
+body.tpr .app-steps li:before{border-color:var(--esp)!important;color:var(--esp)!important}
+body.tpr .app-side p{color:var(--muted)!important}
+body.tpr .mm-map{background:var(--card)!important;border-color:var(--line)!important;border-radius:0!important}
+body.tpr .mm-map-addr{color:var(--muted)!important}body.tpr .mm-map-addr strong{color:var(--ink)!important}
+body.tpr .mm-map .mm-dir{background:var(--esp)!important;color:var(--cream)!important;border-radius:0!important}
+/* footer */
+.tpr-foot{background:var(--sand);border-top:1px solid var(--line)}
+.tpr-foot-in{max-width:1140px;margin:0 auto;padding:56px 28px 44px;display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:40px}
+.tpr-foot h2{font-family:'Manrope',sans-serif!important;font-size:11.5px!important;letter-spacing:.24em;text-transform:uppercase;color:var(--esp)!important;font-weight:500!important;margin:0 0 14px}
+.tpr-foot p{color:var(--ink);font-size:15px;line-height:1.8;margin:12px 0 0;max-width:320px}
+body.tpr .mm-footer{background:var(--cream)!important;border-top:1px solid var(--line)!important;color:var(--muted)!important;font-family:'Manrope',sans-serif!important}
+body.tpr .mm-footer p,body.tpr .mm-footer-bottom{color:var(--muted)!important}
+body.tpr .mm-footer a,body.tpr .mm-footer-bottom a{color:var(--ink)!important}
+body.tpr .mm-footer h2{color:var(--esp)!important;font-family:'Manrope',sans-serif!important;font-size:11.5px!important;letter-spacing:.2em;text-transform:uppercase;font-weight:500!important}
+body.tpr .mm-footer-bottom{border-top-color:var(--line)!important}
+body.tpr .mm-social a{color:var(--ink)!important;border-color:var(--line)!important}
+body.tpr .testi footer,body.tpr .testi cite{color:var(--esp)!important}
+body.tpr .vf-quals li strong,body.tpr .vf-quals li b{color:var(--ink)!important}
+/* chat button in the brand colour */
+body.tpr #mnml-chat-btn{background:var(--esp)!important;box-shadow:0 8px 24px rgba(58,38,23,.25)!important}
+body.tpr #mnml-chat-btn svg{stroke:var(--cream)!important}
+body.tpr #mnml-chat-bubble{background:var(--card)!important;color:var(--ink)!important;border:1px solid var(--line)!important}
+@media(max-width:1060px){body.tpr nav.tpr-nav{display:none}.tpr-burger{display:flex}}
+@media(max-width:860px){.tpr-hero-grid{grid-template-columns:1fr;gap:32px}.tpr-hero-img{max-width:420px;width:100%;margin:0 auto}.tpr-foot-in{grid-template-columns:1fr;gap:28px}}
+@media(max-width:768px){body.tpr .lp-hero{padding:36px 18px 40px}body.tpr .lp-hero h1{font-size:2.1rem!important}body.tpr .stats{gap:22px;justify-content:space-between;margin-top:34px!important}.tpr-head-in{padding:10px 16px;gap:12px}.tpr-mm img{height:34px}.tpr-x{height:30px}.tpr-icon{height:38px}.tpr-word{height:18px}.tpr-brands{gap:10px}}
+@media(max-width:600px){.tpr-back-more{display:none}}
+@media(max-width:400px){.tpr-word{height:15px}.tpr-mm img{height:30px}}
+</style>
 </head>
-<body>
+<body class="tpr" id="top">
 
-<header class="mm-header">
-  <div class="mm-header-inner">
-    <a class="mm-logo" href="/" aria-label="Mr &amp; Mrs Lifestyle home"><img src="/logo.png" alt="Mr &amp; Mrs Lifestyle" width="206" height="140"></a>
-    <div class="mm-nav-wrap" role="navigation" aria-label="Main menu">
-    <ul class="mm-links">
-      <li><a href="/personal-trainer-dubai.html">Dubai PT</a></li>
-      <li><a href="/female-personal-trainer-dubai.html" class="mm-active" aria-current="page">Ladies Pilates</a></li>
-      <li><a href="/online-coaching.html">Online Coaching</a></li>
-      <li><a href="/packages.html">Packages</a></li>
-      <li><a href="/transformations.html">Results</a></li>
-      <li><a href="/blog.html">Blog</a></li>
-      <li class="mm-dropdown"><button type="button" class="mm-drop-btn" aria-haspopup="true">Free Tools</button>
-        <div class="mm-drop-menu">
-          <a href="/calculator.html">Calorie &amp; Macro Calculator</a>
-          <a href="/dubai-food-calories.html">Dubai Food Calories</a>
-          <a href="/personal-trainer-cost-calculator.html">PT Cost Calculator</a>
-          <a href="/workout-tracker.html">Free Workout Tracker</a>
-          <a href="/exercise-library.html">Exercise Library</a>
-          <a href="/free-guide.html">Free Transformation Guide</a>
-        </div>
-      </li>
-      <li><a href="/apply.html" class="mm-cta">Apply Now</a></li>
-    </ul>
+<header class="tpr-head">
+  <div class="tpr-head-in">
+    <div class="tpr-brands">
+      <a class="tpr-mm" href="/" aria-label="Mr &amp; Mrs Lifestyle home"><img src="/logo.png" alt="Mr &amp; Mrs Lifestyle" width="206" height="140"></a>
+      <span class="tpr-x" aria-hidden="true"></span>
+      <a class="tpr-logo" href="#top" aria-label="The Pilates Room by Chloe"><img class="tpr-icon" src="/pilates-room/tpr-icon.png" alt="" width="105" height="200"><img class="tpr-word" src="/pilates-room/tpr-wordmark.png" alt="The Pilates Room by Chloe" width="839" height="120"></a>
     </div>
-    <div class="mm-mobile-actions">
-      <a href="/apply.html" class="mm-cta">Apply Now</a>
-      <button type="button" class="mm-burger" aria-label="Open menu" aria-controls="mmMenu" aria-expanded="false" onclick="mmMenu(true)"><span></span><span></span><span></span></button>
-    </div>
+    <nav class="tpr-nav" aria-label="The Pilates Room menu">
+      <a href="#sessions">Sessions</a><a href="#packages">Pricing</a><a href="#studio">The Studio</a><a href="#faq">FAQ</a>
+      <a class="tpr-book" href="#book-app">Book a Session</a>
+    </nav>
+    <button type="button" class="tpr-burger" aria-label="Open menu" aria-controls="tprMenu" aria-expanded="false" onclick="tprMenu(true)"><span></span><span></span></button>
   </div>
+  <div class="tpr-back"><a href="/">← Part of Mr &amp; Mrs Lifestyle<span class="tpr-back-more"> · Personal training &amp; online coaching</span></a></div>
 </header>
-<div class="mm-menu" id="mmMenu" role="dialog" aria-modal="true" aria-label="Site menu">
-  <button type="button" class="mm-menu-close" aria-label="Close menu" onclick="mmMenu(false)">&times;</button>
-  <a href="/">Home</a>
-  <a href="/personal-trainer-dubai.html">Dubai PT</a>
-  <a href="/female-personal-trainer-dubai.html" class="mm-active" aria-current="page">Ladies Pilates</a>
-  <a href="/online-coaching.html">Online Coaching</a>
-  <a href="/packages.html">Packages</a>
-  <a href="/transformations.html">Results</a>
-  <a href="/blog.html">Blog</a>
-  <div class="mm-menu-label">Free Tools</div>
-  <a href="/calculator.html" class="mm-menu-small">Calorie &amp; Macro Calculator</a>
-  <a href="/dubai-food-calories.html" class="mm-menu-small">Dubai Food Calories</a>
-  <a href="/personal-trainer-cost-calculator.html" class="mm-menu-small">PT Cost Calculator</a>
-  <a href="/workout-tracker.html" class="mm-menu-small">Free Workout Tracker</a>
-  <a href="/exercise-library.html" class="mm-menu-small">Exercise Library</a>
-  <a href="/free-guide.html" class="mm-menu-small">Free Transformation Guide</a>
-  <a href="/apply.html" class="mm-cta">Apply Now</a>
+<div class="tpr-menu" id="tprMenu" role="dialog" aria-modal="true" aria-label="Menu">
+  <button type="button" class="tpr-menu-close" aria-label="Close menu" onclick="tprMenu(false)">&times;</button>
+  <img src="/pilates-room/tpr-icon.png" alt="" width="52" height="99" style="margin-bottom:10px">
+  <a href="#sessions">Sessions</a><a href="#packages">Pricing</a><a href="#studio">The Studio</a><a href="#faq">FAQ</a>
+  <a class="tpr-book" href="#book-app">Book a Session</a>
+  <a class="tpr-menu-back" href="/">← Back to Mr &amp; Mrs Lifestyle</a>
 </div>
-<script>function mmMenu(o){var m=document.getElementById('mmMenu');m.classList.toggle('open',o);document.body.style.overflow=o?'hidden':'';var b=document.querySelector('.mm-burger');if(b)b.setAttribute('aria-expanded',o?'true':'false');}document.addEventListener('keydown',function(e){if(e.key==='Escape')mmMenu(false);});document.querySelectorAll('#mmMenu a').forEach(function(l){l.addEventListener('click',function(){mmMenu(false);});});</script>
+<script>function tprMenu(o){var m=document.getElementById('tprMenu');m.classList.toggle('open',o);document.body.style.overflow=o?'hidden':'';var b=document.querySelector('.tpr-burger');if(b)b.setAttribute('aria-expanded',o?'true':'false');}document.addEventListener('keydown',function(e){if(e.key==='Escape')tprMenu(false);});document.querySelectorAll('#tprMenu a').forEach(function(l){l.addEventListener('click',function(){tprMenu(false);});});</script>
 
 
 <header class="lp-hero">
+<div class="tpr-hero-grid"><div class="tpr-hero-text">
   <div class="crumbs"><a href="https://www.mrandmrslifestyle.com/">Home</a> › <a href="https://www.mrandmrslifestyle.com/personal-trainer-dubai.html">Personal Trainer Dubai</a> › Female Trainer</div>
   <div class="eyebrow">Ladies Only · Meydan, Dubai</div>
   <h1>Female Trainer in Dubai — <em>Private, Ladies-Only Reformer Pilates with Chloe</em></h1>
@@ -740,6 +831,9 @@ th{color:#C9A84C;font-size:13px;letter-spacing:0.05em;text-transform:uppercase;}
   <a class="btn-ghost" href="#studio">About the studio ↓</a>
   <div class="hero-app"><span class="app-badges"><a class="app-badge" href="https://apps.apple.com/ae/app/the-pilates-room-by-chloe/id6815196864" target="_blank" rel="noopener" aria-label="Download The Pilates Room by Chloe app on the App Store" onclick="if(window.gtag)gtag('event','app_store_click',{source:'ladies_page_hero'})"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701"/></svg><span><small>Download on the</small>App Store</span></a><a class="app-badge" href="https://play.google.com/store/apps/details?id=com.fitnessmobileapps.thepilatesroom46324" target="_blank" rel="noopener" aria-label="Get The Pilates Room by Chloe app on Google Play" onclick="if(window.gtag)gtag('event','google_play_click',{source:'ladies_page_hero'})"><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M22.018 13.298l-3.919 2.218-3.515-3.493 3.543-3.521 3.891 2.202a1.49 1.49 0 0 1 0 2.594zM1.337.924a1.486 1.486 0 0 0-.112.568v21.017c0 .217.045.419.124.6l11.155-11.087L1.337.924zm12.207 10.065l3.258-3.238L3.45.195a1.466 1.466 0 0 0-.946-.179l11.04 10.973zm0 2.067l-11 10.933c.298.036.612-.016.906-.183l13.324-7.54-3.23-3.21z"/></svg><span><small>Get it on</small>Google Play</span></a></span><span>Book your session in the app</span></div>
   <div class="hero-ig"><a class="ig-link" href="https://www.instagram.com/thepilatesroombychloe/" target="_blank" rel="noopener" aria-label="The Pilates Room by Chloe on Instagram" onclick="if(window.gtag)gtag('event','instagram_click',{source:'ladies_page_hero'})"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg><span>Follow @thepilatesroombychloe</span></a></div>
+</div>
+<figure class="tpr-hero-img"><img src="/pilates-room/studio-hero.jpg" alt="Private reformer Pilates at The Pilates Room by Chloe, Meydan, Dubai" width="800" height="1000" fetchpriority="high"></figure>
+</div>
   <div class="stats">
     <div class="stat"><b>100%</b><span>Private sessions</span></div>
     <div class="stat"><b>50 min</b><span>Per session</span></div>
@@ -765,7 +859,7 @@ th{color:#C9A84C;font-size:13px;letter-spacing:0.05em;text-transform:uppercase;}
   </div>
 </section>
 
-<section class="wrap">
+<section class="wrap" id="sessions">
   <h2>Ways to train with <em>Chloe</em></h2>
   <div class="vid-row">
     <div>
@@ -905,7 +999,7 @@ th{color:#C9A84C;font-size:13px;letter-spacing:0.05em;text-transform:uppercase;}
   <div class="vf-cta"><a href="https://wa.me/971547011995?text=Hi%20Chloe%2C%20I%27d%20like%20to%20train%20with%20you.%20Can%20we%20chat%3F" class="btn" target="_blank" rel="noopener">Enquire with Chloe</a></div>
 </section>
 
-<section class="band">
+<section class="band" id="faq">
   <div class="wrap faq">
     <h2>Private Pilates in Dubai: <em>your questions answered</em></h2>
     <details><summary>Is there a private Pilates studio in Dubai?</summary><p>Yes. The Pilates Room by Chloe is a private, ladies-only Pilates studio on Meydan Avenue (Block A, Shop 3) in Meydan, Dubai. Every session is private: just you and Chloe, or you and a friend, on the reformer, with no group classes.</p></details>
@@ -944,6 +1038,13 @@ th{color:#C9A84C;font-size:13px;letter-spacing:0.05em;text-transform:uppercase;}
 </section>
 </main>
 
+<section class="tpr-foot" aria-label="The Pilates Room by Chloe">
+  <div class="tpr-foot-in">
+    <div><img src="/pilates-room/tpr-icon.png" alt="" width="42" height="80" style="height:64px;width:auto;margin-bottom:12px"><img src="/pilates-room/tpr-wordmark.png" alt="The Pilates Room by Chloe" width="839" height="120" style="height:34px;width:auto;display:block"><p>Exclusively for women. A private reformer Pilates space in Meydan, Dubai. A space that feels like home.</p></div>
+    <div><h2>Find us</h2><p>Meydan Avenue, Block A, Shop 3<br>Nad Al Sheba 1, Dubai<br><a href="tel:+971547011995">+971 54 701 1995</a></p><p><a href="https://maps.app.goo.gl/YrUzPbKRkRfiaqFg8" target="_blank" rel="noopener">Open in maps →</a></p></div>
+    <div><h2>Book</h2><p><a href="https://apps.apple.com/ae/app/the-pilates-room-by-chloe/id6815196864" target="_blank" rel="noopener">App Store</a> · <a href="https://play.google.com/store/apps/details?id=com.fitnessmobileapps.thepilatesroom46324" target="_blank" rel="noopener">Google Play</a><br><a href="https://wa.me/971547011995?text=Hi%20Chloe%2C%20I%27m%20interested%20in%20private%20reformer%20Pilates%20with%20you%20in%20Dubai.%20Can%20we%20chat%3F" target="_blank" rel="noopener">WhatsApp Chloe</a><br><a href="https://www.instagram.com/thepilatesroombychloe/" target="_blank" rel="noopener">@thepilatesroombychloe</a></p></div>
+  </div>
+</section>
 <div class="mm-footer" role="contentinfo">
   <div class="mm-footer-grid">
     <div>
