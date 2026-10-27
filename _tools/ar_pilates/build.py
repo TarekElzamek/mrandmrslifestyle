@@ -141,6 +141,8 @@ html[dir=rtl] .tpr-rating{flex-direction:row-reverse}
 h = h.replace('</head>', RTL + '</head>', 1) if '</head>' in h else h
 out = h + b
 if '</head>' not in h: out = out.replace('</head>', RTL + '</head>', 1)
+# make relative file paths work from /ar/
+out = re.sub(r'\b(src|href|srcset|poster)="(?!(?:https?:|/|#|tel:|mailto:|data:|javascript:))([^"]+)"', r'\1="/\2"', out)
 open(OUT, 'w', encoding='utf-8').write(out)
 print('written', OUT, len(out), 'faqs', len(faqs))
 print('leftover english:', len(left))
