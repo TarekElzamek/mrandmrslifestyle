@@ -569,11 +569,24 @@
     function list() {
       var ql = q.toLowerCase().trim();
       var items = EX.filter(function (e) { return (cat === 'All' || e.cat === cat) && (!ql || (e.name + ' ' + e.m + ' ' + e.cat).toLowerCase().indexOf(ql) > -1); });
-      var html = items.slice(0, 120).map(function (e) { return '<button type="button" class="pick-item" data-n="' + esc(e.name) + '"><div><b>' + esc(e.name) + (vidsFor(e.name).length ? ' <span class="pill gold vid-pill">▶ Video</span>' : '') + '</b><span>' + esc(e.cat) + ' · ' + esc(e.m) + '</span></div><span class="plus" aria-hidden="true">+</span></button>'; }).join('');
+      var html = items.slice(0, 120).map(function (e) {
+        var hv = vidsFor(e.name).length;
+        return '<div class="pick-row"><div class="pick-line"><button type="button" class="pick-item" data-n="' + esc(e.name) + '"><div><b>' + esc(e.name) + '</b><span>' + esc(e.cat) + ' · ' + esc(e.m) + '</span></div></button>' +
+          (hv ? '<button type="button" class="pill gold vid-pill pick-watch" data-watch="' + esc(e.name) + '" aria-expanded="false" aria-label="Watch the ' + esc(e.name) + ' demo">▶ Video</button>' : '') +
+          '<button type="button" class="pick-add" data-n="' + esc(e.name) + '" aria-label="Add ' + esc(e.name) + '">+</button></div>' +
+          (hv ? '<div class="pick-vid" hidden>' + videoBox(e.name, 'pk|' + e.name) + '<button type="button" class="tk-btn sm block" data-n="' + esc(e.name) + '" style="margin-top:8px">Add ' + esc(e.name) + '</button></div>' : '') + '</div>';
+      }).join('');
       if (ql && !EXMAP[q.trim()]) html += '<button type="button" class="pick-item" data-n="' + esc(q.trim()) + '" data-custom="1"><div><b>Add "' + esc(q.trim()) + '"</b><span>Custom exercise</span></div><span class="plus" aria-hidden="true">+</span></button>';
       if (!html) html = '<div class="tk-empty">No exercises found</div>';
       $('pkList').innerHTML = html;
       $('pkList').querySelectorAll('[data-n]').forEach(function (b) { b.onclick = function () { m.close(); onPick(b.dataset.n); }; });
+      wireVideos($('pkList'));
+      $('pkList').querySelectorAll('[data-watch]').forEach(function (b) { b.onclick = function () {
+        var pv = b.closest('.pick-row').querySelector('.pick-vid');
+        $('pkList').querySelectorAll('.pick-vid').forEach(function (o) { if (o !== pv && !o.hidden) { o.hidden = true; o.querySelector('.ex-vid-frame').innerHTML = ''; var wb = o.closest('.pick-row').querySelector('[data-watch]'); if (wb) wb.setAttribute('aria-expanded', 'false'); } });
+        openHow(pv); b.setAttribute('aria-expanded', pv.hidden ? 'false' : 'true');
+        if (!pv.hidden) pv.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+      }; });
     }
     $('pkQ').oninput = function () { q = this.value; list(); };
     m.querySelectorAll('.chips button').forEach(function (b) { b.onclick = function () { m.querySelectorAll('.chips button').forEach(function (x) { x.setAttribute('aria-pressed', 'false'); }); b.setAttribute('aria-pressed', 'true'); cat = b.dataset.c; list(); }; });
