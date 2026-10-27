@@ -230,3 +230,57 @@ create policy "videos coach write" on public.exercise_videos for all using (publ
 -- ---------- v8: link programmes to the template they were assigned from (assign / unassign) ----------
 alter table public.programs add column if not exists template_id uuid references public.program_templates(id) on delete set null;
 create index if not exists programs_template_idx on public.programs(template_id);
+-- ---------- v9: coach hub — profile photo/bio, client invites, avatars storage ----------
+alter table public.profiles add column if not exists avatar_url text;
+alter table public.profiles add column if not exists bio text;
+alter table public.profiles add column if not exists phone text;
+alter table public.profiles add column if not exists instagram text;
+drop policy if exists "profiles read coaches" on public.profiles;
+create policy "profiles read coaches" on public.profiles for select to authenticated using (role = 'coach');
+
+create table if not exists public.client_invites (
+  id uuid primary key default gen_random_uuid(),
+  email text not null,
+  name text,
+  template_id uuid references public.program_templates(id) on delete set null,
+  created_by uuid references public.profiles(id) on delete set null,
+  created_at timestamptz not null default now(),
+  accepted_at timestamptz,
+  accepted_user uuid references public.profiles(id) on delete set null
+);
+create unique index if not exists client_invites_open_email on public.client_invites (lower(email)) where accepted_at is null;
+alter table public.client_invites enable row level security;
+drop policy if exists "invites coach" on public.client_invites;
+create policy "invites coach" on public.client_invites for all using (public.is_coach()) with check (public.is_coach());
+
+-- when an invited client signs in for the first time: set their name and give them the chosen programme
+create or replace function public.apply_invite() returns trigger
+language plpgsql security definer set search_path = public as $$
+declare inv public.client_invites; t public.program_templates;
+begin
+  select * into inv from public.client_invites where lower(email) = lower(new.email) and accepted_at is null order by created_at desc limit 1;
+  if inv.id is null then return new; end if;
+  if coalesce(inv.name, '') <> '' then update public.profiles set name = inv.name where id = new.id; end if;
+  if inv.template_id is not null then
+    select * into t from public.program_templates where id = inv.template_id;
+    if t.id is not null then
+      insert into public.programs (client_id, name, notes, days, active, created_by, template_id)
+      values (new.id, t.name, t.notes, t.days, true, inv.created_by, t.id);
+    end if;
+  end if;
+  update public.client_invites set accepted_at = now(), accepted_user = new.id where id = inv.id;
+  return new;
+end $$;
+drop trigger if exists profiles_apply_invite on public.profiles;
+create trigger profiles_apply_invite after insert on public.profiles for each row execute function public.apply_invite();
+
+-- profile photos (public read, each user writes only in their own folder)
+insert into storage.buckets (id, name, public) values ('avatars', 'avatars', true) on conflict (id) do nothing;
+drop policy if exists "avatars read" on storage.objects;
+create policy "avatars read" on storage.objects for select using (bucket_id = 'avatars');
+drop policy if exists "avatars insert own" on storage.objects;
+create policy "avatars insert own" on storage.objects for insert to authenticated with check (bucket_id = 'avatars' and (storage.foldername(name))[1] = auth.uid()::text);
+drop policy if exists "avatars update own" on storage.objects;
+create policy "avatars update own" on storage.objects for update to authenticated using (bucket_id = 'avatars' and (storage.foldername(name))[1] = auth.uid()::text);
+drop policy if exists "avatars delete own" on storage.objects;
+create policy "avatars delete own" on storage.objects for delete to authenticated using (bucket_id = 'avatars' and (storage.foldername(name))[1] = auth.uid()::text);

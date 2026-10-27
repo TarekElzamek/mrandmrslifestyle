@@ -86,6 +86,16 @@
   }
 
   var ICON = {
+    hub: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h5v-6h4v6h5V10"/></svg>',
+    menu: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>',
+    workouts: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3c1 3 4 4.5 4 8.5a4 4 0 0 1-8 0c0-2 1-3 2-4 0 2 1 3 2 3 0-3-1-5 0-7.5z"/></svg>',
+    exercises: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="14" cy="4.5" r="1.8"/><path d="M9 21l2.5-6 3 2.5V22M6.5 11.5l3-3.5 4 1 2.5 3.5 3 .5M11.5 15L10 9"/></svg>',
+    addUser: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="8" r="3.5"/><path d="M3.5 20a6.5 6.5 0 0 1 13 0M19 8v6M16 11h6"/></svg>',
+    cal: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>',
+    chat: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16v11H9l-5 4z"/><path d="M9 10.5h.01M12 10.5h.01M15 10.5h.01"/></svg>',
+    checkin: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h5v16h-5M10 8l4 4-4 4M14 12H3"/></svg>',
+    food: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3v8a2 2 0 0 0 4 0V3M8 11v10M17 3c-2 0-3 2-3 6s1 5 3 5v7"/></svg>',
+    money: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 4h8l-2 3h-4zM10 7c-5 3-6 8-6 10a4 4 0 0 0 4 4h8a4 4 0 0 0 4-4c0-2-1-7-6-10"/><path d="M12 11v6M10 12.5c0-1 4-1 4 .5s-4 1-4 2.5 4 1.5 4 .5"/></svg>',
     bell: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 8 3 8H3s3-1 3-8"/><path d="M10.3 20a1.9 1.9 0 0 0 3.4 0"/></svg>',
     today: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M6.5 6.5v11M17.5 6.5v11M3.5 9v6M20.5 9v6M6.5 12h11"/></svg>',
     plan: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>',
@@ -170,7 +180,7 @@
       var t = await sb.from('profiles').select('*').eq('id', saved).maybeSingle();
       if (t.data) S.target = t.data;
     }
-    S.tab = isCoach() && !viewingOther() ? 'clients' : 'today';
+    S.tab = isCoach() && !viewingOther() ? 'hub' : 'today';
     ev('tracker_open', { role: me.role });
     if (isCoach()) startNotifs();
     loadVideos();
@@ -190,7 +200,7 @@
     try { var lv = await sb.from('live_workouts').select('*').eq('user_id', id).maybeSingle(); if (lv && lv.data && (+lv.data.rev || 0) > LIVE.lastRev) { LIVE.lastRev = +lv.data.rev; S.draft = lv.data.data || null; lsSet('mm_draft_' + id, S.draft); } else if (S.draft) pushLive(); } catch (e) {}
     startLive();
     S.progEx = null; S.calDay = null;
-    if (S.draft && S.tab !== 'clients') S.tab = 'today';
+    if (S.draft && COACH_TABS.indexOf(S.tab) < 0) S.tab = 'today';
     render();
   }
 
@@ -237,16 +247,18 @@
   // ---------- rendering shell ----------
   function render() {
     var who = S.me;
-    $('who').innerHTML = '<b>' + esc(who.name || who.email) + '</b>' + (isCoach() ? 'Coach' : 'Mr &amp; Mrs Lifestyle');
+    $('who').innerHTML = '<button type="button" class="tk-who-btn" id="whoBtn" aria-label="Your profile"><span><b>' + esc(who.name || who.email) + '</b>' + (isCoach() ? 'Coach' : 'Mr &amp; Mrs Lifestyle') + '</span>' + avatarHtml(who, 38) + '</button>'; $('whoBtn').onclick = openProfile;
     var cb = $('coachbar');
     if (viewingOther()) { cb.hidden = false; cb.innerHTML = 'Coaching: ' + esc(S.target.name || S.target.email) + '<button type="button" id="backClients">Back to clients</button>'; $('backClients').onclick = backToClients; }
     else cb.hidden = true;
-    var tabs = [['today', 'Today'], ['plan', 'Plan'], ['body', 'Body'], ['progress', 'Progress'], ['history', 'History']];
-    if (isCoach()) tabs.push(['clients', 'Clients']);
+    var tabs;
+    if (isCoach() && !viewingOther()) tabs = COACH_TABS.indexOf(S.tab) > -1 ? [['hub', 'Hub'], ['clients', 'Clients'], ['workouts', 'Workouts'], ['exercises', 'Exercises'], ['menu', 'Menu']] : [['hub', 'Hub'], ['today', 'Today'], ['plan', 'Plan'], ['body', 'Body'], ['progress', 'Progress'], ['history', 'History']];
+    else tabs = [['today', 'Today'], ['plan', 'Plan'], ['body', 'Body'], ['progress', 'Progress'], ['history', 'History']];
     $('nav').innerHTML = tabs.map(function (t) { return '<button type="button" data-tab="' + t[0] + '"' + (S.tab === t[0] ? ' aria-current="page"' : '') + '>' + ICON[t[0]] + t[1] + '</button>'; }).join('');
     $('nav').querySelectorAll('button').forEach(function (b) { b.onclick = function () { S.tab = b.dataset.tab; render(); window.scrollTo(0, 0); }; });
     Object.keys(S.chart).forEach(function (k) { try { S.chart[k].destroy(); } catch (e) {} delete S.chart[k]; });
-    ({ today: renderToday, plan: renderPlan, body: renderBody, progress: renderProgress, history: renderHistory, clients: renderClients })[S.tab]();
+    ({ today: renderToday, plan: renderPlan, body: renderBody, progress: renderProgress, history: renderHistory, clients: renderClients, hub: renderHub, workouts: renderWorkouts, exercises: renderExercises, menu: renderMenu })[S.tab]();
+    if (S.tab === 'today' && !isCoach() && !(S.draft && !S.overview)) coachCard().then(function (html) { if (html && S.tab === 'today' && !(S.draft && !S.overview) && !$('view').querySelector('.coach-card')) $('view').insertAdjacentHTML('beforeend', html); });
   }
 
   async function backToClients() { S.target = S.me; lsSet('mm_target', null); S.tab = 'clients'; await loadTarget(); }
@@ -806,15 +818,15 @@
     draw();
   }
 
-  function openBuilder(prog, seed) {
+  function openBuilder(prog, seed, tplMode) {
     var P = prog ? JSON.parse(JSON.stringify(prog)) : seed ? { name: seed.name, notes: seed.notes || '', days: JSON.parse(JSON.stringify(seed.days || [])), active: true } : { name: '', notes: '', days: [{ name: 'Day 1', exercises: [] }], active: true };
     if (!P.days.length) P.days.push({ name: 'Day 1', exercises: [] });
     P.days.forEach(function (d) { d.exercises = d.exercises || []; });
-    var m = modal(prog ? 'Edit programme' : seed ? 'New programme from template' : 'New programme', '<div id="bld"></div>');
+    var m = modal(tplMode ? (prog ? 'Edit template' : 'New template') : prog ? 'Edit programme' : seed ? 'New programme from template' : 'New programme', '<div id="bld"></div>');
     function draw() {
       var h = '<div class="tk-field"><label for="bName">Programme name</label><input class="tk-input" id="bName" value="' + esc(P.name) + '" placeholder="e.g. 12-week fat loss, 3 days a week"></div>' +
         '<div class="tk-field"><label for="bNotes">Notes for the client</label><textarea class="tk-textarea" id="bNotes" placeholder="Warm-up, cardio after weights, steps target…">' + esc(P.notes || '') + '</textarea></div>' +
-        '<label class="tk-row tk-muted" style="margin-top:10px;min-height:44px"><input type="checkbox" id="bActive"' + (P.active ? ' checked' : '') + ' style="width:20px;height:20px"> Active programme (shows on the client\'s Today screen)</label>';
+        (tplMode ? '' : '<label class="tk-row tk-muted" style="margin-top:10px;min-height:44px"><input type="checkbox" id="bActive"' + (P.active ? ' checked' : '') + ' style="width:20px;height:20px"> Active programme (shows on the client\'s Today screen)</label>');
       P.days.forEach(function (d, di) {
         h += '<div class="bday"><div class="tk-row"><label class="sr" for="dn' + di + '">Day name</label><input class="tk-input" id="dn' + di + '" data-dn="' + di + '" value="' + esc(d.name) + '" style="flex:1;font-weight:700"><button type="button" class="tk-icon-btn" data-rmday="' + di + '" aria-label="Remove day">' + ICON.trash + '</button></div>';
         if (d.exercises.length) h += '<div class="bex-h"><span>Exercise</span><span>Sets</span><span>Reps</span><span>Rest s</span><span></span></div>';
@@ -828,11 +840,11 @@
         h += '<button type="button" class="tk-btn sm ghost" data-addx="' + di + '" style="margin-top:10px">+ Add exercise</button></div>';
       });
       h += '<button type="button" class="tk-btn plain block" id="bAddDay" style="margin-top:12px">+ Add training day</button>';
-      h += '<div class="tk-grid2" style="margin-top:16px">' + (prog ? '<button type="button" class="tk-btn danger" id="bDel">Delete</button>' : '<button type="button" class="tk-btn plain" data-close>Cancel</button>') + '<button type="button" class="tk-btn" id="bSave">Save programme</button></div>';
+      h += '<div class="tk-grid2" style="margin-top:16px">' + (prog ? '<button type="button" class="tk-btn danger" id="bDel">Delete</button>' : '<button type="button" class="tk-btn plain" data-close>Cancel</button>') + '<button type="button" class="tk-btn" id="bSave">' + (tplMode ? 'Save template' : 'Save programme') + '</button></div>';
       $('bld').innerHTML = h;
       $('bName').oninput = function () { P.name = this.value; };
       $('bNotes').oninput = function () { P.notes = this.value; };
-      $('bActive').onchange = function () { P.active = this.checked; };
+      if ($('bActive')) $('bActive').onchange = function () { P.active = this.checked; };
       m.querySelectorAll('[data-dn]').forEach(function (i) { i.oninput = function () { P.days[+i.dataset.dn].name = i.value; }; });
       m.querySelectorAll('input[data-f]').forEach(function (i) { i.oninput = function () { P.days[+i.dataset.d].exercises[+i.dataset.e][i.dataset.f] = i.value; }; });
       m.querySelectorAll('[data-rmday]').forEach(function (b) { b.onclick = function () { if (P.days.length > 1 || confirmBox('Remove the only day?')) { P.days.splice(+b.dataset.rmday, 1); if (!P.days.length) P.days.push({ name: 'Day 1', exercises: [] }); draw(); } }; });
@@ -849,6 +861,7 @@
       $('bAddDay').onclick = function () { P.days.push({ name: 'Day ' + (P.days.length + 1), exercises: [] }); draw(); };
       $('bSave').onclick = saveProg;
       if ($('bDel')) $('bDel').onclick = async function () {
+        if (tplMode) { if (!confirmBox('Delete this template? Programmes already assigned to clients are not affected.')) return; var rt = await sb.from('program_templates').delete().eq('id', prog.id); if (rt.error) return toast(rt.error.message); S.templates = null; m.close(); render(); return toast('Template deleted'); }
         if (!confirmBox('Delete this programme? Logged workouts are kept.')) return;
         var r = await sb.from('programs').delete().eq('id', prog.id);
         if (r.error) return toast(r.error.message);
@@ -858,6 +871,12 @@
     async function saveProg() {
       if (!P.name.trim()) { toast('Give the programme a name'); $('bName').focus(); return; }
       var days = P.days.map(function (d) { return { name: d.name || 'Day', exercises: d.exercises.map(function (e) { return { name: e.name, sets: parseInt(e.sets, 10) || 1, reps: String(e.reps || ''), rest: parseInt(e.rest, 10) || null, notes: e.notes || '', mode: e.mode || undefined }; }) }; });
+      if (tplMode) {
+        var trow = { name: P.name.trim(), notes: P.notes || null, days: days, updated_at: new Date().toISOString() };
+        var rt = prog ? await sb.from('program_templates').update(trow).eq('id', prog.id).select().single() : await sb.from('program_templates').insert(Object.assign(trow, { created_by: S.me.id })).select().single();
+        if (rt.error) return toast('Could not save: ' + rt.error.message);
+        S.templates = null; ev('tracker_template_saved', {}); m.close(); render(); return toast('Template saved');
+      }
       var row = { name: P.name.trim(), notes: P.notes || null, days: days, active: !!P.active, updated_at: new Date().toISOString() };
       var r;
       if (prog) r = await sb.from('programs').update(row).eq('id', prog.id).select().single();
@@ -1103,6 +1122,7 @@
     });
     var h = '<h1 class="tk-h1">Your <em>clients</em></h1><p class="tk-sub">Everyone who signed in to the tracker. Tap a client to see their workouts, weight and programme, or to log today\'s session for them.</p>';
     h += '<div class="tk-grid3" style="margin-top:14px"><div class="tk-stat"><b>' + P.length + '</b><span>Clients</span></div><div class="tk-stat"><b>' + rows.filter(function (r) { return r.last && r.last >= iso(new Date(Date.now() - 7 * 864e5)); }).length + '</b><span>Trained 7 days</span></div><div class="tk-stat"><b>' + rows.filter(function (r) { return !r.prog; }).length + '</b><span>Need a plan</span></div></div>';
+    h += '<button type="button" class="tk-btn block" id="cAdd" style="margin-top:12px">+ Add client</button>';
     h += '<div class="tk-field"><label for="cQ" class="sr">Search clients</label><input class="tk-input" id="cQ" type="search" placeholder="Search by name or email"></div><div class="tk-card" id="cList"></div>';
     v.innerHTML = h;
     function draw(ql) {
@@ -1110,15 +1130,273 @@
         var age = r.last ? Math.round((parseDay(today()) - parseDay(r.last)) / 864e5) : null;
         var pill = r.last == null ? '<span class="pill">No workouts</span>' : '<span class="pill ' + (age <= 7 ? 'ok' : age <= 14 ? 'gold' : 'warn') + '">' + daysAgo(r.last) + '</span>';
         var wt = r.w1 ? r.w1.weight + 'kg' + (r.w0 && r.w0 !== r.w1 ? ' (' + (r1(r.w1.weight - r.w0.weight) > 0 ? '+' : '') + r1(r.w1.weight - r.w0.weight) + ')' : '') : 'no weight yet';
-        return '<button type="button" class="pick-item" data-client="' + r.p.id + '"><div style="min-width:0"><b>' + esc(r.p.name || r.p.email) + (r.p.role === 'coach' ? ' <span class="pill gold">Coach</span>' : '') + '</b><span>' + esc(r.p.email) + ' · ' + r.n30 + ' workouts in 30 days · ' + wt + (r.prog ? '' : ' · no programme') + '</span></div><span style="margin-left:auto">' + pill + '</span></button>';
+        return '<button type="button" class="pick-item" data-client="' + r.p.id + '">' + avatarHtml(r.p, 36) + '<div style="min-width:0;margin-left:10px"><b>' + esc(r.p.name || r.p.email) + (r.p.role === 'coach' ? ' <span class="pill gold">Coach</span>' : '') + '</b><span>' + esc(r.p.email) + ' · ' + r.n30 + ' workouts in 30 days · ' + wt + (r.prog ? '' : ' · no programme') + '</span></div><span style="margin-left:auto">' + pill + '</span></button>';
       }).join('');
       $('cList').innerHTML = html || '<div class="tk-empty">' + (P.length ? 'No match.' : 'No clients yet. Send them the tracker link and ask them to sign in with Google: mrandmrslifestyle.com/workout-tracker.html') + '</div>';
       $('cList').querySelectorAll('[data-client]').forEach(function (b) { b.onclick = function () { openClient(P.filter(function (p) { return p.id === b.dataset.client; })[0]); }; });
     }
+    $('cAdd').onclick = openAddClient;
     $('cQ').oninput = function () { draw(this.value.toLowerCase().trim()); };
     draw('');
   }
   async function openClient(p) { S.target = p; lsSet('mm_target', p.id); S.tab = 'today'; ev('tracker_coach_open_client'); $('view').innerHTML = '<div class="tk-empty">Loading…</div>'; await loadTarget(); window.scrollTo(0, 0); }
+
+  // ---------- COACH HUB (home, workouts library, exercise library, menu, profile, invites) ----------
+  var SITE = 'https://www.mrandmrslifestyle.com/workout-tracker.html';
+  var COACH_TABS = ['hub', 'clients', 'workouts', 'exercises', 'menu'];
+  var SELF_TABS = ['today', 'plan', 'body', 'progress', 'history'];
+  function soon(what) { toast(what + ' is coming soon'); }
+  function firstName(p) { return ((p && (p.name || p.email)) || '').split(/[ @]/)[0]; }
+  function avatarHtml(p, size) {
+    size = size || 40;
+    if (p && p.avatar_url) return '<img class="tk-ava" src="' + esc(p.avatar_url) + '" alt="" width="' + size + '" height="' + size + '" style="width:' + size + 'px;height:' + size + 'px">';
+    return '<span class="tk-ava tk-ava-i" style="width:' + size + 'px;height:' + size + 'px;font-size:' + Math.round(size * 0.4) + 'px" aria-hidden="true">' + esc((firstName(p)[0] || '?').toUpperCase()) + '</span>';
+  }
+  function greet() { var h = new Date().getHours(); return h < 12 ? 'Good morning' : h < 18 ? 'Good afternoon' : 'Good evening'; }
+
+  async function renderHub() {
+    var v = $('view');
+    var head = '<h1 class="tk-h1">' + greet() + ', <em>' + esc(firstName(S.me)) + '</em></h1>';
+    var tiles = '<div class="hub-tiles">' +
+      '<button type="button" class="hub-tile" id="hAdd"><span>Add client</span>' + ICON.addUser + '</button>' +
+      '<button type="button" class="hub-tile" id="hStart"><span>Start a workout</span>' + ICON.today + '</button>' +
+      '<button type="button" class="hub-tile soon" id="hBook"><span>Book an activity<small>Coming soon</small></span>' + ICON.cal + '</button>' +
+      '<button type="button" class="hub-tile soon" id="hChat"><span>Start chat<small>Coming soon</small></span>' + ICON.chat + '</button></div>';
+    v.innerHTML = head + tiles + '<div class="tk-empty">Loading your day…</div>';
+    wireTiles();
+    var since = new Date(); since.setDate(since.getDate() - 7);
+    var q = await Promise.all([
+      sb.from('profiles').select('id,name,email,avatar_url').neq('id', S.me.id),
+      sb.from('workouts').select('user_id,date,title,duration_min,created_at').gte('date', iso(since)).order('created_at', { ascending: false }).limit(500),
+      sb.from('programs').select('client_id,active'),
+      sb.from('live_workouts').select('user_id,data,updated_at').neq('user_id', S.me.id),
+      sb.from('client_invites').select('*').is('accepted_at', null).order('created_at', { ascending: false })
+    ]);
+    if (S.tab !== 'hub') return;
+    var P = q[0].data || [], W = q[1].data || [], PR = q[2].data || [], L = q[3].data || [], I = q[4].data || [];
+    function nm(id) { var p = P.filter(function (x) { return x.id === id; })[0]; return p ? (p.name || p.email) : 'A client'; }
+    var trained = {}; W.forEach(function (w) { trained[w.user_id] = 1; });
+    var noPlan = P.filter(function (p) { return !PR.some(function (x) { return x.client_id === p.id && x.active; }); }).length;
+    var h = head + tiles;
+    h += '<div class="tk-grid3" style="margin-top:14px"><button type="button" class="tk-stat hub-stat" data-go="clients"><b>' + P.length + '</b><span>Clients</span></button><button type="button" class="tk-stat hub-stat" data-go="clients"><b>' + Object.keys(trained).length + '</b><span>Trained 7 days</span></button><button type="button" class="tk-stat hub-stat" data-go="clients"><b>' + noPlan + '</b><span>Need a plan</span></button></div>';
+    var now = L.filter(function (x) { return x.data && x.data.exercises && (Date.now() - new Date(x.updated_at).getTime()) < 3 * 3600e3; });
+    h += '<h2 class="tk-h2 hub-h">Training now</h2><div class="tk-card">';
+    if (!now.length) h += '<p class="tk-muted" style="margin:0">No one is training right now.</p>';
+    now.forEach(function (x) {
+      var mins = x.data.started ? Math.max(0, Math.round((Date.now() - x.data.started) / 60000)) : null;
+      h += '<button type="button" class="pick-item" data-client="' + x.user_id + '"><div style="min-width:0"><b>' + esc(nm(x.user_id)) + '</b><span>' + esc(x.data.title || 'Workout') + ' · ' + (x.data.exercises || []).length + ' exercises' + (mins != null ? ' · ' + mins + ' min' : '') + '</span></div><span class="pill ok" style="margin-left:auto">Live</span></button>';
+    });
+    h += '</div>';
+    var td = W.filter(function (w) { return w.date === today(); });
+    h += '<h2 class="tk-h2 hub-h">Today\'s workouts</h2><div class="tk-card">';
+    if (!td.length) h += '<p class="tk-muted" style="margin:0">No finished workouts yet today.</p>';
+    td.forEach(function (w) { h += '<button type="button" class="pick-item" data-client="' + w.user_id + '" data-hist="1"><div style="min-width:0"><b>' + esc(nm(w.user_id)) + '</b><span>' + esc(w.title || 'Workout') + (w.duration_min ? ' · ' + w.duration_min + ' min' : '') + ' · ' + esc(timeAgo(w.created_at)) + '</span></div><span class="pill gold" style="margin-left:auto">Done</span></button>'; });
+    h += '</div>';
+    if (I.length) {
+      h += '<h2 class="tk-h2 hub-h">Invited, not joined yet</h2><div class="tk-card">';
+      I.forEach(function (x) { h += '<div class="tk-row" style="padding:8px 0;border-bottom:1px solid var(--line)"><div style="flex:1;min-width:0"><b>' + esc(x.name || x.email) + '</b><div class="tk-small">' + esc(x.email) + ' · invited ' + esc(timeAgo(x.created_at)) + '</div></div><button type="button" class="tk-btn sm ghost" data-resend="' + x.id + '">Resend</button><button type="button" class="tk-icon-btn" data-uninv="' + x.id + '" aria-label="Cancel invite for ' + esc(x.name || x.email) + '">' + ICON.x + '</button></div>'; });
+      h += '</div>';
+    }
+    v.innerHTML = h;
+    wireTiles();
+    v.querySelectorAll('[data-go]').forEach(function (b) { b.onclick = function () { go(b.dataset.go); }; });
+    v.querySelectorAll('[data-client]').forEach(function (b) { b.onclick = async function () { var p = await sb.from('profiles').select('*').eq('id', b.dataset.client).maybeSingle(); if (!p.data) return toast('Client not found'); await openClient(p.data); if (b.dataset.hist) { S.tab = 'history'; render(); } }; });
+    v.querySelectorAll('[data-resend]').forEach(function (b) { b.onclick = function () { var x = I.filter(function (y) { return y.id === b.dataset.resend; })[0]; shareInvite(x); }; });
+    v.querySelectorAll('[data-uninv]').forEach(function (b) { b.onclick = async function () { if (!confirmBox('Cancel this invite?')) return; var r = await sb.from('client_invites').delete().eq('id', b.dataset.uninv); if (r.error) return toast(r.error.message); toast('Invite cancelled'); renderHub(); }; });
+  }
+  function wireTiles() {
+    if ($('hAdd')) $('hAdd').onclick = openAddClient;
+    if ($('hStart')) $('hStart').onclick = openStartWorkout;
+    if ($('hBook')) $('hBook').onclick = function () { soon('Booking'); };
+    if ($('hChat')) $('hChat').onclick = function () { soon('Chat'); };
+  }
+  function go(tab) { S.tab = tab; render(); window.scrollTo(0, 0); }
+
+  async function openStartWorkout() {
+    var m = modal('Start a workout', '<button type="button" class="tk-btn block" id="swMe">For myself</button><p class="tk-small" style="margin:14px 0 6px">Or log a session with a client:</p><div class="tk-field"><label for="swQ" class="sr">Search clients</label><input class="tk-input" id="swQ" type="search" placeholder="Search by name or email"></div><div id="swList"><p class="tk-muted">Loading…</p></div>');
+    $('swMe').onclick = async function () { m.close(); if (viewingOther()) { S.target = S.me; lsSet('mm_target', null); await loadTarget(); } go('today'); };
+    var r = await sb.from('profiles').select('*').neq('id', S.me.id).order('name');
+    var C = r.data || [];
+    function draw() {
+      var ql = ($('swQ').value || '').toLowerCase();
+      $('swList').innerHTML = C.filter(function (c) { return !ql || ((c.name || '') + ' ' + c.email).toLowerCase().indexOf(ql) > -1; }).map(function (c) { return '<button type="button" class="pick-item" data-c="' + c.id + '">' + avatarHtml(c, 34) + '<div style="min-width:0;margin-left:10px"><b>' + esc(c.name || c.email) + '</b><span>' + esc(c.email) + '</span></div></button>'; }).join('') || '<div class="tk-empty">No clients found.</div>';
+      $('swList').querySelectorAll('[data-c]').forEach(function (b) { b.onclick = async function () { m.close(); await openClient(C.filter(function (c) { return c.id === b.dataset.c; })[0]); }; });
+    }
+    $('swQ').oninput = draw; draw();
+  }
+
+  async function openAddClient() {
+    var list = S.templates || await loadTemplates() || [];
+    var m = modal('Add a client', '<p class="tk-muted">They sign in with Google using this email. Their name and programme are ready the moment they join.</p>' +
+      '<div class="tk-field"><label for="iName">Client name</label><input class="tk-input" id="iName" autocomplete="off" placeholder="e.g. Sara Ahmed"></div>' +
+      '<div class="tk-field"><label for="iEmail">Google email</label><input class="tk-input" id="iEmail" type="email" autocomplete="off" placeholder="name@gmail.com"></div>' +
+      '<div class="tk-field"><label for="iTpl">Programme (optional)</label><select class="tk-select" id="iTpl"><option value="">No programme yet</option>' + list.map(function (t) { return '<option value="' + t.id + '">' + esc(t.name) + '</option>'; }).join('') + '</select></div>' +
+      '<div class="tk-grid2" style="margin-top:16px"><button type="button" class="tk-btn plain" data-close>Cancel</button><button type="button" class="tk-btn" id="iSave">Create invite</button></div>');
+    $('iSave').onclick = async function () {
+      var name = $('iName').value.trim(), email = $('iEmail').value.trim().toLowerCase(), tpl = $('iTpl').value || null;
+      if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) { toast('Enter a valid email'); return $('iEmail').focus(); }
+      var btn = this; btn.disabled = true;
+      var ex = await sb.from('profiles').select('*').eq('email', email).maybeSingle();
+      if (ex.data) {
+        btn.disabled = false;
+        if (tpl) {
+          var t = list.filter(function (x) { return x.id === tpl; })[0];
+          if (!confirmBox((ex.data.name || email) + ' is already a client. Assign "' + t.name + '" to them now?')) return;
+          var other = await sb.from('programs').select('id').eq('client_id', ex.data.id).eq('active', true);
+          var r1 = await sb.from('programs').insert({ client_id: ex.data.id, created_by: S.me.id, template_id: t.id, name: t.name, notes: t.notes || null, days: JSON.parse(JSON.stringify(t.days || [])), active: true }).select('id').single();
+          if (r1.error) return toast(r1.error.message);
+          var ids = (other.data || []).map(function (x) { return x.id; }); if (ids.length) await sb.from('programs').update({ active: false }).in('id', ids);
+          toast('Programme assigned to ' + (ex.data.name || email));
+        } else toast((ex.data.name || email) + ' is already a client');
+        m.close(); return openClient(ex.data);
+      }
+      var old = await sb.from('client_invites').select('id').eq('email', email).is('accepted_at', null).maybeSingle();
+      var row = { email: email, name: name || null, template_id: tpl, created_by: S.me.id };
+      var r = old.data ? await sb.from('client_invites').update(row).eq('id', old.data.id).select().single() : await sb.from('client_invites').insert(row).select().single();
+      btn.disabled = false;
+      if (r.error) return toast('Could not create the invite: ' + r.error.message);
+      ev('tracker_client_invited', { with_programme: !!tpl });
+      m.close(); shareInvite(r.data); if (S.tab === 'hub') renderHub();
+    };
+  }
+  function inviteText(x) {
+    return 'Hi ' + (x.name ? x.name.split(' ')[0] : 'there') + ', I\'ve set up your training in the Mr & Mrs Lifestyle app' + (x.template_id ? ', and your programme is ready' : '') + '.\n\n1. Open ' + SITE + '\n2. Tap "Continue with Google" and sign in with ' + x.email + '\n3. Add it to your home screen so it works like an app\n\nSee you in there! ' + firstName(S.me);
+  }
+  function shareInvite(x) {
+    var txt = inviteText(x);
+    var m = modal('Send the invite', '<p class="tk-muted">Send this to ' + esc(x.name || x.email) + '. They must sign in with <b>' + esc(x.email) + '</b>.</p><div class="tk-card" style="white-space:pre-wrap;font-size:.9rem">' + esc(txt) + '</div>' +
+      '<div class="tk-grid2" style="margin-top:14px"><button type="button" class="tk-btn plain" id="ivCopy">Copy message</button><a class="tk-btn" id="ivWa" href="https://wa.me/?text=' + encodeURIComponent(txt) + '" target="_blank" rel="noopener">Send on WhatsApp</a></div>');
+    $('ivCopy').onclick = function () { (navigator.clipboard ? navigator.clipboard.writeText(txt) : Promise.reject()).then(function () { toast('Copied'); }, function () { toast('Could not copy. Select the text and copy it.'); }); };
+    $('ivWa').onclick = function () { ev('tracker_invite_whatsapp'); setTimeout(function () { m.close(); }, 300); };
+  }
+
+  async function renderWorkouts() {
+    var v = $('view');
+    v.innerHTML = '<h1 class="tk-h1">Workout <em>templates</em></h1><p class="tk-sub">Your saved programmes. Assign one to any client in two taps.</p><div class="tk-grid2" style="margin-top:12px"><button type="button" class="tk-btn" id="wNew">+ New template</button><button type="button" class="tk-btn plain" id="wFrom">Save a client\'s programme</button></div><div id="wList"><div class="tk-empty">Loading…</div></div>';
+    $('wNew').onclick = function () { openBuilder(null, null, true); };
+    $('wFrom').onclick = function () { toast('Open the client, go to their Plan tab and tap "Save as template"'); go('clients'); };
+    var list = await loadTemplates(); if (S.tab !== 'workouts' || !list) return;
+    var ar = await sb.from('programs').select('client_id,active,template_id').not('template_id', 'is', null);
+    var cr = await sb.from('profiles').select('id,name,email').neq('id', S.me.id);
+    var A = ar.data || [], C = cr.data || [];
+    var h = list.length ? '' : '<div class="tk-empty">No templates yet. Tap <b>+ New template</b>, or save a client\'s programme from their Plan tab.</div>';
+    list.forEach(function (t) {
+      var who = A.filter(function (x) { return x.template_id === t.id && x.active; }).map(function (x) { var c = C.filter(function (y) { return y.id === x.client_id; })[0]; return c ? (c.name || c.email) : null; }).filter(Boolean);
+      h += '<div class="tk-card"><h2 class="tk-h2" style="margin:0 0 4px">' + esc(t.name) + '</h2><p class="tk-small">' + (t.days || []).length + ' days · ' + tplCount(t) + ' exercises</p>' +
+        '<p class="tk-muted" style="margin:6px 0 6px">' + (t.days || []).map(function (d) { return esc(d.name || 'Day'); }).join(' · ') + '</p>' +
+        '<p class="tk-small" style="margin:0 0 10px">' + (who.length ? 'Assigned to: <b>' + who.map(esc).join(', ') + '</b>' : 'Not assigned to anyone yet') + '</p>' +
+        '<div class="tk-grid3"><button type="button" class="tk-btn plain sm" data-wedit="' + t.id + '">Edit</button><button type="button" class="tk-btn danger sm" data-wdel="' + t.id + '">Delete</button><button type="button" class="tk-btn sm" data-wuse="' + t.id + '">Assign</button></div></div>';
+    });
+    $('wList').innerHTML = h;
+    function T(id) { return list.filter(function (x) { return x.id === id; })[0]; }
+    v.querySelectorAll('[data-wuse]').forEach(function (b) { b.onclick = function () { openAssign(T(b.dataset.wuse)); }; });
+    v.querySelectorAll('[data-wedit]').forEach(function (b) { b.onclick = function () { openBuilder(T(b.dataset.wedit), null, true); }; });
+    v.querySelectorAll('[data-wdel]').forEach(function (b) { b.onclick = async function () {
+      var t = T(b.dataset.wdel); if (!confirmBox('Delete the template "' + t.name + '"? Programmes already assigned to clients are not affected.')) return;
+      var r = await sb.from('program_templates').delete().eq('id', t.id); if (r.error) return toast(r.error.message);
+      S.templates = null; toast('Template deleted'); renderWorkouts();
+    }; });
+  }
+
+  function renderExercises() {
+    var v = $('view'); S.exCat = S.exCat || 'All'; S.exQ = S.exQ || '';
+    var withVid = EX.filter(function (e) { return vidsFor(e.name).length; }).length;
+    v.innerHTML = '<h1 class="tk-h1">Exercise <em>library</em></h1><p class="tk-sub">' + EX.length + ' exercises, ' + withVid + ' with your own demo videos. Tap one to watch it.</p>' +
+      '<div class="tk-field"><label class="sr" for="xQ">Search exercises</label><input class="tk-input" id="xQ" type="search" placeholder="Search exercises" value="' + esc(S.exQ) + '"></div>' +
+      '<div class="chips" role="group" aria-label="Filter by muscle group">' + ['All', 'With video'].concat(CATS).map(function (c) { return '<button type="button" aria-pressed="' + (S.exCat === c) + '" data-xc="' + esc(c) + '">' + esc(c) + '</button>'; }).join('') + '</div><div class="tk-card" id="xList"></div>';
+    function draw() {
+      var ql = S.exQ.toLowerCase().trim();
+      var items = EX.filter(function (e) { return (S.exCat === 'All' || (S.exCat === 'With video' ? vidsFor(e.name).length : e.cat === S.exCat)) && (!ql || (e.name + ' ' + e.m + ' ' + e.cat).toLowerCase().indexOf(ql) > -1); });
+      $('xList').innerHTML = items.slice(0, 200).map(function (e) { return '<button type="button" class="pick-item" data-xn="' + esc(e.name) + '"><div><b>' + esc(e.name) + (vidsFor(e.name).length ? ' <span class="pill gold vid-pill">▶ Video</span>' : '') + '</b><span>' + esc(e.cat) + ' · ' + esc(e.m) + '</span></div></button>'; }).join('') || '<div class="tk-empty">No match.</div>';
+      $('xList').querySelectorAll('[data-xn]').forEach(function (b) { b.onclick = function () { openExercise(b.dataset.xn); }; });
+    }
+    $('xQ').oninput = function () { S.exQ = this.value; draw(); };
+    v.querySelectorAll('[data-xc]').forEach(function (b) { b.onclick = function () { S.exCat = b.dataset.xc; v.querySelectorAll('[data-xc]').forEach(function (x) { x.setAttribute('aria-pressed', x === b); }); draw(); }; });
+    draw();
+  }
+  function openExercise(name) {
+    var e = EX.filter(function (x) { return x.name === name; })[0] || { name: name };
+    var m = modal(name, '<p class="tk-small">' + esc([e.cat, e.m].filter(Boolean).join(' · ')) + '</p>' + videoBox(name, 'lib|' + name) + (e.how ? '<p class="tk-muted" style="margin-top:10px">' + esc(e.how) + '</p>' : '') + (vidsFor(name).length ? '' : '<p class="tk-small" style="margin-top:10px">No demo video for this exercise yet.</p>'));
+    var box = m.querySelector('[data-vbox]'); if (box) { wireVideos(m); playVideo(box, vidsFor(name)[0][0]); ev('tracker_video_play'); }
+  }
+
+  function renderMenu() {
+    var v = $('view');
+    function item(id, icon, label, sub, isSoon) { return '<button type="button" class="menu-item' + (isSoon ? ' soon' : '') + '" data-m="' + id + '">' + icon + '<span><b>' + label + '</b>' + (sub ? '<small>' + sub + '</small>' : '') + '</span>' + (isSoon ? '<span class="pill">Soon</span>' : '<span aria-hidden="true" class="menu-arrow">›</span>') + '</button>'; }
+    var h = '<div class="menu-me">' + avatarHtml(S.me, 56) + '<div style="flex:1;min-width:0"><b>' + esc(S.me.name || S.me.email) + '</b><div class="tk-small">Coach · ' + esc(S.me.email) + '</div></div><button type="button" class="tk-btn sm ghost" id="mProf">Edit profile</button></div>';
+    h += '<h2 class="tk-h2 hub-h">Coaching</h2><div class="menu">' +
+      item('hub', ICON.hub, 'Hub', 'Your day at a glance') + item('clients', ICON.clients, 'Clients', 'Everyone you coach') + item('addclient', ICON.addUser, 'Add a client', 'Invite by email or WhatsApp') +
+      item('workouts', ICON.plan, 'Workouts', 'Templates you assign') + item('exercises', ICON.today, 'Exercises', 'Library with your videos') + item('notifs', ICON.bell, 'Notifications', 'Workouts started and finished') + '</div>';
+    h += '<h2 class="tk-h2 hub-h">My training</h2><div class="menu">' + item('today', ICON.today, 'Today', '') + item('plan', ICON.plan, 'My programme', '') + item('body', ICON.body, 'Body', 'Weight and measurements') + item('progress', ICON.progress, 'Progress', '') + item('history', ICON.history, 'History', '') + '</div>';
+    h += '<h2 class="tk-h2 hub-h">Coming soon</h2><div class="menu">' + item('s', ICON.chat, 'Chat', 'Message your clients', 1) + item('s', ICON.checkin, 'Check-ins', 'Weekly progress forms and photos', 1) + item('s', ICON.food, 'Nutrition', 'Meal plans and macros', 1) + item('s', ICON.cal, 'Calendar', 'Sessions and bookings', 1) + item('s', ICON.check, 'Habits', 'Steps, water, sleep', 1) + item('s', ICON.info, 'Resources', 'Guides and files for clients', 1) + item('s', ICON.money, 'Financials', 'Payments and renewals', 1) + '</div>';
+    h += '<div class="menu" style="margin-top:18px">' + item('settings', ICON.gear, 'Settings', 'Rest timer, sign out') + '<a class="menu-item" href="https://wa.me/971507871515" target="_blank" rel="noopener">' + ICON.info + '<span><b>Support</b><small>Something not working? Tell us</small></span><span aria-hidden="true" class="menu-arrow">›</span></a></div>';
+    v.innerHTML = h;
+    $('mProf').onclick = openProfile;
+    v.querySelectorAll('[data-m]').forEach(function (b) { b.onclick = function () {
+      var k = b.dataset.m;
+      if (k === 's') return soon(b.querySelector('b').textContent);
+      if (k === 'addclient') return openAddClient();
+      if (k === 'notifs') return openNotifs();
+      if (k === 'settings') return openSettings();
+      go(k);
+    }; });
+  }
+
+  function openProfile() {
+    var me = S.me;
+    var m = modal('Your profile', '<div class="tk-row" style="gap:14px">' + '<span id="pAva">' + avatarHtml(me, 72) + '</span><div><label class="tk-btn sm ghost" for="pFile" style="cursor:pointer">Change photo</label><input type="file" id="pFile" accept="image/*" class="sr"><p class="tk-small" style="margin:6px 0 0">Your clients see this photo.</p></div></div>' +
+      '<div class="tk-field"><label for="pName">Name</label><input class="tk-input" id="pName" value="' + esc(me.name || '') + '"></div>' +
+      (isCoach() ? '<div class="tk-field"><label for="pBio">About you (shown to clients)</label><textarea class="tk-textarea" id="pBio" placeholder="e.g. Certified PT and nutrition coach. 10+ years helping clients build strength.">' + esc(me.bio || '') + '</textarea></div>' +
+      '<div class="tk-field"><label for="pPhone">WhatsApp number</label><input class="tk-input" id="pPhone" inputmode="tel" placeholder="+971 50 000 0000" value="' + esc(me.phone || '') + '"></div>' +
+      '<div class="tk-field"><label for="pIg">Instagram</label><input class="tk-input" id="pIg" placeholder="@yourhandle" value="' + esc(me.instagram || '') + '"></div>' : '') +
+      '<button type="button" class="tk-btn block" id="pSave" style="margin-top:14px">Save</button>');
+    var newUrl = null;
+    $('pFile').onchange = async function () {
+      var f = this.files && this.files[0]; if (!f) return;
+      if (f.size > 8e6) return toast('Please choose a photo under 8 MB');
+      toast('Uploading…');
+      try {
+        var blob = await shrinkImage(f, 512);
+        var path = me.id + '/avatar-' + Date.now() + '.jpg';
+        var up = await sb.storage.from('avatars').upload(path, blob, { contentType: 'image/jpeg', upsert: true });
+        if (up.error) return toast('Upload failed: ' + up.error.message);
+        newUrl = sb.storage.from('avatars').getPublicUrl(path).data.publicUrl;
+        $('pAva').innerHTML = avatarHtml({ avatar_url: newUrl }, 72); toast('Photo ready. Tap Save.');
+      } catch (e) { toast('Could not read that photo'); }
+    };
+    $('pSave').onclick = async function () {
+      var row = { name: $('pName').value.trim() || null };
+      if (isCoach()) { row.bio = $('pBio').value.trim() || null; row.phone = $('pPhone').value.trim() || null; row.instagram = $('pIg').value.trim().replace(/^@/, '') || null; }
+      if (newUrl) row.avatar_url = newUrl;
+      var r = await sb.from('profiles').update(row).eq('id', me.id).select().single();
+      if (r.error) return toast(r.error.message);
+      S.me = r.data; if (!viewingOther()) S.target = r.data; m.close(); render(); toast('Profile saved');
+    };
+  }
+  function shrinkImage(file, max) {
+    return new Promise(function (ok, bad) {
+      var img = new Image(), url = URL.createObjectURL(file);
+      img.onload = function () {
+        var s = Math.min(1, max / Math.max(img.width, img.height)), w = Math.round(img.width * s), h = Math.round(img.height * s);
+        var side = Math.min(w, h), c = document.createElement('canvas'); c.width = c.height = Math.min(side, max);
+        var sx = (img.width - Math.min(img.width, img.height)) / 2, sy = (img.height - Math.min(img.width, img.height)) / 2, sz = Math.min(img.width, img.height);
+        c.getContext('2d').drawImage(img, sx, sy, sz, sz, 0, 0, c.width, c.height);
+        URL.revokeObjectURL(url); c.toBlob(function (b) { b ? ok(b) : bad(); }, 'image/jpeg', 0.86);
+      };
+      img.onerror = bad; img.src = url;
+    });
+  }
+
+  // client side: "Your coach" card
+  var COACHES = null;
+  async function coachCard() {
+    if (isCoach()) return '';
+    if (!COACHES) { var r = await sb.from('profiles').select('id,name,avatar_url,bio,phone,instagram').eq('role', 'coach'); COACHES = r.data || []; }
+    var c = COACHES.filter(function (x) { return x.name || x.bio; })[0]; if (!c) return '';
+    var wa = (c.phone || '').replace(/[^\d]/g, '');
+    return '<div class="tk-card coach-card"><span class="tk-tag">Your coach</span><div class="tk-row" style="gap:12px;margin-top:8px">' + avatarHtml(c, 56) + '<div style="flex:1;min-width:0"><b>' + esc(c.name || 'Coach') + '</b>' + (c.bio ? '<p class="tk-small" style="margin:4px 0 0">' + esc(c.bio) + '</p>' : '') + '</div></div>' +
+      ((wa || c.instagram) ? '<div class="tk-grid2" style="margin-top:12px">' + (wa ? '<a class="tk-btn sm" href="https://wa.me/' + wa + '" target="_blank" rel="noopener">WhatsApp</a>' : '') + (c.instagram ? '<a class="tk-btn sm plain" href="https://www.instagram.com/' + encodeURIComponent(c.instagram) + '/" target="_blank" rel="noopener">Instagram</a>' : '') + '</div>' : '') + '</div>';
+  }
 
   // ---------- settings ----------
   function openSettings() {
@@ -1127,6 +1405,7 @@
       '<div class="tk-field"><label for="sGoal">Your goal</label><input class="tk-input" id="sGoal" value="' + esc(me.goal || '') + '" placeholder="e.g. lose 8 kg before summer"></div>' +
       '<div class="tk-field"><label for="sRest">Default rest between sets (seconds)</label><input class="tk-input" id="sRest" inputmode="numeric" value="' + lsGet('mm_rest', 90) + '"></div>' +
       '<button type="button" class="tk-btn block" id="sSave" style="margin-top:14px">Save</button>' +
+      '<button type="button" class="tk-btn plain block" id="sProf" style="margin-top:10px">Profile photo' + (isCoach() ? ' and coach info' : '') + '</button>' +
       '<div class="tk-card"><b>Add the tracker to your home screen</b><p class="tk-muted" style="margin-top:4px">iPhone: open this page in Safari, tap Share, then "Add to Home Screen".<br>Android: open the Chrome menu (⋮), then "Install app" or "Add to Home screen".</p></div>' +
       '<p class="tk-small" style="margin-top:12px">Signed in as ' + esc(me.email) + '</p><button type="button" class="tk-btn danger block" id="sOut" style="margin-top:8px">Sign out</button>';
     var m = modal('Settings', body);
@@ -1137,6 +1416,7 @@
       S.me = r.data; if (!viewingOther()) S.target = r.data; m.close(); render(); toast('Saved');
     };
     $('sOut').onclick = signOut;
+    $('sProf').onclick = function () { m.close(); openProfile(); };
   }
 
   document.addEventListener('DOMContentLoaded', function () {
