@@ -1,8 +1,13 @@
 {
   "redirects": [
     {
+      "source": "/reformer-pilates-meydan.html",
+      "destination": "/female-personal-trainer-dubai.html",
+      "permanent": true
+    },
+    {
       "source": "/personal-trainer-meydan.html",
-      "destination": "/reformer-pilates-meydan.html",
+      "destination": "/female-personal-trainer-dubai.html",
       "permanent": true
     },
     {
@@ -128,12 +133,12 @@
     },
     {
       "source": "/personal-trainer-meydan",
-      "destination": "/reformer-pilates-meydan.html",
+      "destination": "/female-personal-trainer-dubai.html",
       "permanent": true
     },
     {
       "source": "/reformer-pilates-meydan",
-      "destination": "/reformer-pilates-meydan.html",
+      "destination": "/female-personal-trainer-dubai.html",
       "permanent": true
     },
     {
@@ -183,7 +188,7 @@
     },
     {
       "source": "/pilates",
-      "destination": "/reformer-pilates-meydan.html",
+      "destination": "/female-personal-trainer-dubai.html",
       "permanent": true
     },
     {
