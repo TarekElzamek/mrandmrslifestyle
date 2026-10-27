@@ -216,7 +216,7 @@ def build_page(d):
     page_title = f'{esc(title_h)}: How to Do It, Muscles Worked + Video'
     if len(title_h) > 30: page_title = f'{esc(title_h)}: Form, Muscles + Video'
     desc = (f'How to do {esc(title_h)} with good form: step-by-step guide, muscles worked, '
-            f'common mistakes and sets &amp; reps, with a demo video by Dubai coach {esc(who(d))}. Log it free in our workout tracker.')
+            f'common mistakes and sets &amp; reps, with a demo video by Dubai coach {esc(who(d))}.')
     faqs = list(d['faq']) + [(f'Can I track my {title_h.lower()} progress for free?',
                               f'Yes. Our free workout tracker has {title_h} with this demo video built in. Log your sets, reps and weight, see your personal records and follow your progress on a chart.')]
     vid_ld = {"@context": "https://schema.org", "@type": "VideoObject", "name": f'How to do {title_h} – {who(d)} | Mr & Mrs Lifestyle',

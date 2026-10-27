@@ -11,6 +11,41 @@
       "permanent": true
     },
     {
+      "source": "/about",
+      "destination": "/#coaches",
+      "permanent": true
+    },
+    {
+      "source": "/contact",
+      "destination": "/apply.html",
+      "permanent": true
+    },
+    {
+      "source": "/coaching",
+      "destination": "/online-coaching.html",
+      "permanent": true
+    },
+    {
+      "source": "/personal-training",
+      "destination": "/personal-trainer-dubai.html",
+      "permanent": true
+    },
+    {
+      "source": "/privacy-policy.html",
+      "destination": "/privacy.html",
+      "permanent": true
+    },
+    {
+      "source": "/terms-and-conditions.html",
+      "destination": "/terms.html",
+      "permanent": true
+    },
+    {
+      "source": "/blog/",
+      "destination": "/blog.html",
+      "permanent": true
+    },
+    {
       "source": "/(.*)",
       "has": [
         {
