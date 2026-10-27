@@ -727,24 +727,82 @@
   async function openTemplates() {
     var m = modal('Programme templates', '<div id="tplList"><p class="tk-muted">Loading…</p></div>');
     var list = await loadTemplates(); if (!list) return m.close();
-    var who = viewingOther() ? (S.target.name || 'this client') : 'yourself';
+    var ar = await sb.from('programs').select('client_id,active,template_id').not('template_id', 'is', null);
+    var cr = await sb.from('profiles').select('id,name,email').neq('id', S.me.id);
+    var A = ar.data || [], C = cr.data || [];
+    function assignedTo(t) { return A.filter(function (x) { return x.template_id === t.id && x.active; }).map(function (x) { var c = C.filter(function (y) { return y.id === x.client_id; })[0]; return c ? (c.name || c.email) : null; }).filter(Boolean); }
     function draw() {
       var h = '';
       if (!S.templates.length) h = '<div class="tk-empty">No templates yet. Open any programme in the Plan tab and tap <b>Save as template</b>.</div>';
       S.templates.forEach(function (t) {
+        var who = assignedTo(t);
         h += '<div class="tk-card"><h2 class="tk-h2" style="margin:0 0 4px">' + esc(t.name) + '</h2><p class="tk-small">' + (t.days || []).length + ' days · ' + tplCount(t) + ' exercises</p>' +
-          '<p class="tk-muted" style="margin:6px 0 10px">' + (t.days || []).map(function (d) { return esc(d.name || 'Day'); }).join(' · ') + '</p>' +
-          '<div class="tk-grid2"><button type="button" class="tk-btn danger sm" data-tdel="' + t.id + '">Delete</button><button type="button" class="tk-btn sm" data-tuse="' + t.id + '">Assign to ' + esc(who) + '</button></div></div>';
+          '<p class="tk-muted" style="margin:6px 0 6px">' + (t.days || []).map(function (d) { return esc(d.name || 'Day'); }).join(' · ') + '</p>' +
+          '<p class="tk-small" style="margin:0 0 10px">' + (who.length ? 'Assigned to: <b>' + who.map(esc).join(', ') + '</b>' : 'Not assigned to anyone yet') + '</p>' +
+          '<div class="tk-grid2"><button type="button" class="tk-btn danger sm" data-tdel="' + t.id + '">Delete</button><button type="button" class="tk-btn sm" data-tuse="' + t.id + '">Assign to a client</button></div></div>';
       });
       $('tplList').innerHTML = h;
-      m.querySelectorAll('[data-tuse]').forEach(function (b) { b.onclick = function () { var t = S.templates.filter(function (x) { return x.id === b.dataset.tuse; })[0]; m.close(); openBuilder(null, t); }; });
+      m.querySelectorAll('[data-tuse]').forEach(function (b) { b.onclick = function () { var t = S.templates.filter(function (x) { return x.id === b.dataset.tuse; })[0]; m.close(); openAssign(t); }; });
       m.querySelectorAll('[data-tdel]').forEach(function (b) { b.onclick = async function () {
         var t = S.templates.filter(function (x) { return x.id === b.dataset.tdel; })[0];
-        if (!confirmBox('Delete the template "' + t.name + '"? Programmes already assigned are not affected.')) return;
+        if (!confirmBox('Delete the template "' + t.name + '"? Programmes already assigned to clients are not affected.')) return;
         var r = await sb.from('program_templates').delete().eq('id', t.id); if (r.error) return toast(r.error.message);
         S.templates = S.templates.filter(function (x) { return x.id !== t.id; }); draw(); toast('Template deleted');
       }; });
     }
+    draw();
+  }
+
+  // Assign / unassign a template to registered clients. Unassign archives (never deletes) so history stays.
+  async function openAssign(t) {
+    var m = modal('Assign: ' + t.name, '<div class="tk-field"><label for="aQ" class="sr">Search clients</label><input class="tk-input" id="aQ" type="search" placeholder="Search by name or email"></div><div id="aList"><p class="tk-muted">Loading clients…</p></div>', function () { if (S.tab === 'plan') render(); });
+    var q = await Promise.all([
+      sb.from('profiles').select('id,name,email').neq('id', S.me.id).order('name'),
+      sb.from('programs').select('id,client_id,name,active,template_id')
+    ]);
+    if (q[0].error || q[1].error) { $('aList').innerHTML = '<p class="tk-muted">Could not load clients.</p>'; return; }
+    var C = q[0].data || [], P = q[1].data || [];
+    function mine(c) { return P.filter(function (x) { return x.client_id === c.id && x.template_id === t.id; }); }
+    function isOn(c) { return mine(c).some(function (x) { return x.active; }); }
+    function draw() {
+      var ql = ($('aQ').value || '').toLowerCase();
+      var list = C.filter(function (c) { return !ql || ((c.name || '') + ' ' + (c.email || '')).toLowerCase().indexOf(ql) > -1; });
+      list.sort(function (a, b) { return (isOn(b) ? 1 : 0) - (isOn(a) ? 1 : 0) || (a.name || a.email || '').localeCompare(b.name || b.email || ''); });
+      var h = list.length ? '' : '<div class="tk-empty">No clients found.</div>';
+      list.forEach(function (c) {
+        var on = isOn(c);
+        h += '<div class="tk-row" style="padding:10px 0;border-bottom:1px solid var(--tk-line,rgba(255,255,255,.08))"><div style="flex:1;min-width:0"><b>' + esc(c.name || 'No name') + '</b><div class="tk-small" style="overflow:hidden;text-overflow:ellipsis">' + esc(c.email || '') + (on ? ' · <span style="color:var(--tk-gold,#C9A84C)">Assigned</span>' : '') + '</div></div>' +
+          '<button type="button" class="tk-btn sm' + (on ? ' plain' : '') + '" data-as="' + c.id + '">' + (on ? 'Unassign' : 'Assign') + '</button></div>';
+      });
+      $('aList').innerHTML = h;
+      m.querySelectorAll('[data-as]').forEach(function (b) { b.onclick = function () { toggle(C.filter(function (c) { return c.id === b.dataset.as; })[0], b); }; });
+    }
+    async function toggle(c, btn) {
+      var who = c.name || c.email || 'this client';
+      btn.disabled = true;
+      try {
+        if (isOn(c)) {
+          if (!confirmBox('Unassign "' + t.name + '" from ' + who + '? Their programme is archived, not deleted, so their workout history stays.')) return;
+          var ids = mine(c).filter(function (x) { return x.active; }).map(function (x) { return x.id; });
+          var r = await sb.from('programs').update({ active: false, updated_at: new Date().toISOString() }).in('id', ids);
+          if (r.error) return toast('Could not unassign: ' + r.error.message);
+          P.forEach(function (x) { if (ids.indexOf(x.id) > -1) x.active = false; });
+          ev('tracker_template_unassigned', {}); toast('Unassigned from ' + who);
+        } else {
+          var other = P.filter(function (x) { return x.client_id === c.id && x.active && x.template_id !== t.id; });
+          if (other.length && !confirmBox(who + ' already follows "' + other[0].name + '". Make "' + t.name + '" their active programme instead? The old one is archived, not deleted.')) return;
+          var prev = mine(c)[0], r2;
+          if (prev) r2 = await sb.from('programs').update({ active: true, updated_at: new Date().toISOString() }).eq('id', prev.id).select('id,client_id,name,active,template_id').single();
+          else r2 = await sb.from('programs').insert({ client_id: c.id, created_by: S.me.id, template_id: t.id, name: t.name, notes: t.notes || null, days: JSON.parse(JSON.stringify(t.days || [])), active: true }).select('id,client_id,name,active,template_id').single();
+          if (r2.error) return toast('Could not assign: ' + r2.error.message);
+          if (other.length) { var oid = other.map(function (x) { return x.id; }); await sb.from('programs').update({ active: false }).in('id', oid); P.forEach(function (x) { if (oid.indexOf(x.id) > -1) x.active = false; }); }
+          P = P.filter(function (x) { return x.id !== r2.data.id; }).concat([r2.data]);
+          ev('tracker_template_assigned', {}); toast('Assigned to ' + who);
+        }
+        if (S.target && S.target.id === c.id) { var rp = await sb.from('programs').select('*').eq('client_id', c.id).order('updated_at', { ascending: false }); if (!rp.error) S.programs = rp.data || []; }
+      } finally { btn.disabled = false; draw(); }
+    }
+    $('aQ').oninput = draw;
     draw();
   }
 

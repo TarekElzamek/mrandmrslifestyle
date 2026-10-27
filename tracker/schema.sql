@@ -226,3 +226,7 @@ create policy "videos coach and clients" on public.exercise_videos for select
 drop policy if exists "videos coach write" on public.exercise_videos;
 create policy "videos coach write" on public.exercise_videos for all using (public.is_coach()) with check (public.is_coach());
 -- rows: one per video (exercise name must match tracker/exercises.js). Free videos stay in tracker/videos.js.
+
+-- ---------- v8: link programmes to the template they were assigned from (assign / unassign) ----------
+alter table public.programs add column if not exists template_id uuid references public.program_templates(id) on delete set null;
+create index if not exists programs_template_idx on public.programs(template_id);
