@@ -226,3 +226,12 @@ details.wk .wk-body b{color:var(--text);font-weight:600}
 .menu-arrow{color:var(--muted);font-size:1.4rem}
 .coach-card .tk-ava{border-color:var(--gold)}
 @media(max-width:420px){.hub-tile{min-height:84px;padding:14px;font-size:.92rem}.hub-tile svg{width:26px;height:26px}.tk-who-btn > span:first-child{display:none}}
+
+/* exercise picker: watch demo before adding */
+.pick-row{border-bottom:1px solid var(--line)}
+.pick-line{display:flex;align-items:center;gap:8px}
+.pick-row .pick-item{border-bottom:0;flex:1;min-width:0}
+.pick-watch{border:0;cursor:pointer;font:inherit;font-size:.72rem;padding:6px 10px;white-space:nowrap}
+.pick-watch[aria-expanded=true]{outline:1px solid var(--gold)}
+.pick-add{background:none;border:0;color:var(--gold);font-size:1.5rem;line-height:1;padding:8px 10px;cursor:pointer;min-width:44px;min-height:44px}
+.pick-vid{padding:0 4px 14px}
