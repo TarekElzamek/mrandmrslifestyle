@@ -816,17 +816,6 @@ body.tpr .tpr-intro .stats{justify-content:center!important;margin-top:44px!impo
 .tpr-community{margin:8px 0 32px}.tpr-community img{display:block;width:100%;height:auto;border:1px solid var(--line)}.tpr-community figcaption{font-family:'Jost',sans-serif;font-weight:300;font-size:1.05rem;color:var(--muted);text-align:center;margin-top:14px}
 .tpr-cover-app{font-family:'Manrope',sans-serif;font-size:11.5px;letter-spacing:.2em;text-transform:uppercase;color:#F6F1EA;margin:0 0 16px}
 .tpr-cover .app-badges{display:flex!important;flex-wrap:wrap;gap:12px;justify-content:flex-start!important;margin:0!important}
-/* hero v2: photo uncovered, text on cream */
-body.tpr .lp-hero.tpr-cover{display:grid!important;grid-template-columns:1fr 1fr;align-items:stretch;min-height:min(88vh,820px);background:var(--cream)!important;border-bottom:1px solid var(--line)!important}
-.tpr-cover::after{display:none!important}
-.tpr-cover picture{position:relative;inset:auto;order:2;width:100%;height:100%;min-height:520px}
-.tpr-cover picture img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 82%}
-.tpr-cover-text{order:1;align-self:center;margin:0!important;max-width:620px;justify-self:end;padding:60px 56px 60px 28px!important}
-body.tpr .tpr-cover .eyebrow{color:var(--esp)!important;opacity:1}
-body.tpr .tpr-cover h1{color:var(--ink)!important;font-size:clamp(2.3rem,4vw,3.6rem)!important}
-body.tpr .tpr-cover .sub{color:var(--muted)!important}
-.tpr-cover-app{color:var(--esp)!important}
-@media(max-width:860px){body.tpr .lp-hero.tpr-cover{grid-template-columns:1fr;min-height:0}.tpr-cover picture{order:0;height:auto;min-height:0;aspect-ratio:4/5}.tpr-cover picture img{object-position:50% 40%}.tpr-cover-text{justify-self:stretch;max-width:none;padding:36px 22px 44px!important}body.tpr .tpr-cover h1{font-size:2.3rem!important}}
 /* chat button in the brand colour */
 body.tpr #mnml-chat-btn{background:var(--esp)!important;box-shadow:0 8px 24px rgba(58,38,23,.25)!important}
 body.tpr #mnml-chat-btn svg{stroke:var(--cream)!important}
@@ -866,7 +855,10 @@ body.tpr #mnml-chat-bubble{background:var(--card)!important;color:var(--ink)!imp
 
 
 <header class="lp-hero tpr-cover">
-  <picture><img src="/pilates-room/hero-chloe.jpg" alt="Chloe coaching a private reformer Pilates session at The Pilates Room by Chloe, Meydan, Dubai" width="1200" height="1802" fetchpriority="high"></picture>
+  <picture>
+    <source media="(min-width:861px)" srcset="/pilates-room/hero-landscape.jpg">
+    <img src="/pilates-room/hero-mobile.jpg" alt="Chloe coaching a private reformer Pilates session at The Pilates Room by Chloe, Meydan, Dubai" width="800" height="1000" fetchpriority="high">
+  </picture>
   <div class="tpr-cover-text">
     <div class="eyebrow">Female trainer · Ladies only</div>
     <h1>Private Reformer Pilates for Women in Dubai</h1>
