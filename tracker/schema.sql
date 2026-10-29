@@ -284,3 +284,31 @@ drop policy if exists "avatars update own" on storage.objects;
 create policy "avatars update own" on storage.objects for update to authenticated using (bucket_id = 'avatars' and (storage.foldername(name))[1] = auth.uid()::text);
 drop policy if exists "avatars delete own" on storage.objects;
 create policy "avatars delete own" on storage.objects for delete to authenticated using (bucket_id = 'avatars' and (storage.foldername(name))[1] = auth.uid()::text);
+
+-- ---------- v10: website leads (every website form saves here first; Formspree stays as the email alert) ----------
+create table if not exists public.leads (
+  id uuid primary key default gen_random_uuid(),
+  created_at timestamptz not null default now(),
+  form text, subject text, name text, email text, phone text, source text, page text, language text,
+  status text not null default 'new' check (status in ('new','contacted','won','lost')),
+  notes text,
+  data jsonb not null default '{}'::jsonb
+);
+create index if not exists leads_created_idx on public.leads (created_at desc);
+alter table public.leads enable row level security;
+drop policy if exists "Anyone can submit a lead" on public.leads;
+create policy "Anyone can submit a lead" on public.leads for insert to anon, authenticated
+  with check (status = 'new' and notes is null
+    and coalesce(length(name),0) <= 200 and coalesce(length(email),0) <= 320 and coalesce(length(phone),0) <= 60
+    and coalesce(length(subject),0) <= 300 and coalesce(length(source),0) <= 300 and coalesce(length(page),0) <= 500
+    and pg_column_size(data) < 30000);
+drop policy if exists "Coaches read leads" on public.leads;
+create policy "Coaches read leads" on public.leads for select to authenticated
+  using (exists (select 1 from public.profiles p where p.id = auth.uid() and p.role = 'coach'));
+drop policy if exists "Coaches update leads" on public.leads;
+create policy "Coaches update leads" on public.leads for update to authenticated
+  using (exists (select 1 from public.profiles p where p.id = auth.uid() and p.role = 'coach'))
+  with check (exists (select 1 from public.profiles p where p.id = auth.uid() and p.role = 'coach'));
+revoke all on public.leads from anon;
+grant insert on public.leads to anon, authenticated;
+grant select, update on public.leads to authenticated;
