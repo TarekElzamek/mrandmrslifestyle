@@ -312,3 +312,6 @@ create policy "Coaches update leads" on public.leads for update to authenticated
 revoke all on public.leads from anon;
 grant insert on public.leads to anon, authenticated;
 grant select, update on public.leads to authenticated;
+
+-- ---------- v11: coaches can remove (hide) a client from their lists without deleting any data ----------
+alter table public.profiles add column if not exists archived boolean not null default false;
