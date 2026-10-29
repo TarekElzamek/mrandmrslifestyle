@@ -86,6 +86,7 @@
   }
 
   var ICON = {
+    inbox: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg>',
     hub: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h5v-6h4v6h5V10"/></svg>',
     menu: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>',
     workouts: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3c1 3 4 4.5 4 8.5a4 4 0 0 1-8 0c0-2 1-3 2-4 0 2 1 3 2 3 0-3-1-5 0-7.5z"/></svg>',
@@ -1167,6 +1168,53 @@
   }
   function greet() { var h = new Date().getHours(); return h < 12 ? 'Good morning' : h < 18 ? 'Good afternoon' : 'Good evening'; }
 
+  // ---------- website leads (saved by track.js from every website form) ----------
+  var LEAD_ST = [['new', 'New'], ['contacted', 'Contacted'], ['won', 'Client'], ['lost', 'Not now']];
+  async function leadsBanner() {
+    try {
+      var r = await sb.from('leads').select('id', { count: 'exact', head: true }).eq('status', 'new');
+      var n = r && r.count; var el = $('leadsBanner'); if (!el || !n) return;
+      el.innerHTML = '<button type="button" class="tk-card gold" id="lbOpen" style="display:block;width:100%;text-align:start;cursor:pointer"><div class="li"><div class="grow"><b>' + n + ' new website lead' + (n === 1 ? '' : 's') + '</b><span class="tk-small">Tap to see who enquired and follow up.</span></div>' + ICON.inbox + '</div></button>';
+      $('lbOpen').onclick = openLeads;
+    } catch (e) {}
+  }
+  async function openLeads() {
+    var filter = 'new', rows = [];
+    var m = modal('Website leads', '<div class="chips" role="group" aria-label="Filter leads" id="ldF">' + [['new', 'New']].concat(LEAD_ST.slice(1)).concat([['all', 'All']]).map(function (x, i) { return '<button type="button" aria-pressed="' + (i ? 'false' : 'true') + '" data-f="' + x[0] + '">' + x[1] + '</button>'; }).join('') + '</div><div id="ldList"><p class="tk-muted">Loading leads…</p></div><button type="button" class="tk-btn sm ghost" id="ldCsv" style="margin-top:14px">Download all as CSV</button>');
+    var r = await sb.from('leads').select('*').order('created_at', { ascending: false }).limit(500);
+    if (r.error) { $('ldList').innerHTML = '<p class="tk-muted">Could not load leads: ' + esc(r.error.message) + '</p>'; return; }
+    rows = r.data || [];
+    function when(t) { var d = new Date(t); return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }) + ' · ' + d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }); }
+    function draw() {
+      var list = rows.filter(function (x) { return filter === 'all' || x.status === filter; });
+      if (!list.length) { $('ldList').innerHTML = '<div class="tk-empty">' + (filter === 'new' ? 'No new leads. New website enquiries and sign-ups appear here.' : 'Nothing here yet.') + '</div>'; return; }
+      $('ldList').innerHTML = list.map(function (x) {
+        var d = x.data || {}, ph = (x.phone || '').replace(/[^\d]/g, '');
+        var extra = [d.goal, d.package, d.calories ? d.calories + ' kcal target' : '', d.message].filter(Boolean).map(function (t) { return esc(String(t).slice(0, 200)); }).join(' · ');
+        return '<div class="tk-card" style="margin-top:10px"><div class="tk-row" style="justify-content:space-between;align-items:flex-start;gap:10px"><div style="min-width:0"><b>' + esc(x.name || 'No name') + '</b><div class="tk-small">' + when(x.created_at) + (x.language === 'ar' ? ' · Arabic' : '') + '</div></div>' +
+          '<select class="tk-input" data-st="' + x.id + '" aria-label="Lead status" style="width:auto;padding:6px 8px">' + LEAD_ST.map(function (s) { return '<option value="' + s[0] + '"' + (x.status === s[0] ? ' selected' : '') + '>' + s[1] + '</option>'; }).join('') + '</select></div>' +
+          '<p class="tk-small" style="margin:8px 0 0">' + esc(x.source || x.subject || x.form || '') + (x.page ? ' · <span style="opacity:.7">' + esc(x.page) + '</span>' : '') + '</p>' +
+          (extra ? '<p class="tk-small" style="margin:6px 0 0">' + extra + '</p>' : '') +
+          '<div class="tk-grid2" style="margin-top:10px">' + (x.email ? '<a class="tk-btn sm" href="mailto:' + esc(x.email) + '">Email</a>' : '') + (ph ? '<a class="tk-btn sm" href="https://wa.me/' + ph + '" target="_blank" rel="noopener">WhatsApp</a>' : '') + '</div>' +
+          (x.email ? '<p class="tk-small" style="margin:6px 0 0;opacity:.7">' + esc(x.email) + (x.phone ? ' · ' + esc(x.phone) : '') + '</p>' : '') + '</div>';
+      }).join('');
+      $('ldList').querySelectorAll('[data-st]').forEach(function (sel) { sel.onchange = async function () {
+        var id = sel.dataset.st, v = sel.value;
+        var u = await sb.from('leads').update({ status: v }).eq('id', id);
+        if (u.error) return toast(u.error.message);
+        rows.forEach(function (x) { if (x.id === id) x.status = v; }); toast('Saved'); draw(); leadsBanner();
+      }; });
+    }
+    $('ldF').querySelectorAll('[data-f]').forEach(function (b) { b.onclick = function () { $('ldF').querySelectorAll('[data-f]').forEach(function (x) { x.setAttribute('aria-pressed', 'false'); }); b.setAttribute('aria-pressed', 'true'); filter = b.dataset.f; draw(); }; });
+    $('ldCsv').onclick = function () {
+      var cols = ['created_at', 'status', 'name', 'email', 'phone', 'source', 'subject', 'page', 'language'];
+      var q = function (v) { v = v == null ? '' : String(v); return '"' + v.replace(/"/g, '""') + '"'; };
+      var csv = cols.join(',') + ',details\n' + rows.map(function (x) { return cols.map(function (c) { return q(x[c]); }).join(',') + ',' + q(JSON.stringify(x.data || {})); }).join('\n');
+      var a = document.createElement('a'); a.href = URL.createObjectURL(new Blob(['﻿' + csv], { type: 'text/csv' })); a.download = 'website-leads.csv'; a.click();
+    };
+    draw();
+  }
+
   async function renderHub() {
     var v = $('view');
     var head = '<h1 class="tk-h1">' + greet() + ', <em>' + esc(firstName(S.me)) + '</em></h1>';
@@ -1175,8 +1223,9 @@
       '<button type="button" class="hub-tile" id="hStart"><span>Start a workout</span>' + ICON.today + '</button>' +
       '<button type="button" class="hub-tile soon" id="hBook"><span>Book an activity<small>Coming soon</small></span>' + ICON.cal + '</button>' +
       '<button type="button" class="hub-tile soon" id="hChat"><span>Start chat<small>Coming soon</small></span>' + ICON.chat + '</button></div>';
-    v.innerHTML = head + tiles + '<div class="tk-empty">Loading your day…</div>';
+    v.innerHTML = head + tiles + '<div id="leadsBanner"></div><div class="tk-empty">Loading your day…</div>';
     wireTiles();
+    leadsBanner();
     var since = new Date(); since.setDate(since.getDate() - 7);
     var q = await Promise.all([
       sb.from('profiles').select('id,name,email,avatar_url').neq('id', S.me.id),
@@ -1190,7 +1239,7 @@
     function nm(id) { var p = P.filter(function (x) { return x.id === id; })[0]; return p ? (p.name || p.email) : 'A client'; }
     var trained = {}; W.forEach(function (w) { trained[w.user_id] = 1; });
     var noPlan = P.filter(function (p) { return !PR.some(function (x) { return x.client_id === p.id && x.active; }); }).length;
-    var h = head + tiles;
+    var h = head + tiles + '<div id="leadsBanner"></div>';
     h += '<div class="tk-grid3" style="margin-top:14px"><button type="button" class="tk-stat hub-stat" data-go="clients"><b>' + P.length + '</b><span>Clients</span></button><button type="button" class="tk-stat hub-stat" data-go="clients"><b>' + Object.keys(trained).length + '</b><span>Trained 7 days</span></button><button type="button" class="tk-stat hub-stat" data-go="clients"><b>' + noPlan + '</b><span>Need a plan</span></button></div>';
     var now = L.filter(function (x) { return x.data && x.data.exercises && (Date.now() - new Date(x.updated_at).getTime()) < 3 * 3600e3; });
     h += '<h2 class="tk-h2 hub-h">Training now</h2><div class="tk-card">';
@@ -1212,6 +1261,7 @@
     }
     v.innerHTML = h;
     wireTiles();
+    leadsBanner();
     v.querySelectorAll('[data-go]').forEach(function (b) { b.onclick = function () { go(b.dataset.go); }; });
     v.querySelectorAll('[data-client]').forEach(function (b) { b.onclick = async function () { var p = await sb.from('profiles').select('*').eq('id', b.dataset.client).maybeSingle(); if (!p.data) return toast('Client not found'); await openClient(p.data); if (b.dataset.hist) { S.tab = 'history'; render(); } }; });
     v.querySelectorAll('[data-resend]').forEach(function (b) { b.onclick = function () { var x = I.filter(function (y) { return y.id === b.dataset.resend; })[0]; shareInvite(x); }; });
@@ -1339,7 +1389,7 @@
     var h = '<div class="menu-me">' + avatarHtml(S.me, 56) + '<div style="flex:1;min-width:0"><b>' + esc(S.me.name || S.me.email) + '</b><div class="tk-small">Coach · ' + esc(S.me.email) + '</div></div><button type="button" class="tk-btn sm ghost" id="mProf">Edit profile</button></div>';
     h += '<h2 class="tk-h2 hub-h">Coaching</h2><div class="menu">' +
       item('hub', ICON.hub, 'Hub', 'Your day at a glance') + item('clients', ICON.clients, 'Clients', 'Everyone you coach') + item('addclient', ICON.addUser, 'Add a client', 'Invite by email or WhatsApp') +
-      item('workouts', ICON.plan, 'Workouts', 'Templates you assign') + item('exercises', ICON.today, 'Exercises', 'Library with your videos') + item('notifs', ICON.bell, 'Notifications', 'Workouts started and finished') + '</div>';
+      item('workouts', ICON.plan, 'Workouts', 'Templates you assign') + item('exercises', ICON.today, 'Exercises', 'Library with your videos') + item('notifs', ICON.bell, 'Notifications', 'Workouts started and finished') + item('leads', ICON.inbox, 'Website leads', 'Enquiries, guide downloads and calculator sign-ups') + '</div>';
     h += '<h2 class="tk-h2 hub-h">My training</h2><div class="menu">' + item('today', ICON.today, 'Today', '') + item('plan', ICON.plan, 'My programme', '') + item('body', ICON.body, 'Body', 'Weight and measurements') + item('progress', ICON.progress, 'Progress', '') + item('history', ICON.history, 'History', '') + '</div>';
     h += '<h2 class="tk-h2 hub-h">Coming soon</h2><div class="menu">' + item('s', ICON.chat, 'Chat', 'Message your clients', 1) + item('s', ICON.checkin, 'Check-ins', 'Weekly progress forms and photos', 1) + item('s', ICON.food, 'Nutrition', 'Meal plans and macros', 1) + item('s', ICON.cal, 'Calendar', 'Sessions and bookings', 1) + item('s', ICON.check, 'Habits', 'Steps, water, sleep', 1) + item('s', ICON.info, 'Resources', 'Guides and files for clients', 1) + item('s', ICON.money, 'Financials', 'Payments and renewals', 1) + '</div>';
     h += '<div class="menu" style="margin-top:18px">' + item('settings', ICON.gear, 'Settings', 'Rest timer, sign out') + '<a class="menu-item" href="https://wa.me/971507871515" target="_blank" rel="noopener">' + ICON.info + '<span><b>Support</b><small>Something not working? Tell us</small></span><span aria-hidden="true" class="menu-arrow">›</span></a></div>';
@@ -1350,6 +1400,7 @@
       if (k === 's') return soon(b.querySelector('b').textContent);
       if (k === 'addclient') return openAddClient();
       if (k === 'notifs') return openNotifs();
+      if (k === 'leads') return openLeads();
       if (k === 'settings') return openSettings();
       go(k);
     }; });

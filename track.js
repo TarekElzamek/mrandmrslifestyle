@@ -110,8 +110,19 @@
         opts = Object.assign({}, opts, { body: JSON.stringify(data) });
       } catch (e) { data = null; }
     }
-    var p = _fetch.call(this, url, opts);
-    if (isForm && data) p.then(function (r) {
+    if (!(isForm && data)) return _fetch.call(this, url, opts);
+    // 1) Save every lead in our own database first (Supabase), so no lead is lost even if Formspree is down or over its monthly limit.
+    var saved = saveLead(url, data);
+    // 2) Still send it to Formspree for the email alert.
+    var sent = _fetch.call(this, url, opts).catch(function () { return null; });
+    var p = Promise.all([sent, saved]).then(function (x) {
+      var r = x[0], ok = x[1];
+      if (r && r.ok) return r;
+      if (ok) return new Response('{"ok":true}', { status: 200, headers: { 'Content-Type': 'application/json' } });
+      if (r) return r;
+      throw new TypeError('Failed to fetch');
+    });
+    p.then(function (r) {
       if (!r.ok) return;
       var src = data.source || '';
       if (/Buy Now/i.test(src)) ev('begin_checkout', { item_name: data.package || '', currency: 'AED' }, 'InitiateCheckout', 'checkout');
@@ -119,6 +130,30 @@
     }).catch(function () {});
     return p;
   };
+
+  function saveLead(url, d) {
+    try {
+      var cut = function (v, n) { return v == null || v === '' ? null : String(v).slice(0, n); };
+      var formId = (String(url).match(/formspree\.io\/f\/([\w-]+)/) || [])[1] || '';
+      var row = {
+        form: formId === 'xvzdnogv' ? 'guide' : formId === 'mdayvono' ? 'enquiry' : formId,
+        subject: cut(d._subject, 300),
+        name: cut(d.name || d.firstName || d.first_name || d.full_name, 200),
+        email: cut(d.email || d._replyto, 320),
+        phone: cut(d.phone || d.whatsapp || d.mobile, 60),
+        source: cut(d.source, 300),
+        page: cut(location.pathname, 500),
+        language: cut(document.documentElement.lang || 'en', 10),
+        data: d
+      };
+      return _fetch('https://iwtkphupsobwiaiqvkok.supabase.co/rest/v1/leads', {
+        method: 'POST', keepalive: true,
+        headers: { 'Content-Type': 'application/json', 'apikey': 'sb_publishable_L1RcJTZ1UTT_XocBLPLSYg_tPpPFWbU',
+                   'Authorization': 'Bearer sb_publishable_L1RcJTZ1UTT_XocBLPLSYg_tPpPFWbU', 'Prefer': 'return=minimal' },
+        body: JSON.stringify(row)
+      }).then(function (r) { return r.ok; }).catch(function () { return false; });
+    } catch (e) { return Promise.resolve(false); }
+  }
 
   /* ---------- Stripe success page ---------- */
   if (/thank-you/.test(location.pathname)) ev('purchase', { currency: 'AED' }, 'Purchase', 'purchase');
