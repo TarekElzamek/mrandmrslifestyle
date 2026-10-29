@@ -34,6 +34,7 @@ C = {
 <li><strong>The headrest and shoulder blocks:</strong> they keep you in position so you don't slide off.</li>
 <li><strong>The sitting box:</strong> a padded box placed on the carriage for seated, kneeling and lying-on-your-front exercises, like in the photo above.</li>
 </ul>
+<figure style="margin:24px 0"><img src="/pilates-room/reformer-straps.jpg" width="900" height="1352" loading="lazy" alt="Kneeling arm exercise with the reformer straps and a Pilates ring at The Pilates Room by Chloe, Meydan, Dubai" style="width:100%;max-width:460px;height:auto;border-radius:10px;display:block;margin:0 auto"><figcaption style="font-size:13px;opacity:.7;text-align:center;margin-top:8px">Kneeling on the carriage, pulling the straps, with a Pilates ring for extra work. The shoulder blocks sit at the front of the carriage.</figcaption></figure>
 
 <h2>Reformer vs mat Pilates</h2>
 <div class="table-wrap" style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;margin:8px 0 24px;font-size:15px">
@@ -70,9 +71,10 @@ C = {
 <h2>What to wear</h2>
 <ul>
 <li><strong>Fitted clothes,</strong> so nothing catches in the springs and your instructor can see your alignment.</li>
-<li><strong>Grip socks.</strong> Non-slip Pilates socks help you stay steady on the carriage and footbar.</li>
+<li><strong>Grip socks.</strong> Non-slip Pilates socks help you stay steady on the carriage and footbar. We sell our own The Pilates Room grip socks at the studio, so you can pick up a pair at your first session.</li>
 <li><strong>Hair tied back</strong> and no long jewellery.</li>
 </ul>
+<figure style="margin:24px 0"><div style="display:flex;gap:12px;justify-content:center"><img src="/pilates-room/grip-socks-vanilla.jpg" width="800" height="1002" loading="lazy" alt="The Pilates Room by Chloe grip socks in vanilla white" style="width:48%;max-width:300px;height:auto;border-radius:10px"><img src="/pilates-room/grip-socks-latte.jpg" width="800" height="1053" loading="lazy" alt="The Pilates Room by Chloe grip socks in latte beige" style="width:48%;max-width:300px;height:auto;border-radius:10px"></div><figcaption style="font-size:13px;opacity:.7;text-align:center;margin-top:8px">Our own The Pilates Room grip socks, available at the studio in Meydan.</figcaption></figure>
 
 <h2>What happens in your first session</h2>
 <p>Your first session starts with a short chat about your goals, your routine and anything your body needs. Then your instructor shows you how the reformer works, how to get on and off safely, and how to breathe with the movement. You'll start with foundation exercises like footwork, bridging and arm work in straps, with the springs set for your level. By the end of 50 minutes most people feel their core and glutes working, and know exactly what to expect next time.</p>
@@ -88,7 +90,7 @@ C = {
  faq=[('Is reformer Pilates hard for beginners?', 'No. The springs can be set to support you, and your instructor chooses exercises for your level. Most beginners find the reformer easier to learn than mat Pilates.'),
       ('Do I need to be flexible to start?', 'No. Flexibility improves as you practise; you start with the range of movement you have today.'),
       ('How long until I see results?', 'With two to three sessions a week, many people feel stronger and stand taller within a few weeks. Visible changes usually take longer and depend on your nutrition and consistency.'),
-      ('Do I need grip socks for reformer Pilates?', 'Grip socks are recommended. Their non-slip soles keep your feet steady on the carriage and footbar.'),
+      ('Do I need grip socks for reformer Pilates?', 'Grip socks are recommended. Their non-slip soles keep your feet steady on the carriage and footbar. You can buy our own The Pilates Room grip socks at the studio.'),
       ('Is reformer Pilates the same as Lagree?', 'No. Lagree uses a different machine and a slower, high-intensity style, usually in group classes. Reformer Pilates focuses on control, alignment and core strength.'),
       ('Can I do reformer Pilates while pregnant?', 'Only with your doctor\'s approval and an instructor trained in pre and postnatal exercise, who will adapt the exercises for each stage.')],
  related_h='Keep reading',
@@ -118,6 +120,7 @@ C = {
 <li><strong>مسند الرأس ومساند الكتفين:</strong> تثبّتك في مكانك حتى لا تنزلقي.</li>
 <li><strong>صندوق الجلوس:</strong> صندوق مبطّن يوضع على السرير لتمارين الجلوس والركوع والاستلقاء على البطن، كما في الصورة أعلاه.</li>
 </ul>
+<figure style="margin:24px 0"><img src="/pilates-room/reformer-straps.jpg" width="900" height="1352" loading="lazy" alt="تمرين للذراعين على الركبتين بأحزمة جهاز البيلاتس وحلقة البيلاتس في ذا بيلاتس روم بميدان، دبي" style="width:100%;max-width:460px;height:auto;border-radius:10px;display:block;margin:0 auto"><figcaption style="font-size:13px;opacity:.7;text-align:center;margin-top:8px">الركوع على السرير وسحب الأحزمة مع حلقة البيلاتس لمجهود إضافي. ومساند الكتفين في مقدمة السرير.</figcaption></figure>
 
 <h2>البيلاتس على الجهاز أم بيلاتس الأرضية (المات)؟</h2>
 <div class="table-wrap" style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;margin:8px 0 24px;font-size:15px">
@@ -154,9 +157,10 @@ C = {
 <h2>ماذا ترتدين</h2>
 <ul>
 <li><strong>ملابس رياضية مريحة وضيقة قليلًا،</strong> حتى لا يعلق شيء في النوابض وترى المدربة وضعيتك.</li>
-<li><strong>جوارب مانعة للانزلاق (جوارب البيلاتس)</strong> لتبقي ثابتة على السرير وقضيب القدمين.</li>
+<li><strong>جوارب مانعة للانزلاق (جوارب البيلاتس)</strong> لتبقي ثابتة على السرير وقضيب القدمين. نبيع جوارب ذا بيلاتس روم الخاصة بنا في الاستوديو، ويمكنك الحصول على زوج في جلستك الأولى.</li>
 <li><strong>شعر مربوط</strong> وبدون إكسسوارات طويلة.</li>
 </ul>
+<figure style="margin:24px 0"><div style="display:flex;gap:12px;justify-content:center"><img src="/pilates-room/grip-socks-vanilla.jpg" width="800" height="1002" loading="lazy" alt="جوارب البيلاتس المانعة للانزلاق من ذا بيلاتس روم باللون الأبيض" style="width:48%;max-width:300px;height:auto;border-radius:10px"><img src="/pilates-room/grip-socks-latte.jpg" width="800" height="1053" loading="lazy" alt="جوارب البيلاتس المانعة للانزلاق من ذا بيلاتس روم باللون البيج" style="width:48%;max-width:300px;height:auto;border-radius:10px"></div><figcaption style="font-size:13px;opacity:.7;text-align:center;margin-top:8px">جوارب ذا بيلاتس روم الخاصة بنا، متوفرة في الاستوديو بميدان.</figcaption></figure>
 
 <h2>ماذا يحدث في جلستك الأولى</h2>
 <p>تبدأ جلستك الأولى بحديث قصير عن أهدافك وروتينك وما يحتاجه جسمك. ثم تشرح لك المدربة كيف يعمل جهاز البيلاتس، وكيف تصعدين وتنزلين بأمان، وكيف تتنفسين مع الحركة. تبدئين بتمارين أساسية مثل تمارين القدمين على القضيب، ورفع الحوض، وتمارين الذراعين بالأحزمة، مع ضبط النوابض حسب مستواك. وبنهاية الخمسين دقيقة تشعر معظم السيدات بعمل عضلات البطن والأرداف، ويعرفن تمامًا ماذا ينتظرهن في الجلسة القادمة.</p>
@@ -172,7 +176,7 @@ C = {
  faq=[('هل البيلاتس على الجهاز صعب للمبتدئات؟', 'لا. يمكن ضبط النوابض لتساعدك، والمدربة تختار التمارين حسب مستواك. معظم المبتدئات يجدن الجهاز أسهل في التعلّم من بيلاتس الأرضية.'),
       ('هل أحتاج أن أكون مرنة لأبدأ؟', 'لا. المرونة تتحسن مع الممارسة، وتبدئين بمدى الحركة الذي لديك اليوم.'),
       ('متى أرى النتائج؟', 'مع جلستين إلى ثلاث جلسات أسبوعيًا، تشعر كثير من السيدات بقوة أكبر ووقفة أفضل خلال أسابيع قليلة. التغييرات الظاهرة تأخذ وقتًا أطول وتعتمد على التغذية والاستمرار.'),
-      ('هل أحتاج جوارب خاصة للبيلاتس على الجهاز؟', 'يُنصح بالجوارب المانعة للانزلاق، لأن نعلها يثبّت قدميك على السرير وقضيب القدمين.'),
+      ('هل أحتاج جوارب خاصة للبيلاتس على الجهاز؟', 'يُنصح بالجوارب المانعة للانزلاق، لأن نعلها يثبّت قدميك على السرير وقضيب القدمين. ويمكنك شراء جوارب ذا بيلاتس روم الخاصة بنا من الاستوديو.'),
       ('هل البيلاتس على الجهاز هو نفسه اللاغري؟', 'لا. اللاغري يستخدم جهازًا مختلفًا وأسلوبًا أبطأ وعالي الشدة، وغالبًا في حصص جماعية. أما البيلاتس على الجهاز فيركّز على التحكم والمحاذاة وقوة عضلات البطن والظهر.'),
       ('هل يمكنني ممارسة البيلاتس على الجهاز أثناء الحمل؟', 'فقط بموافقة طبيبتك ومع مدربة متخصصة في تمارين الحمل وما بعد الولادة، تكيّف التمارين حسب كل مرحلة.')],
  related_h='اقرئي أيضًا',
