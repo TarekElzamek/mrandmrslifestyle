@@ -58,14 +58,16 @@ async function gemini(model, key, img) {
   });
 }
 
-// If the default model has been retired, pick any current free "flash" model that can read images.
-async function fallbackModel(key) {
-  const r = await fetch(`${API}/models?pageSize=200`, { headers: { 'x-goog-api-key': key } });
-  if (!r.ok) return null;
-  const j = await r.json();
-  const ok = (j.models || []).filter(m => (m.supportedGenerationMethods || []).includes('generateContent') && /flash/.test(m.name) && !/thinking|tts|image-generation|live|embedding/.test(m.name));
-  ok.sort((a, b) => (/lite/.test(a.name) - /lite/.test(b.name)) || b.name.localeCompare(a.name));
-  return ok[0] ? ok[0].name.replace(/^models\//, '') : null;
+// Free "flash" models available to this key that can read images, best first.
+async function flashModels(key) {
+  try {
+    const r = await fetch(`${API}/models?pageSize=200`, { headers: { 'x-goog-api-key': key } });
+    if (!r.ok) return [];
+    const j = await r.json();
+    const ok = (j.models || []).filter(m => (m.supportedGenerationMethods || []).includes('generateContent') && /gemini.*flash/.test(m.name) && !/thinking|tts|image|live|embedding|audio|preview-0[0-4]/.test(m.name));
+    ok.sort((a, b) => (/lite/.test(a.name) - /lite/.test(b.name)) || b.name.localeCompare(a.name));
+    return ok.map(m => m.name.replace(/^models\//, ''));
+  } catch (e) { return []; }
 }
 
 module.exports = async (req, res) => {
@@ -88,13 +90,24 @@ module.exports = async (req, res) => {
   if (img.length > 4000000) return send(res, 413, { error: 'image_too_large' });
 
   // 3) Ask Gemini to read the sheet
-  let text = '';
+  let text = '', detail = '';
   try {
-    let r = await gemini(process.env.GEMINI_MODEL || 'gemini-2.5-flash', key, img);
-    if (r.status === 404) { const m = await fallbackModel(key); if (m) r = await gemini(m, key, img); }
-    const j = await r.json();
-    if (r.status === 429) return send(res, 429, { error: 'busy' }); // free daily limit reached
-    if (!r.ok) { console.error('gemini error', r.status, j && j.error && j.error.message); return send(res, 502, { error: 'ai_failed' }); }
+    const first = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
+    let tried = [first], r = await gemini(first, key, img), j = await r.json();
+    // Model retired (404) or no free allowance for it (429): try the other free Flash models.
+    if (r.status === 404 || r.status === 429) {
+      const others = (await flashModels(key)).filter(m => !tried.includes(m)).slice(0, 4);
+      for (const m of others) {
+        detail = (j && j.error && j.error.message || '').slice(0, 300);
+        tried.push(m); r = await gemini(m, key, img); j = await r.json();
+        if (r.ok) break;
+      }
+    }
+    if (!r.ok) {
+      detail = (j && j.error && j.error.message || detail || '').slice(0, 300);
+      console.error('gemini error', r.status, tried.join(','), detail);
+      return send(res, r.status === 429 ? 429 : 502, { error: r.status === 429 ? 'busy' : 'ai_failed', tried, detail });
+    }
     text = ((((j.candidates || [])[0] || {}).content || {}).parts || []).map(p => p.text || '').join('');
   } catch (e) { console.error(e); return send(res, 502, { error: 'ai_failed' }); }
 
