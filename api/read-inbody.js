@@ -47,15 +47,23 @@ async function readBody(req) {
   try { return JSON.parse(Buffer.concat(chunks).toString('utf8') || '{}'); } catch (e) { return {}; }
 }
 
-async function gemini(model, key, img) {
-  return fetch(`${API}/models/${model}:generateContent`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'x-goog-api-key': key },
-    body: JSON.stringify({
-      contents: [{ parts: [{ inline_data: { mime_type: 'image/jpeg', data: img } }, { text: PROMPT }] }],
-      generationConfig: { temperature: 0, responseMimeType: 'application/json' }
-    })
-  });
+// One call to Gemini with "thinking" switched off (reading numbers off a sheet doesn't need it) and a time limit.
+async function gemini(model, key, img, ms) {
+  const thinking = /gemini-2\.5/.test(model) ? { thinkingBudget: 0 } : /gemini-[3-9]/.test(model) ? { thinkingLevel: 'low' } : null;
+  const call = (cfg) => {
+    const ctl = new AbortController(), t = setTimeout(() => ctl.abort(), ms);
+    return fetch(`${API}/models/${model}:generateContent`, {
+      method: 'POST', signal: ctl.signal,
+      headers: { 'Content-Type': 'application/json', 'x-goog-api-key': key },
+      body: JSON.stringify({
+        contents: [{ parts: [{ inline_data: { mime_type: 'image/jpeg', data: img } }, { text: PROMPT }] }],
+        generationConfig: Object.assign({ temperature: 0, responseMimeType: 'application/json', maxOutputTokens: 600 }, cfg ? { thinkingConfig: cfg } : {})
+      })
+    }).finally(() => clearTimeout(t));
+  };
+  let r = await call(thinking);
+  if (r.status === 400 && thinking) r = await call(null); // model doesn't accept that thinking setting
+  return r;
 }
 
 // Free "flash" models available to this key that can read images, best first.
@@ -90,16 +98,19 @@ module.exports = async (req, res) => {
   if (img.length > 4000000) return send(res, 413, { error: 'image_too_large' });
 
   // 3) Ask Gemini to read the sheet
-  let text = '', detail = '';
+  let text = '', detail = '', used = '';
+  const started = Date.now(), left = () => 55000 - (Date.now() - started);
   try {
     const first = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
-    let tried = [first], r = await gemini(first, key, img), j = await r.json();
+    const tried = [first];
+    let r = await gemini(first, key, img, Math.min(30000, left())), j = await r.json(); used = first;
     // Model retired (404) or no free allowance for it (429): try the other free Flash models.
     if (r.status === 404 || r.status === 429) {
-      const others = (await flashModels(key)).filter(m => !tried.includes(m)).slice(0, 4);
+      const others = (await flashModels(key)).filter(m => !tried.includes(m)).slice(0, 3);
       for (const m of others) {
+        if (left() < 8000) break;
         detail = (j && j.error && j.error.message || '').slice(0, 300);
-        tried.push(m); r = await gemini(m, key, img); j = await r.json();
+        tried.push(m); r = await gemini(m, key, img, Math.min(30000, left())); j = await r.json(); used = m;
         if (r.ok) break;
       }
     }
@@ -108,14 +119,14 @@ module.exports = async (req, res) => {
       console.error('gemini error', r.status, tried.join(','), detail);
       return send(res, r.status === 429 ? 429 : 502, { error: r.status === 429 ? 'busy' : 'ai_failed', tried, detail });
     }
-    text = ((((j.candidates || [])[0] || {}).content || {}).parts || []).map(p => p.text || '').join('');
-  } catch (e) { console.error(e); return send(res, 502, { error: 'ai_failed' }); }
+    text = ((((j.candidates || [])[0] || {}).content || {}).parts || []).filter(p => !p.thought).map(p => p.text || '').join('');
+  } catch (e) { console.error(e); return send(res, 504, { error: e.name === 'AbortError' ? 'timeout' : 'ai_failed', model: used }); }
 
   // 4) Clean up the answer: only numbers in sensible ranges
   let data;
   try { data = JSON.parse((text.match(/\{[\s\S]*\}/) || ['{}'])[0]); } catch (e) { data = {}; }
-  if (!data.is_body_scan) return send(res, 200, { is_inbody: false });
-  const out = { is_inbody: true, values: {} };
+  if (!data.is_body_scan) return send(res, 200, { is_inbody: false, model: used });
+  const out = { is_inbody: true, values: {}, model: used, secs: Math.round((Date.now() - started) / 1000) };
   FIELDS.forEach(([k, min, max, int]) => {
     let v = data[k];
     if (typeof v === 'string') v = parseFloat(v.replace(',', '.'));

@@ -1043,7 +1043,7 @@
   }
   async function readInbody(file) {
     var st = $('bAi'); if (!st || !file) return;
-    st.className = 'ai-status'; st.hidden = false; st.innerHTML = '<span class="ai-spin" aria-hidden="true"></span> Reading the InBody sheet…';
+    st.className = 'ai-status'; st.hidden = false; st.innerHTML = '<span class="ai-spin" aria-hidden="true"></span> Reading the InBody sheet… this can take up to 30 seconds. You can keep typing meanwhile.';
     try {
       var data = await photoData(file, 2000, 0.85);
       var ses = await sb.auth.getSession(), tok = ses.data && ses.data.session && ses.data.session.access_token;

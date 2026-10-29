@@ -774,5 +774,10 @@
         }
       ]
     }
-  ]
+  ],
+  "functions": {
+    "api/read-inbody.js": {
+      "maxDuration": 60
+    }
+  }
 }
