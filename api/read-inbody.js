@@ -7,7 +7,7 @@
  *
  * Settings (Vercel → Project → Settings → Environment Variables):
  *   GEMINI_API_KEY   free key from Google AI Studio (aistudio.google.com → Get API key)   required
- *   GEMINI_MODEL     optional, default "gemini-flash-latest" (falls back to other free Flash models)
+ *   GEMINI_MODEL     optional, default "gemini-flash-lite-latest" (falls back to other free Flash models)
  */
 const SUPA_URL = 'https://iwtkphupsobwiaiqvkok.supabase.co';
 const SUPA_KEY = 'sb_publishable_L1RcJTZ1UTT_XocBLPLSYg_tPpPFWbU'; // public key, same as in the app
@@ -107,15 +107,15 @@ module.exports = async (req, res) => {
   let text = '', detail = '', used = '';
   const started = Date.now(), left = () => 55000 - (Date.now() - started);
   try {
-    const first = process.env.GEMINI_MODEL || 'gemini-flash-latest';
+    const first = process.env.GEMINI_MODEL || 'gemini-flash-lite-latest';
     const tried = [first];
     let { status, ok, j } = await gemini(first, key, img, Math.min(20000, left())); used = first;
     const r = () => ({ status, ok });
     // Model retired (404), no free allowance (429), busy (500/503) or too slow (504): try other free Flash models,
-    // the fast "lite" one first.
+    // the main Flash model first.
     if ([404, 429, 500, 502, 503, 504].includes(status)) {
       const all = await flashModels(key);
-      const lite = all.filter(m => /flash-lite-latest/.test(m));
+      const lite = all.filter(m => /^gemini-flash-latest$/.test(m));
       const others = lite.concat(all.filter(m => !lite.includes(m))).filter(m => !tried.includes(m)).slice(0, 5);
       for (const m of others) {
         if (left() < 6000) break;
