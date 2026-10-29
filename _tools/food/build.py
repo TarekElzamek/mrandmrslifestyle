@@ -27,10 +27,10 @@ EN_HEADER = (EN_HEADER.replace(' class="mm-active" aria-current="page"', '')
              .replace('mm-menu-small mm-active', 'mm-menu-small'))
 EN_FOOTER = calc[calc.index('<div class="mm-footer"'):calc.index('<script>', calc.index('<div class="mm-footer"'))]
 
-ar = read('ar/index.html')
-AR_HEADER = ar[ar.index('<header class="mm-header ar-head">'):ar.index('<header class="lp-hero">')]
+ar = read('ar/calories/chicken-shawarma.html')  # ar/index.html is now the full Arabic home page; reuse the current calorie-page header
+AR_HEADER = ar[ar.index('<header class="mm-header ar-head">'):ar.index('<main id="main">')]
 AR_HEADER = AR_HEADER.replace(' class="mm-active" aria-current="page"', '').replace(' class="mm-active"', '')
-AR_FOOTER = ar[ar.index('<div class="mm-footer" role="contentinfo" dir="rtl">'):ar.index('<script src="/shared.js"', ar.index('<div class="mm-footer" role="contentinfo" dir="rtl">'))]
+AR_FOOTER = ar[ar.index('<div class="mm-footer" role="contentinfo" dir="rtl">'):ar.index('<script>', ar.index('<div class="mm-footer" role="contentinfo" dir="rtl">'))]
 
 def mark_active(h):
     """Highlight the Free Tools menu + this tool in the header."""
@@ -51,10 +51,11 @@ T = {
    none='We don\'t have that one yet. <a href="https://wa.me/971507871515?text=Please%20add%20this%20food%20to%20your%20calorie%20list%3A%20" style="color:var(--gold)">Tell us on WhatsApp</a> and we\'ll add it.',
    note='Values are estimates for a typical Dubai restaurant portion, based on published nutrition data and standard recipes. Portions and recipes vary between restaurants.',
    calc_link='Not sure of your daily calories? <a href="/calculator.html" style="color:var(--gold)">Use our free calculator</a>.',
-   lead_tag='Free Meal Plan', lead_h='Want a meal plan that still includes <em>{what}</em>?', lead_fav_default='your favourites',
-   lead_p='Tell us where to send it. Tarek &amp; Chloe will build you a sample day around your favourite Dubai foods, so you can lose fat without giving them up.',
-   ph_name='First name', ph_email='Your email', ph_fav='Your favourite foods (e.g. shawarma, karak)', lead_btn='Send My Free Plan',
-   nospam='No spam. Unsubscribe anytime.', thanks='Thank you! We\'ll be in touch by email shortly.',
+   lead_tag='Free PDF guide', lead_h='Love {what}? Get the free <em>Dubai Eating-Out Guide</em>', lead_fav_default='eating out',
+   lead_p='What to order at 29 Dubai favourites, from shawarma and karak to biryani and kunafa, and still lose fat. Plus our 7 rules for eating out. Free, instant download.',
+   ph_name='First name', ph_email='Your email', lead_btn='Get the Free Guide',
+   nospam='No spam. Unsubscribe anytime.', thanks='Your guide is ready:', dl_btn='Download the guide (PDF)', guide_pdf='/guides/dubai-eating-out-guide.pdf',
+   teaser='<b>Free PDF:</b> what to order at 29 Dubai favourites and still lose fat', teaser_btn='Get the free guide ↓',
    cta_h_hub='Lose fat without giving up the food you love', cta_h_page='Lose fat without giving up {name}',
    cta_p='Our clients still eat shawarma and drink karak. We just build it into the plan.',
    cta1=('See Online Coaching', '/online-coaching.html'), cta2=('Train In Person', '/personal-trainer-dubai.html'),
@@ -94,10 +95,11 @@ T = {
    none='هذه الأكلة غير موجودة بعد. <a href="https://wa.me/971507871515?text=%D8%A3%D8%B1%D8%AC%D9%88%20%D8%A5%D8%B6%D8%A7%D9%81%D8%A9%20%D9%87%D8%B0%D9%87%20%D8%A7%D9%84%D8%A3%D9%83%D9%84%D8%A9%3A%20" style="color:var(--gold)">أخبرنا على واتساب</a> وسنضيفها.',
    note='القيم تقديرية لحصة مطعم عادية في دبي، بناءً على بيانات غذائية منشورة ووصفات معتادة. الحصص والوصفات تختلف بين المطاعم.',
    calc_link='لا تعرف سعراتك اليومية؟ <a href="/calculator.html" style="color:var(--gold)">استخدم الحاسبة المجانية</a>.',
-   lead_tag='نظام غذائي مجاني', lead_h='تريد نظامًا غذائيًا يشمل <em>{what}</em>؟', lead_fav_default='أكلاتك المفضلة',
-   lead_p='أخبرنا أين نرسله. طارق وكلوي سيجهّزان لك يومًا نموذجيًا يشمل أكلاتك المفضلة في دبي، لتخسر الدهون بدون أن تتخلى عنها.',
-   ph_name='الاسم الأول', ph_email='بريدك الإلكتروني', ph_fav='أكلاتك المفضلة (مثلًا شاورما، كرك)', lead_btn='أرسل لي النظام المجاني',
-   nospam='بدون رسائل مزعجة. يمكنك إلغاء الاشتراك في أي وقت.', thanks='شكرًا! سنتواصل معك عبر البريد قريبًا.',
+   lead_tag='دليل PDF مجاني', lead_h='تحب {what}؟ احصل مجانًا على <em>دليل الأكل خارج البيت في دبي</em>', lead_fav_default='الأكل خارج البيت',
+   lead_p='ماذا تطلب من 29 أكلة مفضلة في دبي، من الشاورما والكرك إلى البرياني والكنافة، وتخسر الدهون في نفس الوقت. مع 7 قواعد للأكل خارج البيت. مجاني وتحميل فوري.',
+   ph_name='الاسم الأول', ph_email='بريدك الإلكتروني', lead_btn='احصل على الدليل المجاني',
+   nospam='بدون رسائل مزعجة. يمكنك إلغاء الاشتراك في أي وقت.', thanks='دليلك جاهز:', dl_btn='حمّل الدليل (PDF)', guide_pdf='/guides/dubai-eating-out-guide-ar.pdf',
+   teaser='<b>دليل PDF مجاني:</b> ماذا تطلب من 29 أكلة مفضلة في دبي وتخسر الدهون', teaser_btn='احصل على الدليل ↓',
    cta_h_hub='اخسر الدهون بدون أن تتخلى عن أكلك المفضل', cta_h_page='اخسر الدهون بدون أن تتخلى عن {name}',
    cta_p='عملاؤنا ما زالوا يأكلون الشاورما ويشربون الكرك. نحن فقط ندخلها في الخطة.',
    cta1=('التدريب أونلاين', '/ar/online-coaching.html'), cta2=('التدريب الشخصي في دبي', '/ar/personal-trainer-dubai.html'),
@@ -203,6 +205,13 @@ a{color:inherit}
 .fc-lead button,.fc-btn{padding:.9rem 1.2rem;border:0;border-radius:6px;background:var(--gold);color:#0a0a0a;font-weight:700;font-size:.85rem;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;font-family:inherit;text-decoration:none;display:inline-block;text-align:center}
 .fc-small{font-size:.72rem;color:rgba(255,255,255,.5)}
 .fc-done{display:none;color:var(--gold);font-weight:600}
+#free-guide{scroll-margin-top:90px}
+.fc-teaser{display:flex;justify-content:space-between;align-items:center;gap:1rem;margin-top:1.5rem;padding:1rem 1.3rem;border:1px dashed rgba(201,168,76,.55);border-radius:10px;color:#fff;text-decoration:none;font-size:.92rem;line-height:1.5}
+.fc-teaser b{color:var(--gold);white-space:nowrap;font-size:.85rem}
+.fc-teaser span b{color:var(--gold)}
+.fc-guide-cover{float:right;margin:0 0 .8rem 1rem;border-radius:4px;box-shadow:0 8px 24px rgba(0,0,0,.5);width:96px;height:auto}
+[dir=rtl] .fc-guide-cover{float:left;margin:0 1rem .8rem 0}
+@media(max-width:640px){.fc-teaser{flex-direction:column;align-items:flex-start;gap:.4rem}.fc-guide-cover{width:80px}}
 .fc-cta{text-align:center;margin:4rem auto 5rem;max-width:640px}
 .fc-cta h2{font-family:var(--font-d);font-weight:400;font-size:1.8rem;margin-bottom:.6rem}
 .fc-cta p{color:var(--muted);margin-bottom:1.4rem;line-height:1.6}
@@ -307,30 +316,35 @@ def head(lang, title, desc, path, alt_path, ld):
 
 def lead_box(lang, what, src):
     t = T[lang]
-    return f'''<section class="fc-lead" id="meal-plan">
+    return f'''<section class="fc-lead" id="free-guide">
   <div>
     <div class="fc-tag" style="margin-bottom:.8rem">{t['lead_tag']}</div>
+    <img class="fc-guide-cover" src="/guides/dubai-eating-out-guide{'-ar' if lang == 'ar' else ''}-cover.jpg" width="120" height="170" alt="" loading="lazy">
     <h2>{t['lead_h'].format(what=esc(what))}</h2>
     <p>{t['lead_p']}</p>
   </div>
   <form onsubmit="return fcLead(event)" data-src="{esc(src)}">
     <label class="sr" for="fcName">{t['ph_name']}</label><input id="fcName" type="text" required placeholder="{t['ph_name']}" autocomplete="given-name">
     <label class="sr" for="fcEmail">{t['ph_email']}</label><input id="fcEmail" type="email" required placeholder="{t['ph_email']}" autocomplete="email">
-    <label class="sr" for="fcFav">{t['ph_fav']}</label><input id="fcFav" type="text" placeholder="{t['ph_fav']}">
     <button type="submit">{t['lead_btn']}</button>
     <div class="fc-small">{t['nospam']}</div>
-    <div class="fc-done" id="fcDone" role="status">{t['thanks']}</div>
+    <div class="fc-done" id="fcDone" role="status">{t['thanks']}<a class="fc-btn" href="{t['guide_pdf']}" target="_blank" rel="noopener" style="margin-top:.6rem;display:block">{t['dl_btn']}</a></div>
   </form>
 </section>'''
 
 LEAD_JS = '''<script>
 function fcLead(e){e.preventDefault();var f=e.target,b=f.querySelector('button');
- var n=document.getElementById('fcName').value.trim(),m=document.getElementById('fcEmail').value.trim(),fav=document.getElementById('fcFav').value.trim();
- b.disabled=true;
- fetch('https://formspree.io/f/mdayvono',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},
-  body:JSON.stringify({_subject:'\\ud83c\\udf7d New Food Calories Lead \\u2014 '+n,name:n,email:m,_replyto:m,favourite_foods:fav,daily_target:(function(){try{return localStorage.getItem('mmTarget')||''}catch(x){return ''}})(),language:document.documentElement.lang,source:f.getAttribute('data-src')})}).catch(function(){});
+ var n=document.getElementById('fcName').value.trim(),m=document.getElementById('fcEmail').value.trim();
+ b.disabled=true;b.style.display='none';
+ fetch('https://formspree.io/f/xvzdnogv',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},
+  body:JSON.stringify({_subject:'\\ud83d\\udccb New Eating-Out Guide Download \\u2014 '+n,name:n,email:m,_replyto:m,goal:'Dubai Eating-Out Guide',daily_target:(function(){try{return localStorage.getItem('mmTarget')||''}catch(x){return ''}})(),language:document.documentElement.lang,landing_page:location.pathname,source:f.getAttribute('data-src')})}).catch(function(){});
+ if(window.gtag)gtag('event','generate_lead',{lead_type:'eating_out_guide',source:f.getAttribute('data-src')});
  document.getElementById('fcDone').style.display='block';return false;}
 </script>'''
+
+def teaser(lang):
+    t = T[lang]
+    return f'<a class="fc-teaser" href="#free-guide"><span>{t["teaser"]}</span><b>{t["teaser_btn"]}</b></a>'
 
 def cta(lang, h):
     t = T[lang]
@@ -390,7 +404,8 @@ def build_hub(lang):
   <p class="fc-sub">{t['hub_sub'].format(n=n)}</p>
 </div>
 <div class="fc-wrap">
-  <div class="fc-tools">
+  {teaser(lang)}
+  <div class="fc-tools" style="margin-top:1.5rem">
     <label class="fc-search">{SEARCH_ICON}<input id="fcQ" type="search" placeholder="{esc(t['search'])}" aria-label="{esc(t['search'])}" autocomplete="off"></label>
     <label class="fc-target">{t['target']} <input id="fcT" type="number" value="2000" min="1000" max="5000" step="50" inputmode="numeric"></label>
   </div>
@@ -512,6 +527,7 @@ def build_page(f, lang):
       <div class="fc-small" style="margin-top:.3rem">{t['walk_note']}</div>
     </div>
   </div>
+  {teaser(lang)}
   {pt_box(f, lang, name)}
   <div class="fp-main fp-sec">
     <div class="fp-box">

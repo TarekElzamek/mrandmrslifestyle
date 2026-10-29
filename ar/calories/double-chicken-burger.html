@@ -74,6 +74,13 @@ a{color:inherit}
 .fc-lead button,.fc-btn{padding:.9rem 1.2rem;border:0;border-radius:6px;background:var(--gold);color:#0a0a0a;font-weight:700;font-size:.85rem;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;font-family:inherit;text-decoration:none;display:inline-block;text-align:center}
 .fc-small{font-size:.72rem;color:rgba(255,255,255,.5)}
 .fc-done{display:none;color:var(--gold);font-weight:600}
+#free-guide{scroll-margin-top:90px}
+.fc-teaser{display:flex;justify-content:space-between;align-items:center;gap:1rem;margin-top:1.5rem;padding:1rem 1.3rem;border:1px dashed rgba(201,168,76,.55);border-radius:10px;color:#fff;text-decoration:none;font-size:.92rem;line-height:1.5}
+.fc-teaser b{color:var(--gold);white-space:nowrap;font-size:.85rem}
+.fc-teaser span b{color:var(--gold)}
+.fc-guide-cover{float:right;margin:0 0 .8rem 1rem;border-radius:4px;box-shadow:0 8px 24px rgba(0,0,0,.5);width:96px;height:auto}
+[dir=rtl] .fc-guide-cover{float:left;margin:0 1rem .8rem 0}
+@media(max-width:640px){.fc-teaser{flex-direction:column;align-items:flex-start;gap:.4rem}.fc-guide-cover{width:80px}}
 .fc-cta{text-align:center;margin:4rem auto 5rem;max-width:640px}
 .fc-cta h2{font-family:var(--font-d);font-weight:400;font-size:1.8rem;margin-bottom:.6rem}
 .fc-cta p{color:var(--muted);margin-bottom:1.4rem;line-height:1.6}
@@ -197,6 +204,7 @@ body{font-family:'Tajawal','DM Sans',sans-serif}
       <div class="fc-small" style="margin-top:.3rem">تقريبي، لشخص وزنه 75 كغ بمعدل 5 سعرات في الدقيقة تقريبًا.</div>
     </div>
   </div>
+  <a class="fc-teaser" href="#free-guide"><span><b>دليل PDF مجاني:</b> ماذا تطلب من 29 أكلة مفضلة في دبي وتخسر الدهون</span><b>احصل على الدليل ↓</b></a>
   <section class="fc-pt" aria-label="تدريب شخصي 1 لـ 1 · القوز، دبي">
     <div>
       <div class="fc-tag">تدريب شخصي 1 لـ 1 · القوز، دبي</div>
@@ -224,19 +232,19 @@ body{font-family:'Tajawal','DM Sans',sans-serif}
     <h2 class="fp-h">أسئلة شائعة</h2>
     <details><summary>كم سعرة في دبل برجر دجاج؟</summary><p>حوالي 800 سعرة لـ برجر (قطعتا دجاج كرسبي، جبن، مايونيز)، مع 40 غ بروتين و65 غ كربوهيدرات و42 غ دهون. القيم تختلف بين المطاعم.</p></details><details><summary>هل يمكنني أكل دبل برجر دجاج وخسارة الوزن؟</summary><p>نعم. خسارة الدهون تعتمد على مجموع سعراتك خلال اليوم، وليس على أكلة واحدة. دبل برجر دجاج تعادل حوالي 40% من يوم 2,000 سعرة. اختره مشويًا، أو بقطعة واحدة بدون مايونيز: حوالي 450 سعرة.</p></details><details><summary>كم أحتاج لحرق دبل برجر دجاج؟</summary><p>حوالي 160 دقيقة من المشي السريع لشخص وزنه 75 كغ. تعديل الحصة أسهل من محاولة حرقها، ولهذا ندخل الأكلات المفضلة في خطط عملائنا.</p></details>
   </div>
-  <section class="fc-lead" id="meal-plan">
+  <section class="fc-lead" id="free-guide">
   <div>
-    <div class="fc-tag" style="margin-bottom:.8rem">نظام غذائي مجاني</div>
-    <h2>تريد نظامًا غذائيًا يشمل <em>دبل برجر دجاج</em>؟</h2>
-    <p>أخبرنا أين نرسله. طارق وكلوي سيجهّزان لك يومًا نموذجيًا يشمل أكلاتك المفضلة في دبي، لتخسر الدهون بدون أن تتخلى عنها.</p>
+    <div class="fc-tag" style="margin-bottom:.8rem">دليل PDF مجاني</div>
+    <img class="fc-guide-cover" src="/guides/dubai-eating-out-guide-ar-cover.jpg" width="120" height="170" alt="" loading="lazy">
+    <h2>تحب دبل برجر دجاج؟ احصل مجانًا على <em>دليل الأكل خارج البيت في دبي</em></h2>
+    <p>ماذا تطلب من 29 أكلة مفضلة في دبي، من الشاورما والكرك إلى البرياني والكنافة، وتخسر الدهون في نفس الوقت. مع 7 قواعد للأكل خارج البيت. مجاني وتحميل فوري.</p>
   </div>
   <form onsubmit="return fcLead(event)" data-src="Food Calories – Double Chicken Burger (Arabic)">
     <label class="sr" for="fcName">الاسم الأول</label><input id="fcName" type="text" required placeholder="الاسم الأول" autocomplete="given-name">
     <label class="sr" for="fcEmail">بريدك الإلكتروني</label><input id="fcEmail" type="email" required placeholder="بريدك الإلكتروني" autocomplete="email">
-    <label class="sr" for="fcFav">أكلاتك المفضلة (مثلًا شاورما، كرك)</label><input id="fcFav" type="text" placeholder="أكلاتك المفضلة (مثلًا شاورما، كرك)">
-    <button type="submit">أرسل لي النظام المجاني</button>
+    <button type="submit">احصل على الدليل المجاني</button>
     <div class="fc-small">بدون رسائل مزعجة. يمكنك إلغاء الاشتراك في أي وقت.</div>
-    <div class="fc-done" id="fcDone" role="status">شكرًا! سنتواصل معك عبر البريد قريبًا.</div>
+    <div class="fc-done" id="fcDone" role="status">دليلك جاهز:<a class="fc-btn" href="/guides/dubai-eating-out-guide-ar.pdf" target="_blank" rel="noopener" style="margin-top:.6rem;display:block">حمّل الدليل (PDF)</a></div>
   </form>
 </section>
   <div class="fp-sec" style="margin-top:3rem">
@@ -263,10 +271,11 @@ body{font-family:'Tajawal','DM Sans',sans-serif}
 </div>
 <script>
 function fcLead(e){e.preventDefault();var f=e.target,b=f.querySelector('button');
- var n=document.getElementById('fcName').value.trim(),m=document.getElementById('fcEmail').value.trim(),fav=document.getElementById('fcFav').value.trim();
- b.disabled=true;
- fetch('https://formspree.io/f/mdayvono',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},
-  body:JSON.stringify({_subject:'\ud83c\udf7d New Food Calories Lead \u2014 '+n,name:n,email:m,_replyto:m,favourite_foods:fav,daily_target:(function(){try{return localStorage.getItem('mmTarget')||''}catch(x){return ''}})(),language:document.documentElement.lang,source:f.getAttribute('data-src')})}).catch(function(){});
+ var n=document.getElementById('fcName').value.trim(),m=document.getElementById('fcEmail').value.trim();
+ b.disabled=true;b.style.display='none';
+ fetch('https://formspree.io/f/xvzdnogv',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},
+  body:JSON.stringify({_subject:'\ud83d\udccb New Eating-Out Guide Download \u2014 '+n,name:n,email:m,_replyto:m,goal:'Dubai Eating-Out Guide',daily_target:(function(){try{return localStorage.getItem('mmTarget')||''}catch(x){return ''}})(),language:document.documentElement.lang,landing_page:location.pathname,source:f.getAttribute('data-src')})}).catch(function(){});
+ if(window.gtag)gtag('event','generate_lead',{lead_type:'eating_out_guide',source:f.getAttribute('data-src')});
  document.getElementById('fcDone').style.display='block';return false;}
 </script>
 <script src="/shared.js" defer></script>
