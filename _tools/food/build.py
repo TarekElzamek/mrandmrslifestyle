@@ -29,7 +29,7 @@ EN_FOOTER = calc[calc.index('<div class="mm-footer"'):calc.index('<script>', cal
 
 ar = read('ar/calories/chicken-shawarma.html')  # ar/index.html is now the full Arabic home page; reuse the current calorie-page header
 AR_HEADER = ar[ar.index('<header class="mm-header ar-head">'):ar.index('<main id="main">')]
-AR_HEADER = AR_HEADER.replace(' class="mm-active" aria-current="page"', '').replace(' class="mm-active"', '')
+AR_HEADER = AR_HEADER.replace(' class="mm-active" aria-current="page"', '').replace(' class="mm-active"', '').replace('href="/calculator.html"', 'href="/ar/calculator.html"')
 AR_FOOTER = ar[ar.index('<div class="mm-footer" role="contentinfo" dir="rtl">'):ar.index('<script>', ar.index('<div class="mm-footer" role="contentinfo" dir="rtl">'))]
 
 def mark_active(h):
@@ -94,7 +94,7 @@ T = {
    search='ابحث عن أكلة، مثلًا شاورما أو karak', target='سعراتي اليومية',
    none='هذه الأكلة غير موجودة بعد. <a href="https://wa.me/971507871515?text=%D8%A3%D8%B1%D8%AC%D9%88%20%D8%A5%D8%B6%D8%A7%D9%81%D8%A9%20%D9%87%D8%B0%D9%87%20%D8%A7%D9%84%D8%A3%D9%83%D9%84%D8%A9%3A%20" style="color:var(--gold)">أخبرنا على واتساب</a> وسنضيفها.',
    note='القيم تقديرية لحصة مطعم عادية في دبي، بناءً على بيانات غذائية منشورة ووصفات معتادة. الحصص والوصفات تختلف بين المطاعم.',
-   calc_link='لا تعرف سعراتك اليومية؟ <a href="/calculator.html" style="color:var(--gold)">استخدم الحاسبة المجانية</a>.',
+   calc_link='لا تعرف سعراتك اليومية؟ <a href="/ar/calculator.html" style="color:var(--gold)">استخدم الحاسبة المجانية</a>.',
    lead_tag='دليل PDF مجاني', lead_h='تحب {what}؟ احصل مجانًا على <em>دليل الأكل خارج البيت في دبي</em>', lead_fav_default='الأكل خارج البيت',
    lead_p='ماذا تطلب من 29 أكلة مفضلة في دبي، من الشاورما والكرك إلى البرياني والكنافة، وتخسر الدهون في نفس الوقت. مع 7 قواعد للأكل خارج البيت. مجاني وتحميل فوري.',
    ph_name='الاسم الأول', ph_email='بريدك الإلكتروني', lead_btn='احصل على الدليل المجاني',
@@ -405,6 +405,7 @@ def build_hub(lang):
 </div>
 <div class="fc-wrap">
   {teaser(lang)}
+  <p style="margin-top:1rem;font-size:.95rem"><a href="{'/ar' if lang == 'ar' else ''}/calories/mcdonalds-uae.html" style="color:var(--gold);font-weight:600">{'جديد: سعرات ماكدونالدز الإمارات مرتبة من القائمة الرسمية ←' if lang == 'ar' else "New: McDonald's UAE calories, every item ranked from the official menu →"}</a></p>
   <div class="fc-tools" style="margin-top:1.5rem">
     <label class="fc-search">{SEARCH_ICON}<input id="fcQ" type="search" placeholder="{esc(t['search'])}" aria-label="{esc(t['search'])}" autocomplete="off"></label>
     <label class="fc-target">{t['target']} <input id="fcT" type="number" value="2000" min="1000" max="5000" step="50" inputmode="numeric"></label>
@@ -441,6 +442,22 @@ def build_hub(lang):
 
 # Hand-tuned titles/descriptions (Search Console work) that the templates must not overwrite.
 META_OVERRIDES = {
+    ('boiled-egg', 'en'): dict(title='Egg Calories: 1 Egg = 78 kcal, 2 Eggs = 155 (Boiled &amp; Fried)',
+        desc='How many calories in an egg? 1 large boiled egg is about 78 kcal with 6 g protein, 2 eggs about 155 kcal. Fried, omelette and egg white compared.'),
+    ('boiled-egg', 'ar'): dict(title='كم سعرة في البيضة؟ بيضة مسلوقة 78 سعرة وبيضتان 155',
+        desc='كم سعرة حرارية في البيضة المسلوقة؟ البيضة الكبيرة حوالي 78 سعرة مع 6 غ بروتين، والبيضتان حوالي 155 سعرة. مقارنة مع البيض المقلي والأومليت.'),
+    ('white-rice', 'en'): dict(title='Rice Calories: 1 Cup Cooked = 205 kcal (White, Basmati, Brown)',
+        desc='How many calories in rice? 1 cup of cooked white rice is about 205 kcal, 100 g about 130 kcal. Basmati, brown and fried rice compared, plus portion tips.'),
+    ('white-rice', 'ar'): dict(title='سعرات الرز: كوب رز مطبوخ 205 سعرة (أبيض وبسمتي وبني)',
+        desc='كم سعرة في الرز؟ كوب الرز الأبيض المطبوخ حوالي 205 سعرات، و100 غ حوالي 130 سعرة. مقارنة مع البسمتي والبني والرز المقلي.'),
+    ('chicken-breast', 'en'): dict(title='Chicken Breast Calories: 100 g = 165 kcal, 31 g Protein',
+        desc='How many calories in chicken breast? 100 g cooked skinless is about 165 kcal with 31 g protein. Grilled, with skin and fried compared.'),
+    ('chicken-breast', 'ar'): dict(title='سعرات صدر الدجاج: 100 غرام = 165 سعرة و31 غ بروتين',
+        desc='كم سعرة في صدر الدجاج؟ 100 غ مطبوخ بدون جلد حوالي 165 سعرة مع 31 غ بروتين. مقارنة بين المشوي ومع الجلد والمقلي.'),
+    ('banana', 'en'): dict(title='Banana Calories: 1 Medium Banana = 105 kcal',
+        desc='How many calories in a banana? A medium banana is about 105 kcal, small 90 and large 120. Carbs, protein and when to eat it for fat loss.'),
+    ('banana', 'ar'): dict(title='كم سعرة في الموز؟ موزة متوسطة = 105 سعرات',
+        desc='كم سعرة حرارية في الموز؟ الموزة المتوسطة حوالي 105 سعرات، والصغيرة 90 والكبيرة 120. الكربوهيدرات ومتى تأكلها أثناء خسارة الدهون.'),
     ('chicken-shawarma', 'en'): dict(
         title='Chicken Shawarma Wrap Calories: 550 kcal (With Garlic Sauce)',
         desc='About 550 kcal with garlic sauce &amp; fries inside. Skip the fries and get the sauce on the side and it drops to 400 kcal. Every option compared + full macros.'),
@@ -517,7 +534,7 @@ def build_page(f, lang):
       <div class="fp-big" style="margin-top:.6rem"><b>{num(f['kcal'])}</b><span>{t['per'].format(portion=esc(portion))}</span></div>
       <div class="fp-mac">{row(t['protein'], f['p'], f['p'] * 4)}{row(t['carbs'], f['c'], f['c'] * 4)}{row(t['fat'], f['f'], f['f'] * 9)}</div>
       <div class="fc-pct" style="margin-top:1.4rem" id="fpPct">{t['pct'].format(p=pct2000, t='2,000')}</div><div class="fc-bar"><i id="fpBar" style="width:{min(pct2000, 100)}%"></i></div>
-      <div class="fc-small">{t['day_note']} <a href="/calculator.html" style="color:var(--gold)">{t['find']}</a></div>
+      <div class="fc-small">{t['day_note']} <a href="{'/ar' if lang == 'ar' else ''}/calculator.html" style="color:var(--gold)">{t['find']}</a></div>
     </div>
     <div class="fp-box">
       <h2 class="fp-h">{t['fits']}</h2>

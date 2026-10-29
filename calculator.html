@@ -7,6 +7,9 @@
 <title>Free Calorie &amp; Macro Calculator | Mr &amp; Mrs Lifestyle</title>
 <meta name="description" content="Free calorie and macro calculator. Enter your weight, height, age and goal to get your daily calorie target and macros, from Dubai coaches Tarek &amp; Chloe.">
 <link rel="canonical" href="https://www.mrandmrslifestyle.com/calculator.html">
+<link rel="alternate" hreflang="en" href="https://www.mrandmrslifestyle.com/calculator.html">
+<link rel="alternate" hreflang="ar" href="https://www.mrandmrslifestyle.com/ar/calculator.html">
+<link rel="alternate" hreflang="x-default" href="https://www.mrandmrslifestyle.com/calculator.html">
 <meta property="og:image" content="https://www.mrandmrslifestyle.com/og-home.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -270,7 +273,7 @@ footer a { color: var(--gold); text-decoration: none; }
   <div class="calc-card">
     <div class="calc-header">
       <h2>Calorie & BMI Calculator</h2>
-      <p>Takes 30 seconds · 100% free · No email required</p>
+      <p>Takes 30 seconds · 100% free · No email required · <a href="/ar/calculator.html" lang="ar" style="color:var(--gold)">الحاسبة بالعربي</a></p>
     </div>
     <div class="calc-body">
 
@@ -565,7 +568,7 @@ footer a { color: var(--gold); text-decoration: none; }
   </div>
   <div class="mm-footer-bottom">
     <span>&copy; 2026 Mr &amp; Mrs Lifestyle · Dubai, UAE</span>
-    <span><a href="/ar/" hreflang="ar" lang="ar">العربية</a> · <a href="/privacy.html">Privacy Policy</a> · <a href="/terms.html">Terms &amp; Conditions</a></span>
+    <span><a href="/ar/calculator.html" hreflang="ar" lang="ar">العربية</a> · <a href="/privacy.html">Privacy Policy</a> · <a href="/terms.html">Terms &amp; Conditions</a></span>
   </div>
 </div>
 
@@ -728,7 +731,7 @@ function mpSubmit(e){
     body:JSON.stringify({_subject:'🔥 New Calculator Lead — '+n,name:n,email:m,_replyto:m,goal:r.goal||'',calories:r.kcal||'',protein_g:r.p||'',carbs_g:r.c||'',fat_g:r.f||'',source:'Calorie Calculator'})}).catch(function(){});
   var k=r.kcal||2000,p=r.p||0,nm=n.charAt(0).toUpperCase()+n.slice(1);
   var el=document.getElementById('mpPlan');
-  el.innerHTML=(window.mmPlanHTML?window.mmPlanHTML(k,p,nm):'')+'<p style="font-size:.85rem;margin:.9rem 0 0"><a href="/dubai-food-calories.html" style="color:#c9a84c;font-weight:600">See how shawarma, karak and 144 Dubai foods fit your '+k.toLocaleString()+' kcal →</a></p><p style="font-size:.8rem;color:rgba(255,255,255,.55);margin:.9rem 0 0">Want a full week built for you, with training and weekly check-ins? <a href="/online-coaching.html" style="color:#c9a84c">See online coaching</a> or <a href="/personal-trainer-dubai.html" style="color:#c9a84c">train in person</a>.</p>';
+  el.innerHTML=(window.mmPlanHTML?window.mmPlanHTML(k,p,nm):'')+'<p style="font-size:.85rem;margin:.9rem 0 0"><a href="/dubai-food-calories.html" style="color:#c9a84c;font-weight:600">See how shawarma, karak and 160 Dubai foods fit your '+k.toLocaleString()+' kcal →</a></p><p style="font-size:.8rem;color:rgba(255,255,255,.55);margin:.9rem 0 0">Want a full week built for you, with training and weekly check-ins? <a href="/online-coaching.html" style="color:#c9a84c">See online coaching</a> or <a href="/personal-trainer-dubai.html" style="color:#c9a84c">train in person</a>.</p>';
   document.getElementById('mpForm').style.display='none'; el.style.display='block';
   return false;
 }
