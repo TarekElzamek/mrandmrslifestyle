@@ -57,7 +57,7 @@ b = b.replace('href="/ar/female-personal-trainer-dubai.html" hreflang="ar" lang=
 b = b.replace(' Get Directions<', ' الاتجاهات<').replace('>Get Directions<', '>الاتجاهات<')
 
 # internal links -> Arabic versions where they exist
-for p in ['personal-trainer-dubai.html', 'online-coaching.html', 'personal-trainer-cost-calculator.html', 'dubai-food-calories.html', 'female-personal-trainer-dubai.html', 'calculator.html']:
+for p in ['personal-trainer-dubai.html', 'online-coaching.html', 'personal-trainer-cost-calculator.html', 'dubai-food-calories.html', 'female-personal-trainer-dubai.html', 'calculator.html', 'blog-what-is-reformer-pilates.html']:
     b = b.replace('href="https://www.mrandmrslifestyle.com/%s' % p, 'href="/ar/%s' % p).replace('href="/%s' % p, 'href="/ar/%s' % p)
 b = b.replace('href="https://www.mrandmrslifestyle.com/"', 'href="/ar/"').replace('href="/"', 'href="/ar/"')
 
@@ -75,8 +75,8 @@ left = [t.strip() for t in re.findall(r'>([^<>]+)<', chk) if re.search('[A-Za-z]
 # ---------- head ----------
 h = head
 h = h.replace('<html lang="en"', '<html lang="ar" dir="rtl"', 1)
-TITLE = 'بيلاتس ريفورمر خاص للسيدات في دبي | ذا بيلاتس روم ميدان'
-DESC = 'بيلاتس ريفورمر خاص للسيدات فقط في ميدان، دبي مع المدربة كلوي. جلسات فردية أو مع صديقة من 365 درهماً، بلا حصص جماعية، مواقف مجانية، والأطفال مرحّب بهم.'
+TITLE = 'بيلاتس على الجهاز (ريفورمر) للسيدات في دبي | ذا بيلاتس روم ميدان'
+DESC = 'بيلاتس خاص على الجهاز (الريفورمر) للسيدات فقط في ميدان، دبي مع المدربة كلوي. جلسات فردية أو مع صديقة من 365 درهماً، بلا حصص جماعية، مواقف مجانية، والأطفال مرحّب بهم.'
 h = re.sub(r'<title>.*?</title>', '<title>%s</title>' % TITLE, h, flags=re.S)
 h = re.sub(r'(<meta name="description" content=")[^"]*', r'\g<1>' + DESC, h)
 h = re.sub(r'(<meta property="og:title" content=")[^"]*', r'\g<1>' + TITLE, h)
@@ -107,7 +107,7 @@ def fix_ld(m):
                     if k < 3: li['name'] = names[k]; li['item'] = urls[k]
                 return
             if t == 'Service' and 'description' in o:
-                o['description'] = 'بيلاتس ريفورمر خاص للسيدات فقط في ميدان، دبي مع المدربة كلوي أنطونيازي: جلسات فردية أو مع صديقة مع تمارين القوة على جهاز Speediance Gym Monster 3S، وجلسات معدّلة لما قبل الولادة وبعدها، وتدريب أونلاين للسيدات.'
+                o['description'] = 'بيلاتس خاص على الجهاز (الريفورمر) للسيدات فقط في ميدان، دبي مع المدربة كلوي أنطونيازي: جلسات فردية أو مع صديقة مع تمارين القوة على جهاز Speediance Gym Monster 3S، وجلسات معدّلة لما قبل الولادة وبعدها، وتدريب أونلاين للسيدات.'
                 o['inLanguage'] = 'ar'
             elif 'description' in o and isinstance(o['description'], str) and re.search('[A-Za-z]{4}', o['description']) and t in ('ExerciseGym', 'SportsActivityLocation', 'LocalBusiness', 'HealthClub'):
                 o['description'] = 'استوديو بوتيك للسيدات فقط في ميدان، دبي يقدّم جلسات بيلاتس ريفورمر خاصة فردية أو مع صديقة (2 إلى 1) مع كلوي أنطونيازي، مع تمارين القوة. الأطفال مرحّب بهم.'
