@@ -948,7 +948,7 @@
     h += '</div><details style="margin-top:14px"><summary class="tk-link" style="cursor:pointer">Tape measurements (optional)</summary><div class="tk-grid2">';
     MEAS.filter(function (m) { return m[3] === 'tape'; }).forEach(function (m) { h += '<div class="tk-field"><label for="m_' + m[0] + '">' + mLabel(m) + '</label><input class="tk-input" inputmode="decimal" id="m_' + m[0] + '"></div>'; });
     h += '</div></details>';
-    h += '<div class="tk-field"><label for="bPhoto">Photo: progress photo or the InBody result sheet (optional, private)</label><input class="tk-input" type="file" id="bPhoto" accept="image/*"></div>';
+    h += '<div class="tk-field"><label for="bPhoto">Photo: progress photo or the InBody result sheet (optional, private)</label><input class="tk-input" type="file" id="bPhoto" accept="image/*"><p class="tk-small" style="margin-top:6px">Add a photo of the InBody sheet and we\'ll fill in the numbers for you.</p><div id="bAi" class="ai-status" role="status" hidden></div></div>';
     h += '<div class="tk-field"><label for="bNote">Notes</label><input class="tk-input" id="bNote" placeholder="e.g. scan after 4 weeks, started new plan"></div><button type="button" class="tk-btn block" id="bSaveLog" style="margin-top:14px">Save</button><p class="tk-small" style="margin-top:8px">Only you and your coach can see your measurements and photos.</p></div>';
     var cols = MEAS.filter(function (m) { return series(B, m[0]).length; });
     if (B.length && cols.length) {
@@ -982,6 +982,7 @@
     }
     if (ph.length) loadPhotos(ph);
     $('bSaveLog').onclick = saveBody;
+    if ($('bPhoto')) $('bPhoto').onchange = function () { if (this.files[0]) readInbody(this.files[0]); };
     v.querySelectorAll('[data-delb]').forEach(function (b) {
       b.onclick = async function () {
         if (!confirmBox('Delete this entry?')) return;
@@ -995,12 +996,71 @@
   async function loadPhotos(rows) {
     var r = await sb.storage.from('progress-photos').createSignedUrls(rows.map(function (b) { return b.photo_path; }), 3600);
     if (r.error || !$('photos')) return;
-    $('photos').innerHTML = rows.map(function (b, i) { var u = r.data[i] && r.data[i].signedUrl; return u ? '<figure><img src="' + esc(u) + '" alt="Progress photo, ' + fmtDay(b.date) + '" loading="lazy"><figcaption>' + fmtDay(b.date, { day: 'numeric', month: 'short', year: '2-digit' }) + (b.weight ? ' · ' + b.weight + 'kg' : '') + '</figcaption></figure>' : ''; }).reverse().join('');
+    var items = [];
+    $('photos').innerHTML = rows.map(function (b, i) {
+      var u = r.data[i] && r.data[i].signedUrl; if (!u) return '';
+      var cap = fmtDay(b.date, { day: 'numeric', month: 'short', year: '2-digit' }) + (b.weight ? ' · ' + b.weight + 'kg' : '');
+      items.push({ url: u, cap: cap });
+      return '<button type="button" class="ph-btn" data-ph="' + (items.length - 1) + '" aria-label="Open photo from ' + esc(cap) + '"><figure><img src="' + esc(u) + '" alt="Progress photo, ' + fmtDay(b.date) + '" loading="lazy"><figcaption>' + esc(cap) + '</figcaption></figure></button>';
+    }).join('');
+    $('photos').querySelectorAll('[data-ph]').forEach(function (b) { b.onclick = function () { openViewer(items, +b.dataset.ph); }; });
+  }
+  function openViewer(items, idx) {
+    var w = document.createElement('div'); w.className = 'pv'; w.setAttribute('role', 'dialog'); w.setAttribute('aria-modal', 'true'); w.setAttribute('aria-label', 'Photo viewer');
+    w.innerHTML = '<div class="pv-top"><span class="pv-cap"></span><a class="pv-orig" target="_blank" rel="noopener">Open original</a><button type="button" class="pv-x" aria-label="Close">' + ICON.x + '</button></div>' +
+      '<div class="pv-stage"><img alt=""></div>' +
+      (items.length > 1 ? '<button type="button" class="pv-nav pv-prev" aria-label="Previous photo">‹</button><button type="button" class="pv-nav pv-next" aria-label="Next photo">›</button>' : '') +
+      '<p class="pv-hint">Tap the photo to zoom in</p>';
+    var stage = w.querySelector('.pv-stage'), img = stage.querySelector('img');
+    function show(i) { idx = (i + items.length) % items.length; stage.classList.remove('zoom'); img.src = items[idx].url; img.alt = 'Photo, ' + items[idx].cap; w.querySelector('.pv-cap').textContent = items[idx].cap + (items.length > 1 ? '  ·  ' + (idx + 1) + ' of ' + items.length : ''); w.querySelector('.pv-orig').href = items[idx].url; }
+    function close() { w.remove(); document.removeEventListener('keydown', key); document.body.style.overflow = ''; }
+    function key(e) { if (e.key === 'Escape') close(); else if (e.key === 'ArrowRight') show(idx + 1); else if (e.key === 'ArrowLeft') show(idx - 1); }
+    img.onclick = function (e) {
+      var zoomed = stage.classList.toggle('zoom');
+      if (zoomed) { var rc = img.getBoundingClientRect(), fx = (e.clientX - rc.left) / rc.width, fy = (e.clientY - rc.top) / rc.height; requestAnimationFrame(function () { stage.scrollLeft = fx * stage.scrollWidth - stage.clientWidth / 2; stage.scrollTop = fy * stage.scrollHeight - stage.clientHeight / 2; }); }
+    };
+    w.querySelector('.pv-x').onclick = close;
+    w.addEventListener('click', function (e) { if (e.target === w || e.target === stage) close(); });
+    if (items.length > 1) { w.querySelector('.pv-prev').onclick = function () { show(idx - 1); }; w.querySelector('.pv-next').onclick = function () { show(idx + 1); }; }
+    var sx = null; stage.addEventListener('touchstart', function (e) { sx = e.touches.length === 1 && !stage.classList.contains('zoom') ? e.touches[0].clientX : null; }, { passive: true });
+    stage.addEventListener('touchend', function (e) { if (sx == null) return; var dx = e.changedTouches[0].clientX - sx; if (Math.abs(dx) > 50 && items.length > 1) show(idx + (dx < 0 ? 1 : -1)); sx = null; });
+    document.addEventListener('keydown', key); document.body.appendChild(w); document.body.style.overflow = 'hidden';
+    show(idx); w.querySelector('.pv-x').focus();
+  }
+  // ---------- InBody sheet: read the numbers with AI (server: /api/read-inbody) ----------
+  function photoData(file, max, q) {
+    return new Promise(function (ok, bad) {
+      var img = new Image(), url = URL.createObjectURL(file);
+      img.onload = function () { var k = Math.min(1, max / Math.max(img.width, img.height)), c = document.createElement('canvas'); c.width = Math.round(img.width * k); c.height = Math.round(img.height * k); c.getContext('2d').drawImage(img, 0, 0, c.width, c.height); URL.revokeObjectURL(url); ok(c.toDataURL('image/jpeg', q)); };
+      img.onerror = function () { bad(new Error('Could not read photo')); }; img.src = url;
+    });
+  }
+  async function readInbody(file) {
+    var st = $('bAi'); if (!st || !file) return;
+    st.className = 'ai-status'; st.hidden = false; st.innerHTML = '<span class="ai-spin" aria-hidden="true"></span> Reading the InBody sheet…';
+    try {
+      var data = await photoData(file, 2000, 0.85);
+      var ses = await sb.auth.getSession(), tok = ses.data && ses.data.session && ses.data.session.access_token;
+      var r = await fetch('/api/read-inbody', { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + tok }, body: JSON.stringify({ image: data }) });
+      var j = await r.json().catch(function () { return {}; });
+      if (!$('bAi')) return;
+      if (r.status === 503) { st.hidden = true; return; }
+      if (!r.ok) throw new Error(j.error || 'failed');
+      if (!j.is_inbody) { st.innerHTML = 'No InBody numbers found in this photo. That\'s fine for a progress photo; for a scan, type the numbers below.'; return; }
+      var n = 0;
+      Object.keys(j.values || {}).forEach(function (k) { var el = $('m_' + k); if (el) { el.value = j.values[k]; el.classList.add('ai-filled'); n++; } });
+      if (j.date && $('bDate')) $('bDate').value = j.date;
+      st.className = 'ai-status ok';
+      st.innerHTML = n ? '✓ ' + n + ' number' + (n === 1 ? '' : 's') + ' filled in from the InBody sheet' + (j.date ? ' (scan date ' + fmtDay(j.date, { day: 'numeric', month: 'short', year: 'numeric' }) + ')' : '') + '. Please check them against the sheet, then tap Save.' : 'We couldn\'t read the numbers clearly. Please type them below, or try a sharper, straight-on photo.';
+      ev('tracker_inbody_read', { fields: n });
+    } catch (e) {
+      if ($('bAi')) { st.className = 'ai-status'; st.innerHTML = 'Couldn\'t read the sheet automatically. Please type the numbers below.'; }
+    }
   }
   function compress(file) {
     return new Promise(function (ok, bad) {
       var img = new Image(), url = URL.createObjectURL(file);
-      img.onload = function () { var k = Math.min(1, 1280 / Math.max(img.width, img.height)), c = document.createElement('canvas'); c.width = Math.round(img.width * k); c.height = Math.round(img.height * k); c.getContext('2d').drawImage(img, 0, 0, c.width, c.height); URL.revokeObjectURL(url); c.toBlob(function (b) { b ? ok(b) : bad(new Error('Could not read photo')); }, 'image/jpeg', 0.82); };
+      img.onload = function () { var k = Math.min(1, 2000 / Math.max(img.width, img.height)), c = document.createElement('canvas'); c.width = Math.round(img.width * k); c.height = Math.round(img.height * k); c.getContext('2d').drawImage(img, 0, 0, c.width, c.height); URL.revokeObjectURL(url); c.toBlob(function (b) { b ? ok(b) : bad(new Error('Could not read photo')); }, 'image/jpeg', 0.82); };
       img.onerror = function () { bad(new Error('Could not read photo')); }; img.src = url;
     });
   }
