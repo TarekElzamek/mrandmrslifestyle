@@ -62,7 +62,7 @@ for a, c in JS:
 b = b.replace(' Get Directions<', ' الاتجاهات<').replace('>Get Directions<', '>الاتجاهات<')
 
 # internal links -> Arabic versions where they exist
-for p in ['personal-trainer-dubai.html', 'online-coaching.html', 'personal-trainer-cost-calculator.html', 'dubai-food-calories.html', 'female-personal-trainer-dubai.html']:
+for p in ['personal-trainer-dubai.html', 'online-coaching.html', 'personal-trainer-cost-calculator.html', 'dubai-food-calories.html', 'female-personal-trainer-dubai.html', 'calculator.html']:
     b = b.replace('href="https://www.mrandmrslifestyle.com/%s' % p, 'href="/ar/%s' % p).replace('href="/%s' % p, 'href="/ar/%s' % p)
 b = b.replace('href="https://www.mrandmrslifestyle.com/"', 'href="/ar/"').replace('href="/"', 'href="/ar/"')
 
