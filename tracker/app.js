@@ -943,12 +943,12 @@
     if (pf.length > 1) h += '<div class="tk-card"><span class="tk-tag">Body fat %</span><div class="chart-box"><canvas id="pChartB" role="img" aria-label="Body fat percentage over time"></canvas></div></div>';
     if (withW.length > 1) h += '<div class="tk-card"><span class="tk-tag">Weight trend</span><div class="chart-box"><canvas id="wChart" role="img" aria-label="Body weight over time"></canvas></div></div>';
     h += '<div class="tk-card"><h2 class="tk-h2" style="margin-top:0">Log a scan or weigh-in</h2><div class="tk-field"><label for="bDate">Date</label><input class="tk-input" type="date" id="bDate" value="' + today() + '" max="' + today() + '"></div>';
-    h += '<h3 class="tk-tag" style="display:block;margin-top:16px">InBody scan</h3><p class="tk-small">Copy the numbers from the InBody result sheet. Fill in only what you have; weight alone is fine for a quick weigh-in.</p><div class="tk-grid2">';
+    h += '<div class="tk-field"><label for="bPhoto">Photo of your InBody sheet, or a progress photo (optional, private)</label><input class="tk-input" type="file" id="bPhoto" accept="image/*"><p class="tk-small" style="margin-top:6px">Add a photo of the InBody sheet and we\'ll fill in the numbers for you. You can also type or correct them below.</p><div id="bPrev" class="b-prev" hidden></div><div id="bAi" class="ai-status" role="status" hidden></div></div>' +
+      '<h3 class="tk-tag" style="display:block;margin-top:16px">InBody scan</h3><p class="tk-small">Fill in only what you have; weight alone is fine for a quick weigh-in.</p><div class="tk-grid2">';
     MEAS.filter(function (m) { return m[3] === 'scan'; }).forEach(function (m) { var ls = series(B, m[0]), pl = ls.length ? ls[ls.length - 1][m[0]] : ''; h += '<div class="tk-field"><label for="m_' + m[0] + '">' + mLabel(m) + '</label><input class="tk-input" inputmode="decimal" id="m_' + m[0] + '" placeholder="' + esc(pl) + '"></div>'; });
     h += '</div><details style="margin-top:14px"><summary class="tk-link" style="cursor:pointer">Tape measurements (optional)</summary><div class="tk-grid2">';
     MEAS.filter(function (m) { return m[3] === 'tape'; }).forEach(function (m) { h += '<div class="tk-field"><label for="m_' + m[0] + '">' + mLabel(m) + '</label><input class="tk-input" inputmode="decimal" id="m_' + m[0] + '"></div>'; });
     h += '</div></details>';
-    h += '<div class="tk-field"><label for="bPhoto">Photo: progress photo or the InBody result sheet (optional, private)</label><input class="tk-input" type="file" id="bPhoto" accept="image/*"><p class="tk-small" style="margin-top:6px">Add a photo of the InBody sheet and we\'ll fill in the numbers for you.</p><div id="bAi" class="ai-status" role="status" hidden></div></div>';
     h += '<div class="tk-field"><label for="bNote">Notes</label><input class="tk-input" id="bNote" placeholder="e.g. scan after 4 weeks, started new plan"></div><button type="button" class="tk-btn block" id="bSaveLog" style="margin-top:14px">Save</button><p class="tk-small" style="margin-top:8px">Only you and your coach can see your measurements and photos.</p></div>';
     var cols = MEAS.filter(function (m) { return series(B, m[0]).length; });
     if (B.length && cols.length) {
@@ -982,7 +982,13 @@
     }
     if (ph.length) loadPhotos(ph);
     $('bSaveLog').onclick = saveBody;
-    if ($('bPhoto')) $('bPhoto').onchange = function () { if (this.files[0]) readInbody(this.files[0]); };
+    if ($('bPhoto')) $('bPhoto').onchange = function () {
+      var f = this.files[0], pv = $('bPrev'); if (!f) { pv.hidden = true; return; }
+      var u = URL.createObjectURL(f);
+      pv.innerHTML = '<button type="button" class="ph-btn" aria-label="Open your photo full screen to zoom"><img src="' + u + '" alt="Your photo"></button><span class="tk-small">Tap the photo to zoom while you check the numbers.</span>';
+      pv.hidden = false; pv.querySelector('button').onclick = function () { openViewer([{ url: u, cap: 'Your photo' }], 0); };
+      readInbody(f);
+    };
     v.querySelectorAll('[data-delb]').forEach(function (b) {
       b.onclick = async function () {
         if (!confirmBox('Delete this entry?')) return;
@@ -1045,6 +1051,7 @@
       var j = await r.json().catch(function () { return {}; });
       if (!$('bAi')) return;
       if (r.status === 503) { st.hidden = true; return; }
+      if (r.status === 429) { st.innerHTML = 'Automatic reading is busy right now. Please type the numbers below while looking at your photo.'; return; }
       if (!r.ok) throw new Error(j.error || 'failed');
       if (!j.is_inbody) { st.innerHTML = 'No InBody numbers found in this photo. That\'s fine for a progress photo; for a scan, type the numbers below.'; return; }
       var n = 0;

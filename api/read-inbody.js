@@ -1,16 +1,17 @@
-/* Mr & Mrs Lifestyle tracker: read an InBody result sheet from a photo.
+/* Mr & Mrs Lifestyle tracker: read a body composition result sheet (InBody, Medi-Ana, Tanita…) from a photo.
  *
- * The tracker app sends a photo (JPEG, base64) taken by a signed-in client or coach.
- * We check the person is signed in to the tracker, ask Claude (vision) to read the
- * InBody numbers, and return them so the app can fill in the "Log a scan" form.
+ * Uses Google Gemini on its FREE tier (no billing needed). The tracker app sends a photo
+ * taken by a signed-in client or coach; we check the person is signed in, ask Gemini to
+ * read the numbers and return them so the app can fill in the "Log a scan" form.
  * The client always checks the numbers before saving. Nothing is stored here.
  *
  * Settings (Vercel → Project → Settings → Environment Variables):
- *   ANTHROPIC_API_KEY   Anthropic API key (sk-ant-...)   required
- *   ANTHROPIC_MODEL     optional, default "claude-sonnet-5-5"
+ *   GEMINI_API_KEY   free key from Google AI Studio (aistudio.google.com → Get API key)   required
+ *   GEMINI_MODEL     optional, default "gemini-2.5-flash" (falls back to any available Flash model)
  */
 const SUPA_URL = 'https://iwtkphupsobwiaiqvkok.supabase.co';
 const SUPA_KEY = 'sb_publishable_L1RcJTZ1UTT_XocBLPLSYg_tPpPFWbU'; // public key, same as in the app
+const API = 'https://generativelanguage.googleapis.com/v1beta';
 
 // [field, min, max, integer?]  (same ranges as the app)
 const FIELDS = [
@@ -18,18 +19,19 @@ const FIELDS = [
   ['inbody_score', 0, 120, true], ['visceral_fat', 1, 30, true], ['bmr', 500, 5000, true]
 ];
 
-const PROMPT = `This photo should show an InBody body composition result sheet (any InBody model, any language).
-Read the CURRENT result values (not the normal ranges, not the history table, not previous results) and reply with ONLY a JSON object, no other text:
-{"is_inbody": true or false,
- "date": "YYYY-MM-DD" (the test date/time printed on the sheet) or null,
- "weight": kg or null,
+const PROMPT = `This photo should show a body composition analyser result sheet (InBody, Medi-Ana, Tanita or similar, any language).
+Read the person's CURRENT measured values. Do NOT use normal/standard ranges, "desirable" or "target" weight, weight/fat/muscle "control" values, previous results, or the history table.
+Reply with ONLY this JSON object:
+{"is_body_scan": true or false,
+ "date": "YYYY-MM-DD" (the current test date printed on the sheet) or null,
+ "weight": current body weight in kg or null,
  "muscle_mass": Skeletal Muscle Mass (SMM) in kg or null,
  "fat_mass": Body Fat Mass in kg or null,
- "body_fat": Percent Body Fat (PBF) in % or null,
- "inbody_score": InBody Score (points, out of 100) or null,
- "visceral_fat": Visceral Fat Level (whole number) or null,
+ "body_fat": Percent Body Fat (PBF, %) or null,
+ "inbody_score": the overall score out of 100 (InBody Score / Fitness Score) or null,
+ "visceral_fat": Visceral Fat Level/Grade (number) or null,
  "bmr": Basal Metabolic Rate in kcal or null}
-Use numbers only (no units). If a value is not clearly readable, use null rather than guessing. If the sheet is in lb, convert to kg. If the photo is not an InBody sheet (for example a progress photo), return {"is_inbody": false}.`;
+Numbers only, no units. If a value is not clearly readable, use null rather than guessing. If the sheet is in lb, convert to kg. If the photo is not a body composition sheet, return {"is_body_scan": false}.`;
 
 function send(res, code, obj) {
   res.statusCode = code;
@@ -45,9 +47,31 @@ async function readBody(req) {
   try { return JSON.parse(Buffer.concat(chunks).toString('utf8') || '{}'); } catch (e) { return {}; }
 }
 
+async function gemini(model, key, img) {
+  return fetch(`${API}/models/${model}:generateContent`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'x-goog-api-key': key },
+    body: JSON.stringify({
+      contents: [{ parts: [{ inline_data: { mime_type: 'image/jpeg', data: img } }, { text: PROMPT }] }],
+      generationConfig: { temperature: 0, responseMimeType: 'application/json' }
+    })
+  });
+}
+
+// If the default model has been retired, pick any current free "flash" model that can read images.
+async function fallbackModel(key) {
+  const r = await fetch(`${API}/models?pageSize=200`, { headers: { 'x-goog-api-key': key } });
+  if (!r.ok) return null;
+  const j = await r.json();
+  const ok = (j.models || []).filter(m => (m.supportedGenerationMethods || []).includes('generateContent') && /flash/.test(m.name) && !/thinking|tts|image-generation|live|embedding/.test(m.name));
+  ok.sort((a, b) => (/lite/.test(a.name) - /lite/.test(b.name)) || b.name.localeCompare(a.name));
+  return ok[0] ? ok[0].name.replace(/^models\//, '') : null;
+}
+
 module.exports = async (req, res) => {
   if (req.method !== 'POST') return send(res, 405, { error: 'method_not_allowed' });
-  if (!process.env.ANTHROPIC_API_KEY) return send(res, 503, { error: 'not_configured' });
+  const key = process.env.GEMINI_API_KEY;
+  if (!key) return send(res, 503, { error: 'not_configured' });
 
   // 1) Only signed-in tracker users can use this
   const auth = req.headers.authorization || '';
@@ -63,30 +87,21 @@ module.exports = async (req, res) => {
   if (!img || img.length < 1000) return send(res, 400, { error: 'no_image' });
   if (img.length > 4000000) return send(res, 413, { error: 'image_too_large' });
 
-  // 3) Ask Claude to read the sheet
+  // 3) Ask Gemini to read the sheet
   let text = '';
   try {
-    const r = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: { 'x-api-key': process.env.ANTHROPIC_API_KEY, 'anthropic-version': '2023-06-01', 'content-type': 'application/json' },
-      body: JSON.stringify({
-        model: process.env.ANTHROPIC_MODEL || 'claude-sonnet-5-5',
-        max_tokens: 400,
-        messages: [{ role: 'user', content: [
-          { type: 'image', source: { type: 'base64', media_type: 'image/jpeg', data: img } },
-          { type: 'text', text: PROMPT }
-        ] }]
-      })
-    });
+    let r = await gemini(process.env.GEMINI_MODEL || 'gemini-2.5-flash', key, img);
+    if (r.status === 404) { const m = await fallbackModel(key); if (m) r = await gemini(m, key, img); }
     const j = await r.json();
-    if (!r.ok) { console.error('anthropic error', r.status, j && j.error); return send(res, 502, { error: 'ai_failed' }); }
-    text = (j.content || []).filter(c => c.type === 'text').map(c => c.text).join('');
+    if (r.status === 429) return send(res, 429, { error: 'busy' }); // free daily limit reached
+    if (!r.ok) { console.error('gemini error', r.status, j && j.error && j.error.message); return send(res, 502, { error: 'ai_failed' }); }
+    text = ((((j.candidates || [])[0] || {}).content || {}).parts || []).map(p => p.text || '').join('');
   } catch (e) { console.error(e); return send(res, 502, { error: 'ai_failed' }); }
 
   // 4) Clean up the answer: only numbers in sensible ranges
   let data;
   try { data = JSON.parse((text.match(/\{[\s\S]*\}/) || ['{}'])[0]); } catch (e) { data = {}; }
-  if (!data.is_inbody) return send(res, 200, { is_inbody: false });
+  if (!data.is_body_scan) return send(res, 200, { is_inbody: false });
   const out = { is_inbody: true, values: {} };
   FIELDS.forEach(([k, min, max, int]) => {
     let v = data[k];
@@ -94,6 +109,9 @@ module.exports = async (req, res) => {
     if (typeof v !== 'number' || !isFinite(v) || v < min || v > max) return;
     out.values[k] = int ? Math.round(v) : Math.round(v * 10) / 10;
   });
+  // sanity checks: muscle and fat can't exceed body weight
+  const w = out.values.weight;
+  if (w) ['muscle_mass', 'fat_mass'].forEach(k => { if (out.values[k] && out.values[k] >= w) delete out.values[k]; });
   if (typeof data.date === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(data.date)) {
     const d = new Date(data.date + 'T00:00:00Z'), now = new Date();
     if (!isNaN(d) && d <= now && d.getUTCFullYear() >= 2015) out.date = data.date;

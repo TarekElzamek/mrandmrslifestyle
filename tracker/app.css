@@ -258,3 +258,6 @@ details.wk .wk-body b{color:var(--text);font-weight:600}
 .ai-spin{display:inline-block;width:12px;height:12px;border:2px solid currentColor;border-right-color:transparent;border-radius:50%;animation:aispin .8s linear infinite;vertical-align:-1px;margin-right:6px}
 @keyframes aispin{to{transform:rotate(360deg)}}
 .tk-input.ai-filled{border-color:var(--gold,#C9A84C);box-shadow:0 0 0 1px rgba(201,168,76,.4)}
+
+.b-prev{display:flex;align-items:center;gap:12px;margin-top:10px}
+.b-prev img{width:96px;height:128px;object-fit:cover;border-radius:8px;border:1px solid rgba(201,168,76,.4);display:block}
