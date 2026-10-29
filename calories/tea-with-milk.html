@@ -74,6 +74,13 @@ a{color:inherit}
 .fc-lead button,.fc-btn{padding:.9rem 1.2rem;border:0;border-radius:6px;background:var(--gold);color:#0a0a0a;font-weight:700;font-size:.85rem;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;font-family:inherit;text-decoration:none;display:inline-block;text-align:center}
 .fc-small{font-size:.72rem;color:rgba(255,255,255,.5)}
 .fc-done{display:none;color:var(--gold);font-weight:600}
+#free-guide{scroll-margin-top:90px}
+.fc-teaser{display:flex;justify-content:space-between;align-items:center;gap:1rem;margin-top:1.5rem;padding:1rem 1.3rem;border:1px dashed rgba(201,168,76,.55);border-radius:10px;color:#fff;text-decoration:none;font-size:.92rem;line-height:1.5}
+.fc-teaser b{color:var(--gold);white-space:nowrap;font-size:.85rem}
+.fc-teaser span b{color:var(--gold)}
+.fc-guide-cover{float:right;margin:0 0 .8rem 1rem;border-radius:4px;box-shadow:0 8px 24px rgba(0,0,0,.5);width:96px;height:auto}
+[dir=rtl] .fc-guide-cover{float:left;margin:0 1rem .8rem 0}
+@media(max-width:640px){.fc-teaser{flex-direction:column;align-items:flex-start;gap:.4rem}.fc-guide-cover{width:80px}}
 .fc-cta{text-align:center;margin:4rem auto 5rem;max-width:640px}
 .fc-cta h2{font-family:var(--font-d);font-weight:400;font-size:1.8rem;margin-bottom:.6rem}
 .fc-cta p{color:var(--muted);margin-bottom:1.4rem;line-height:1.6}
@@ -201,6 +208,7 @@ a{color:inherit}
       <div class="fc-small" style="margin-top:.3rem">Approximate, for a 75 kg adult at about 5 kcal per minute.</div>
     </div>
   </div>
+  <a class="fc-teaser" href="#free-guide"><span><b>Free PDF:</b> what to order at 29 Dubai favourites and still lose fat</span><b>Get the free guide ↓</b></a>
   <section class="fc-pt" aria-label="1-to-1 Personal Training · Al Quoz, Dubai">
     <div>
       <div class="fc-tag">1-to-1 Personal Training · Al Quoz, Dubai</div>
@@ -228,19 +236,19 @@ a{color:inherit}
     <h2 class="fp-h">Questions we get asked</h2>
     <details><summary>How many calories are in Tea with Milk &amp; Sugar?</summary><p>About 60 kcal for 1 cup with 2 tsp sugar, with 1g protein, 10g carbs and 2g fat. Values vary between restaurants.</p></details><details><summary>Can I eat Tea with Milk &amp; Sugar and still lose weight?</summary><p>Yes. Fat loss depends on your total calories across the day, not one food. Tea with Milk &amp; Sugar is about 3% of a 2,000 kcal day. Cut to one sugar or use sweetener: about 30 kcal a cup.</p></details><details><summary>How long does it take to burn off Tea with Milk &amp; Sugar?</summary><p>About 12 minutes of brisk walking for a 75 kg adult. It&#x27;s easier to adjust the portion than to try to burn it off, which is why we build favourite foods into our clients&#x27; plans.</p></details>
   </div>
-  <section class="fc-lead" id="meal-plan">
+  <section class="fc-lead" id="free-guide">
   <div>
-    <div class="fc-tag" style="margin-bottom:.8rem">Free Meal Plan</div>
-    <h2>Want a meal plan that still includes <em>Tea with Milk &amp; Sugar</em>?</h2>
-    <p>Tell us where to send it. Tarek &amp; Chloe will build you a sample day around your favourite Dubai foods, so you can lose fat without giving them up.</p>
+    <div class="fc-tag" style="margin-bottom:.8rem">Free PDF guide</div>
+    <img class="fc-guide-cover" src="/guides/dubai-eating-out-guide-cover.jpg" width="120" height="170" alt="" loading="lazy">
+    <h2>Love Tea with Milk &amp; Sugar? Get the free <em>Dubai Eating-Out Guide</em></h2>
+    <p>What to order at 29 Dubai favourites, from shawarma and karak to biryani and kunafa, and still lose fat. Plus our 7 rules for eating out. Free, instant download.</p>
   </div>
   <form onsubmit="return fcLead(event)" data-src="Food Calories – Tea with Milk &amp; Sugar">
     <label class="sr" for="fcName">First name</label><input id="fcName" type="text" required placeholder="First name" autocomplete="given-name">
     <label class="sr" for="fcEmail">Your email</label><input id="fcEmail" type="email" required placeholder="Your email" autocomplete="email">
-    <label class="sr" for="fcFav">Your favourite foods (e.g. shawarma, karak)</label><input id="fcFav" type="text" placeholder="Your favourite foods (e.g. shawarma, karak)">
-    <button type="submit">Send My Free Plan</button>
+    <button type="submit">Get the Free Guide</button>
     <div class="fc-small">No spam. Unsubscribe anytime.</div>
-    <div class="fc-done" id="fcDone" role="status">Thank you! We'll be in touch by email shortly.</div>
+    <div class="fc-done" id="fcDone" role="status">Your guide is ready:<a class="fc-btn" href="/guides/dubai-eating-out-guide.pdf" target="_blank" rel="noopener" style="margin-top:.6rem;display:block">Download the guide (PDF)</a></div>
   </form>
 </section>
   <div class="fp-sec" style="margin-top:3rem">
@@ -312,10 +320,11 @@ a{color:inherit}
 
 <script>
 function fcLead(e){e.preventDefault();var f=e.target,b=f.querySelector('button');
- var n=document.getElementById('fcName').value.trim(),m=document.getElementById('fcEmail').value.trim(),fav=document.getElementById('fcFav').value.trim();
- b.disabled=true;
- fetch('https://formspree.io/f/mdayvono',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},
-  body:JSON.stringify({_subject:'\ud83c\udf7d New Food Calories Lead \u2014 '+n,name:n,email:m,_replyto:m,favourite_foods:fav,daily_target:(function(){try{return localStorage.getItem('mmTarget')||''}catch(x){return ''}})(),language:document.documentElement.lang,source:f.getAttribute('data-src')})}).catch(function(){});
+ var n=document.getElementById('fcName').value.trim(),m=document.getElementById('fcEmail').value.trim();
+ b.disabled=true;b.style.display='none';
+ fetch('https://formspree.io/f/xvzdnogv',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},
+  body:JSON.stringify({_subject:'\ud83d\udccb New Eating-Out Guide Download \u2014 '+n,name:n,email:m,_replyto:m,goal:'Dubai Eating-Out Guide',daily_target:(function(){try{return localStorage.getItem('mmTarget')||''}catch(x){return ''}})(),language:document.documentElement.lang,landing_page:location.pathname,source:f.getAttribute('data-src')})}).catch(function(){});
+ if(window.gtag)gtag('event','generate_lead',{lead_type:'eating_out_guide',source:f.getAttribute('data-src')});
  document.getElementById('fcDone').style.display='block';return false;}
 </script>
 <script src="/shared.js" defer></script>
