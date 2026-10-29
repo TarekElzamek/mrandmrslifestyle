@@ -426,8 +426,9 @@ def build_hub(lang):
  var params=new URLSearchParams(location.search);if(params.get('q'))q.value=params.get('q');
  function norm(v){{return v.toLowerCase().replace(/[أإآ]/g,'ا').replace(/ة/g,'ه').replace(/ى/g,'ي');}}
  function upd(){{var T=parseFloat(t.value)||2000,v=norm(q.value.trim()),shown=0;
+  var ws=v.split(/\\s+/).filter(function(w){{return w&&!/^(calories?|kcal|in|of|a|an|the|how|many|much|سعرات?|سعره|حراريه|كم|في)$/.test(w)}}).map(function(w){{return w.length>3?w.replace(/(es|s)$/,''):w}});
   try{{if(T>=1000)localStorage.setItem('mmTarget',T);}}catch(e){{}}
-  cards.forEach(function(c){{var ok=(cat==='All'||c.dataset.cat===cat)&&(!v||norm(c.dataset.q).indexOf(v)>-1);c.style.display=ok?'':'none';if(ok)shown++;
+  cards.forEach(function(c){{var d=norm(c.dataset.q),ok=(cat==='All'||c.dataset.cat===cat)&&ws.every(function(w){{return d.indexOf(w)>-1}});c.style.display=ok?'':'none';if(ok)shown++;
    var pct=Math.round(c.dataset.kcal/T*100);c.querySelector('.fc-pct').textContent=P.replace('{{p}}',pct).replace('{{t}}',T.toLocaleString('en-US'));c.querySelector('.fc-bar i').style.width=Math.min(pct,100)+'%';}});
   document.getElementById('fcNone').style.display=shown?'none':'block';
   clearTimeout(timer);if(v&&window.gtag)timer=setTimeout(function(){{gtag('event','food_search',{{search_term:q.value.trim(),results:shown}});}},1200);}}
