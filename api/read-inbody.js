@@ -61,9 +61,15 @@ async function gemini(model, key, img, ms) {
       })
     }).finally(() => clearTimeout(t));
   };
-  let r = await call(thinking);
-  if (r.status === 400 && thinking) r = await call(null); // model doesn't accept that thinking setting
-  return r;
+  try {
+    let r = await call(thinking);
+    if (r.status === 400 && thinking) r = await call(null); // model doesn't accept that thinking setting
+    let j = {}; try { j = await r.json(); } catch (e) {}
+    return { status: r.status, ok: r.ok, j };
+  } catch (e) {
+    // too slow: report it like a busy model so the next one is tried
+    return { status: e.name === 'AbortError' ? 504 : 502, ok: false, j: { error: { message: e.name === 'AbortError' ? 'took too long' : String(e.message || e) } } };
+  }
 }
 
 // Free "flash" models available to this key that can read images, best first.
@@ -103,21 +109,26 @@ module.exports = async (req, res) => {
   try {
     const first = process.env.GEMINI_MODEL || 'gemini-flash-latest';
     const tried = [first];
-    let r = await gemini(first, key, img, Math.min(30000, left())), j = await r.json(); used = first;
-    // Model retired (404) or no free allowance for it (429): try the other free Flash models.
-    if (r.status === 404 || r.status === 429 || r.status === 503 || r.status === 500) {
-      const others = (await flashModels(key)).filter(m => !tried.includes(m)).slice(0, 5);
+    let { status, ok, j } = await gemini(first, key, img, Math.min(20000, left())); used = first;
+    const r = () => ({ status, ok });
+    // Model retired (404), no free allowance (429), busy (500/503) or too slow (504): try other free Flash models,
+    // the fast "lite" one first.
+    if ([404, 429, 500, 502, 503, 504].includes(status)) {
+      const all = await flashModels(key);
+      const lite = all.filter(m => /flash-lite-latest/.test(m));
+      const others = lite.concat(all.filter(m => !lite.includes(m))).filter(m => !tried.includes(m)).slice(0, 5);
       for (const m of others) {
-        if (left() < 8000) break;
+        if (left() < 6000) break;
         detail = (j && j.error && j.error.message || '').slice(0, 300);
-        tried.push(m); r = await gemini(m, key, img, Math.min(30000, left())); j = await r.json(); used = m;
-        if (r.ok) break;
+        tried.push(m); ({ status, ok, j } = await gemini(m, key, img, Math.min(20000, left() - 2000))); used = m;
+        if (ok) break;
       }
     }
-    if (!r.ok) {
+    const rr = r();
+    if (!rr.ok) {
       detail = (j && j.error && j.error.message || detail || '').slice(0, 300);
-      console.error('gemini error', r.status, tried.join(','), detail);
-      return send(res, r.status === 429 ? 429 : 502, { error: r.status === 429 ? 'busy' : 'ai_failed', tried, detail });
+      console.error('gemini error', rr.status, tried.join(','), detail);
+      return send(res, rr.status === 429 ? 429 : 502, { error: rr.status === 429 ? 'busy' : 'ai_failed', tried, detail });
     }
     text = ((((j.candidates || [])[0] || {}).content || {}).parts || []).filter(p => !p.thought).map(p => p.text || '').join('');
   } catch (e) { console.error(e); return send(res, 504, { error: e.name === 'AbortError' ? 'timeout' : 'ai_failed', model: used }); }
