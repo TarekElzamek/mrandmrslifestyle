@@ -754,7 +754,7 @@
     var m = modal('Programme templates', '<div id="tplList"><p class="tk-muted">Loading…</p></div>');
     var list = await loadTemplates(); if (!list) return m.close();
     var ar = await sb.from('programs').select('client_id,active,template_id').not('template_id', 'is', null);
-    var cr = await sb.from('profiles').select('id,name,email').neq('id', S.me.id);
+    var cr = await sb.from('profiles').select('id,name,email').neq('id', S.me.id).eq('archived', false);
     var A = ar.data || [], C = cr.data || [];
     function assignedTo(t) { return A.filter(function (x) { return x.template_id === t.id && x.active; }).map(function (x) { var c = C.filter(function (y) { return y.id === x.client_id; })[0]; return c ? (c.name || c.email) : null; }).filter(Boolean); }
     function draw() {
@@ -783,7 +783,7 @@
   async function openAssign(t) {
     var m = modal('Assign: ' + t.name, '<div class="tk-field"><label for="aQ" class="sr">Search clients</label><input class="tk-input" id="aQ" type="search" placeholder="Search by name or email"></div><div id="aList"><p class="tk-muted">Loading clients…</p></div>', function () { if (S.tab === 'plan') render(); });
     var q = await Promise.all([
-      sb.from('profiles').select('id,name,email').neq('id', S.me.id).order('name'),
+      sb.from('profiles').select('id,name,email').neq('id', S.me.id).eq('archived', false).order('name'),
       sb.from('programs').select('id,client_id,name,active,template_id')
     ]);
     if (q[0].error || q[1].error) { $('aList').innerHTML = '<p class="tk-muted">Could not load clients.</p>'; return; }
@@ -1128,7 +1128,7 @@
       sb.from('programs').select('client_id,active')
     ]);
     if (S.tab !== 'clients') return;
-    var P = q[0].data || [], W = q[1].data || [], B = q[2].data || [], PR = q[3].data || [];
+    var ALL = q[0].data || [], P = ALL.filter(function (p) { return !p.archived; }), GONE = ALL.filter(function (p) { return p.archived; }), W = q[1].data || [], B = q[2].data || [], PR = q[3].data || [], edit = false;
     var m30 = new Date(); m30.setDate(m30.getDate() - 30); var c30 = iso(m30);
     var rows = P.map(function (p) {
       var w = W.filter(function (x) { return x.user_id === p.id; }), b = B.filter(function (x) { return x.user_id === p.id; });
@@ -1137,18 +1137,36 @@
     var h = '<h1 class="tk-h1">Your <em>clients</em></h1><p class="tk-sub">Everyone who signed in to the tracker. Tap a client to see their workouts, weight and programme, or to log today\'s session for them.</p>';
     h += '<div class="tk-grid3" style="margin-top:14px"><div class="tk-stat"><b>' + P.length + '</b><span>Clients</span></div><div class="tk-stat"><b>' + rows.filter(function (r) { return r.last && r.last >= iso(new Date(Date.now() - 7 * 864e5)); }).length + '</b><span>Trained 7 days</span></div><div class="tk-stat"><b>' + rows.filter(function (r) { return !r.prog; }).length + '</b><span>Need a plan</span></div></div>';
     h += '<button type="button" class="tk-btn block" id="cAdd" style="margin-top:12px">+ Add client</button>';
-    h += '<div class="tk-field"><label for="cQ" class="sr">Search clients</label><input class="tk-input" id="cQ" type="search" placeholder="Search by name or email"></div><div class="tk-card" id="cList"></div>';
+    h += '<div class="tk-field"><label for="cQ" class="sr">Search clients</label><input class="tk-input" id="cQ" type="search" placeholder="Search by name or email"></div><div class="tk-row" style="justify-content:flex-end;margin:4px 0 8px"><button type="button" class="tk-btn sm ghost" id="cEdit">Edit list</button></div><div class="tk-card" id="cList"></div><div id="cGone"></div>';
     v.innerHTML = h;
     function draw(ql) {
       var html = rows.filter(function (r) { return !ql || ((r.p.name || '') + ' ' + r.p.email).toLowerCase().indexOf(ql) > -1; }).map(function (r) {
         var age = r.last ? Math.round((parseDay(today()) - parseDay(r.last)) / 864e5) : null;
         var pill = r.last == null ? '<span class="pill">No workouts</span>' : '<span class="pill ' + (age <= 7 ? 'ok' : age <= 14 ? 'gold' : 'warn') + '">' + daysAgo(r.last) + '</span>';
         var wt = r.w1 ? r.w1.weight + 'kg' + (r.w0 && r.w0 !== r.w1 ? ' (' + (r1(r.w1.weight - r.w0.weight) > 0 ? '+' : '') + r1(r.w1.weight - r.w0.weight) + ')' : '') : 'no weight yet';
+        if (edit) return '<div class="pick-item" style="cursor:default">' + avatarHtml(r.p, 36) + '<div style="min-width:0;margin-left:10px"><b>' + esc(r.p.name || r.p.email) + '</b><span>' + esc(r.p.email) + '</span></div><button type="button" class="tk-btn sm ghost" data-remove="' + r.p.id + '" style="margin-left:auto">Remove</button></div>';
         return '<button type="button" class="pick-item" data-client="' + r.p.id + '">' + avatarHtml(r.p, 36) + '<div style="min-width:0;margin-left:10px"><b>' + esc(r.p.name || r.p.email) + (r.p.role === 'coach' ? ' <span class="pill gold">Coach</span>' : '') + '</b><span>' + esc(r.p.email) + ' · ' + r.n30 + ' workouts in 30 days · ' + wt + (r.prog ? '' : ' · no programme') + '</span></div><span style="margin-left:auto">' + pill + '</span></button>';
       }).join('');
       $('cList').innerHTML = html || '<div class="tk-empty">' + (P.length ? 'No match.' : 'No clients yet. Send them the tracker link and ask them to sign in with Google: mrandmrslifestyle.com/workout-tracker.html') + '</div>';
       $('cList').querySelectorAll('[data-client]').forEach(function (b) { b.onclick = function () { openClient(P.filter(function (p) { return p.id === b.dataset.client; })[0]); }; });
+      $('cList').querySelectorAll('[data-remove]').forEach(function (b) { b.onclick = async function () {
+        var c = P.filter(function (p) { return p.id === b.dataset.remove; })[0]; if (!c) return;
+        if (!confirmBox('Remove ' + (c.name || c.email) + '? Their history is kept and you can restore them.')) return;
+        b.disabled = true;
+        var r = await sb.from('profiles').update({ archived: true }).eq('id', c.id);
+        if (r.error) { b.disabled = false; return toast(r.error.message); }
+        if (lsGet('mm_target', null) === c.id) lsSet('mm_target', null);
+        toast((c.name || c.email) + ' removed'); renderClients();
+      }; });
+      var g = $('cGone'); if (!g) return;
+      g.innerHTML = GONE.length ? '<details style="margin-top:16px"><summary class="tk-small" style="cursor:pointer">Removed clients (' + GONE.length + ')</summary><div class="tk-card" style="margin-top:8px">' + GONE.map(function (p) { return '<div class="pick-item" style="cursor:default">' + avatarHtml(p, 32) + '<div style="min-width:0;margin-left:10px"><b>' + esc(p.name || p.email) + '</b><span>' + esc(p.email) + '</span></div><button type="button" class="tk-btn sm" data-restore="' + p.id + '" style="margin-left:auto">Restore</button></div>'; }).join('') + '</div></details>' : '';
+      g.querySelectorAll('[data-restore]').forEach(function (b) { b.onclick = async function () {
+        b.disabled = true; var r = await sb.from('profiles').update({ archived: false }).eq('id', b.dataset.restore);
+        if (r.error) { b.disabled = false; return toast(r.error.message); }
+        toast('Client restored'); renderClients();
+      }; });
     }
+    $('cEdit').onclick = function () { edit = !edit; this.textContent = edit ? 'Done' : 'Edit list'; draw(($('cQ').value || '').toLowerCase().trim()); };
     $('cAdd').onclick = openAddClient;
     $('cQ').oninput = function () { draw(this.value.toLowerCase().trim()); };
     draw('');
@@ -1228,7 +1246,7 @@
     leadsBanner();
     var since = new Date(); since.setDate(since.getDate() - 7);
     var q = await Promise.all([
-      sb.from('profiles').select('id,name,email,avatar_url').neq('id', S.me.id),
+      sb.from('profiles').select('id,name,email,avatar_url').neq('id', S.me.id).eq('archived', false),
       sb.from('workouts').select('user_id,date,title,duration_min,created_at').gte('date', iso(since)).order('created_at', { ascending: false }).limit(500),
       sb.from('programs').select('client_id,active'),
       sb.from('live_workouts').select('user_id,data,updated_at').neq('user_id', S.me.id),
@@ -1340,7 +1358,7 @@
     $('wFrom').onclick = function () { toast('Open the client, go to their Plan tab and tap "Save as template"'); go('clients'); };
     var list = await loadTemplates(); if (S.tab !== 'workouts' || !list) return;
     var ar = await sb.from('programs').select('client_id,active,template_id').not('template_id', 'is', null);
-    var cr = await sb.from('profiles').select('id,name,email').neq('id', S.me.id);
+    var cr = await sb.from('profiles').select('id,name,email').neq('id', S.me.id).eq('archived', false);
     var A = ar.data || [], C = cr.data || [];
     var h = list.length ? '' : '<div class="tk-empty">No templates yet. Tap <b>+ New template</b>, or save a client\'s programme from their Plan tab.</div>';
     list.forEach(function (t) {
