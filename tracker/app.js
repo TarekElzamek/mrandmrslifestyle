@@ -291,7 +291,7 @@
       h += '<div class="tk-card"><b>No programme yet</b><p class="tk-muted" style="margin-top:4px">Training on your own? Start a workout below and add any of 200+ exercises. Training with Tarek or Chloe? Your coach will add your programme here.</p></div>';
     }
     h += '<div class="tk-row" style="margin-top:14px"><button type="button" class="tk-btn ' + (prog && !viewingOther() ? 'ghost ' : '') + 'block" id="startEmpty">' + (isCoach() ? 'Start an empty workout' : 'Start a workout') + '</button></div>';
-    if (lastW) h += '<div class="tk-card"><span class="tk-tag">Last workout</span><div class="li"><div class="grow"><b>' + esc(lastW.title || 'Workout') + '</b><span class="tk-small">' + fmtDay(lastW.date) + ' · ' + (lastW.exercises || []).length + ' exercises' + (lastW.duration_min ? ' · ' + lastW.duration_min + ' min' : '') + '</span></div></div></div>';
+    if (lastW) h += '<div class="tk-card"><span class="tk-tag">Last workout</span><div class="li"><div class="grow"><b>' + esc(lastW.title || 'Workout') + '</b><span class="tk-small">' + fmtDay(lastW.date) + ' · ' + (lastW.exercises || []).length + ' exercises' + (lastW.duration_min ? ' · ' + lastW.duration_min + ' min' : '') + (kcalOf(lastW) ? ' · ' + kcalLabel(lastW) : '') + '</span></div></div></div>';
     h += '<div class="tk-card"><span class="tk-tag">Body weight</span><div class="li"><div class="grow"><b>' + (lastB && lastB.weight ? lastB.weight + ' kg' : 'Not logged yet') + '</b><span class="tk-small">' + (lastB ? 'Last logged ' + daysAgo(lastB.date) : 'Track your weight weekly for the clearest trend') + '</span></div><button type="button" class="tk-btn sm plain" id="goBody">Log</button></div></div>';
     v.innerHTML = h;
     v.querySelectorAll('[data-startday]').forEach(function (b) { b.onclick = function () { if (S.draft && !confirmBox('You have a workout in progress (' + (S.draft.title || 'Workout') + '). Discard it and start ' + (prog.days[+b.dataset.startday].name || 'this day') + '?')) return; startDraft(prog, +b.dataset.startday); }; });
@@ -531,12 +531,13 @@
     $('finish').disabled = true;
     var prs = 0; exs.forEach(function (e) { e.sets.forEach(function (s) { if (s.pr) prs++; }); });
     var row = { user_id: S.target.id, date: d.date, title: d.title || 'Workout', program_id: d.programId, exercises: exs, duration_min: Math.max(1, Math.round((Date.now() - d.started) / 60000)), notes: d.notes || null };
+    var est = kcalEstimate(row); if (est != null) { row.kcal = est; row.kcal_source = 'est'; }
     var r = await sb.from('workouts').insert(row).select().single();
     if (r.error) { $('finish').disabled = false; toast('Could not save: ' + r.error.message); return; }
     stopRest(); S.draft = null; saveDraft(); S.workouts.unshift(r.data);
     ev('tracker_workout_saved', { exercises: exs.length, prs: prs, coach_logged: viewingOther() });
     var nSets = 0; exs.forEach(function (e) { nSets += e.sets.length; });
-    notifyCoach('finished', row.title, exs.length + (exs.length === 1 ? ' exercise · ' : ' exercises · ') + nSets + (nSets === 1 ? ' set · ' : ' sets · ') + row.duration_min + ' min' + (prs ? ' · ' + prs + ' new PR' + (prs > 1 ? 's' : '') : ''));
+    notifyCoach('finished', row.title, exs.length + (exs.length === 1 ? ' exercise · ' : ' exercises · ') + nSets + (nSets === 1 ? ' set · ' : ' sets · ') + row.duration_min + ' min' + (row.kcal ? ' · ~' + nf(row.kcal) + ' kcal' : '') + (prs ? ' · ' + prs + ' new PR' + (prs > 1 ? 's' : '') : ''));
     summaryModal(r.data, prs);
     render();
   }
@@ -544,16 +545,59 @@
   function summaryModal(w, prs) {
     var sets = 0; (w.exercises || []).forEach(function (e) { sets += e.sets.length; });
     var vol = workoutVolume(w);
-    var text = w.title + ' done! ' + (w.exercises || []).length + ' exercises, ' + sets + ' sets' + (vol ? ', ' + nf(vol) + ' kg lifted' : '') + (prs ? ', ' + prs + ' new PR' + (prs > 1 ? 's' : '') : '') + ' in ' + w.duration_min + ' min. Tracked with Mr & Mrs Lifestyle.';
+    var text = w.title + ' done! ' + (w.exercises || []).length + ' exercises, ' + sets + ' sets' + (vol ? ', ' + nf(vol) + ' kg lifted' : '') + (prs ? ', ' + prs + ' new PR' + (prs > 1 ? 's' : '') : '') + ' in ' + w.duration_min + ' min' + (kcalOf(w) ? ', ' + kcalLabel(w) + ' burnt' : '') + '. Tracked with Mr & Mrs Lifestyle.';
     var body = '<div style="text-align:center"><div class="tk-h1">Workout <em>saved</em></div><p class="tk-muted">' + fmtDay(w.date) + '</p></div><div class="tk-grid2" style="margin-top:14px"><div class="tk-stat"><b>' + w.duration_min + '</b><span>Minutes</span></div><div class="tk-stat"><b>' + sets + '</b><span>Sets</span></div><div class="tk-stat"><b>' + (vol ? nf(vol) : '–') + '</b><span>Kg lifted</span></div><div class="tk-stat"><b>' + prs + '</b><span>New PRs</span></div></div>' +
-      '<div class="tk-grid2" style="margin-top:16px"><button type="button" class="tk-btn ghost" id="shareW">Share</button><button type="button" class="tk-btn" data-close>Done</button></div>';
+      kcalBox(w) + '<div class="tk-grid2" style="margin-top:16px"><button type="button" class="tk-btn ghost" id="shareW">Share</button><button type="button" class="tk-btn" data-close>Done</button></div>';
     var m = modal('Great work', body);
+    wireKcal(m, function () { var bx = m.querySelector('.kc-box'); if (bx) bx.outerHTML = kcalBox(w); wireKcal(m); render(); });
     $('shareW').onclick = function () {
       if (navigator.share) navigator.share({ title: 'My workout', text: text, url: 'https://www.mrandmrslifestyle.com/workout-tracker.html' }).catch(function () {});
       else if (navigator.clipboard) navigator.clipboard.writeText(text).then(function () { toast('Copied. Paste it anywhere to share.'); });
     };
     if (prs) confetti();
     return m;
+  }
+
+  // ---------- calories burnt ----------
+  // Estimate = MET x body weight (kg) x hours. Weights ~5 METs (a typical gym session with rests), cardio ~8 METs.
+  function weightOn(date) {
+    var ws = S.body.filter(function (b) { return b.weight != null; }); if (!ws.length) return null;
+    var before = ws.filter(function (b) { return b.date <= date; });
+    return +(before.length ? before[before.length - 1] : ws[0]).weight;
+  }
+  function kcalEstimate(w) {
+    var kg = weightOn(w.date || today()); if (!kg || !w.duration_min) return null;
+    var mins = Math.min(w.duration_min, 150), cardio = 0;
+    (w.exercises || []).forEach(function (e) { if ((e.type || typeOf(e.name)) === 'c') (e.sets || []).forEach(function (st) { cardio += num(st.r) || 0; }); });
+    cardio = Math.min(cardio, mins);
+    return Math.round(kg * (5 * (mins - cardio) + 8 * cardio) / 60);
+  }
+  function kcalOf(w) { return w.kcal != null ? w.kcal : kcalEstimate(w); }
+  function kcalLabel(w) { var k = kcalOf(w); return k == null ? '' : (w.kcal_source === 'watch' ? '' : '~') + nf(k) + ' kcal'; }
+  async function saveKcal(w, val) {
+    var k = parseInt(String(val).replace(/[^\d]/g, ''), 10);
+    if (!(k > 0 && k <= 5000)) { toast('Enter the calories from your watch, e.g. 420'); return false; }
+    var r = await sb.from('workouts').update({ kcal: k, kcal_source: 'watch' }).eq('id', w.id);
+    if (r.error) { toast('Could not save: ' + r.error.message); return false; }
+    w.kcal = k; w.kcal_source = 'watch';
+    S.workouts.forEach(function (x) { if (x.id === w.id) { x.kcal = k; x.kcal_source = 'watch'; } });
+    ev('tracker_kcal_watch'); toast('Saved'); return true;
+  }
+  function kcalBox(w) {
+    var k = kcalOf(w), watch = w.kcal_source === 'watch';
+    var h = '<div class="kc-box"><div class="kc-top"><span class="kc-ic" aria-hidden="true">🔥</span><div><b>' + (k == null ? 'Calories burnt' : (watch ? '' : '~') + nf(k) + ' kcal burnt') + '</b><span class="tk-small">' +
+      (k == null ? 'Log your body weight in the Body tab and we\'ll estimate it for every workout.' : watch ? 'From your watch.' : 'Estimated from your body weight and workout time. A watch or heart-rate strap is more accurate.') + '</span></div></div>';
+    h += '<div class="kc-edit"><label for="kc_' + w.id + '" class="tk-small">' + (watch ? 'Change' : 'Have a watch? Enter its number') + '</label><div class="tk-row"><input class="tk-input" id="kc_' + w.id + '" inputmode="numeric" placeholder="kcal" value="' + (watch ? k : '') + '"><button type="button" class="tk-btn sm ghost" data-kcsave="' + w.id + '">Save</button></div></div></div>';
+    return h;
+  }
+  function wireKcal(root, after) {
+    root.querySelectorAll('[data-kcsave]').forEach(function (b) {
+      b.onclick = async function () {
+        var w = S.workouts.filter(function (x) { return x.id === b.dataset.kcsave; })[0]; if (!w) return;
+        b.disabled = true; var ok = await saveKcal(w, $('kc_' + w.id).value); b.disabled = false;
+        if (ok && after) after();
+      };
+    });
   }
 
   // ---------- modal + exercise picker ----------
@@ -1356,6 +1400,9 @@
     var month = today().slice(0, 7), vol = 0; W.forEach(function (w) { vol += workoutVolume(w); });
     var h = '<h1 class="tk-h1">Strength <em>progress</em></h1>';
     h += '<div class="tk-grid2" style="margin-top:14px"><div class="tk-stat"><b>' + W.length + '</b><span>Workouts</span></div><div class="tk-stat"><b>' + W.filter(function (w) { return w.date.slice(0, 7) === month; }).length + '</b><span>This month</span></div><div class="tk-stat"><b>' + weekStreak() + '</b><span>Week streak</span></div><div class="tk-stat"><b>' + (vol >= 1e6 ? r1(vol / 1e6) + 'M' : vol >= 1e4 ? Math.round(vol / 1e3) + 'k' : nf(vol)) + '</b><span>Kg lifted</span></div></div>';
+    var wk = weekKey(today()), kW = 0, kM = 0, anyK = false;
+    W.forEach(function (w) { var k = kcalOf(w); if (k == null) return; anyK = true; if (weekKey(w.date) === wk) kW += k; if (w.date.slice(0, 7) === month) kM += k; });
+    h += anyK ? '<div class="tk-grid2" style="margin-top:12px"><div class="tk-stat"><b>' + nf(kW) + '</b><span>🔥 Kcal burnt this week</span></div><div class="tk-stat"><b>' + nf(kM) + '</b><span>🔥 Kcal burnt this month</span></div></div>' : (W.length ? '<p class="tk-small" style="margin-top:10px">🔥 Log your body weight in the Body tab to see calories burnt in your workouts.</p>' : '');
     var freq = {}; W.forEach(function (w) { (w.exercises || []).forEach(function (e) { var t = e.type || typeOf(e.name); if (t === 'w' || t === 'b') freq[e.name] = (freq[e.name] || 0) + 1; }); });
     var names = Object.keys(freq).sort(function (a, b) { return freq[b] - freq[a]; });
     if (!names.length) { h += '<div class="tk-empty">Log a few workouts and your strength charts and personal records will appear here.</div>'; v.innerHTML = h; return; }
@@ -1409,13 +1456,15 @@
     list.forEach(function (w) {
       var sets = 0; (w.exercises || []).forEach(function (e) { sets += (e.sets || []).length; });
       var prs = 0; (w.exercises || []).forEach(function (e) { (e.sets || []).forEach(function (s) { if (s.pr) prs++; }); });
-      h += '<details class="wk"><summary><div style="flex:1;min-width:0"><b>' + esc(w.title || 'Workout') + '</b><span class="tk-small" style="display:block">' + fmtDay(w.date) + ' · ' + (w.exercises || []).length + ' exercises · ' + sets + ' sets' + (w.duration_min ? ' · ' + w.duration_min + ' min' : '') + '</span></div>' + (prs ? '<span class="pill gold">' + prs + ' PR</span>' : '') + '</summary><div class="wk-body">';
+      h += '<details class="wk"><summary><div style="flex:1;min-width:0"><b>' + esc(w.title || 'Workout') + '</b><span class="tk-small" style="display:block">' + fmtDay(w.date) + ' · ' + (w.exercises || []).length + ' exercises · ' + sets + ' sets' + (w.duration_min ? ' · ' + w.duration_min + ' min' : '') + (kcalOf(w) ? ' · ' + kcalLabel(w) : '') + '</span></div>' + (prs ? '<span class="pill gold">' + prs + ' PR</span>' : '') + '</summary><div class="wk-body">';
       (w.exercises || []).forEach(function (e) { var t = e.type || typeOf(e.name); h += '<p><b>' + esc(e.name) + '</b>: ' + (e.sets || []).map(function (s) { return esc(setLabel(s, t)) + (s.pr ? ' ★' : ''); }).join(', ') + '</p>'; });
       if (w.notes) h += '<p><b>Notes:</b> ' + esc(w.notes) + '</p>';
+      h += kcalBox(w);
       h += '<button type="button" class="tk-btn sm danger" data-delw="' + w.id + '" style="margin-top:8px">Delete workout</button></div></details>';
     });
     h += '</div>';
     v.innerHTML = h;
+    wireKcal(v, render);
     $('cPrev').onclick = function () { var d = new Date(y, mo - 1, 1); S.cal = iso(d).slice(0, 7); S.calDay = null; render(); };
     $('cNext').onclick = function () { var d = new Date(y, mo + 1, 1); S.cal = iso(d).slice(0, 7); S.calDay = null; render(); };
     if ($('cAll')) $('cAll').onclick = function () { S.calDay = null; render(); };
