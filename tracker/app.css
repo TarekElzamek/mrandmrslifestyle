@@ -297,3 +297,24 @@ details.wk .wk-body b{color:var(--text);font-weight:600}
 .hb-wide{grid-column:1/-1}
 .hb-wide .hb-scale{max-width:360px}
 .hb-step b{white-space:nowrap}
+/* ---------- badges ---------- */
+.bd-grid{list-style:none;margin:12px 0 0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:8px}
+.bd{background:var(--card-2);border:1px solid var(--line);border-radius:12px;padding:10px 6px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:3px;opacity:.55}
+.bd .bd-ic{font-size:1.6rem;filter:grayscale(1)}
+.bd b{font-size:.8rem;line-height:1.2}
+.bd small{font-size:.68rem;color:var(--muted);line-height:1.25}
+.bd.on{opacity:1;border-color:rgba(201,168,76,.55);background:linear-gradient(180deg,rgba(201,168,76,.14),var(--card-2))}
+.bd.on .bd-ic{filter:none}
+.bd.on small{color:var(--gold)}
+.bd-pop{text-align:center;position:relative;padding:8px 0 4px;overflow:hidden}
+.bd-pop h3{font-family:'DM Serif Display',Georgia,serif;font-weight:400;font-size:1.6rem;color:var(--gold);margin:6px 0 4px}
+.bd-big{font-size:4rem;display:inline-block;animation:bdPop .6s cubic-bezier(.2,1.6,.4,1) both}
+.bd-burst{position:absolute;left:50%;top:48px;width:0;height:0}
+.bd-burst i{position:absolute;width:8px;height:8px;border-radius:2px;background:var(--gold);opacity:0;animation:bdFly 1s ease-out .15s both}
+.bd-burst i:nth-child(odd){background:var(--gold-2)}
+.bd-burst i:nth-child(3n){background:var(--ok)}
+.bd-burst i:nth-child(1){--x:-90px;--y:-40px}.bd-burst i:nth-child(2){--x:90px;--y:-40px}.bd-burst i:nth-child(3){--x:-60px;--y:-80px}.bd-burst i:nth-child(4){--x:60px;--y:-80px}.bd-burst i:nth-child(5){--x:0;--y:-95px}.bd-burst i:nth-child(6){--x:-110px;--y:10px}.bd-burst i:nth-child(7){--x:110px;--y:10px}.bd-burst i:nth-child(8){--x:-80px;--y:50px}.bd-burst i:nth-child(9){--x:80px;--y:50px}.bd-burst i:nth-child(10){--x:-30px;--y:-60px}.bd-burst i:nth-child(11){--x:30px;--y:-60px}.bd-burst i:nth-child(12){--x:-120px;--y:-70px}.bd-burst i:nth-child(13){--x:120px;--y:-70px}
+@keyframes bdPop{0%{transform:scale(.2);opacity:0}100%{transform:scale(1);opacity:1}}
+@keyframes bdFly{0%{transform:translate(0,0) rotate(0);opacity:1}100%{transform:translate(var(--x),var(--y)) rotate(200deg);opacity:0}}
+@media (prefers-reduced-motion:reduce){.bd-big,.bd-burst i{animation:none}.bd-burst{display:none}}
+.hb-head{display:flex;align-items:center;justify-content:space-between;gap:10px}
