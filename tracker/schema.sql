@@ -356,3 +356,6 @@ $cron$);
 alter table public.workouts
   add column if not exists kcal int check (kcal between 0 and 5000),
   add column if not exists kcal_source text check (kcal_source in ('est','watch'));
+
+-- ---------- v15: daily calorie target (goal + optional coach override) ----------
+alter table public.profiles add column if not exists nutrition jsonb;

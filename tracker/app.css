@@ -326,3 +326,16 @@ details.wk .wk-body b{color:var(--text);font-weight:600}
 .kc-edit{margin-top:10px}
 .kc-edit .tk-row{gap:8px;margin-top:4px}
 .kc-edit .tk-input{flex:1;min-width:0}
+/* ---------- daily calorie target ---------- */
+.nut .chips{margin-top:2px}
+.nut-big{display:flex;align-items:baseline;gap:8px;margin-top:10px}
+.nut-big b{font-family:'DM Serif Display',Georgia,serif;font-weight:400;font-size:2.6rem;color:var(--gold);line-height:1}
+.nut-big span{color:var(--muted)}
+.nut-macros{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
+.nut-macros div{background:var(--card-2);border:1px solid var(--line);border-radius:10px;padding:10px;text-align:center}
+.nut-macros b{display:block;font-size:1.15rem}
+.nut-macros span{font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.nut-set{color:var(--ok);margin-top:8px}
+.nut-how,.nut-ovr{margin-top:12px}
+.nut-how summary,.nut-ovr summary{cursor:pointer}
+.nut-how ul{margin:8px 0 0;padding-left:18px;display:grid;gap:6px}

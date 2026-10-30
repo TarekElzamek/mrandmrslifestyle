@@ -293,12 +293,14 @@
     h += '<div class="tk-row" style="margin-top:14px"><button type="button" class="tk-btn ' + (prog && !viewingOther() ? 'ghost ' : '') + 'block" id="startEmpty">' + (isCoach() ? 'Start an empty workout' : 'Start a workout') + '</button></div>';
     if (lastW) h += '<div class="tk-card"><span class="tk-tag">Last workout</span><div class="li"><div class="grow"><b>' + esc(lastW.title || 'Workout') + '</b><span class="tk-small">' + fmtDay(lastW.date) + ' · ' + (lastW.exercises || []).length + ' exercises' + (lastW.duration_min ? ' · ' + lastW.duration_min + ' min' : '') + (kcalOf(lastW) ? ' · ' + kcalLabel(lastW) : '') + '</span></div></div></div>';
     h += '<div class="tk-card"><span class="tk-tag">Body weight</span><div class="li"><div class="grow"><b>' + (lastB && lastB.weight ? lastB.weight + ' kg' : 'Not logged yet') + '</b><span class="tk-small">' + (lastB ? 'Last logged ' + daysAgo(lastB.date) : 'Track your weight weekly for the clearest trend') + '</span></div><button type="button" class="tk-btn sm plain" id="goBody">Log</button></div></div>';
+    h += nutLine();
     v.innerHTML = h;
     v.querySelectorAll('[data-startday]').forEach(function (b) { b.onclick = function () { if (S.draft && !confirmBox('You have a workout in progress (' + (S.draft.title || 'Workout') + '). Discard it and start ' + (prog.days[+b.dataset.startday].name || 'this day') + '?')) return; startDraft(prog, +b.dataset.startday); }; });
     if ($('startEmpty')) $('startEmpty').onclick = function () { if (S.draft && !confirmBox('You have a workout in progress. Discard it and start an empty one?')) return; startDraft(null); };
     if ($('resumeW')) $('resumeW').onclick = function () { S.overview = false; render(); window.scrollTo(0, 0); };
     $('goBody').onclick = function () { S.tab = 'body'; render(); };
     wireHabitCard(v); $('goHabits').onclick = function () { go('habits'); };
+    if ($('goNut')) $('goNut').onclick = function () { go('body'); setTimeout(function () { var c = $('nutCard'); if (c) c.scrollIntoView({ block: 'start' }); }, 50); };
   }
 
   function startDraft(prog, dayIdx) {
@@ -991,6 +993,7 @@
     if (withW.length || mm.length || pf.length) {
       h += '<div class="tk-grid2" style="margin-top:14px">' + stat(withW, 'weight', 'Weight kg') + stat(mm, 'muscle_mass', 'Muscle kg') + stat(fm, 'fat_mass', 'Fat mass kg') + stat(pf, 'body_fat', 'Body fat', '%') + stat(sc, 'inbody_score', 'InBody score') + '</div>';
     }
+    h += nutCard();
     if (mm.length > 1 || fm.length > 1) h += '<div class="tk-card"><span class="tk-tag">Muscle vs fat (kg)</span><div class="chart-box"><canvas id="cChart" role="img" aria-label="Skeletal muscle mass and body fat mass over time"></canvas></div><p class="tk-small">The goal for most clients: the gold line (muscle) rising or holding while the blue line (fat) drops.</p></div>';
     if (pf.length > 1) h += '<div class="tk-card"><span class="tk-tag">Body fat %</span><div class="chart-box"><canvas id="pChartB" role="img" aria-label="Body fat percentage over time"></canvas></div></div>';
     if (withW.length > 1) h += '<div class="tk-card"><span class="tk-tag">Weight trend</span><div class="chart-box"><canvas id="wChart" role="img" aria-label="Body weight over time"></canvas></div></div>';
@@ -1033,6 +1036,7 @@
       }
     }
     if (ph.length) loadPhotos(ph);
+    wireNut(v);
     $('bSaveLog').onclick = saveBody;
     if ($('bPhoto')) $('bPhoto').onchange = function () {
       var f = this.files[0], pv = $('bPrev'); if (!f) { pv.hidden = true; return; }
@@ -1394,6 +1398,74 @@
     });
     return out.sort(function (a, b) { return b.score - a.score; }).slice(0, 8);
   }
+  // ---------- DAILY CALORIE TARGET (from the latest body scan + tracked activity) ----------
+  var GOALS = [['lose', 'Lose fat'], ['maintain', 'Maintain'], ['gain', 'Build muscle']];
+  function nutPlan() {
+    var B = S.body, w = null, scan = null;
+    for (var i = B.length - 1; i >= 0; i--) { if (!w && B[i].weight != null) w = B[i]; if (!scan && (B[i].bmr != null || B[i].fat_mass != null || B[i].body_fat != null)) scan = B[i]; if (w && scan) break; }
+    var n = (S.target && S.target.nutrition) || {}, goal = n.goal || 'maintain';
+    if (!w) return { missing: 'weight', goal: goal, n: n };
+    var kg = +w.weight, lbm = null;
+    if (scan && scan.fat_mass != null) lbm = (scan.weight != null ? +scan.weight : kg) - +scan.fat_mass;
+    else if (scan && scan.body_fat != null) lbm = (scan.weight != null ? +scan.weight : kg) * (1 - +scan.body_fat / 100);
+    var bmr = scan && scan.bmr != null ? +scan.bmr : lbm ? 370 + 21.6 * lbm : null, bmrFrom = scan && scan.bmr != null ? 'scan' : 'calc';
+    if (!bmr) return { missing: 'scan', goal: goal, n: n };
+    // Activity from the tracker: average steps over 14 days + workouts per week over 4 weeks.
+    var days = hLastDays(14), st = days.map(hRow).filter(function (x) { return x && x.steps; }).map(function (x) { return x.steps; });
+    var steps = st.length >= 3 ? st.reduce(function (a, b) { return a + b; }, 0) / st.length : null;
+    var since = iso(new Date(Date.now() - 28 * 864e5)), wpw = S.workouts.filter(function (x) { return x.date >= since; }).length / 4;
+    var stepB = steps == null ? 0.1 : steps < 5000 ? 0 : steps < 7500 ? 0.1 : steps < 10000 ? 0.175 : 0.25;
+    var factor = 1.2 + stepB + Math.min(0.25, wpw * 0.05), tdee = bmr * factor;
+    var kcal = goal === 'lose' ? Math.max(bmr, tdee - Math.min(750, tdee * 0.2)) : goal === 'gain' ? tdee + Math.min(400, tdee * 0.1) : tdee;
+    kcal = Math.round(kcal / 10) * 10;
+    var protein = Math.round((lbm ? 2.2 * lbm : 1.8 * kg) / 5) * 5;
+    var coach = n.kcal ? true : false;
+    if (n.kcal) kcal = +n.kcal; if (n.protein) protein = +n.protein;
+    var fat = Math.round(kcal * 0.27 / 9 / 5) * 5, carbs = Math.max(0, Math.round((kcal - protein * 4 - fat * 9) / 4 / 5) * 5);
+    return { goal: goal, n: n, kcal: kcal, protein: protein, fat: fat, carbs: carbs, bmr: Math.round(bmr), bmrFrom: bmrFrom, tdee: Math.round(tdee / 10) * 10, factor: factor, steps: steps, wpw: wpw, scanDate: (scan || w).date, coach: coach, lbm: lbm };
+  }
+  function nutLine() {
+    var p = nutPlan(); if (p.missing) return '';
+    return '<div class="tk-card nut-mini"><span class="tk-tag">Daily target</span><div class="li"><div class="grow"><b>' + nf(p.kcal) + ' kcal · ' + p.protein + ' g protein</b><span class="tk-small">' + (p.coach ? 'Set by your coach' : GOALS.filter(function (g) { return g[0] === p.goal; })[0][1] + ' · from your scan on ' + fmtDay(p.scanDate, { day: 'numeric', month: 'short' })) + '</span></div><button type="button" class="tk-btn sm plain" id="goNut">Details</button></div></div>';
+  }
+  function nutCard() {
+    var p = nutPlan(), coachView = isCoach(), who = viewingOther() ? esc((S.target.name || 'Client').split(' ')[0]) + '\'s' : 'Your';
+    var h = '<div class="tk-card gold nut" id="nutCard"><span class="tk-tag">Nutrition</span><h2 class="tk-h2" style="margin:4px 0 6px">' + who + ' daily calories</h2>';
+    h += '<div class="chips" role="group" aria-label="Goal">' + GOALS.map(function (g) { return '<button type="button" data-ngoal="' + g[0] + '" aria-pressed="' + (p.goal === g[0]) + '">' + g[1] + '</button>'; }).join('') + '</div>';
+    if (p.missing === 'weight') return h + '<p class="tk-muted">Log your weight below to get your daily calorie target.</p></div>';
+    if (p.missing === 'scan') return h + '<p class="tk-muted">Log a body composition scan (InBody or similar) with your BMR or body fat, and we\'ll work out your daily calories from it.</p></div>';
+    h += '<div class="nut-big"><b>' + nf(p.kcal) + '</b><span>kcal a day</span></div>';
+    h += '<div class="nut-macros"><div><b>' + p.protein + ' g</b><span>Protein</span></div><div><b>' + p.carbs + ' g</b><span>Carbs</span></div><div><b>' + p.fat + ' g</b><span>Fat</span></div></div>';
+    if (p.coach) h += '<p class="tk-small nut-set">✓ Set by your coach</p>';
+    h += '<details class="nut-how"><summary class="tk-link">How we worked this out</summary><ul class="tk-small">' +
+      '<li>Resting burn (BMR): <b>' + nf(p.bmr) + ' kcal</b> ' + (p.bmrFrom === 'scan' ? 'from your scan' : 'calculated from your lean mass') + ' on ' + fmtDay(p.scanDate, { day: 'numeric', month: 'short' }) + '.</li>' +
+      '<li>Activity: ' + (p.steps != null ? nf(p.steps) + ' steps a day' : 'steps not logged yet, so we assume light activity') + ' and ' + r1(p.wpw) + ' workouts a week, so you burn about <b>' + nf(p.tdee) + ' kcal</b> a day.</li>' +
+      '<li>Goal: ' + (p.goal === 'lose' ? 'a moderate deficit (up to 20%, never below your BMR) to lose fat while keeping muscle.' : p.goal === 'gain' ? 'a small surplus (about 10%) to build muscle with minimal fat.' : 'eat around what you burn to keep your weight steady.') + '</li>' +
+      '<li>Protein: ' + (p.lbm ? '2.2 g per kg of lean mass (' + r1(p.lbm) + ' kg)' : '1.8 g per kg of body weight') + ', to protect and build muscle.</li>' +
+      '<li>It updates by itself with every new scan and as your steps and training change.</li></ul></details>';
+    h += '<p class="tk-small" style="margin-top:8px">Check what your meals cost with our <a href="/dubai-food-calories.html" target="_blank" rel="noopener">Dubai food calories</a> guide. This is general guidance, not medical advice' + (viewingOther() ? '' : '; if you have a medical condition, check with your doctor') + '.</p>';
+    if (coachView) {
+      h += '<details class="nut-ovr"' + (p.coach ? ' open' : '') + '><summary class="tk-link">Coach: set a custom target</summary><div class="tk-grid2"><div class="tk-field"><label for="nK">Calories</label><input class="tk-input" id="nK" inputmode="numeric" placeholder="' + p.kcal + '" value="' + (p.n.kcal || '') + '"></div><div class="tk-field"><label for="nP">Protein g</label><input class="tk-input" id="nP" inputmode="numeric" placeholder="' + p.protein + '" value="' + (p.n.protein || '') + '"></div></div><div class="tk-grid2" style="margin-top:10px"><button type="button" class="tk-btn sm" id="nSave">Save target</button>' + (p.coach ? '<button type="button" class="tk-btn sm plain" id="nClear">Use automatic</button>' : '') + '</div></details>';
+    }
+    return h + '</div>';
+  }
+  function wireNut(root) {
+    async function save(n) {
+      var r = await sb.from('profiles').update({ nutrition: n }).eq('id', S.target.id);
+      if (r.error) { toast('Could not save: ' + r.error.message); return false; }
+      S.target.nutrition = n; if (S.target.id === S.me.id) S.me.nutrition = n; return true;
+    }
+    root.querySelectorAll('[data-ngoal]').forEach(function (b) { b.onclick = async function () { var n = Object.assign({}, S.target.nutrition || {}, { goal: b.dataset.ngoal }); if (await save(n)) { ev('tracker_nut_goal', { goal: n.goal }); render(); } }; });
+    if ($('nSave')) $('nSave').onclick = async function () {
+      var k = parseInt($('nK').value, 10), pr = parseInt($('nP').value, 10);
+      if (!(k >= 1000 && k <= 6000)) return toast('Calories should be between 1,000 and 6,000');
+      if ($('nP').value && !(pr >= 40 && pr <= 400)) return toast('Protein should be between 40 and 400 g');
+      var n = Object.assign({}, S.target.nutrition || {}, { kcal: k, protein: pr || null, set_by: S.me.id });
+      if (await save(n)) { toast('Target saved'); render(); }
+    };
+    if ($('nClear')) $('nClear').onclick = async function () { var n = Object.assign({}, S.target.nutrition || {}); delete n.kcal; delete n.protein; delete n.set_by; if (await save(n)) { toast('Back to automatic'); render(); } };
+  }
+
   // ---------- PROGRESS ----------
   function renderProgress() {
     var v = $('view'), W = S.workouts;
