@@ -44,7 +44,7 @@
   var ICON_PLAY = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M10 8.5v7l5.5-3.5z" fill="currentColor" stroke="none"/></svg>';
   var CATS = []; EX.forEach(function (e) { if (CATS.indexOf(e.cat) < 0) CATS.push(e.cat); });
 
-  var S = { user: null, me: null, target: null, tab: 'today', programs: [], workouts: [], body: [], habits: [], hDay: null, clients: null, draft: null, cal: null, calDay: null, chart: {}, progEx: null, rest: null };
+  var S = { user: null, me: null, target: null, tab: 'today', programs: [], workouts: [], body: [], habits: [], hDay: null, food: [], fDay: null, clients: null, draft: null, cal: null, calDay: null, chart: {}, progEx: null, rest: null };
 
   // ---------- helpers ----------
   function $(id) { return document.getElementById(id); }
@@ -200,9 +200,10 @@
       sb.from('programs').select('*').eq('client_id', id).order('updated_at', { ascending: false }),
       sb.from('workouts').select('*').eq('user_id', id).order('date', { ascending: false }).order('created_at', { ascending: false }).limit(1000),
       sb.from('body_logs').select('*').eq('user_id', id).order('date', { ascending: true }).limit(1000),
-      sb.from('habit_logs').select('*').eq('user_id', id).order('date', { ascending: true }).limit(400)
+      sb.from('habit_logs').select('*').eq('user_id', id).order('date', { ascending: true }).limit(400),
+      sb.from('food_logs').select('*').eq('user_id', id).gte('date', iso(new Date(Date.now() - 60 * 864e5))).order('created_at', { ascending: true }).limit(2000)
     ]);
-    S.programs = q[0].data || []; S.workouts = q[1].data || []; S.body = q[2].data || []; S.habits = q[3].data || []; S.hDay = null; if (!viewingOther() && S.me && lsGet('mm_badges_' + S.me.id, null) == null) lsSet('mm_badges_' + S.me.id, Object.keys(badgeDates()));
+    S.programs = q[0].data || []; S.workouts = q[1].data || []; S.body = q[2].data || []; S.habits = q[3].data || []; S.hDay = null; S.food = q[4].data || []; S.fDay = null; if (!viewingOther() && S.me && lsGet('mm_badges_' + S.me.id, null) == null) lsSet('mm_badges_' + S.me.id, Object.keys(badgeDates()));
     S.draft = lsGet('mm_draft_' + id, null); S.overview = false; LIVE.lastRev = (S.draft && S.draft.rev) || 0;
     try { var lv = await sb.from('live_workouts').select('*').eq('user_id', id).maybeSingle(); if (lv && lv.data && (+lv.data.rev || 0) > LIVE.lastRev) { LIVE.lastRev = +lv.data.rev; S.draft = lv.data.data || null; lsSet('mm_draft_' + id, S.draft); } else if (S.draft) pushLive(); } catch (e) {}
     startLive();
@@ -264,7 +265,7 @@
     $('nav').innerHTML = tabs.map(function (t) { return '<button type="button" data-tab="' + t[0] + '"' + (S.tab === t[0] ? ' aria-current="page"' : '') + '>' + ICON[t[0]] + t[1] + '</button>'; }).join('');
     $('nav').querySelectorAll('button').forEach(function (b) { b.onclick = function () { S.tab = b.dataset.tab; render(); window.scrollTo(0, 0); }; });
     Object.keys(S.chart).forEach(function (k) { try { S.chart[k].destroy(); } catch (e) {} delete S.chart[k]; });
-    ({ today: renderToday, plan: renderPlan, body: renderBody, progress: renderProgress, history: renderHistory, clients: renderClients, hub: renderHub, workouts: renderWorkouts, exercises: renderExercises, menu: renderMenu, habits: renderHabits })[S.tab]();
+    ({ today: renderToday, plan: renderPlan, body: renderBody, progress: renderProgress, history: renderHistory, clients: renderClients, hub: renderHub, workouts: renderWorkouts, exercises: renderExercises, menu: renderMenu, habits: renderHabits, food: renderFood })[S.tab]();
     if (S.tab === 'today' && !isCoach() && !(S.draft && !S.overview)) coachCard().then(function (html) { if (html && S.tab === 'today' && !(S.draft && !S.overview) && !$('view').querySelector('.coach-card')) $('view').insertAdjacentHTML('beforeend', html); });
   }
 
@@ -281,6 +282,7 @@
     h += '<h1 class="tk-h1">' + (viewingOther() ? esc(S.target.name || 'Client') + '\'s <em>training</em>' : 'Hi ' + esc(name || 'there') + ', ready to <em>train?</em>') + '</h1>';
     h += '<div class="tk-grid3" style="margin-top:14px"><div class="tk-stat"><b>' + thisWeekCount() + '</b><span>This week</span></div><div class="tk-stat"><b>' + weekStreak() + '</b><span>Week streak</span></div><div class="tk-stat"><b>' + S.workouts.length + '</b><span>Workouts</span></div></div>';
     h += todayHabitsCard();
+    h += todayFoodCard();
     if (prog && (prog.days || []).length) {
       h += '<div class="tk-card gold"><span class="tk-tag">Your programme</span><h2 class="tk-h2" style="margin:4px 0 6px">' + esc(prog.name) + '</h2>' + (prog.notes ? '<p class="tk-muted">' + esc(prog.notes) + '</p>' : '');
       prog.days.forEach(function (d, i) {
@@ -293,14 +295,13 @@
     h += '<div class="tk-row" style="margin-top:14px"><button type="button" class="tk-btn ' + (prog && !viewingOther() ? 'ghost ' : '') + 'block" id="startEmpty">' + (isCoach() ? 'Start an empty workout' : 'Start a workout') + '</button></div>';
     if (lastW) h += '<div class="tk-card"><span class="tk-tag">Last workout</span><div class="li"><div class="grow"><b>' + esc(lastW.title || 'Workout') + '</b><span class="tk-small">' + fmtDay(lastW.date) + ' · ' + (lastW.exercises || []).length + ' exercises' + (lastW.duration_min ? ' · ' + lastW.duration_min + ' min' : '') + (kcalOf(lastW) ? ' · ' + kcalLabel(lastW) : '') + '</span></div></div></div>';
     h += '<div class="tk-card"><span class="tk-tag">Body weight</span><div class="li"><div class="grow"><b>' + (lastB && lastB.weight ? lastB.weight + ' kg' : 'Not logged yet') + '</b><span class="tk-small">' + (lastB ? 'Last logged ' + daysAgo(lastB.date) : 'Track your weight weekly for the clearest trend') + '</span></div><button type="button" class="tk-btn sm plain" id="goBody">Log</button></div></div>';
-    h += nutLine();
     v.innerHTML = h;
     v.querySelectorAll('[data-startday]').forEach(function (b) { b.onclick = function () { if (S.draft && !confirmBox('You have a workout in progress (' + (S.draft.title || 'Workout') + '). Discard it and start ' + (prog.days[+b.dataset.startday].name || 'this day') + '?')) return; startDraft(prog, +b.dataset.startday); }; });
     if ($('startEmpty')) $('startEmpty').onclick = function () { if (S.draft && !confirmBox('You have a workout in progress. Discard it and start an empty one?')) return; startDraft(null); };
     if ($('resumeW')) $('resumeW').onclick = function () { S.overview = false; render(); window.scrollTo(0, 0); };
     $('goBody').onclick = function () { S.tab = 'body'; render(); };
     wireHabitCard(v); $('goHabits').onclick = function () { go('habits'); };
-    if ($('goNut')) $('goNut').onclick = function () { go('body'); setTimeout(function () { var c = $('nutCard'); if (c) c.scrollIntoView({ block: 'start' }); }, 50); };
+    $('goFood').onclick = function () { go('food'); }; $('addFoodT').onclick = function () { openAddFood(); };
   }
 
   function startDraft(prog, dayIdx) {
@@ -1485,6 +1486,166 @@
     if ($('nClear')) $('nClear').onclick = async function () { var n = Object.assign({}, S.target.nutrition || {}); delete n.kcal; delete n.protein; delete n.set_by; if (await save(n)) { toast('Back to automatic'); render(); } };
   }
 
+  // ---------- FOOD LOG (search the food list, photo AI estimate, or custom) ----------
+  var FOODS = (window.MM_FOODS || []).map(function (r) { return { name: r[0], ar: r[1], portion: r[2], g: r[3], unit: r[4], kcal: r[5], p: r[6], c: r[7], f: r[8], kw: r[9] || '' }; });
+  var MEALS = [['breakfast', 'Breakfast'], ['lunch', 'Lunch'], ['dinner', 'Dinner'], ['snack', 'Snacks']];
+  function mealNow() { var h = new Date().getHours(); return h < 11 ? 'breakfast' : h < 16 ? 'lunch' : h < 18 ? 'snack' : 'dinner'; }
+  function fDay(d) { return (S.food || []).filter(function (x) { return x.date === d; }); }
+  function fTot(d) { var t = { kcal: 0, p: 0, c: 0, f: 0, n: 0 }; fDay(d).forEach(function (x) { t.kcal += x.kcal || 0; t.p += +x.protein || 0; t.c += +x.carbs || 0; t.f += +x.fat || 0; t.n++; }); return t; }
+  function normQ(s) { return String(s || '').toLowerCase().replace(/[^\w؀-ۿ\s]/g, ' ').split(/\s+/).filter(Boolean).map(function (w) { return w.length > 3 ? w.replace(/(es|s)$/, '') : w; }); }
+  function searchFoods(q) {
+    var t = normQ(q); if (!t.length) return [];
+    var res = [];
+    FOODS.forEach(function (f) {
+      var hay = (f.name + ' ' + f.ar + ' ' + f.kw).toLowerCase(), score = 0, all = true;
+      t.forEach(function (w) { if (hay.indexOf(w) > -1) score += f.name.toLowerCase().indexOf(w) === 0 ? 3 : f.name.toLowerCase().indexOf(w) > -1 ? 2 : 1; else all = false; });
+      if (all) res.push({ f: f, s: score - (f.unit === 'portion' ? 0.5 : 0) });
+    });
+    return res.sort(function (a, b) { return b.s - a.s; }).slice(0, 25).map(function (x) { return x.f; });
+  }
+  function recentFoods() {
+    var seen = {}, out = [];
+    (S.food || []).slice().reverse().forEach(function (x) { if (out.length < 8 && !seen[x.name]) { seen[x.name] = 1; out.push(x); } });
+    return out;
+  }
+  function macroBar(label, val, goal, unit) {
+    var p = goal ? Math.min(100, Math.round(val / goal * 100)) : 0, over = goal && val > goal * 1.05;
+    return '<div class="fd-mac"><div class="fd-mac-top"><span>' + label + '</span><b>' + Math.round(val) + (goal ? ' <small>/ ' + Math.round(goal) + ' ' + unit + '</small>' : ' ' + unit) + '</b></div><div class="hb-bar' + (over ? ' over' : p >= 95 ? ' done' : '') + '"><i style="width:' + p + '%"></i></div></div>';
+  }
+  function foodSummary(d, big) {
+    var t = fTot(d), plan = nutPlan(), goal = plan.missing ? null : plan, left = goal ? goal.kcal - Math.round(t.kcal) : null;
+    var h = '<div class="fd-sum' + (big ? ' big' : '') + '"><div class="fd-kcal"><b>' + nf(t.kcal) + '</b><span>' + (goal ? 'of ' + nf(goal.kcal) + ' kcal' : 'kcal eaten') + '</span>' +
+      (goal ? '<em class="' + (left < 0 ? 'over' : '') + '">' + (left >= 0 ? nf(left) + ' kcal left' : nf(-left) + ' kcal over') + '</em>' : '') + '</div>';
+    if (goal) h += '<div class="hb-bar fd-main' + (left < 0 ? ' over' : '') + '"><i style="width:' + Math.min(100, Math.round(t.kcal / goal.kcal * 100)) + '%"></i></div>';
+    h += '<div class="fd-macs">' + macroBar('Protein', t.p, goal && goal.protein, 'g') + macroBar('Carbs', t.c, goal && goal.carbs, 'g') + macroBar('Fat', t.f, goal && goal.fat, 'g') + '</div>';
+    if (!goal && big) h += '<p class="tk-small" style="margin-top:8px">Log a body scan in the Body tab to see your daily target here.</p>';
+    return h + '</div>';
+  }
+  function todayFoodCard() {
+    var who = viewingOther() ? esc((S.target.name || 'Client').split(' ')[0]) + '\'s food today' : 'Food today';
+    return '<div class="tk-card fd-card"><div class="hb-head"><span class="tk-tag">' + who + '</span><button type="button" class="tk-btn sm plain" id="goFood">Food log</button></div>' + foodSummary(today(), false) + '<button type="button" class="tk-btn block" id="addFoodT" style="margin-top:12px">+ Add food</button></div>';
+  }
+  function renderFood() {
+    var v = $('view'); if (!S.fDay || S.fDay > today()) S.fDay = today();
+    var d = S.fDay, days = hLastDays(7);
+    var h = '<button type="button" class="tk-link hb-back" id="fBack">← Today</button><h1 class="tk-h1">Food <em>log</em></h1><p class="tk-sub">Search 200+ foods, snap a photo of your meal, or add your own. Everything adds up against your daily target.</p>';
+    h += '<div class="chips hb-days" role="group" aria-label="Choose a day">' + days.slice().reverse().map(function (x) { var n = fDay(x).length; return '<button type="button" data-fd="' + x + '" aria-pressed="' + (x === d) + '">' + (x === today() ? 'Today' : fmtDay(x, { weekday: 'short', day: 'numeric' })) + (n ? ' <span class="hb-dot" aria-label="logged">•</span>' : '') + '</button>'; }).join('') + '</div>';
+    h += '<div class="tk-card">' + foodSummary(d, true) + '</div>';
+    MEALS.forEach(function (m) {
+      var it = fDay(d).filter(function (x) { return x.meal === m[0]; }), k = it.reduce(function (a, x) { return a + (x.kcal || 0); }, 0);
+      h += '<div class="tk-card fd-meal"><div class="hb-head"><h2 class="tk-h2" style="margin:0">' + m[1] + '</h2><span class="tk-small">' + (k ? nf(k) + ' kcal' : '') + '</span></div>';
+      it.forEach(function (x) { h += '<div class="li"><div class="grow"><b>' + esc(x.name) + (x.source === 'ai' ? ' <span class="pill" title="Estimated from a photo">📷</span>' : '') + '</b><span class="tk-small">' + (x.amount ? esc(x.amount) + ' · ' : '') + nf(x.kcal) + ' kcal' + (x.protein != null ? ' · ' + r1(+x.protein) + ' g protein' : '') + '</span></div><button type="button" class="tk-icon-btn" data-delf="' + x.id + '" aria-label="Remove ' + esc(x.name) + '">' + ICON.trash + '</button></div>'; });
+      h += '<button type="button" class="tk-btn sm ghost fd-add" data-addmeal="' + m[0] + '">+ Add to ' + m[1].toLowerCase() + '</button></div>';
+    });
+    var wk = days.map(function (x) { return fTot(x); }).filter(function (t) { return t.n; });
+    if (wk.length > 1) { var av = function (k) { return wk.reduce(function (a, t) { return a + t[k]; }, 0) / wk.length; }; h += '<div class="tk-card"><span class="tk-tag">7-day average (days logged)</span><div class="tk-grid2" style="margin-top:8px"><div class="tk-stat"><b>' + nf(av('kcal')) + '</b><span>Kcal a day</span></div><div class="tk-stat"><b>' + Math.round(av('p')) + ' g</b><span>Protein a day</span></div></div></div>'; }
+    h += '<p class="tk-small" style="margin-top:12px">Food values are typical estimates. Photo estimates are a guide: check the portions before adding.</p>';
+    v.innerHTML = h;
+    $('fBack').onclick = function () { go('today'); };
+    v.querySelectorAll('[data-fd]').forEach(function (b) { b.onclick = function () { S.fDay = b.dataset.fd; render(); }; });
+    v.querySelectorAll('[data-addmeal]').forEach(function (b) { b.onclick = function () { openAddFood(b.dataset.addmeal, d); }; });
+    v.querySelectorAll('[data-delf]').forEach(function (b) { b.onclick = async function () {
+      var r = await sb.from('food_logs').delete().eq('id', b.dataset.delf); if (r.error) return toast(r.error.message);
+      S.food = S.food.filter(function (x) { return x.id !== b.dataset.delf; }); toast('Removed'); render();
+    }; });
+  }
+  async function addFoodRows(rows) {
+    var r = await sb.from('food_logs').insert(rows).select();
+    if (r.error) { toast('Could not save: ' + r.error.message); return false; }
+    S.food = (S.food || []).concat(r.data || []); ev('tracker_food_added', { n: rows.length, source: rows[0].source });
+    return true;
+  }
+  function openAddFood(meal, date) {
+    meal = meal || mealNow(); date = date || today();
+    var m = modal('Add food', '<div class="chips fd-tabs" role="tablist"><button type="button" role="tab" data-ftab="search" aria-pressed="true">🔍 Search</button><button type="button" role="tab" data-ftab="photo" aria-pressed="false">📷 Photo</button><button type="button" role="tab" data-ftab="custom" aria-pressed="false">✏️ My own</button></div>' +
+      '<div class="tk-field" style="margin-top:6px"><label for="fMeal">Meal</label><select class="tk-select" id="fMeal">' + MEALS.map(function (x) { return '<option value="' + x[0] + '"' + (x[0] === meal ? ' selected' : '') + '>' + x[1] + (date !== today() ? ' · ' + fmtDay(date, { weekday: 'short', day: 'numeric' }) : '') + '</option>'; }).join('') + '</select></div><div id="fPane"></div>');
+    function meal_() { return $('fMeal').value; }
+    function base(o) { return { user_id: S.target.id, date: date, meal: meal_(), source: 'db' }; }
+    function done() { m.close(); render(); }
+    function tab(t) { m.querySelectorAll('[data-ftab]').forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.ftab === t)); }); ({ search: paneSearch, photo: panePhoto, custom: paneCustom })[t](); }
+    m.querySelectorAll('[data-ftab]').forEach(function (b) { b.onclick = function () { tab(b.dataset.ftab); }; });
+
+    function paneSearch() {
+      var rec = recentFoods();
+      $('fPane').innerHTML = '<div class="tk-field"><label for="fQ" class="sr">Search foods</label><input class="tk-input" id="fQ" type="search" placeholder="e.g. chicken breast, basmati rice, shawarma" autocomplete="off"></div><div id="fRes" class="fd-res">' +
+        (rec.length ? '<p class="tk-small" style="margin:10px 0 4px">Recent</p>' + rec.map(function (x, i) { return '<button type="button" class="pick-item" data-rec="' + i + '"><div style="min-width:0"><b>' + esc(x.name) + '</b><span>' + (x.amount ? esc(x.amount) + ' · ' : '') + nf(x.kcal) + ' kcal</span></div><span aria-hidden="true">+</span></button>'; }).join('') : '<p class="tk-small" style="margin-top:10px">Type a food to search. Foods marked per 100 g let you enter the exact weight.</p>') + '</div>';
+      rec.forEach(function (x, i) { var b = m.querySelector('[data-rec="' + i + '"]'); if (b) b.onclick = async function () { b.disabled = true; var o = base(); ['name', 'amount', 'kcal', 'protein', 'carbs', 'fat', 'source'].forEach(function (k) { o[k] = x[k]; }); o.meal = meal_(); if (await addFoodRows([o])) { toast('Added ' + x.name); done(); } }; });
+      var q = $('fQ'); q.focus();
+      q.oninput = function () {
+        var list = searchFoods(q.value);
+        $('fRes').innerHTML = list.length ? list.map(function (f, i) { return '<button type="button" class="pick-item" data-fi="' + i + '"><div style="min-width:0"><b>' + esc(f.name) + '</b><span>' + esc(f.portion) + ' · ' + nf(f.kcal) + ' kcal · ' + f.p + ' g protein</span></div><span aria-hidden="true">›</span></button>'; }).join('') : (q.value.trim() ? '<p class="tk-small" style="margin-top:10px">Nothing found. Try another word, or add it under ✏️ My own.</p>' : '');
+        $('fRes').querySelectorAll('[data-fi]').forEach(function (b) { b.onclick = function () { paneAmount(list[+b.dataset.fi]); }; });
+      };
+    }
+    function paneAmount(f) {
+      var byW = !!f.g, def = byW ? (f.unit === 'g' && f.g === 100 ? 100 : f.g) : 1;
+      $('fPane').innerHTML = '<div class="fd-pick"><b>' + esc(f.name) + '</b><span class="tk-small">' + esc(f.portion) + ' = ' + nf(f.kcal) + ' kcal</span></div>' +
+        '<div class="tk-field"><label for="fAmt">' + (byW ? 'How much? (' + (f.unit === 'ml' ? 'ml' : 'grams') + ')' : 'How many portions?') + '</label><input class="tk-input" id="fAmt" inputmode="decimal" value="' + def + '"></div>' +
+        (byW ? '' : '<div class="chips" role="group" aria-label="Quick amounts">' + [0.5, 1, 1.5, 2].map(function (x) { return '<button type="button" data-q="' + x + '">' + x + '</button>'; }).join('') + '</div>') +
+        '<div class="fd-calc" id="fCalc" aria-live="polite"></div><div class="tk-grid2" style="margin-top:12px"><button type="button" class="tk-btn ghost" id="fBackS">Back</button><button type="button" class="tk-btn" id="fAdd">Add</button></div>';
+      function calc() { var a = num($('fAmt').value) || 0, k = byW ? a / f.g : a; return { a: a, kcal: Math.round(f.kcal * k), p: r1(f.p * k), c: r1(f.c * k), f: r1(f.f * k) }; }
+      function paint() { var c = calc(); $('fCalc').innerHTML = '<b>' + nf(c.kcal) + ' kcal</b><span>' + c.p + ' g protein · ' + c.c + ' g carbs · ' + c.f + ' g fat</span>'; }
+      $('fAmt').oninput = paint; paint(); $('fAmt').select();
+      m.querySelectorAll('[data-q]').forEach(function (b) { b.onclick = function () { $('fAmt').value = b.dataset.q; paint(); }; });
+      $('fBackS').onclick = paneSearch;
+      $('fAdd').onclick = async function () {
+        var c = calc(); if (!(c.a > 0)) return toast('Enter an amount');
+        if (byW && c.a > 3000) return toast('That looks like a lot. Check the amount.');
+        this.disabled = true;
+        var o = base(); o.name = f.name; o.amount = byW ? c.a + ' ' + (f.unit === 'ml' ? 'ml' : 'g') : (c.a === 1 ? '' : c.a + ' × ') + f.portion.slice(0, 50); o.kcal = c.kcal; o.protein = c.p; o.carbs = c.c; o.fat = c.f;
+        if (await addFoodRows([o])) { toast('Added ' + f.name); done(); } else this.disabled = false;
+      };
+    }
+    function panePhoto() {
+      $('fPane').innerHTML = '<p class="tk-small" style="margin-top:8px">Take a clear photo from above with the whole plate in view. We\'ll list each food with an estimated portion; check and adjust before adding.</p><label class="tk-btn block fd-cam" for="fCam">📷 Take or choose a photo</label><input type="file" id="fCam" accept="image/*" capture="environment" class="sr"><div id="fPrev" class="b-prev" hidden></div><div id="fAi" class="ai-status" role="status" hidden></div><div id="fItems"></div>';
+      $('fCam').onchange = async function () {
+        var file = this.files[0]; if (!file) return;
+        var u = URL.createObjectURL(file), pv = $('fPrev'); pv.innerHTML = '<img src="' + u + '" alt="Your meal">'; pv.hidden = false;
+        var st = $('fAi'); st.className = 'ai-status'; st.hidden = false; st.innerHTML = '<span class="ai-spin" aria-hidden="true"></span> Looking at your meal… this usually takes 5 to 20 seconds.'; $('fItems').innerHTML = '';
+        try {
+          var data = await photoData(file, 1280, 0.82);
+          var ses = await sb.auth.getSession(), tok = ses.data && ses.data.session && ses.data.session.access_token;
+          var r = await fetch('/api/read-meal', { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + tok }, body: JSON.stringify({ image: data }) });
+          var j = await r.json().catch(function () { return {}; });
+          if (!$('fAi')) return;
+          if (r.status === 429) { st.innerHTML = 'The photo reader is busy right now. Try again in a minute, or use 🔍 Search.'; return; }
+          if (!r.ok) throw new Error(j.error || 'failed');
+          if (!j.is_food || !(j.items || []).length) { st.innerHTML = 'We couldn\'t see any food in this photo. Try another photo, or use 🔍 Search.'; return; }
+          st.className = 'ai-status ok'; st.innerHTML = '✓ Found ' + j.items.length + ' item' + (j.items.length === 1 ? '' : 's') + '. Check the portions, then add.' + (j.note ? '<br><span class="tk-small">' + esc(j.note) + '</span>' : '');
+          ev('tracker_meal_photo', { items: j.items.length });
+          showItems(j.items);
+        } catch (e) { if ($('fAi')) { st.className = 'ai-status'; st.innerHTML = 'Couldn\'t read the photo. Please try again, or use 🔍 Search.'; } }
+      };
+      function showItems(items) {
+        var box = $('fItems');
+        box.innerHTML = items.map(function (it, i) {
+          return '<div class="fd-ai" data-ai="' + i + '"><label class="fd-ai-chk"><input type="checkbox" checked data-aion="' + i + '"><span class="sr">Include ' + esc(it.name) + '</span></label><div class="fd-ai-main"><input class="tk-input fd-ai-name" value="' + esc(it.name) + '" aria-label="Food name" data-ain="' + i + '"><div class="fd-ai-row"><label>Grams <input class="tk-input" inputmode="numeric" value="' + (it.grams || '') + '" data-aig="' + i + '"></label><span class="fd-ai-k" id="aik' + i + '">' + nf(it.kcal) + ' kcal</span></div></div></div>';
+        }).join('') + '<div class="fd-calc" id="fAiTot"></div><button type="button" class="tk-btn block" id="fAiAdd" style="margin-top:12px">Add to my log</button>';
+        function cur(i) { var it = items[i], g = num(box.querySelector('[data-aig="' + i + '"]').value), k = it.grams && g ? g / it.grams : 1; return { on: box.querySelector('[data-aion="' + i + '"]').checked, name: box.querySelector('[data-ain="' + i + '"]').value.trim() || it.name, g: g, kcal: Math.round(it.kcal * k), p: it.protein != null ? r1(it.protein * k) : null, c: it.carbs != null ? r1(it.carbs * k) : null, f: it.fat != null ? r1(it.fat * k) : null }; }
+        function tot() { var t = { k: 0, p: 0 }; items.forEach(function (it, i) { var c = cur(i); $('aik' + i).textContent = nf(c.kcal) + ' kcal'; if (c.on) { t.k += c.kcal; t.p += c.p || 0; } }); $('fAiTot').innerHTML = '<b>' + nf(t.k) + ' kcal</b><span>' + r1(t.p) + ' g protein in this meal</span>'; }
+        box.querySelectorAll('input').forEach(function (x) { x.oninput = tot; x.onchange = tot; }); tot();
+        $('fAiAdd').onclick = async function () {
+          var rows = []; items.forEach(function (it, i) { var c = cur(i); if (!c.on) return; var o = base(); o.source = 'ai'; o.name = c.name.slice(0, 80); o.amount = c.g ? c.g + ' g (photo estimate)' : 'photo estimate'; o.kcal = c.kcal; o.protein = c.p; o.carbs = c.c; o.fat = c.f; rows.push(o); });
+          if (!rows.length) return toast('Tick at least one item');
+          this.disabled = true; if (await addFoodRows(rows)) { toast('Meal added'); done(); } else this.disabled = false;
+        };
+      }
+    }
+    function paneCustom() {
+      $('fPane').innerHTML = '<div class="tk-field"><label for="cN">Food</label><input class="tk-input" id="cN" maxlength="80" placeholder="e.g. Mum\'s chicken machboos"></div><div class="tk-field"><label for="cA">Amount (optional)</label><input class="tk-input" id="cA" maxlength="60" placeholder="e.g. 1 plate, 250 g"></div>' +
+        '<div class="tk-grid2"><div class="tk-field"><label for="cK">Calories</label><input class="tk-input" id="cK" inputmode="numeric"></div><div class="tk-field"><label for="cP">Protein g</label><input class="tk-input" id="cP" inputmode="decimal"></div><div class="tk-field"><label for="cC">Carbs g</label><input class="tk-input" id="cC" inputmode="decimal"></div><div class="tk-field"><label for="cF">Fat g</label><input class="tk-input" id="cF" inputmode="decimal"></div></div><p class="tk-small">Tip: the label on packaged food shows these numbers.</p><button type="button" class="tk-btn block" id="cAdd" style="margin-top:12px">Add</button>';
+      $('cN').focus();
+      $('cAdd').onclick = async function () {
+        var n = $('cN').value.trim(), k = parseInt($('cK').value, 10);
+        if (!n) return toast('Enter the food name'); if (!(k >= 0 && k <= 5000)) return toast('Enter the calories');
+        var o = base(); o.source = 'custom'; o.name = n; o.amount = $('cA').value.trim() || null; o.kcal = k;
+        [['cP', 'protein'], ['cC', 'carbs'], ['cF', 'fat']].forEach(function (x) { var v = num($(x[0]).value); o[x[1]] = v == null ? null : r1(v); });
+        this.disabled = true; if (await addFoodRows([o])) { toast('Added ' + n); done(); } else this.disabled = false;
+      };
+    }
+    paneSearch();
+  }
+
   // ---------- PROGRESS ----------
   function renderProgress() {
     var v = $('view'), W = S.workouts;
@@ -1870,8 +2031,8 @@
     h += '<h2 class="tk-h2 hub-h">Coaching</h2><div class="menu">' +
       item('hub', ICON.hub, 'Hub', 'Your day at a glance') + item('clients', ICON.clients, 'Clients', 'Everyone you coach') + item('addclient', ICON.addUser, 'Add a client', 'Invite by email or WhatsApp') +
       item('workouts', ICON.plan, 'Workouts', 'Templates you assign') + item('exercises', ICON.today, 'Exercises', 'Library with your videos') + item('notifs', ICON.bell, 'Notifications', 'Workouts started and finished') + item('leads', ICON.inbox, 'Website leads', 'Enquiries, guide downloads and calculator sign-ups') + '</div>';
-    h += '<h2 class="tk-h2 hub-h">My training</h2><div class="menu">' + item('today', ICON.today, 'Today', '') + item('plan', ICON.plan, 'My programme', '') + item('body', ICON.body, 'Body', 'Weight and measurements') + item('habits', ICON.check, 'Habits', 'Steps, water, sleep, mood') + item('progress', ICON.progress, 'Progress', '') + item('history', ICON.history, 'History', '') + '</div>';
-    h += '<h2 class="tk-h2 hub-h">Coming soon</h2><div class="menu">' + item('s', ICON.chat, 'Chat', 'Message your clients', 1) + item('s', ICON.checkin, 'Check-ins', 'Weekly progress forms and photos', 1) + item('s', ICON.food, 'Nutrition', 'Meal plans and macros', 1) + item('s', ICON.cal, 'Calendar', 'Sessions and bookings', 1) + item('s', ICON.info, 'Resources', 'Guides and files for clients', 1) + item('s', ICON.money, 'Financials', 'Payments and renewals', 1) + '</div>';
+    h += '<h2 class="tk-h2 hub-h">My training</h2><div class="menu">' + item('today', ICON.today, 'Today', '') + item('plan', ICON.plan, 'My programme', '') + item('body', ICON.body, 'Body', 'Weight and measurements') + item('habits', ICON.check, 'Habits', 'Steps, water, sleep, mood') + item('food', ICON.food, 'Food log', 'Calories and macros') + item('progress', ICON.progress, 'Progress', '') + item('history', ICON.history, 'History', '') + '</div>';
+    h += '<h2 class="tk-h2 hub-h">Coming soon</h2><div class="menu">' + item('s', ICON.chat, 'Chat', 'Message your clients', 1) + item('s', ICON.checkin, 'Check-ins', 'Weekly progress forms and photos', 1) + item('s', ICON.cal, 'Calendar', 'Sessions and bookings', 1) + item('s', ICON.info, 'Resources', 'Guides and files for clients', 1) + item('s', ICON.money, 'Financials', 'Payments and renewals', 1) + '</div>';
     h += '<div class="menu" style="margin-top:18px">' + item('settings', ICON.gear, 'Settings', 'Rest timer, sign out') + '<a class="menu-item" href="https://wa.me/971507871515" target="_blank" rel="noopener">' + ICON.info + '<span><b>Support</b><small>Something not working? Tell us</small></span><span aria-hidden="true" class="menu-arrow">›</span></a></div>';
     v.innerHTML = h;
     $('mProf').onclick = openProfile;

@@ -359,3 +359,26 @@ alter table public.workouts
 
 -- ---------- v15: daily calorie target (goal + optional coach override) ----------
 alter table public.profiles add column if not exists nutrition jsonb;
+
+-- ---------- v16: food log (search, photo AI estimate or custom entry) ----------
+create table if not exists public.food_logs (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references public.profiles(id) on delete cascade,
+  date date not null default current_date,
+  meal text not null default 'snack' check (meal in ('breakfast','lunch','dinner','snack')),
+  name text not null check (char_length(name) between 1 and 80),
+  amount text check (char_length(amount) <= 60),
+  kcal int not null check (kcal between 0 and 5000),
+  protein numeric(5,1) check (protein between 0 and 500),
+  carbs numeric(5,1) check (carbs between 0 and 800),
+  fat numeric(5,1) check (fat between 0 and 500),
+  source text not null default 'db' check (source in ('db','ai','custom')),
+  created_at timestamptz not null default now()
+);
+create index if not exists food_logs_user_date_idx on public.food_logs(user_id, date desc);
+alter table public.food_logs enable row level security;
+drop policy if exists "food read" on public.food_logs;
+create policy "food read" on public.food_logs for select using (user_id = auth.uid() or public.is_coach());
+drop policy if exists "food own" on public.food_logs;
+create policy "food own" on public.food_logs for all
+  using (user_id = auth.uid() or public.is_coach()) with check (user_id = auth.uid() or public.is_coach());

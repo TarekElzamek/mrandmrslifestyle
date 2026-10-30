@@ -778,6 +778,9 @@
   "functions": {
     "api/read-inbody.js": {
       "maxDuration": 60
+    },
+    "api/read-meal.js": {
+      "maxDuration": 60
     }
   }
 }
