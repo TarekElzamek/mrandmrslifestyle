@@ -59,6 +59,7 @@ window.MM_EXERCISES = [
 ["Meadows Row","Back","Lats, upper back","w","Landmine bar beside you, staggered stance, row the bar end to your hip."],
 // SHOULDERS
 ["Barbell Overhead Press","Shoulders","Shoulders, triceps","w","Squeeze glutes, press the bar from the collarbone straight overhead, head through at the top."],
+["Dumbbell Shoulder Press","Shoulders","Front and side delts, triceps","w","Seated or standing, dumbbells at shoulder height. Press up until your arms are straight, lower with control. Single arm: brace your core and don't lean away."],
 ["Seated Dumbbell Press","Shoulders","Shoulders","w","Back on the pad, press dumbbells overhead, lower to ear level."],
 ["Standing Dumbbell Press","Shoulders","Shoulders, core","w","Brace your core, press overhead without leaning back."],
 ["Arnold Press","Shoulders","Front and side delts","w","Start palms facing you, rotate as you press overhead."],

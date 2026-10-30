@@ -19,7 +19,9 @@
       if (S.me && !document.querySelector('.modal') && !(document.activeElement && /INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName))) render();
     } catch (e) {}
   }
-  function vidsFor(name) { return VIDS[name] || []; }
+  // Exercises that are the same movement under two names share their demo videos.
+  var VID_ALIAS = { 'Face Pulls': 'Rope Face Pull', 'Rope Face Pull': 'Face Pulls' };
+  function vidsFor(name) { return (VIDS[name] || []).concat(VID_ALIAS[name] ? VIDS[VID_ALIAS[name]] || [] : []); }
   function videoBox(name, key) {
     var vs = vidsFor(name); if (!vs.length) return '';
     var h = '<div class="ex-vid" data-vbox="' + key + '"><div class="ex-vid-frame"></div>';
