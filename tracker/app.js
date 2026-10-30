@@ -206,7 +206,7 @@
       sb.from('food_logs').select('*').eq('user_id', id).gte('date', iso(new Date(Date.now() - 60 * 864e5))).order('created_at', { ascending: true }).limit(2000)
     ]);
     S.programs = q[0].data || []; S.workouts = q[1].data || []; S.body = q[2].data || []; S.habits = q[3].data || []; S.hDay = null; S.food = q[4].data || []; S.fDay = null; if (!viewingOther() && S.me && lsGet('mm_badges_' + S.me.id, null) == null) lsSet('mm_badges_' + S.me.id, Object.keys(badgeDates()));
-    S.draft = lsGet('mm_draft_' + id, null); S.overview = false; LIVE.lastRev = (S.draft && S.draft.rev) || 0;
+    S.draft = lsGet('mm_draft_' + id, null); S.overview = true; // always open on the home page; the workout is one tap away (Resume) LIVE.lastRev = (S.draft && S.draft.rev) || 0;
     try { var lv = await sb.from('live_workouts').select('*').eq('user_id', id).maybeSingle(); if (lv && lv.data && (+lv.data.rev || 0) > LIVE.lastRev) { LIVE.lastRev = +lv.data.rev; S.draft = lv.data.data || null; lsSet('mm_draft_' + id, S.draft); } else if (S.draft) pushLive(); } catch (e) {}
     startLive();
     S.progEx = null; S.calDay = null;
@@ -280,7 +280,7 @@
     var prog = S.programs.filter(function (p) { return p.active; })[0];
     var lastW = S.workouts[0], lastB = S.body[S.body.length - 1];
     var h = '';
-    if (S.draft) h += '<div class="tk-card gold resume"><div class="li"><div class="grow"><b>Workout in progress: ' + esc(S.draft.title || 'Workout') + '</b><span class="tk-small">' + S.draft.exercises.length + ' exercises · started ' + Math.max(0, Math.round((Date.now() - S.draft.started) / 60000)) + ' min ago. Nothing is lost.</span></div><button type="button" class="tk-btn sm" id="resumeW">Resume</button></div></div>';
+    if (S.draft) { var stale = (Date.now() - S.draft.started) > 12 * 3600e3; h += '<div class="tk-card gold resume"><div class="li"><div class="grow"><b>' + (stale ? 'Unfinished workout: ' : 'Workout in progress: ') + esc(S.draft.title || 'Workout') + '</b><span class="tk-small">' + S.draft.exercises.length + (S.draft.exercises.length === 1 ? ' exercise · ' : ' exercises · ') + (stale ? 'started ' + fmtDay(iso(new Date(S.draft.started)), { weekday: 'short', day: 'numeric', month: 'short' }) + '. Finish or discard it.' : 'started ' + elapsedLabel(S.draft.started) + ' ago. Nothing is lost.') + '</span></div><button type="button" class="tk-btn sm" id="resumeW">Resume</button></div>' + (stale ? '<button type="button" class="tk-link" id="discardW" style="margin-top:8px">Discard this workout</button>' : '') + '</div>'; }
     h += '<h1 class="tk-h1">' + (viewingOther() ? esc(S.target.name || 'Client') + '\'s <em>training</em>' : 'Hi ' + esc(name || 'there') + ', ready to <em>train?</em>') + '</h1>';
     h += '<div class="tk-grid3" style="margin-top:14px"><div class="tk-stat"><b>' + thisWeekCount() + '</b><span>This week</span></div><div class="tk-stat"><b>' + weekStreak() + '</b><span>Week streak</span></div><div class="tk-stat"><b>' + S.workouts.length + '</b><span>Workouts</span></div></div>';
     h += todayHabitsCard();
@@ -301,6 +301,7 @@
     v.querySelectorAll('[data-startday]').forEach(function (b) { b.onclick = function () { if (S.draft && !confirmBox('You have a workout in progress (' + (S.draft.title || 'Workout') + '). Discard it and start ' + (prog.days[+b.dataset.startday].name || 'this day') + '?')) return; startDraft(prog, +b.dataset.startday); }; });
     if ($('startEmpty')) $('startEmpty').onclick = function () { if (S.draft && !confirmBox('You have a workout in progress. Discard it and start an empty one?')) return; startDraft(null); };
     if ($('resumeW')) $('resumeW').onclick = function () { S.overview = false; render(); window.scrollTo(0, 0); };
+    if ($('discardW')) $('discardW').onclick = function () { if (!confirmBox('Discard this unfinished workout?')) return; stopRest(); S.draft = null; saveDraft(); toast('Workout discarded'); render(); };
     $('goBody').onclick = function () { S.tab = 'body'; render(); };
     wireHabitCard(v); $('goHabits').onclick = function () { go('habits'); };
     $('goFood').onclick = function () { go('food'); }; $('addFoodT').onclick = function () { openAddFood(); };
@@ -406,7 +407,7 @@
     var mins = Math.max(0, Math.round((Date.now() - d.started) / 60000)), ed = canEditWorkout(d);
     var h = '<button type="button" class="tk-btn sm plain" id="allDays" style="margin-bottom:10px">← All workouts</button>';
     h += '<div class="tk-row"><div class="grow" style="flex:1"><label class="sr" for="wTitle">Workout name</label><input class="tk-input" id="wTitle" value="' + esc(d.title) + '" style="font-weight:700;font-size:1.1rem"></div></div>';
-    h += '<div class="tk-row tk-small" style="margin-top:6px"><span>' + fmtDay(d.date) + '</span><span>· ' + mins + ' min</span>' + (viewingOther() ? '<span class="pill gold">Logging for ' + esc(S.target.name || 'client') + '</span>' : '') + '</div>';
+    h += '<div class="tk-row tk-small" style="margin-top:6px"><span>' + fmtDay(d.date) + '</span><span>· ' + elapsedLabel(d.started) + '</span>' + (viewingOther() ? '<span class="pill gold">Logging for ' + esc(S.target.name || 'client') + '</span>' : '') + '</div>';
     d.exercises.forEach(function (ex, xi) {
       var info = EXMAP[ex.name] || {}, last = lastPerformance(ex.name), mode = ex.type === 'b' ? modeOf(ex) : null, f = fieldsFor(ex.type, mode);
       h += '<section class="ex" aria-label="' + esc(ex.name) + '"><div class="ex-head"><div><h3>' + esc(ex.name) + '</h3><div class="tk-small">' + esc(info.m || ex.cat || '') + (last ? ' · last ' + daysAgo(last.date) : '') + '</div></div><div class="ex-act">' +
@@ -535,7 +536,7 @@
     if (!exs.length) { toast('Log at least one set before finishing'); return; }
     $('finish').disabled = true;
     var prs = 0; exs.forEach(function (e) { e.sets.forEach(function (s) { if (s.pr) prs++; }); });
-    var row = { user_id: S.target.id, date: d.date, title: d.title || 'Workout', program_id: d.programId, exercises: exs, duration_min: Math.max(1, Math.round((Date.now() - d.started) / 60000)), notes: d.notes || null };
+    var row = { user_id: S.target.id, date: d.date, title: d.title || 'Workout', program_id: d.programId, exercises: exs, duration_min: Math.min(180, Math.max(1, Math.round((Date.now() - d.started) / 60000))), notes: d.notes || null };
     var est = kcalEstimate(row); if (est != null) { row.kcal = est; row.kcal_source = 'est'; }
     var r = await sb.from('workouts').insert(row).select().single();
     if (r.error) { $('finish').disabled = false; toast('Could not save: ' + r.error.message); return; }
@@ -656,6 +657,13 @@
   function notifyCoach(kind, workout, detail) {
     if (!S.me || isCoach() || viewingOther()) return;
     try { sb.functions.invoke('notify-coach', { body: { kind: kind, workout: workout || 'Workout', detail: detail || '' } }).catch(function () {}); } catch (e) {}
+  }
+  // How long a workout has been open: '25 min', '1 h 20 min', or 'since Sun 25 Oct' for one left open for days.
+  function elapsedLabel(started) {
+    var m = Math.max(0, Math.round((Date.now() - started) / 60000));
+    if (m < 60) return m + ' min';
+    if (m < 12 * 60) return Math.floor(m / 60) + ' h ' + (m % 60) + ' min';
+    return 'not finished yet';
   }
   function timeAgo(t) {
     var m = Math.round((Date.now() - new Date(t).getTime()) / 60000);
@@ -2130,5 +2138,5 @@
     $('gear').innerHTML = ICON.gear; $('gear').onclick = function () { if (S.me) openSettings(); };
     boot();
   });
-  setInterval(function () { if (S.draft && S.tab === 'today' && !document.querySelector('.modal') && document.activeElement && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') { var el = document.querySelector('.tk-row.tk-small span:nth-child(2)'); if (el) el.textContent = '· ' + Math.max(0, Math.round((Date.now() - S.draft.started) / 60000)) + ' min'; } }, 30000);
+  setInterval(function () { if (S.draft && !S.overview && S.tab === 'today' && !document.querySelector('.modal') && document.activeElement && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') { var el = document.querySelector('.tk-row.tk-small span:nth-child(2)'); if (el) el.textContent = '· ' + elapsedLabel(S.draft.started); } }, 30000);
 })();
