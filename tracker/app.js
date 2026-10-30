@@ -1069,23 +1069,42 @@
   }
   function openViewer(items, idx) {
     var w = document.createElement('div'); w.className = 'pv'; w.setAttribute('role', 'dialog'); w.setAttribute('aria-modal', 'true'); w.setAttribute('aria-label', 'Photo viewer');
-    w.innerHTML = '<div class="pv-top"><span class="pv-cap"></span><a class="pv-orig" target="_blank" rel="noopener">Open original</a><button type="button" class="pv-x" aria-label="Close">' + ICON.x + '</button></div>' +
+    w.innerHTML = '<div class="pv-top"><span class="pv-cap"></span><a class="pv-orig" target="_blank" rel="noopener">Open original</a><button type="button" class="pv-x" aria-label="Close photo">' + ICON.x + '<span>Close</span></button></div>' +
       '<div class="pv-stage"><img alt=""></div>' +
       (items.length > 1 ? '<button type="button" class="pv-nav pv-prev" aria-label="Previous photo">‹</button><button type="button" class="pv-nav pv-next" aria-label="Next photo">›</button>' : '') +
-      '<p class="pv-hint">Tap the photo to zoom in</p>';
+      '<div class="pv-bot"><p class="pv-hint">Tap the photo to zoom · swipe down to close</p><button type="button" class="pv-close2">Close</button></div>';
     var stage = w.querySelector('.pv-stage'), img = stage.querySelector('img');
     function show(i) { idx = (i + items.length) % items.length; stage.classList.remove('zoom'); img.src = items[idx].url; img.alt = 'Photo, ' + items[idx].cap; w.querySelector('.pv-cap').textContent = items[idx].cap + (items.length > 1 ? '  ·  ' + (idx + 1) + ' of ' + items.length : ''); w.querySelector('.pv-orig').href = items[idx].url; }
-    function close() { w.remove(); document.removeEventListener('keydown', key); document.body.style.overflow = ''; }
+    var closed = false;
+    function close(fromBack) {
+      if (closed) return; closed = true;
+      w.remove(); document.removeEventListener('keydown', key); window.removeEventListener('popstate', onBack); document.body.style.overflow = '';
+      if (!fromBack && history.state && history.state.mmViewer) history.back();
+    }
+    function onBack() { close(true); }
     function key(e) { if (e.key === 'Escape') close(); else if (e.key === 'ArrowRight') show(idx + 1); else if (e.key === 'ArrowLeft') show(idx - 1); }
     img.onclick = function (e) {
       var zoomed = stage.classList.toggle('zoom');
       if (zoomed) { var rc = img.getBoundingClientRect(), fx = (e.clientX - rc.left) / rc.width, fy = (e.clientY - rc.top) / rc.height; requestAnimationFrame(function () { stage.scrollLeft = fx * stage.scrollWidth - stage.clientWidth / 2; stage.scrollTop = fy * stage.scrollHeight - stage.clientHeight / 2; }); }
     };
-    w.querySelector('.pv-x').onclick = close;
-    w.addEventListener('click', function (e) { if (e.target === w || e.target === stage) close(); });
+    w.querySelector('.pv-x').onclick = function () { close(); };
+    w.querySelector('.pv-close2').onclick = function () { close(); };
+    w.addEventListener('click', function (e) { if (e.target === w || e.target === stage || e.target.classList.contains('pv-bot')) close(); });
     if (items.length > 1) { w.querySelector('.pv-prev').onclick = function () { show(idx - 1); }; w.querySelector('.pv-next').onclick = function () { show(idx + 1); }; }
-    var sx = null; stage.addEventListener('touchstart', function (e) { sx = e.touches.length === 1 && !stage.classList.contains('zoom') ? e.touches[0].clientX : null; }, { passive: true });
-    stage.addEventListener('touchend', function (e) { if (sx == null) return; var dx = e.changedTouches[0].clientX - sx; if (Math.abs(dx) > 50 && items.length > 1) show(idx + (dx < 0 ? 1 : -1)); sx = null; });
+    // Swipe left/right = next/previous photo, swipe down = close (only when not zoomed in).
+    var sx = null, sy = null;
+    stage.addEventListener('touchstart', function (e) { var ok = e.touches.length === 1 && !stage.classList.contains('zoom'); sx = ok ? e.touches[0].clientX : null; sy = ok ? e.touches[0].clientY : null; }, { passive: true });
+    stage.addEventListener('touchmove', function (e) { if (sy == null) return; var dy = e.touches[0].clientY - sy; if (dy > 0) { img.style.transform = 'translateY(' + dy + 'px)'; img.style.opacity = String(Math.max(0.3, 1 - dy / 400)); } }, { passive: true });
+    stage.addEventListener('touchend', function (e) {
+      if (sx == null) return;
+      var dx = e.changedTouches[0].clientX - sx, dy = e.changedTouches[0].clientY - sy;
+      img.style.transform = ''; img.style.opacity = '';
+      if (dy > 90 && Math.abs(dy) > Math.abs(dx)) close();
+      else if (Math.abs(dx) > 50 && items.length > 1) show(idx + (dx < 0 ? 1 : -1));
+      sx = sy = null;
+    });
+    // The phone's Back button / back gesture closes the photo instead of leaving the page.
+    try { history.pushState({ mmViewer: 1 }, ''); window.addEventListener('popstate', onBack); } catch (e2) {}
     document.addEventListener('keydown', key); document.body.appendChild(w); document.body.style.overflow = 'hidden';
     show(idx); w.querySelector('.pv-x').focus();
   }

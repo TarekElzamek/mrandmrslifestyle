@@ -240,17 +240,20 @@ details.wk .wk-body b{color:var(--text);font-weight:600}
 .ph-btn{all:unset;cursor:zoom-in;display:block;border-radius:10px}
 .ph-btn:focus-visible{outline:2px solid var(--gold,#C9A84C);outline-offset:2px}
 .pv{position:fixed;inset:0;z-index:5000;background:#000;display:flex;flex-direction:column}
-.pv-top{display:flex;align-items:center;gap:12px;padding:12px 14px;color:#fff;font-size:.9rem}
+.pv-top{display:flex;align-items:center;gap:12px;padding:10px 12px;padding-top:max(10px,env(safe-area-inset-top));color:#fff;font-size:.9rem;background:#000;position:relative;z-index:2}
 .pv-cap{flex:1;min-width:0;opacity:.85}
 .pv-orig{color:var(--gold,#C9A84C);font-size:.85rem;text-decoration:underline}
-.pv-x{background:rgba(255,255,255,.1);border:0;color:#fff;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;cursor:pointer}
+.pv-x{background:#1d1d1d;border:1.5px solid var(--gold,#C9A84C);color:#fff;min-height:48px;padding:0 16px 0 12px;border-radius:999px;display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:.95rem;cursor:pointer;flex-shrink:0}
 .pv-stage{flex:1;overflow:auto;display:flex;align-items:center;justify-content:center;padding:0 8px 8px;-webkit-overflow-scrolling:touch}
 .pv-stage img{max-width:100%;max-height:100%;object-fit:contain;cursor:zoom-in;border-radius:6px}
 .pv-stage.zoom{display:block}
 .pv-stage.zoom img{max-width:none;max-height:none;width:240%;cursor:zoom-out}
 .pv-nav{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.12);border:0;color:#fff;font-size:2rem;width:48px;height:64px;border-radius:10px;cursor:pointer}
 .pv-prev{left:8px}.pv-next{right:8px}
-.pv-hint{text-align:center;color:rgba(255,255,255,.5);font-size:.75rem;margin:0 0 10px}
+.pv-hint{text-align:center;color:rgba(255,255,255,.5);font-size:.75rem;margin:0 0 8px}
+.pv-bot{padding:6px 16px;padding-bottom:max(12px,env(safe-area-inset-bottom));background:#000;position:relative;z-index:2}
+.pv-close2{display:block;width:100%;max-width:420px;margin:0 auto;min-height:52px;border-radius:12px;border:0;background:var(--gold,#C9A84C);color:#0a0a0a;font-weight:700;font-size:1rem;cursor:pointer}
+.pv-stage img{transition:opacity .15s}
 @media(min-width:900px){.pv-stage.zoom img{width:160%}}
 /* InBody auto-read */
 .ai-status{margin-top:8px;padding:10px 12px;border-radius:10px;background:rgba(255,255,255,.05);font-size:.85rem;line-height:1.5}
