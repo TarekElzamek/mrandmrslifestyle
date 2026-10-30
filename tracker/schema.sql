@@ -336,3 +336,18 @@ drop policy if exists "habits own" on public.habit_logs;
 create policy "habits own" on public.habit_logs for all
   using (user_id = auth.uid() or public.is_coach()) with check (user_id = auth.uid() or public.is_coach());
 alter table public.profiles add column if not exists habit_goals jsonb;
+
+-- ---------- v13: daily habit reminder (push) ----------
+alter table public.profiles add column if not exists habit_reminder jsonb;
+create table if not exists public.private_config (key text primary key, value text not null);
+alter table public.private_config enable row level security;  -- no policies: only the server (secret key) can read it
+insert into public.private_config (key, value) values ('cron_secret', md5(random()::text || clock_timestamp()::text) || md5(random()::text)) on conflict (key) do nothing;
+create extension if not exists pg_cron;
+create extension if not exists pg_net;
+select cron.unschedule('habit-reminders') where exists (select 1 from cron.job where jobname = 'habit-reminders');
+select cron.schedule('habit-reminders', '0 * * * *', $cron$
+  select net.http_post(
+    url := 'https://iwtkphupsobwiaiqvkok.supabase.co/functions/v1/habit-reminders',
+    headers := jsonb_build_object('Content-Type', 'application/json', 'x-cron-secret', (select value from public.private_config where key = 'cron_secret')),
+    body := '{}'::jsonb, timeout_milliseconds := 30000);
+$cron$);

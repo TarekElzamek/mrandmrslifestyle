@@ -202,7 +202,7 @@
       sb.from('body_logs').select('*').eq('user_id', id).order('date', { ascending: true }).limit(1000),
       sb.from('habit_logs').select('*').eq('user_id', id).order('date', { ascending: true }).limit(400)
     ]);
-    S.programs = q[0].data || []; S.workouts = q[1].data || []; S.body = q[2].data || []; S.habits = q[3].data || []; S.hDay = null;
+    S.programs = q[0].data || []; S.workouts = q[1].data || []; S.body = q[2].data || []; S.habits = q[3].data || []; S.hDay = null; if (!viewingOther() && S.me && lsGet('mm_badges_' + S.me.id, null) == null) lsSet('mm_badges_' + S.me.id, Object.keys(badgeDates()));
     S.draft = lsGet('mm_draft_' + id, null); S.overview = false; LIVE.lastRev = (S.draft && S.draft.rev) || 0;
     try { var lv = await sb.from('live_workouts').select('*').eq('user_id', id).maybeSingle(); if (lv && lv.data && (+lv.data.rev || 0) > LIVE.lastRev) { LIVE.lastRev = +lv.data.rev; S.draft = lv.data.data || null; lsSet('mm_draft_' + id, S.draft); } else if (S.draft) pushLive(); } catch (e) {}
     startLive();
@@ -1166,6 +1166,7 @@
       $('hWaterN').innerHTML = (x.water || 0) + ' <small>of ' + g.water + '</small>';
       $('hHits').textContent = hitsText(x, g);
       var st = $('hStreakN'); if (st) st.textContent = hStreak();
+      clearTimeout(HSAVE.badge); HSAVE.badge = setTimeout(checkBadges, 1200);
     }
     $('hSteps').oninput = function () { var v = parseInt(this.value.replace(/[^\d]/g, ''), 10); if (this.value && (isNaN(v) || v > 100000)) return; hSet(d, 'steps', isNaN(v) ? null : v); repaint(); };
     $('hSleep').oninput = function () { var v = num(this.value); if (this.value && (v == null || v < 0 || v > 24)) return; hSet(d, 'sleep', v == null ? null : r1(v)); repaint(); };
@@ -1208,11 +1209,12 @@
       var fl = hLastDays(14);
       h += '<div class="tk-card"><span class="tk-tag">Mood &amp; energy · last 14 days</span><div class="hb-moodrow">' + fl.map(function (d) { var x = hRow(d) || {}; return '<div class="hb-mday"><span class="hb-memo" aria-label="' + (x.mood ? 'Mood ' + MOODS[x.mood - 1][1] : 'No mood logged') + '">' + (x.mood ? MOODS[x.mood - 1][0] : '·') + '</span><span class="hb-en' + (x.energy ? '' : ' none') + '" style="--e:' + ((x.energy || 0) * 20) + '%" aria-label="' + (x.energy ? 'Energy ' + x.energy + ' of 5' : 'No energy logged') + '"></span><small>' + fmtDay(d, { day: 'numeric' }) + '</small></div>'; }).join('') + '</div><p class="tk-small">Emoji = mood, bar = energy. Look for patterns with your sleep and training days.</p></div>';
     } else h += '<div class="tk-empty">Log a couple of days and your 30-day charts will appear here.</div>';
+    h += reminderCard() + badgeWall();
     var notes = (S.habits || []).filter(function (x) { return x.note; }).slice(-10).reverse();
     if (notes.length) h += '<div class="tk-card"><span class="tk-tag">Recent notes</span>' + notes.map(function (x) { return '<div class="li"><div class="grow"><b>' + fmtDay(x.date) + '</b><span class="tk-small">' + esc(x.note) + '</span></div></div>'; }).join('') + '</div>';
     h += '<div class="tk-card"><h2 class="tk-h2" style="margin-top:0">' + (viewingOther() ? esc((S.target.name || 'Client').split(' ')[0]) + '\'s daily goals' : 'Your daily goals') + '</h2><p class="tk-small">' + (viewingOther() ? 'Set targets that suit this client.' : 'Your coach may adjust these for you.') + '</p><div class="tk-grid3"><div class="tk-field"><label for="hgSteps">Steps</label><input class="tk-input" id="hgSteps" inputmode="numeric" value="' + g.steps + '"></div><div class="tk-field"><label for="hgWater">Glasses</label><input class="tk-input" id="hgWater" inputmode="numeric" value="' + g.water + '"></div><div class="tk-field"><label for="hgSleep">Sleep h</label><input class="tk-input" id="hgSleep" inputmode="decimal" value="' + g.sleep + '"></div></div><button type="button" class="tk-btn ghost block" id="hgSave" style="margin-top:12px">Save goals</button></div>';
     v.innerHTML = h;
-    wireHabitCard(v);
+    wireHabitCard(v); wireReminder();
     $('hBack').onclick = function () { go('today'); };
     v.querySelectorAll('[data-hd]').forEach(function (b) { b.onclick = function () { S.hDay = b.dataset.hd; render(); }; });
     if (withData.length > 1 && window.Chart) {
@@ -1233,6 +1235,121 @@
     };
   }
 
+  // ---------- HABIT BADGES ----------
+  // [id, emoji, name, how to earn]
+  var BADGES = [
+    ['streak3', '🔥', '3-day streak', 'Log your habits 3 days in a row'],
+    ['streak7', '🔥', '7-day streak', 'Log your habits 7 days in a row'],
+    ['streak30', '🏆', '30-day streak', 'Log your habits 30 days in a row'],
+    ['streak100', '👑', '100-day streak', 'Log your habits 100 days in a row'],
+    ['perfect1', '⭐', 'Perfect day', 'Hit all 3 goals in one day'],
+    ['perfect7', '🌟', 'Perfect week', 'Hit all 3 goals 7 days in a row'],
+    ['steps10k', '👟', '10K day', 'Walk 10,000 steps in a day'],
+    ['steps10k10', '🚶', '10K club', 'Walk 10,000+ steps on 10 days'],
+    ['sleep7', '😴', 'Well rested', 'Hit your sleep goal 7 nights in a row'],
+    ['water7', '💧', 'Hydrated', 'Hit your water goal 7 days in a row'],
+    ['logs50', '📈', '50 days logged', 'Log your habits on 50 different days']
+  ];
+  // Returns { id: date earned } from the habit history, in date order.
+  function badgeDates() {
+    var g = hGoals(), rows = (S.habits || []).filter(hLogged), out = {};
+    var run = { log: 0, perf: 0, sleep: 0, water: 0 }, cnt = { log: 0, k10: 0 }, prev = null;
+    function hit(id, d) { if (!out[id]) out[id] = d; }
+    rows.forEach(function (x) {
+      var cont = prev && Math.round((parseDay(x.date) - parseDay(prev)) / 864e5) === 1;
+      if (!cont) run = { log: 0, perf: 0, sleep: 0, water: 0 };
+      run.log++; cnt.log++;
+      run.perf = hHits(x, g) === 3 ? run.perf + 1 : 0;
+      run.sleep = (+x.sleep || 0) >= g.sleep ? run.sleep + 1 : 0;
+      run.water = (x.water || 0) >= g.water ? run.water + 1 : 0;
+      if ((x.steps || 0) >= 10000) { cnt.k10++; hit('steps10k', x.date); }
+      if (run.log >= 3) hit('streak3', x.date); if (run.log >= 7) hit('streak7', x.date); if (run.log >= 30) hit('streak30', x.date); if (run.log >= 100) hit('streak100', x.date);
+      if (run.perf >= 1) hit('perfect1', x.date); if (run.perf >= 7) hit('perfect7', x.date);
+      if (cnt.k10 >= 10) hit('steps10k10', x.date);
+      if (run.sleep >= 7) hit('sleep7', x.date); if (run.water >= 7) hit('water7', x.date);
+      if (cnt.log >= 50) hit('logs50', x.date);
+      prev = x.date;
+    });
+    return out;
+  }
+  function badgeWall() {
+    var got = badgeDates(), n = Object.keys(got).length;
+    var h = '<div class="tk-card"><div class="hb-head"><span class="tk-tag">Badges</span><span class="tk-small">' + n + ' of ' + BADGES.length + ' earned</span></div><ul class="bd-grid">';
+    BADGES.forEach(function (b) {
+      var d = got[b[0]];
+      h += '<li class="bd' + (d ? ' on' : '') + '"><span class="bd-ic" aria-hidden="true">' + b[1] + '</span><b>' + b[2] + '</b><small>' + (d ? 'Earned ' + fmtDay(d, { day: 'numeric', month: 'short' }) : esc(b[3])) + '</small>' + (d ? '' : '<span class="sr">Not earned yet</span>') + '</li>';
+    });
+    return h + '</ul></div>';
+  }
+  // Celebrate badges earned since last time (own account only, never when a coach is viewing a client).
+  function checkBadges() {
+    if (viewingOther() || !S.me) return;
+    var key = 'mm_badges_' + S.me.id, seen = lsGet(key, null), got = badgeDates();
+    if (!seen) { lsSet(key, Object.keys(got)); return; }
+    var fresh = BADGES.filter(function (b) { return got[b[0]] && seen.indexOf(b[0]) < 0; });
+    if (!fresh.length) return;
+    lsSet(key, seen.concat(fresh.map(function (b) { return b[0]; })));
+    ev('tracker_badge', { badge: fresh[0][0] });
+    if (document.querySelector('.modal')) return;
+    var b = fresh[fresh.length - 1];
+    var m = modal('New badge!', '<div class="bd-pop"><div class="bd-burst" aria-hidden="true">' + new Array(14).join('<i></i>') + '</div><span class="bd-big" aria-hidden="true">' + b[1] + '</span><h3>' + b[2] + '</h3><p class="tk-muted">' + esc(b[3]) + '. Keep it going!</p>' + (fresh.length > 1 ? '<p class="tk-small">Plus ' + (fresh.length - 1) + ' more. See them all in Habits.</p>' : '') + '<button type="button" class="tk-btn block" id="bdOk">Nice!</button></div>');
+    $('bdOk').onclick = function () { m.close(); };
+  }
+
+  // ---------- HABIT REMINDER (daily push) ----------
+  function reminderCard() {
+    if (viewingOther()) return '';
+    var r = S.me.habit_reminder || {}, on = !!r.on, hr = +r.hour || 20;
+    var opts = [17, 18, 19, 20, 21, 22].map(function (x) { return '<option value="' + x + '"' + (x === hr ? ' selected' : '') + '>' + (x - 12) + ':00 pm</option>'; }).join('');
+    var h = '<div class="tk-card' + (on ? '' : ' gold') + '" id="remCard"><h2 class="tk-h2" style="margin-top:0">Daily reminder</h2>';
+    if (!pushSupported()) {
+      h += isIOS() && !isStandalone()
+        ? '<p class="tk-muted">To get a reminder on your iPhone: open this page in Safari, tap <b>Share</b> → <b>Add to Home Screen</b>, then open the tracker from your home screen and turn the reminder on here.</p>'
+        : '<p class="tk-muted">This browser can\'t show reminders. Try Chrome or Safari on your phone.</p>';
+      return h + '</div>';
+    }
+    h += '<p class="tk-muted" style="margin-top:4px">' + (on ? 'On. If you haven\'t hit your goals by then, we\'ll send you a nudge on this phone.' : 'Get one gentle nudge a day if you haven\'t logged or hit your goals yet.') + '</p>';
+    h += '<div class="tk-field"><label for="remHour">Remind me at</label><select class="tk-select" id="remHour">' + opts + '</select></div>';
+    h += '<button type="button" class="tk-btn ' + (on ? 'plain' : '') + ' block" id="remBtn" style="margin-top:12px">' + (on ? 'Turn off reminder' : 'Turn on reminder') + '</button></div>';
+    return h;
+  }
+  function wireReminder() {
+    if (!$('remBtn')) return;
+    async function save(r) {
+      var x = await sb.from('profiles').update({ habit_reminder: r }).eq('id', S.me.id);
+      if (x.error) { toast('Could not save: ' + x.error.message); return false; }
+      S.me.habit_reminder = r; if (S.target.id === S.me.id) S.target.habit_reminder = r; return true;
+    }
+    $('remHour').onchange = async function () { var r = S.me.habit_reminder || {}; if (await save({ on: !!r.on, hour: +this.value })) toast('Reminder time saved'); };
+    $('remBtn').onclick = async function () {
+      var r = S.me.habit_reminder || {}, hr = +$('remHour').value; this.disabled = true;
+      if (r.on) { if (await save({ on: false, hour: hr })) toast('Reminder turned off'); render(); return; }
+      var ok = await enablePush().catch(function (e) { toast('Could not turn on: ' + (e && e.message || e)); return false; });
+      if (ok && await save({ on: true, hour: hr })) { ev('tracker_reminder_on', { hour: hr }); toast('Reminder on. See you at ' + (hr - 12) + ' pm!'); }
+      render();
+    };
+  }
+
+  // Coach hub: clients whose habits slipped this week (vs the week before), so the coach can check in.
+  function habitNudges(P, H) {
+    var t0 = parseDay(today()), out = [];
+    function dAgo(s) { return Math.round((t0 - parseDay(s)) / 864e5); }
+    function avg(a) { return a.length ? a.reduce(function (x, y) { return x + y; }, 0) / a.length : null; }
+    P.forEach(function (p) {
+      var rows = H.filter(function (x) { return x.user_id === p.id; }); if (!rows.length) return;
+      var wk = rows.filter(function (x) { return dAgo(x.date) < 7; }), pw = rows.filter(function (x) { return dAgo(x.date) >= 7; });
+      var pick = function (a, k) { return a.filter(function (x) { return x[k] != null && +x[k] > 0; }).map(function (x) { return +x[k]; }); };
+      var s1 = avg(pick(wk, 'steps')), s0 = avg(pick(pw, 'steps')), z1 = avg(pick(wk, 'sleep')), z0 = avg(pick(pw, 'sleep'));
+      var last = rows.map(function (x) { return x.date; }).sort().pop(), gap = dAgo(last), why = [], score = 0;
+      if (gap >= 3) { why.push('No habits logged for ' + gap + ' days'); score += gap; }
+      if (s1 != null && s0 != null && s1 < s0 * 0.8) { why.push('Steps down ' + Math.round((1 - s1 / s0) * 100) + '% (' + nf(s1) + ' a day vs ' + nf(s0) + ')'); score += 3; }
+      if (z1 != null && (z1 < 6 || (z0 != null && z1 < z0 - 1))) { why.push('Sleeping ' + r1(z1) + ' h a night' + (z0 != null ? ' (was ' + r1(z0) + ' h)' : '')); score += 2; }
+      var lowMood = pick(wk, 'mood').filter(function (m) { return m <= 2; }).length;
+      if (lowMood >= 3) { why.push('Low mood on ' + lowMood + ' days this week'); score += 2; }
+      if (why.length) out.push({ id: p.id, name: p.name || p.email, why: why, score: score });
+    });
+    return out.sort(function (a, b) { return b.score - a.score; }).slice(0, 8);
+  }
   // ---------- PROGRESS ----------
   function renderProgress() {
     var v = $('view'), W = S.workouts;
@@ -1446,10 +1563,11 @@
       sb.from('workouts').select('user_id,date,title,duration_min,created_at').gte('date', iso(since)).order('created_at', { ascending: false }).limit(500),
       sb.from('programs').select('client_id,active'),
       sb.from('live_workouts').select('user_id,data,updated_at').neq('user_id', S.me.id),
-      sb.from('client_invites').select('*').is('accepted_at', null).order('created_at', { ascending: false })
+      sb.from('client_invites').select('*').is('accepted_at', null).order('created_at', { ascending: false }),
+      sb.from('habit_logs').select('user_id,date,steps,sleep,mood').neq('user_id', S.me.id).gte('date', iso(new Date(Date.now() - 14 * 864e5))).limit(5000)
     ]);
     if (S.tab !== 'hub') return;
-    var P = q[0].data || [], W = q[1].data || [], PR = q[2].data || [], L = q[3].data || [], I = q[4].data || [];
+    var P = q[0].data || [], W = q[1].data || [], PR = q[2].data || [], L = q[3].data || [], I = q[4].data || [], HL = q[5].data || [];
     function nm(id) { var p = P.filter(function (x) { return x.id === id; })[0]; return p ? (p.name || p.email) : 'A client'; }
     var trained = {}; W.forEach(function (w) { trained[w.user_id] = 1; });
     var noPlan = P.filter(function (p) { return !PR.some(function (x) { return x.client_id === p.id && x.active; }); }).length;
@@ -1468,6 +1586,14 @@
     if (!td.length) h += '<p class="tk-muted" style="margin:0">No finished workouts yet today.</p>';
     td.forEach(function (w) { h += '<button type="button" class="pick-item" data-client="' + w.user_id + '" data-hist="1"><div style="min-width:0"><b>' + esc(nm(w.user_id)) + '</b><span>' + esc(w.title || 'Workout') + (w.duration_min ? ' · ' + w.duration_min + ' min' : '') + ' · ' + esc(timeAgo(w.created_at)) + '</span></div><span class="pill gold" style="margin-left:auto">Done</span></button>'; });
     h += '</div>';
+    if (HL.length) {
+      var nd = habitNudges(P, HL);
+      h += '<h2 class="tk-h2 hub-h">Needs a nudge</h2><div class="tk-card">';
+      if (!nd.length) h += '<p class="tk-muted" style="margin:0">Everyone logging habits is on track this week. 👏</p>';
+      else h += '<p class="tk-small" style="margin:0 0 6px">Habits slipped this week compared with last week. A quick message now goes a long way.</p>';
+      nd.forEach(function (x) { h += '<button type="button" class="pick-item" data-client="' + x.id + '" data-habits="1"><div style="min-width:0"><b>' + esc(x.name) + '</b><span>' + esc(x.why.join(' · ')) + '</span></div><span aria-hidden="true">›</span></button>'; });
+      h += '</div>';
+    }
     if (I.length) {
       h += '<h2 class="tk-h2 hub-h">Invited, not joined yet</h2><div class="tk-card">';
       I.forEach(function (x) { h += '<div class="tk-row" style="padding:8px 0;border-bottom:1px solid var(--line)"><div style="flex:1;min-width:0"><b>' + esc(x.name || x.email) + '</b><div class="tk-small">' + esc(x.email) + ' · invited ' + esc(timeAgo(x.created_at)) + '</div></div><button type="button" class="tk-btn sm ghost" data-resend="' + x.id + '">Resend</button><button type="button" class="tk-icon-btn" data-uninv="' + x.id + '" aria-label="Cancel invite for ' + esc(x.name || x.email) + '">' + ICON.x + '</button></div>'; });
@@ -1477,7 +1603,7 @@
     wireTiles();
     leadsBanner();
     v.querySelectorAll('[data-go]').forEach(function (b) { b.onclick = function () { go(b.dataset.go); }; });
-    v.querySelectorAll('[data-client]').forEach(function (b) { b.onclick = async function () { var p = await sb.from('profiles').select('*').eq('id', b.dataset.client).maybeSingle(); if (!p.data) return toast('Client not found'); await openClient(p.data); if (b.dataset.hist) { S.tab = 'history'; render(); } }; });
+    v.querySelectorAll('[data-client]').forEach(function (b) { b.onclick = async function () { var p = await sb.from('profiles').select('*').eq('id', b.dataset.client).maybeSingle(); if (!p.data) return toast('Client not found'); await openClient(p.data); if (b.dataset.habits) { S.tab = 'habits'; render(); return; } if (b.dataset.hist) { S.tab = 'history'; render(); } }; });
     v.querySelectorAll('[data-resend]').forEach(function (b) { b.onclick = function () { var x = I.filter(function (y) { return y.id === b.dataset.resend; })[0]; shareInvite(x); }; });
     v.querySelectorAll('[data-uninv]').forEach(function (b) { b.onclick = async function () { if (!confirmBox('Cancel this invite?')) return; var r = await sb.from('client_invites').delete().eq('id', b.dataset.uninv); if (r.error) return toast(r.error.message); toast('Invite cancelled'); renderHub(); }; });
   }
