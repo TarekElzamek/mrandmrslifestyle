@@ -375,3 +375,11 @@ details.wk .wk-body b{color:var(--text);font-weight:600}
 .fd-ai-row .tk-input{width:90px}
 .fd-ai-k{margin-left:auto;font-weight:700;color:var(--gold)}
 .fd-cams{margin-top:10px}.fd-cams .fd-cam{margin-top:0;text-align:center}
+/* mood scale: line icons + labels instead of emojis */
+.hb-scale.mood button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-height:58px;color:var(--gold);font-size:1rem}
+.hb-scale.mood button svg{width:24px;height:24px}
+.hb-scale.mood button small{font-size:.68rem;font-weight:600;color:var(--muted);letter-spacing:.02em}
+.hb-scale.mood button[aria-pressed="true"]{color:#0a0a0a}
+.hb-scale.mood button[aria-pressed="true"] small{color:#0a0a0a}
+.hb-memo{color:var(--gold);display:inline-flex}
+.hb-memo svg{width:18px;height:18px}
