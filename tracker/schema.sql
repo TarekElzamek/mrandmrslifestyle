@@ -351,3 +351,8 @@ select cron.schedule('habit-reminders', '0 * * * *', $cron$
     headers := jsonb_build_object('Content-Type', 'application/json', 'x-cron-secret', (select value from public.private_config where key = 'cron_secret')),
     body := '{}'::jsonb, timeout_milliseconds := 30000);
 $cron$);
+
+-- ---------- v14: calories burnt per workout (estimate or from the client's watch) ----------
+alter table public.workouts
+  add column if not exists kcal int check (kcal between 0 and 5000),
+  add column if not exists kcal_source text check (kcal_source in ('est','watch'));

@@ -318,3 +318,11 @@ details.wk .wk-body b{color:var(--text);font-weight:600}
 @keyframes bdFly{0%{transform:translate(0,0) rotate(0);opacity:1}100%{transform:translate(var(--x),var(--y)) rotate(200deg);opacity:0}}
 @media (prefers-reduced-motion:reduce){.bd-big,.bd-burst i{animation:none}.bd-burst{display:none}}
 .hb-head{display:flex;align-items:center;justify-content:space-between;gap:10px}
+/* ---------- calories burnt ---------- */
+.kc-box{background:var(--card-2);border:1px solid rgba(201,168,76,.3);border-radius:12px;padding:12px;margin-top:14px;text-align:left}
+.kc-top{display:flex;gap:10px;align-items:flex-start}
+.kc-top b{display:block}
+.kc-ic{font-size:1.5rem;line-height:1}
+.kc-edit{margin-top:10px}
+.kc-edit .tk-row{gap:8px;margin-top:4px}
+.kc-edit .tk-input{flex:1;min-width:0}
