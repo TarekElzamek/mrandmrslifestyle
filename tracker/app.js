@@ -1607,8 +1607,8 @@
       };
     }
     function panePhoto() {
-      $('fPane').innerHTML = '<p class="tk-small" style="margin-top:8px">Take a clear photo from above with the whole plate in view. We\'ll list each food with an estimated portion; check and adjust before adding.</p><label class="tk-btn block fd-cam" for="fCam">📷 Take or choose a photo</label><input type="file" id="fCam" accept="image/*" capture="environment" class="sr"><div id="fPrev" class="b-prev" hidden></div><div id="fAi" class="ai-status" role="status" hidden></div><div id="fItems"></div>';
-      $('fCam').onchange = async function () {
+      $('fPane').innerHTML = '<p class="tk-small" style="margin-top:8px">Take a clear photo from above with the whole plate in view. We\'ll list each food with an estimated portion; check and adjust before adding.</p><div class="tk-grid2 fd-cams"><label class="tk-btn fd-cam" for="fCam">📷 Take a photo</label><label class="tk-btn ghost fd-cam" for="fGal">🖼️ From gallery</label></div><input type="file" id="fCam" accept="image/*" capture="environment" class="sr"><input type="file" id="fGal" accept="image/*" class="sr"><div id="fPrev" class="b-prev" hidden></div><div id="fAi" class="ai-status" role="status" hidden></div><div id="fItems"></div>';
+      $('fCam').onchange = $('fGal').onchange = async function () {
         var file = this.files[0]; if (!file) return;
         var u = URL.createObjectURL(file), pv = $('fPrev'); pv.innerHTML = '<img src="' + u + '" alt="Your meal">'; pv.hidden = false;
         var st = $('fAi'); st.className = 'ai-status'; st.hidden = false; st.innerHTML = '<span class="ai-spin" aria-hidden="true"></span> Looking at your meal… this usually takes 5 to 20 seconds.'; $('fItems').innerHTML = '';
