@@ -79,7 +79,8 @@ async function flashModels(key) {
     if (!r.ok) return [];
     const j = await r.json();
     const ok = (j.models || []).filter(m => (m.supportedGenerationMethods || []).includes('generateContent') && /gemini.*flash/.test(m.name) && !/thinking|tts|image|live|embedding|audio|preview-0[0-4]/.test(m.name));
-    ok.sort((a, b) => (/lite/.test(a.name) - /lite/.test(b.name)) || b.name.localeCompare(a.name));
+    // Lite models first: they have by far the biggest free daily allowance (hundreds a day vs about 20).
+    ok.sort((a, b) => (/lite/.test(b.name) - /lite/.test(a.name)) || b.name.localeCompare(a.name));
     return ok.map(m => m.name.replace(/^models\//, ''));
   } catch (e) { return []; }
 }
