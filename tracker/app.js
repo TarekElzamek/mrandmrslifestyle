@@ -44,7 +44,7 @@
   var ICON_PLAY = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M10 8.5v7l5.5-3.5z" fill="currentColor" stroke="none"/></svg>';
   var CATS = []; EX.forEach(function (e) { if (CATS.indexOf(e.cat) < 0) CATS.push(e.cat); });
 
-  var S = { user: null, me: null, target: null, tab: 'today', programs: [], workouts: [], body: [], clients: null, draft: null, cal: null, calDay: null, chart: {}, progEx: null, rest: null };
+  var S = { user: null, me: null, target: null, tab: 'today', programs: [], workouts: [], body: [], habits: [], hDay: null, clients: null, draft: null, cal: null, calDay: null, chart: {}, progEx: null, rest: null };
 
   // ---------- helpers ----------
   function $(id) { return document.getElementById(id); }
@@ -86,6 +86,11 @@
   }
 
   var ICON = {
+    steps: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 16c-1.5 0-2.5-1.3-2.5-3.5S5.6 7 7.5 7 10 9 9.6 11.5 8.5 16 7 16z"/><path d="M5.5 18.5h3"/><path d="M17 12c1.5 0 2.5-1.3 2.5-3.5S18.4 3 16.5 3 14 5 14.4 7.5 15.5 12 17 12z"/><path d="M15.5 14.5h3"/></svg>',
+    water: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11z"/></svg>',
+    sleep: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg>',
+    bolt: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg>',
+    smile: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8.5 14.5s1.2 1.8 3.5 1.8 3.5-1.8 3.5-1.8"/><path d="M9 9.5h.01M15 9.5h.01"/></svg>',
     inbox: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg>',
     hub: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h5v-6h4v6h5V10"/></svg>',
     menu: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>',
@@ -194,9 +199,10 @@
     var q = await Promise.all([
       sb.from('programs').select('*').eq('client_id', id).order('updated_at', { ascending: false }),
       sb.from('workouts').select('*').eq('user_id', id).order('date', { ascending: false }).order('created_at', { ascending: false }).limit(1000),
-      sb.from('body_logs').select('*').eq('user_id', id).order('date', { ascending: true }).limit(1000)
+      sb.from('body_logs').select('*').eq('user_id', id).order('date', { ascending: true }).limit(1000),
+      sb.from('habit_logs').select('*').eq('user_id', id).order('date', { ascending: true }).limit(400)
     ]);
-    S.programs = q[0].data || []; S.workouts = q[1].data || []; S.body = q[2].data || [];
+    S.programs = q[0].data || []; S.workouts = q[1].data || []; S.body = q[2].data || []; S.habits = q[3].data || []; S.hDay = null;
     S.draft = lsGet('mm_draft_' + id, null); S.overview = false; LIVE.lastRev = (S.draft && S.draft.rev) || 0;
     try { var lv = await sb.from('live_workouts').select('*').eq('user_id', id).maybeSingle(); if (lv && lv.data && (+lv.data.rev || 0) > LIVE.lastRev) { LIVE.lastRev = +lv.data.rev; S.draft = lv.data.data || null; lsSet('mm_draft_' + id, S.draft); } else if (S.draft) pushLive(); } catch (e) {}
     startLive();
@@ -258,7 +264,7 @@
     $('nav').innerHTML = tabs.map(function (t) { return '<button type="button" data-tab="' + t[0] + '"' + (S.tab === t[0] ? ' aria-current="page"' : '') + '>' + ICON[t[0]] + t[1] + '</button>'; }).join('');
     $('nav').querySelectorAll('button').forEach(function (b) { b.onclick = function () { S.tab = b.dataset.tab; render(); window.scrollTo(0, 0); }; });
     Object.keys(S.chart).forEach(function (k) { try { S.chart[k].destroy(); } catch (e) {} delete S.chart[k]; });
-    ({ today: renderToday, plan: renderPlan, body: renderBody, progress: renderProgress, history: renderHistory, clients: renderClients, hub: renderHub, workouts: renderWorkouts, exercises: renderExercises, menu: renderMenu })[S.tab]();
+    ({ today: renderToday, plan: renderPlan, body: renderBody, progress: renderProgress, history: renderHistory, clients: renderClients, hub: renderHub, workouts: renderWorkouts, exercises: renderExercises, menu: renderMenu, habits: renderHabits })[S.tab]();
     if (S.tab === 'today' && !isCoach() && !(S.draft && !S.overview)) coachCard().then(function (html) { if (html && S.tab === 'today' && !(S.draft && !S.overview) && !$('view').querySelector('.coach-card')) $('view').insertAdjacentHTML('beforeend', html); });
   }
 
@@ -274,6 +280,7 @@
     if (S.draft) h += '<div class="tk-card gold resume"><div class="li"><div class="grow"><b>Workout in progress: ' + esc(S.draft.title || 'Workout') + '</b><span class="tk-small">' + S.draft.exercises.length + ' exercises · started ' + Math.max(0, Math.round((Date.now() - S.draft.started) / 60000)) + ' min ago. Nothing is lost.</span></div><button type="button" class="tk-btn sm" id="resumeW">Resume</button></div></div>';
     h += '<h1 class="tk-h1">' + (viewingOther() ? esc(S.target.name || 'Client') + '\'s <em>training</em>' : 'Hi ' + esc(name || 'there') + ', ready to <em>train?</em>') + '</h1>';
     h += '<div class="tk-grid3" style="margin-top:14px"><div class="tk-stat"><b>' + thisWeekCount() + '</b><span>This week</span></div><div class="tk-stat"><b>' + weekStreak() + '</b><span>Week streak</span></div><div class="tk-stat"><b>' + S.workouts.length + '</b><span>Workouts</span></div></div>';
+    h += todayHabitsCard();
     if (prog && (prog.days || []).length) {
       h += '<div class="tk-card gold"><span class="tk-tag">Your programme</span><h2 class="tk-h2" style="margin:4px 0 6px">' + esc(prog.name) + '</h2>' + (prog.notes ? '<p class="tk-muted">' + esc(prog.notes) + '</p>' : '');
       prog.days.forEach(function (d, i) {
@@ -291,6 +298,7 @@
     if ($('startEmpty')) $('startEmpty').onclick = function () { if (S.draft && !confirmBox('You have a workout in progress. Discard it and start an empty one?')) return; startDraft(null); };
     if ($('resumeW')) $('resumeW').onclick = function () { S.overview = false; render(); window.scrollTo(0, 0); };
     $('goBody').onclick = function () { S.tab = 'body'; render(); };
+    wireHabitCard(v); $('goHabits').onclick = function () { go('habits'); };
   }
 
   function startDraft(prog, dayIdx) {
@@ -1104,6 +1112,127 @@
     });
   }
 
+  // ---------- HABITS (steps, water, sleep, energy, mood) ----------
+  var HG_DEF = { steps: 8000, water: 8, sleep: 7 };
+  var MOODS = [['😫', 'Awful'], ['🙁', 'Low'], ['😐', 'Okay'], ['🙂', 'Good'], ['😄', 'Great']];
+  var ENERGY = ['Very low', 'Low', 'Okay', 'High', 'Very high'];
+  function hGoals() { var g = (S.target && S.target.habit_goals) || {}; return { steps: +g.steps || HG_DEF.steps, water: +g.water || HG_DEF.water, sleep: +g.sleep || HG_DEF.sleep }; }
+  function hRow(d) { return (S.habits || []).filter(function (x) { return x.date === d; })[0] || null; }
+  function hLogged(x) { return !!x && (x.steps != null || !!x.water || x.sleep != null || !!x.energy || !!x.mood); }
+  function hHits(x, g) { if (!x) return 0; var n = 0; if ((x.steps || 0) >= g.steps) n++; if ((x.water || 0) >= g.water) n++; if ((+x.sleep || 0) >= g.sleep) n++; return n; }
+  function hStreak() {
+    var d = parseDay(today()); if (!hLogged(hRow(today()))) d.setDate(d.getDate() - 1);
+    var n = 0; while (hLogged(hRow(iso(d)))) { n++; d.setDate(d.getDate() - 1); }
+    return n;
+  }
+  function hLastDays(n) { var out = [], d = parseDay(today()); for (var i = 0; i < n; i++) { out.unshift(iso(d)); d.setDate(d.getDate() - 1); } return out; }
+  function hAvg(days, k) { var v = days.map(hRow).filter(function (x) { return x && x[k] != null && x[k] !== 0; }).map(function (x) { return +x[k]; }); return v.length ? v.reduce(function (a, b) { return a + b; }, 0) / v.length : null; }
+  var HSAVE = {};
+  function hSet(d, k, val) {
+    var row = hRow(d);
+    if (!row) { row = { user_id: S.target.id, date: d }; S.habits.push(row); S.habits.sort(function (a, b) { return a.date < b.date ? -1 : a.date > b.date ? 1 : 0; }); }
+    row[k] = val;
+    clearTimeout(HSAVE[d]);
+    var uid = S.target.id;
+    HSAVE[d] = setTimeout(async function () {
+      var p = { user_id: uid, date: d, updated_at: new Date().toISOString() };
+      ['steps', 'water', 'sleep', 'energy', 'mood', 'note'].forEach(function (f) { p[f] = row[f] == null || row[f] === '' ? null : row[f]; });
+      var r = await sb.from('habit_logs').upsert(p, { onConflict: 'user_id,date' });
+      if (r.error) toast('Could not save: ' + r.error.message);
+      else { ev('tracker_habit_saved', { field: k }); var st = document.querySelector('[data-hsaved="' + d + '"]'); if (st) { st.textContent = 'Saved'; setTimeout(function () { if (st) st.textContent = ''; }, 1500); } }
+    }, 600);
+  }
+  function hBar(val, goal) { var p = Math.max(0, Math.min(100, Math.round((val || 0) / goal * 100))); return '<div class="hb-bar' + (p >= 100 ? ' done' : '') + '"><i style="width:' + p + '%"></i></div>'; }
+  // The logging card for one day. full = show the note field too.
+  function habitCard(d, full) {
+    var x = hRow(d) || {}, g = hGoals(), isToday = d === today();
+    var h = '<div class="hb" data-hday="' + d + '">';
+    h += '<div class="hb-item"><div class="hb-top"><label for="hSteps">' + ICON.steps + 'Steps</label><span class="tk-small">Goal ' + nf(g.steps) + '</span></div><input class="tk-input" id="hSteps" inputmode="numeric" placeholder="e.g. 8500" value="' + (x.steps != null ? x.steps : '') + '" aria-describedby="hStepsHelp">' + hBar(x.steps, g.steps) + '<span class="sr" id="hStepsHelp">Copy the number from your phone\'s health app</span></div>';
+    h += '<div class="hb-item"><div class="hb-top"><span id="hWaterL">' + ICON.water + 'Water</span><span class="tk-small">Goal ' + g.water + ' glasses</span></div><div class="hb-step" role="group" aria-labelledby="hWaterL"><button type="button" class="tk-icon-btn" id="hWaterMinus" aria-label="One glass less">−</button><b id="hWaterN" aria-live="polite">' + (x.water || 0) + ' <small>of ' + g.water + '</small></b><button type="button" class="tk-icon-btn" id="hWaterPlus" aria-label="One more glass">+</button></div>' + hBar(x.water, g.water) + '<span class="tk-small">1 glass = 250 ml</span></div>';
+    h += '<div class="hb-item"><div class="hb-top"><label for="hSleep">' + ICON.sleep + 'Sleep ' + (isToday ? 'last night' : '') + '</label><span class="tk-small">Goal ' + g.sleep + ' h</span></div><input class="tk-input" id="hSleep" inputmode="decimal" placeholder="Hours, e.g. 7.5" value="' + (x.sleep != null ? x.sleep : '') + '">' + hBar(x.sleep, g.sleep) + '</div>';
+    h += '<div class="hb-item"><span class="hb-lab" id="hEnL">' + ICON.bolt + 'Energy</span><div class="hb-scale" role="group" aria-labelledby="hEnL">' + ENERGY.map(function (t, i) { return '<button type="button" data-hen="' + (i + 1) + '" aria-pressed="' + (x.energy === i + 1) + '" aria-label="Energy ' + (i + 1) + ' of 5, ' + t + '">' + (i + 1) + '</button>'; }).join('') + '</div></div>';
+    h += '<div class="hb-item hb-wide"><span class="hb-lab" id="hMoL">' + ICON.smile + 'Mood</span><div class="hb-scale mood" role="group" aria-labelledby="hMoL">' + MOODS.map(function (m, i) { return '<button type="button" data-hmo="' + (i + 1) + '" aria-pressed="' + (x.mood === i + 1) + '" aria-label="Mood: ' + m[1] + '"><span aria-hidden="true">' + m[0] + '</span></button>'; }).join('') + '</div></div>';
+    if (full) h += '<div class="tk-field"><label for="hNote">Note (optional)</label><input class="tk-input" id="hNote" maxlength="500" placeholder="e.g. late dinner, poor sleep, felt great in training" value="' + esc(x.note || '') + '"></div>';
+    h += '<div class="hb-foot"><span class="tk-small" id="hHits">' + hitsText(x, g) + '</span><span class="tk-small hb-saved" data-hsaved="' + d + '" role="status"></span></div></div>';
+    return h;
+  }
+  function hitsText(x, g) { var n = hHits(x, g); return n === 3 ? 'All 3 goals hit. Great day!' : n + ' of 3 goals hit'; }
+  function wireHabitCard(root) {
+    var box = root.querySelector('[data-hday]'); if (!box) return;
+    var d = box.dataset.hday, g = hGoals();
+    function repaint() {
+      var x = hRow(d) || {}, bars = box.querySelectorAll('.hb-bar');
+      [[x.steps, g.steps], [x.water, g.water], [x.sleep, g.sleep]].forEach(function (p, i) { if (bars[i]) bars[i].outerHTML = hBar(p[0], p[1]); });
+      $('hWaterN').innerHTML = (x.water || 0) + ' <small>of ' + g.water + '</small>';
+      $('hHits').textContent = hitsText(x, g);
+      var st = $('hStreakN'); if (st) st.textContent = hStreak();
+    }
+    $('hSteps').oninput = function () { var v = parseInt(this.value.replace(/[^\d]/g, ''), 10); if (this.value && (isNaN(v) || v > 100000)) return; hSet(d, 'steps', isNaN(v) ? null : v); repaint(); };
+    $('hSleep').oninput = function () { var v = num(this.value); if (this.value && (v == null || v < 0 || v > 24)) return; hSet(d, 'sleep', v == null ? null : r1(v)); repaint(); };
+    $('hWaterPlus').onclick = function () { var x = hRow(d) || {}; hSet(d, 'water', Math.min(30, (x.water || 0) + 1)); repaint(); };
+    $('hWaterMinus').onclick = function () { var x = hRow(d) || {}; hSet(d, 'water', Math.max(0, (x.water || 0) - 1)); repaint(); };
+    box.querySelectorAll('[data-hen]').forEach(function (b) { b.onclick = function () { var x = hRow(d) || {}, v = +b.dataset.hen; v = x.energy === v ? null : v; hSet(d, 'energy', v); box.querySelectorAll('[data-hen]').forEach(function (o) { o.setAttribute('aria-pressed', String(+o.dataset.hen === v)); }); repaint(); }; });
+    box.querySelectorAll('[data-hmo]').forEach(function (b) { b.onclick = function () { var x = hRow(d) || {}, v = +b.dataset.hmo; v = x.mood === v ? null : v; hSet(d, 'mood', v); box.querySelectorAll('[data-hmo]').forEach(function (o) { o.setAttribute('aria-pressed', String(+o.dataset.hmo === v)); }); repaint(); }; });
+    if ($('hNote')) $('hNote').oninput = function () { hSet(d, 'note', this.value.trim() || null); };
+  }
+  function todayHabitsCard() {
+    var who = viewingOther() ? esc((S.target.name || 'Client').split(' ')[0]) + '\'s' : 'Today\'s';
+    return '<div class="tk-card hb-card"><div class="hb-head"><div><span class="tk-tag">' + who + ' habits</span><b class="hb-streak"><span id="hStreakN">' + hStreak() + '</span>-day streak</b></div><button type="button" class="tk-btn sm plain" id="goHabits">Trends</button></div>' + habitCard(today(), false) + '</div>';
+  }
+  function barChart(id, labels, data, goal, label, color) {
+    var el = $(id); if (!el || !window.Chart) return null;
+    var sets = [{ type: 'bar', label: label, data: data, backgroundColor: data.map(function (v) { return v != null && goal && v >= goal ? '#C9A84C' : color || 'rgba(201,168,76,.45)'; }), borderRadius: 4, maxBarThickness: 18 }];
+    if (goal) sets.push({ type: 'line', label: 'Goal', data: labels.map(function () { return goal; }), borderColor: 'rgba(242,237,227,.5)', borderDash: [5, 4], borderWidth: 1.5, pointRadius: 0 });
+    return new Chart(el, {
+      type: 'bar',
+      data: { labels: labels, datasets: sets },
+      options: { responsive: true, maintainAspectRatio: false, interaction: { mode: 'index', intersect: false },
+        plugins: { legend: { display: false }, tooltip: { backgroundColor: '#111', borderColor: '#C9A84C', borderWidth: 1 } },
+        scales: { x: { ticks: { color: '#9a9488', maxRotation: 0, autoSkip: true, maxTicksLimit: 7 }, grid: { display: false } }, y: { beginAtZero: true, ticks: { color: '#9a9488' }, grid: { color: 'rgba(255,255,255,.06)' } } } }
+    });
+  }
+  function renderHabits() {
+    var v = $('view'), g = hGoals();
+    if (!S.hDay || S.hDay > today()) S.hDay = today();
+    var week = hLastDays(7), month = hLastDays(30);
+    var h = '<button type="button" class="tk-link hb-back" id="hBack">← Today</button><h1 class="tk-h1">Daily <em>habits</em></h1><p class="tk-sub">Small daily habits drive your results as much as your training. Log them in under a minute: steps from your phone\'s health app, glasses of water, hours of sleep, and how you feel.</p>';
+    var a7 = { steps: hAvg(week, 'steps'), water: hAvg(week, 'water'), sleep: hAvg(week, 'sleep') };
+    h += '<div class="tk-grid2" style="margin-top:14px"><div class="tk-stat"><b>' + hStreak() + '</b><span>Day streak</span></div><div class="tk-stat"><b>' + (a7.steps != null ? nf(Math.round(a7.steps)) : '–') + '</b><span>Avg steps · 7 days</span></div><div class="tk-stat"><b>' + (a7.sleep != null ? r1(a7.sleep) + ' h' : '–') + '</b><span>Avg sleep · 7 days</span></div><div class="tk-stat"><b>' + (a7.water != null ? r1(a7.water) : '–') + '</b><span>Avg glasses · 7 days</span></div></div>';
+    h += '<div class="tk-card"><h2 class="tk-h2" style="margin-top:0">Log a day</h2><div class="chips hb-days" role="group" aria-label="Choose a day">' + week.slice().reverse().map(function (d) { var lg = hLogged(hRow(d)); return '<button type="button" data-hd="' + d + '" aria-pressed="' + (d === S.hDay) + '">' + (d === today() ? 'Today' : fmtDay(d, { weekday: 'short', day: 'numeric' })) + (lg ? ' <span class="hb-dot" aria-label="logged">•</span>' : '') + '</button>'; }).join('') + '</div>' + habitCard(S.hDay, true) + '</div>';
+    var withData = month.filter(function (d) { return hLogged(hRow(d)); });
+    var lab = month.map(function (d) { return fmtDay(d, { day: 'numeric', month: 'short' }); });
+    if (withData.length > 1) {
+      h += '<div class="tk-card"><span class="tk-tag">Steps · last 30 days</span><div class="chart-box"><canvas id="hcSteps" role="img" aria-label="Daily steps for the last 30 days with your goal line"></canvas></div><p class="tk-small">Gold bars hit your goal of ' + nf(g.steps) + ' steps.</p></div>';
+      h += '<div class="tk-card"><span class="tk-tag">Sleep · last 30 days</span><div class="chart-box"><canvas id="hcSleep" role="img" aria-label="Hours of sleep for the last 30 days with your goal line"></canvas></div></div>';
+      h += '<div class="tk-card"><span class="tk-tag">Water · last 30 days</span><div class="chart-box"><canvas id="hcWater" role="img" aria-label="Glasses of water for the last 30 days with your goal line"></canvas></div></div>';
+      var fl = hLastDays(14);
+      h += '<div class="tk-card"><span class="tk-tag">Mood &amp; energy · last 14 days</span><div class="hb-moodrow">' + fl.map(function (d) { var x = hRow(d) || {}; return '<div class="hb-mday"><span class="hb-memo" aria-label="' + (x.mood ? 'Mood ' + MOODS[x.mood - 1][1] : 'No mood logged') + '">' + (x.mood ? MOODS[x.mood - 1][0] : '·') + '</span><span class="hb-en' + (x.energy ? '' : ' none') + '" style="--e:' + ((x.energy || 0) * 20) + '%" aria-label="' + (x.energy ? 'Energy ' + x.energy + ' of 5' : 'No energy logged') + '"></span><small>' + fmtDay(d, { day: 'numeric' }) + '</small></div>'; }).join('') + '</div><p class="tk-small">Emoji = mood, bar = energy. Look for patterns with your sleep and training days.</p></div>';
+    } else h += '<div class="tk-empty">Log a couple of days and your 30-day charts will appear here.</div>';
+    var notes = (S.habits || []).filter(function (x) { return x.note; }).slice(-10).reverse();
+    if (notes.length) h += '<div class="tk-card"><span class="tk-tag">Recent notes</span>' + notes.map(function (x) { return '<div class="li"><div class="grow"><b>' + fmtDay(x.date) + '</b><span class="tk-small">' + esc(x.note) + '</span></div></div>'; }).join('') + '</div>';
+    h += '<div class="tk-card"><h2 class="tk-h2" style="margin-top:0">' + (viewingOther() ? esc((S.target.name || 'Client').split(' ')[0]) + '\'s daily goals' : 'Your daily goals') + '</h2><p class="tk-small">' + (viewingOther() ? 'Set targets that suit this client.' : 'Your coach may adjust these for you.') + '</p><div class="tk-grid3"><div class="tk-field"><label for="hgSteps">Steps</label><input class="tk-input" id="hgSteps" inputmode="numeric" value="' + g.steps + '"></div><div class="tk-field"><label for="hgWater">Glasses</label><input class="tk-input" id="hgWater" inputmode="numeric" value="' + g.water + '"></div><div class="tk-field"><label for="hgSleep">Sleep h</label><input class="tk-input" id="hgSleep" inputmode="decimal" value="' + g.sleep + '"></div></div><button type="button" class="tk-btn ghost block" id="hgSave" style="margin-top:12px">Save goals</button></div>';
+    v.innerHTML = h;
+    wireHabitCard(v);
+    $('hBack').onclick = function () { go('today'); };
+    v.querySelectorAll('[data-hd]').forEach(function (b) { b.onclick = function () { S.hDay = b.dataset.hd; render(); }; });
+    if (withData.length > 1 && window.Chart) {
+      S.chart.hs = barChart('hcSteps', lab, month.map(function (d) { var x = hRow(d); return x && x.steps != null ? x.steps : null; }), g.steps, 'Steps');
+      S.chart.hz = barChart('hcSleep', lab, month.map(function (d) { var x = hRow(d); return x && x.sleep != null ? +x.sleep : null; }), g.sleep, 'Sleep (h)', 'rgba(143,183,232,.55)');
+      S.chart.hw = barChart('hcWater', lab, month.map(function (d) { var x = hRow(d); return x && x.water ? x.water : null; }), g.water, 'Glasses', 'rgba(143,183,232,.55)');
+    }
+    $('hgSave').onclick = async function () {
+      var ng = { steps: parseInt($('hgSteps').value, 10), water: parseInt($('hgWater').value, 10), sleep: num($('hgSleep').value) };
+      if (!(ng.steps >= 1000 && ng.steps <= 50000)) return toast('Steps goal should be between 1,000 and 50,000');
+      if (!(ng.water >= 1 && ng.water <= 20)) return toast('Water goal should be between 1 and 20 glasses');
+      if (!(ng.sleep >= 4 && ng.sleep <= 12)) return toast('Sleep goal should be between 4 and 12 hours');
+      ng.sleep = r1(ng.sleep); this.disabled = true;
+      var r = await sb.from('profiles').update({ habit_goals: ng }).eq('id', S.target.id);
+      if (r.error) { this.disabled = false; return toast('Could not save: ' + r.error.message); }
+      S.target.habit_goals = ng; if (S.target.id === S.me.id) S.me.habit_goals = ng;
+      toast('Goals saved'); render();
+    };
+  }
+
   // ---------- PROGRESS ----------
   function renderProgress() {
     var v = $('view'), W = S.workouts;
@@ -1475,8 +1604,8 @@
     h += '<h2 class="tk-h2 hub-h">Coaching</h2><div class="menu">' +
       item('hub', ICON.hub, 'Hub', 'Your day at a glance') + item('clients', ICON.clients, 'Clients', 'Everyone you coach') + item('addclient', ICON.addUser, 'Add a client', 'Invite by email or WhatsApp') +
       item('workouts', ICON.plan, 'Workouts', 'Templates you assign') + item('exercises', ICON.today, 'Exercises', 'Library with your videos') + item('notifs', ICON.bell, 'Notifications', 'Workouts started and finished') + item('leads', ICON.inbox, 'Website leads', 'Enquiries, guide downloads and calculator sign-ups') + '</div>';
-    h += '<h2 class="tk-h2 hub-h">My training</h2><div class="menu">' + item('today', ICON.today, 'Today', '') + item('plan', ICON.plan, 'My programme', '') + item('body', ICON.body, 'Body', 'Weight and measurements') + item('progress', ICON.progress, 'Progress', '') + item('history', ICON.history, 'History', '') + '</div>';
-    h += '<h2 class="tk-h2 hub-h">Coming soon</h2><div class="menu">' + item('s', ICON.chat, 'Chat', 'Message your clients', 1) + item('s', ICON.checkin, 'Check-ins', 'Weekly progress forms and photos', 1) + item('s', ICON.food, 'Nutrition', 'Meal plans and macros', 1) + item('s', ICON.cal, 'Calendar', 'Sessions and bookings', 1) + item('s', ICON.check, 'Habits', 'Steps, water, sleep', 1) + item('s', ICON.info, 'Resources', 'Guides and files for clients', 1) + item('s', ICON.money, 'Financials', 'Payments and renewals', 1) + '</div>';
+    h += '<h2 class="tk-h2 hub-h">My training</h2><div class="menu">' + item('today', ICON.today, 'Today', '') + item('plan', ICON.plan, 'My programme', '') + item('body', ICON.body, 'Body', 'Weight and measurements') + item('habits', ICON.check, 'Habits', 'Steps, water, sleep, mood') + item('progress', ICON.progress, 'Progress', '') + item('history', ICON.history, 'History', '') + '</div>';
+    h += '<h2 class="tk-h2 hub-h">Coming soon</h2><div class="menu">' + item('s', ICON.chat, 'Chat', 'Message your clients', 1) + item('s', ICON.checkin, 'Check-ins', 'Weekly progress forms and photos', 1) + item('s', ICON.food, 'Nutrition', 'Meal plans and macros', 1) + item('s', ICON.cal, 'Calendar', 'Sessions and bookings', 1) + item('s', ICON.info, 'Resources', 'Guides and files for clients', 1) + item('s', ICON.money, 'Financials', 'Payments and renewals', 1) + '</div>';
     h += '<div class="menu" style="margin-top:18px">' + item('settings', ICON.gear, 'Settings', 'Rest timer, sign out') + '<a class="menu-item" href="https://wa.me/971507871515" target="_blank" rel="noopener">' + ICON.info + '<span><b>Support</b><small>Something not working? Tell us</small></span><span aria-hidden="true" class="menu-arrow">›</span></a></div>';
     v.innerHTML = h;
     $('mProf').onclick = openProfile;
