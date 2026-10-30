@@ -315,3 +315,24 @@ grant select, update on public.leads to authenticated;
 
 -- ---------- v11: coaches can remove (hide) a client from their lists without deleting any data ----------
 alter table public.profiles add column if not exists archived boolean not null default false;
+
+-- ---------- v12: daily habits (steps, water, sleep, energy, mood) + personal goals ----------
+create table if not exists public.habit_logs (
+  user_id uuid not null references public.profiles(id) on delete cascade,
+  date date not null,
+  steps int check (steps between 0 and 100000),
+  water smallint check (water between 0 and 30),
+  sleep numeric(3,1) check (sleep between 0 and 24),
+  energy smallint check (energy between 1 and 5),
+  mood smallint check (mood between 1 and 5),
+  note text check (char_length(note) <= 500),
+  updated_at timestamptz not null default now(),
+  primary key (user_id, date)
+);
+alter table public.habit_logs enable row level security;
+drop policy if exists "habits read" on public.habit_logs;
+create policy "habits read" on public.habit_logs for select using (user_id = auth.uid() or public.is_coach());
+drop policy if exists "habits own" on public.habit_logs;
+create policy "habits own" on public.habit_logs for all
+  using (user_id = auth.uid() or public.is_coach()) with check (user_id = auth.uid() or public.is_coach());
+alter table public.profiles add column if not exists habit_goals jsonb;
