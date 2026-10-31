@@ -1630,27 +1630,29 @@
       // Eggs are counted, not weighed: per large egg (about 50 g edible) and per egg white.
       var EGG = { whole: { k: 72, p: 6.3, c: 0.4, f: 4.8, one: 'whole egg', many: 'whole eggs' }, white: { k: 17, p: 3.6, c: 0.2, f: 0.1, one: 'egg white', many: 'egg whites' } };
       function isEgg(it) { return it.count != null || (/\b(eggs?|omel+ett?e?s?|frittatas?)\b/i.test(it.name) && !/eggplant|egg ?noodle|egg ?fried rice|scotch/i.test(it.name)); }
+      function eggOpts(sel) { var o = ''; for (var n = 0; n <= 12; n++) o += '<option value="' + n + '"' + (n === sel ? ' selected' : '') + '>' + n + '</option>'; return o; }
       function showItems(items) {
         var box = $('fItems');
         items.forEach(function (it) {
           if (!isEgg(it)) return;
-          it.egg = true; it.eggN = it.count || Math.min(12, Math.max(1, Math.round((it.grams || 100) / 50)));
-          var t = EGG[it.egg_type === 'white' ? 'white' : 'whole'];
+          it.egg = true; var n0 = it.count || Math.min(12, Math.max(1, Math.round((it.grams || 100) / 50))), wt = it.egg_type === 'white';
+          it.eggW = wt ? 0 : n0; it.eggWh = wt ? n0 : 0;
           // Whatever the photo estimate adds on top of the eggs themselves (oil, butter, cheese) is kept, as fat.
-          it.extra = Math.max(0, Math.min(200, (it.kcal || 0) - it.eggN * t.k));
+          it.extra = Math.max(0, Math.min(200, (it.kcal || 0) - n0 * EGG[wt ? 'white' : 'whole'].k));
         });
         box.innerHTML = items.map(function (it, i) {
           var amt = it.egg
-            ? '<label>Eggs <select class="tk-select fd-ai-sel" data-aie="' + i + '">' + [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(function (n) { return '<option value="' + n + '"' + (n === it.eggN ? ' selected' : '') + '>' + n + '</option>'; }).join('') + '</select></label>' +
-              '<label class="sr" for="aiet' + i + '">Egg type</label><select class="tk-select fd-ai-sel" id="aiet' + i + '" data-aiet="' + i + '"><option value="whole"' + (it.egg_type !== 'white' ? ' selected' : '') + '>Whole egg</option><option value="white"' + (it.egg_type === 'white' ? ' selected' : '') + '>Egg white</option></select>'
+            ? '<label>Whole eggs <select class="tk-select fd-ai-sel" data-aie="' + i + '">' + eggOpts(it.eggW) + '</select></label>' +
+              '<label>Egg whites <select class="tk-select fd-ai-sel" data-aiwh="' + i + '">' + eggOpts(it.eggWh) + '</select></label>'
             : '<label>Grams <input class="tk-input" inputmode="numeric" value="' + (it.grams || '') + '" data-aig="' + i + '"></label>';
           return '<div class="fd-ai" data-ai="' + i + '"><label class="fd-ai-chk"><input type="checkbox" checked data-aion="' + i + '"><span class="sr">Include ' + esc(it.name) + '</span></label><div class="fd-ai-main"><input class="tk-input fd-ai-name" value="' + esc(it.name) + '" aria-label="Food name" data-ain="' + i + '"><div class="fd-ai-row">' + amt + '<span class="fd-ai-k" id="aik' + i + '">' + nf(it.kcal) + ' kcal</span></div></div></div>';
         }).join('') + '<div class="fd-calc" id="fAiTot"></div><button type="button" class="tk-btn block" id="fAiAdd" style="margin-top:12px">Add to my log</button>';
         function cur(i) {
           var it = items[i], on = box.querySelector('[data-aion="' + i + '"]').checked, name = box.querySelector('[data-ain="' + i + '"]').value.trim() || it.name;
           if (it.egg) {
-            var n = +box.querySelector('[data-aie="' + i + '"]').value || 1, ty = box.querySelector('[data-aiet="' + i + '"]').value === 'white' ? 'white' : 'whole', t = EGG[ty];
-            return { on: on, name: name, amount: n + ' ' + (n === 1 ? t.one : t.many), kcal: Math.round(n * t.k + it.extra), p: r1(n * t.p), c: r1(n * t.c), f: r1(n * t.f + it.extra / 9) };
+            var w = +box.querySelector('[data-aie="' + i + '"]').value || 0, wh = +box.querySelector('[data-aiwh="' + i + '"]').value || 0, A = EGG.whole, B = EGG.white, x = w + wh ? it.extra : 0;
+            var amount = [w ? w + ' ' + (w === 1 ? A.one : A.many) : '', wh ? wh + ' ' + (wh === 1 ? B.one : B.many) : ''].filter(Boolean).join(' + ');
+            return { on: on && w + wh > 0, name: name, amount: amount, kcal: Math.round(w * A.k + wh * B.k + x), p: r1(w * A.p + wh * B.p), c: r1(w * A.c + wh * B.c), f: r1(w * A.f + wh * B.f + x / 9) };
           }
           var g = num(box.querySelector('[data-aig="' + i + '"]').value), k = it.grams && g ? g / it.grams : 1;
           return { on: on, name: name, g: g, kcal: Math.round(it.kcal * k), p: it.protein != null ? r1(it.protein * k) : null, c: it.carbs != null ? r1(it.carbs * k) : null, f: it.fat != null ? r1(it.fat * k) : null };
