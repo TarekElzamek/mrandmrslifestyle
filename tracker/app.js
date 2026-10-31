@@ -1656,7 +1656,7 @@
           return { on: on, name: name, g: g, kcal: Math.round(it.kcal * k), p: it.protein != null ? r1(it.protein * k) : null, c: it.carbs != null ? r1(it.carbs * k) : null, f: it.fat != null ? r1(it.fat * k) : null };
         }
         function tot() { var t = { k: 0, p: 0 }; items.forEach(function (it, i) { var c = cur(i); $('aik' + i).textContent = nf(c.kcal) + ' kcal'; if (c.on) { t.k += c.kcal; t.p += c.p || 0; } }); $('fAiTot').innerHTML = '<b>' + nf(t.k) + ' kcal</b><span>' + r1(t.p) + ' g protein in this meal</span>'; }
-        box.querySelectorAll('input').forEach(function (x) { x.oninput = tot; x.onchange = tot; }); tot();
+        box.querySelectorAll('input, select').forEach(function (x) { x.oninput = tot; x.onchange = tot; }); tot();
         $('fAiAdd').onclick = async function () {
           var rows = []; items.forEach(function (it, i) { var c = cur(i); if (!c.on) return; var o = base(); o.source = 'ai'; o.name = c.name.slice(0, 80); o.amount = c.amount ? c.amount + ' (photo)' : c.g ? c.g + ' g (photo estimate)' : 'photo estimate'; o.kcal = c.kcal; o.protein = c.p; o.carbs = c.c; o.fat = c.f; rows.push(o); });
           if (!rows.length) return toast('Tick at least one item');
