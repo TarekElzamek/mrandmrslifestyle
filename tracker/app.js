@@ -1498,6 +1498,8 @@
   }
 
   // ---------- FOOD LOG (search the food list, photo AI estimate, or custom) ----------
+  // Protein shakes are counted in scoops (1 scoop whey, 30 g) plus what they're mixed with, not weighed.
+  var SCOOP = { k: 120, p: 24, c: 3, f: 2 }, MILK = { low: { k: 0.46, p: 0.034, c: 0.049, f: 0.015, nm: 'low-fat milk' }, full: { k: 0.625, p: 0.033, c: 0.05, f: 0.033, nm: 'full-fat milk' } };
   var FOODS = (window.MM_FOODS || []).map(function (r) { return { name: r[0], ar: r[1], portion: r[2], g: r[3], unit: r[4], kcal: r[5], p: r[6], c: r[7], f: r[8], kw: r[9] || '' }; });
   var MEALS = [['breakfast', 'Breakfast'], ['lunch', 'Lunch'], ['dinner', 'Dinner'], ['snack', 'Snacks']];
   function mealNow() { var h = new Date().getHours(); return h < 11 ? 'breakfast' : h < 16 ? 'lunch' : h < 18 ? 'snack' : 'dinner'; }
@@ -1588,7 +1590,28 @@
         $('fRes').querySelectorAll('[data-fi]').forEach(function (b) { b.onclick = function () { paneAmount(list[+b.dataset.fi]); }; });
       };
     }
+    function paneShake(f) {
+      var milkDefault = /milk/i.test(f.name) && !/water/i.test(f.name);
+      $('fPane').innerHTML = '<div class="fd-pick"><b>' + esc(f.name) + '</b><span class="tk-small">1 scoop (30 g) = ' + SCOOP.k + ' kcal · ' + SCOOP.p + ' g protein</span></div>' +
+        '<div class="tk-field"><span class="tk-small" id="scL">How many scoops?</span><div class="chips" role="group" aria-labelledby="scL">' + [1, 1.5, 2, 3].map(function (x) { return '<button type="button" data-sc="' + x + '" aria-pressed="' + (x === 1) + '">' + x + '</button>'; }).join('') + '</div></div>' +
+        '<div class="tk-grid2"><div class="tk-field"><label for="shMx">Mixed with</label><select class="tk-select" id="shMx"><option value="water"' + (milkDefault ? '' : ' selected') + '>Water</option><option value="low"' + (milkDefault ? ' selected' : '') + '>Low-fat milk</option><option value="full">Full-fat milk</option></select></div>' +
+        '<div class="tk-field" id="shMlW"' + (milkDefault ? '' : ' hidden') + '><label for="shMl">Milk</label><select class="tk-select" id="shMl">' + [150, 200, 250, 300, 350, 400, 500].map(function (n) { return '<option value="' + n + '"' + (n === 300 ? ' selected' : '') + '>' + n + ' ml</option>'; }).join('') + '</select></div></div>' +
+        '<div class="fd-calc" id="fCalc" aria-live="polite"></div><div class="tk-grid2" style="margin-top:12px"><button type="button" class="tk-btn ghost" id="fBackS">Back</button><button type="button" class="tk-btn" id="fAdd">Add</button></div>';
+      var sc = 1;
+      function calc() { var mx = $('shMx').value, ml = mx === 'water' ? 0 : +$('shMl').value || 0, M = MILK[mx] || { k: 0, p: 0, c: 0, f: 0 }; $('shMlW').hidden = mx === 'water';
+        return { amount: sc + ' scoop' + (sc === 1 ? '' : 's') + ' with ' + (mx === 'water' ? 'water' : ml + ' ml ' + M.nm), kcal: Math.round(sc * SCOOP.k + ml * M.k), p: r1(sc * SCOOP.p + ml * M.p), c: r1(sc * SCOOP.c + ml * M.c), f: r1(sc * SCOOP.f + ml * M.f) }; }
+      function paint() { var c = calc(); $('fCalc').innerHTML = '<b>' + nf(c.kcal) + ' kcal</b><span>' + c.p + ' g protein · ' + c.c + ' g carbs · ' + c.f + ' g fat</span>'; }
+      m.querySelectorAll('[data-sc]').forEach(function (b) { b.onclick = function () { sc = +b.dataset.sc; m.querySelectorAll('[data-sc]').forEach(function (x) { x.setAttribute('aria-pressed', String(x === b)); }); paint(); }; });
+      $('shMx').onchange = $('shMl').onchange = paint; paint();
+      $('fBackS').onclick = paneSearch;
+      $('fAdd').onclick = async function () {
+        var c = calc(); this.disabled = true;
+        var o = base(); o.name = 'Protein shake'; o.amount = c.amount; o.kcal = c.kcal; o.protein = c.p; o.carbs = c.c; o.fat = c.f;
+        if (await addFoodRows([o])) { toast('Added protein shake'); done(); } else this.disabled = false;
+      };
+    }
     function paneAmount(f) {
+      if (/^(whey protein powder|protein shake)/i.test(f.name)) return paneShake(f);
       var byW = !!f.g, def = byW ? (f.unit === 'g' && f.g === 100 ? 100 : f.g) : 1;
       $('fPane').innerHTML = '<div class="fd-pick"><b>' + esc(f.name) + '</b><span class="tk-small">' + esc(f.portion) + ' = ' + nf(f.kcal) + ' kcal</span></div>' +
         '<div class="tk-field"><label for="fAmt">' + (byW ? 'How much? (' + (f.unit === 'ml' ? 'ml' : 'grams') + ')' : 'How many portions?') + '</label><input class="tk-input" id="fAmt" inputmode="decimal" value="' + def + '"></div>' +
@@ -1630,8 +1653,6 @@
       // Eggs are counted, not weighed: per large egg (about 50 g edible) and per egg white.
       var EGG = { whole: { k: 72, p: 6.3, c: 0.4, f: 4.8, one: 'whole egg', many: 'whole eggs' }, white: { k: 17, p: 3.6, c: 0.2, f: 0.1, one: 'egg white', many: 'egg whites' } };
       function isEgg(it) { return it.count != null || (/\b(eggs?|omel+ett?e?s?|frittatas?)\b/i.test(it.name) && !/eggplant|egg ?noodle|egg ?fried rice|scotch/i.test(it.name)); }
-      // Protein shakes are counted in scoops (1 scoop whey, 30 g) plus what they're mixed with, not weighed.
-      var SCOOP = { k: 120, p: 24, c: 3, f: 2 }, MILK = { low: { k: 0.46, p: 0.034, c: 0.049, f: 0.015, nm: 'low-fat milk' }, full: { k: 0.625, p: 0.033, c: 0.05, f: 0.033, nm: 'full-fat milk' } };
       function isShake(it) { return it.scoops != null || (/\b(protein|whey)\b.*\b(shake|drink)\b|\bwhey\b|\bprotein shake\b/i.test(it.name) && !/smoothie|bar\b|pancake|oat|cookie|yogh?urt|ice cream/i.test(it.name)); }
       function eggOpts(sel) { var o = ''; for (var n = 0; n <= 12; n++) o += '<option value="' + n + '"' + (n === sel ? ' selected' : '') + '>' + n + '</option>'; return o; }
       function showItems(items) {
