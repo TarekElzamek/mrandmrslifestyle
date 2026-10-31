@@ -385,3 +385,4 @@ details.wk .wk-body b{color:var(--text);font-weight:600}
 .hb-scale.mood button[aria-pressed="true"] small{color:#0a0a0a}
 .hb-memo{color:var(--gold);display:inline-flex}
 .hb-memo svg{width:18px;height:18px}
+.fd-ai-row label[hidden]{display:none}

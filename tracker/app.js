@@ -1630,10 +1630,14 @@
       // Eggs are counted, not weighed: per large egg (about 50 g edible) and per egg white.
       var EGG = { whole: { k: 72, p: 6.3, c: 0.4, f: 4.8, one: 'whole egg', many: 'whole eggs' }, white: { k: 17, p: 3.6, c: 0.2, f: 0.1, one: 'egg white', many: 'egg whites' } };
       function isEgg(it) { return it.count != null || (/\b(eggs?|omel+ett?e?s?|frittatas?)\b/i.test(it.name) && !/eggplant|egg ?noodle|egg ?fried rice|scotch/i.test(it.name)); }
+      // Protein shakes are counted in scoops (1 scoop whey, 30 g) plus what they're mixed with, not weighed.
+      var SCOOP = { k: 120, p: 24, c: 3, f: 2 }, MILK = { low: { k: 0.46, p: 0.034, c: 0.049, f: 0.015, nm: 'low-fat milk' }, full: { k: 0.625, p: 0.033, c: 0.05, f: 0.033, nm: 'full-fat milk' } };
+      function isShake(it) { return it.scoops != null || (/\b(protein|whey)\b.*\b(shake|drink)\b|\bwhey\b|\bprotein shake\b/i.test(it.name) && !/smoothie|bar\b|pancake|oat|cookie|yogh?urt|ice cream/i.test(it.name)); }
       function eggOpts(sel) { var o = ''; for (var n = 0; n <= 12; n++) o += '<option value="' + n + '"' + (n === sel ? ' selected' : '') + '>' + n + '</option>'; return o; }
       function showItems(items) {
         var box = $('fItems');
         items.forEach(function (it) {
+          if (isShake(it)) { it.shake = true; it.sc = it.scoops || 1; it.mix = it.mixed_with === 'milk' ? 'low' : 'water'; return; }
           if (!isEgg(it)) return;
           it.egg = true; var n0 = it.count || Math.min(12, Math.max(1, Math.round((it.grams || 100) / 50))), wt = it.egg_type === 'white';
           it.eggW = wt ? 0 : n0; it.eggWh = wt ? n0 : 0;
@@ -1641,7 +1645,11 @@
           it.extra = Math.max(0, Math.min(200, (it.kcal || 0) - n0 * EGG[wt ? 'white' : 'whole'].k));
         });
         box.innerHTML = items.map(function (it, i) {
-          var amt = it.egg
+          var amt = it.shake
+            ? '<label>Scoops <select class="tk-select fd-ai-sel" data-aisc="' + i + '">' + [1, 2, 3, 4].map(function (n) { return '<option value="' + n + '"' + (n === it.sc ? ' selected' : '') + '>' + n + '</option>'; }).join('') + '</select></label>' +
+              '<label>With <select class="tk-select fd-ai-sel" data-aimx="' + i + '"><option value="water"' + (it.mix === 'water' ? ' selected' : '') + '>Water</option><option value="low"' + (it.mix === 'low' ? ' selected' : '') + '>Low-fat milk</option><option value="full">Full-fat milk</option></select></label>' +
+              '<label data-aimlw="' + i + '"' + (it.mix === 'water' ? ' hidden' : '') + '>Milk <select class="tk-select fd-ai-sel" data-aiml="' + i + '">' + [150, 200, 250, 300, 350, 400, 500].map(function (n) { return '<option value="' + n + '"' + (n === 300 ? ' selected' : '') + '>' + n + ' ml</option>'; }).join('') + '</select></label>'
+            : it.egg
             ? '<label>Whole eggs <select class="tk-select fd-ai-sel" data-aie="' + i + '">' + eggOpts(it.eggW) + '</select></label>' +
               '<label>Egg whites <select class="tk-select fd-ai-sel" data-aiwh="' + i + '">' + eggOpts(it.eggWh) + '</select></label>'
             : '<label>Grams <input class="tk-input" inputmode="numeric" value="' + (it.grams || '') + '" data-aig="' + i + '"></label>';
@@ -1649,6 +1657,11 @@
         }).join('') + '<div class="fd-calc" id="fAiTot"></div><button type="button" class="tk-btn block" id="fAiAdd" style="margin-top:12px">Add to my log</button>';
         function cur(i) {
           var it = items[i], on = box.querySelector('[data-aion="' + i + '"]').checked, name = box.querySelector('[data-ain="' + i + '"]').value.trim() || it.name;
+          if (it.shake) {
+            var sc = +box.querySelector('[data-aisc="' + i + '"]').value || 1, mx = box.querySelector('[data-aimx="' + i + '"]').value, ml = mx === 'water' ? 0 : +box.querySelector('[data-aiml="' + i + '"]').value || 0, M = MILK[mx] || { k: 0, p: 0, c: 0, f: 0 };
+            box.querySelector('[data-aimlw="' + i + '"]').hidden = mx === 'water';
+            return { on: on, name: name, amount: sc + ' scoop' + (sc === 1 ? '' : 's') + ' with ' + (mx === 'water' ? 'water' : ml + ' ml ' + M.nm), kcal: Math.round(sc * SCOOP.k + ml * M.k), p: r1(sc * SCOOP.p + ml * M.p), c: r1(sc * SCOOP.c + ml * M.c), f: r1(sc * SCOOP.f + ml * M.f) };
+          }
           if (it.egg) {
             var w = +box.querySelector('[data-aie="' + i + '"]').value || 0, wh = +box.querySelector('[data-aiwh="' + i + '"]').value || 0, A = EGG.whole, B = EGG.white, x = w + wh ? it.extra : 0;
             var amount = [w ? w + ' ' + (w === 1 ? A.one : A.many) : '', wh ? wh + ' ' + (wh === 1 ? B.one : B.many) : ''].filter(Boolean).join(' + ');

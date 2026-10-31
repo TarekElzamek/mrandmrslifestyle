@@ -19,6 +19,7 @@ Reply with ONLY this JSON object:
  "items": [{"name": short English name, "grams": number, "kcal": number, "protein": grams, "carbs": grams, "fat": grams}],
  "note": one short sentence about anything uncertain (for example hidden oil or sauce), or ""}
 Eggs: for any egg dish (fried, boiled, poached, scrambled, omelette, frittata) also count the eggs. Add "count": the number of eggs, and "egg_type": "whole" if yolks are used or "white" if it looks like egg whites only. Name it by how it was cooked: a flat egg folded or rolled with no separate runny yolk is an omelette, an egg with a visible separate yolk is fried, small soft curds are scrambled. Keep grams and kcal for the whole egg dish including any oil or butter.
+Protein shakes: for a whey or protein shake (often in a shaker bottle), add "scoops": your best guess of the scoops of powder (usually 1), and "mixed_with": "milk" only if you can clearly see it is milky, otherwise "water".
 Numbers only, no units. If the photo does not show food or drink, return {"is_food": false, "items": []}.`;
 
 function send(res, code, obj) {
@@ -130,6 +131,7 @@ module.exports = async (req, res) => {
   const items = (Array.isArray(data.items) ? data.items : []).slice(0, 12).map(it => {
     const o = { name: String(it && it.name || '').slice(0, 60).trim(), grams: n(it.grams, 3000), kcal: n(it.kcal, 4000), protein: n(it.protein, 300), carbs: n(it.carbs, 600), fat: n(it.fat, 300) };
     if (o.grams != null) o.grams = Math.round(o.grams);
+    const sc = n(it.scoops, 4); if (sc != null && sc >= 0.5) { o.scoops = Math.max(1, Math.round(sc)); o.mixed_with = it.mixed_with === 'milk' ? 'milk' : 'water'; }
     const c = n(it.count, 12); if (c != null && c >= 1) { o.count = Math.round(c); o.egg_type = it.egg_type === 'white' ? 'white' : 'whole'; }
     if (o.kcal != null) o.kcal = Math.round(o.kcal);
     ['protein', 'carbs', 'fat'].forEach(k => { if (o[k] != null) o[k] = Math.round(o[k] * 10) / 10; });
