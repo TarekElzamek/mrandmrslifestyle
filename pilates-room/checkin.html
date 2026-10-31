@@ -1,0 +1,340 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="TPR Check-in">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#F6F1EA">
+<link rel="apple-touch-icon" href="/pilates-room-logo.jpg">
+<title>TPR Check-in</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--cream:#F6F1EA;--white:#FFFDF9;--sand:#E9DED2;--line:#D9CBBB;--ink:#3A2617;--brown:#795033;--muted:#6F5A48;--ok:#3F6B45;--warn:#9A4B2F}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--cream);color:var(--ink);font-family:Montserrat,Arial,sans-serif;font-size:15px;-webkit-tap-highlight-color:transparent}
+body{min-height:100vh;padding:calc(env(safe-area-inset-top) + 14px) 16px calc(env(safe-area-inset-bottom) + 28px)}
+.wrap{max-width:520px;margin:0 auto}
+header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+header img{height:22px}
+.tabs{display:flex;gap:6px}
+.tabs button{border:1px solid var(--line);background:transparent;color:var(--ink);border-radius:999px;padding:7px 12px;font:600 12px Montserrat,sans-serif}
+.tabs button[aria-pressed=true]{background:var(--ink);color:var(--cream);border-color:var(--ink)}
+h1{font-family:Cinzel,Georgia,serif;font-weight:500;font-size:22px;letter-spacing:.5px}
+h2{font-family:Cinzel,Georgia,serif;font-weight:500;font-size:17px;letter-spacing:.5px;margin-bottom:10px}
+p.m{color:var(--muted);font-size:13.5px;line-height:1.55;margin-top:6px}
+.card{background:var(--white);border:1px solid var(--sand);border-radius:14px;padding:16px;margin-top:14px}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;border:0;border-radius:12px;background:var(--ink);color:var(--cream);font:600 15px Montserrat,sans-serif;padding:14px 16px;text-decoration:none;cursor:pointer}
+.btn.big{font-size:18px;padding:20px}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.btn.gold{background:var(--brown)}
+.btn.sm{width:auto;padding:9px 14px;font-size:13px;border-radius:10px}
+.btn:disabled{opacity:.5}
+.row{display:flex;gap:8px;align-items:center}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+input,select{width:100%;border:1px solid var(--line);background:#fff;border-radius:10px;padding:12px;font:500 16px Montserrat,sans-serif;color:var(--ink)}
+label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin:12px 0 5px}
+.pin{letter-spacing:8px;text-align:center;font-size:24px}
+.list .it{display:flex;align-items:center;gap:12px;padding:12px 2px;border-top:1px solid var(--sand);cursor:pointer}
+.list .it:first-child{border-top:0}
+.av{flex:0 0 38px;height:38px;border-radius:50%;background:var(--cream);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-family:Cinzel,serif;color:var(--brown)}
+.it b{display:block;font-weight:600}
+.it small{color:var(--muted);font-size:12px}
+.n{margin-left:auto;text-align:right;font-family:Cinzel,serif;font-size:20px}
+.pill{display:inline-block;font:700 10px Montserrat,sans-serif;letter-spacing:.8px;text-transform:uppercase;border-radius:999px;padding:3px 8px;margin-left:6px;vertical-align:middle}
+.pill.r{background:#F3E2C5;color:#7A4E12}.pill.f{background:#E3EEDF;color:var(--ok)}
+.sheet{position:fixed;inset:0;background:rgba(58,38,23,.45);display:flex;align-items:flex-end;justify-content:center;z-index:20}
+.sheet>div{background:var(--white);width:100%;max-width:560px;max-height:92vh;overflow:auto;border-radius:18px 18px 0 0;padding:18px 16px calc(env(safe-area-inset-bottom) + 20px)}
+.sh-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.x{border:0;background:var(--cream);width:36px;height:36px;border-radius:50%;font-size:18px;color:var(--ink)}
+.big-n{font-family:Cinzel,serif;font-size:44px;line-height:1}
+.ok{color:var(--ok);font-weight:600}
+.warn{background:#FBEFE6;border:1px solid #EBCDB8;color:var(--warn);border-radius:10px;padding:10px 12px;font-size:13.5px;margin-top:10px}
+.good{background:#EAF2E6;border:1px solid #CFE0C7;color:var(--ok);border-radius:10px;padding:10px 12px;font-size:13.5px;margin-top:10px}
+video{width:100%;border-radius:14px;background:#000;aspect-ratio:3/4;object-fit:cover}
+.scanbox{position:relative}
+.scanbox:after{content:"";position:absolute;left:18%;right:18%;top:22%;bottom:22%;border:3px solid rgba(246,241,234,.9);border-radius:14px}
+.toast{position:fixed;left:50%;top:calc(env(safe-area-inset-top) + 14px);transform:translateX(-50%);background:var(--ink);color:var(--cream);padding:11px 16px;border-radius:12px;font-size:14px;z-index:40;max-width:90vw}
+.log{font-size:12.5px;color:var(--muted);margin-top:6px}
+.log div{padding:5px 0;border-top:1px dashed var(--sand)}
+.step{display:flex;gap:10px;margin-top:14px}
+.step>span{flex:0 0 26px;height:26px;border-radius:50%;background:var(--ink);color:var(--cream);font:700 12px Montserrat;display:flex;align-items:center;justify-content:center}
+.step.done>span{background:var(--ok)}
+code{background:var(--cream);border:1px solid var(--sand);border-radius:6px;padding:2px 5px;font-size:12px;word-break:break-all}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <img src="/pilates-room/tpr-wordmark.png" alt="The Pilates Room">
+    <div class="tabs" id="tabs" hidden><button data-tab="home" aria-pressed="true">Check-in</button><button data-tab="setup" aria-pressed="false">Setup</button></div>
+  </header>
+
+  <!-- PIN -->
+  <section id="vPin" hidden>
+    <h1>Studio check-in</h1>
+    <p class="m">Enter the studio PIN to add sessions to clients' rewards cards.</p>
+    <div class="card">
+      <label for="pin">Studio PIN</label>
+      <input id="pin" class="pin" type="password" inputmode="numeric" autocomplete="current-password" maxlength="12">
+      <button class="btn" id="pinGo" style="margin-top:14px">Unlock</button>
+      <div id="pinMsg"></div>
+    </div>
+    <p class="m" style="margin-top:18px">Setting this up for the first time? <a href="#" id="toSetup" style="color:var(--brown)">Open Setup</a> (coach sign-in needed).</p>
+  </section>
+
+  <!-- HOME -->
+  <section id="vHome" hidden>
+    <button class="btn big" id="scanBtn">Scan a card</button>
+    <div class="card">
+      <div class="row"><input id="q" type="search" placeholder="Search a client by name or phone" autocomplete="off"><button class="btn sm" id="addBtn">+ New</button></div>
+      <div class="list" id="list" style="margin-top:6px"><p class="m">Loading…</p></div>
+    </div>
+    <p class="m" style="text-align:center;margin-top:16px"><a href="#" id="lock" style="color:var(--muted)">Lock this phone</a></p>
+  </section>
+
+  <!-- SETUP -->
+  <section id="vSetup" hidden>
+    <h1>Rewards card setup</h1>
+    <p class="m">One-time setup for Tarek. Needs your coach sign-in from the Mr &amp; Mrs Lifestyle tracker.</p>
+    <div id="setupBody" class="card"><p class="m">Checking…</p></div>
+  </section>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"></script>
+<script>
+(function () {
+  'use strict';
+  var $ = function (id) { return document.getElementById(id); };
+  var S = { pin: null, members: [], tab: 'home' };
+  function ls(k, v) { try { if (v === undefined) return localStorage.getItem(k); if (v === null) localStorage.removeItem(k); else localStorage.setItem(k, v); } catch (e) { return null; } }
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+  function toast(t) { var d = document.createElement('div'); d.className = 'toast'; d.textContent = t; document.body.appendChild(d); setTimeout(function () { d.remove(); }, 2600); }
+  function show(v) { ['vPin', 'vHome', 'vSetup'].forEach(function (x) { $(x).hidden = x !== v; }); }
+
+  async function api(action, args) {
+    var r = await fetch('/api/tpr', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ pin: S.pin, action: action, args: args || {} }) });
+    var j = await r.json().catch(function () { return { error: 'server_error' }; });
+    if (j.error === 'wrong_pin' || j.error === 'locked') { lock(j.error === 'locked' ? 'Too many wrong PINs. Wait 15 minutes, then try again.' : 'Wrong PIN.'); throw new Error(j.error); }
+    return j;
+  }
+  function errText(e) {
+    return ({ not_found: 'No client with that card.', no_free_sessions: 'No free sessions left to use.', not_reached: 'This reward has not been reached yet.',
+      name_required: 'Enter the client\'s name.', nothing_to_undo: 'Nothing to undo.', bad_number: 'Enter a valid number.', no_pin: 'No studio PIN yet. Open Setup first.',
+      not_configured: 'The card system is not switched on yet (Setup step 3).', server_error: 'Something went wrong. Try again.' })[e] || e;
+  }
+
+  // ---------- PIN ----------
+  function lock(msg) { S.pin = null; ls('tpr_pin', null); show('vPin'); $('tabs').hidden = true; $('pinMsg').innerHTML = msg ? '<div class="warn">' + esc(msg) + '</div>' : ''; $('pin').value = ''; }
+  async function unlock(pin, silent) {
+    S.pin = pin; $('pinGo').disabled = true;
+    try {
+      var r = await api('check');
+      if (r.error) { $('pinMsg').innerHTML = '<div class="warn">' + esc(errText(r.error)) + '</div>'; S.pin = null; return; }
+      ls('tpr_pin', pin); $('tabs').hidden = false; go('home');
+    } catch (e) { if (!silent && e.message !== 'wrong_pin' && e.message !== 'locked') $('pinMsg').innerHTML = '<div class="warn">Could not connect. Check the internet and try again.</div>'; }
+    finally { $('pinGo').disabled = false; }
+  }
+  $('pinGo').onclick = function () { var p = $('pin').value.trim(); if (p) unlock(p); };
+  $('pin').onkeydown = function (e) { if (e.key === 'Enter') $('pinGo').click(); };
+  $('lock').onclick = function (e) { e.preventDefault(); lock(); };
+  $('toSetup').onclick = function (e) { e.preventDefault(); $('tabs').hidden = false; go('setup'); };
+  document.querySelectorAll('#tabs button').forEach(function (b) { b.onclick = function () { if (b.dataset.tab === 'home' && !S.pin) return lock(); go(b.dataset.tab); }; });
+  function go(tab) {
+    S.tab = tab; document.querySelectorAll('#tabs button').forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.tab === tab)); });
+    if (tab === 'home') { show('vHome'); load(); } else { show('vSetup'); setup(); }
+  }
+
+  // ---------- list ----------
+  function ready(m) { return (m.sessions >= 10 && !m.reward10_at) || (m.sessions >= 20 && !m.reward20_at); }
+  function freeLeft(m) { return Math.max(0, (m.free_earned || 0) - (m.free_used || 0)); }
+  function initials(n) { return String(n || '?').split(' ').map(function (x) { return x[0]; }).join('').slice(0, 2).toUpperCase(); }
+  async function load() {
+    try { var r = await api('list'); if (r.error) { $('list').innerHTML = '<div class="warn">' + esc(errText(r.error)) + '</div>'; return; } S.members = r.members || []; draw(); }
+    catch (e) { if (S.pin) $('list').innerHTML = '<div class="warn">Could not load clients.</div>'; }
+  }
+  function draw() {
+    var q = $('q').value.trim().toLowerCase();
+    var rows = S.members.filter(function (m) { return !q || (m.name + ' ' + (m.phone || '') + ' ' + m.serial).toLowerCase().indexOf(q) > -1; });
+    $('list').innerHTML = rows.length ? rows.map(function (m) {
+      return '<div class="it" data-id="' + m.id + '"><span class="av">' + esc(initials(m.name)) + '</span><div style="min-width:0"><b>' + esc(m.name) + (ready(m) ? '<span class="pill r">Reward</span>' : '') + (freeLeft(m) ? '<span class="pill f">' + freeLeft(m) + ' free</span>' : '') + '</b><small>' + esc(m.serial) + (m.last_session ? ' · last ' + esc(m.last_session) : '') + '</small></div><span class="n">' + m.sessions + '</span></div>';
+    }).join('') : '<p class="m">' + (S.members.length ? 'No match.' : 'No clients yet. Tap + New to add your first client.') + '</p>';
+    $('list').querySelectorAll('[data-id]').forEach(function (el) { el.onclick = function () { openMember(+el.dataset.id); }; });
+  }
+  $('q').oninput = draw;
+  function upsert(m) { var i = S.members.findIndex(function (x) { return x.id === m.id; }); if (i > -1) S.members[i] = m; else S.members.push(m); S.members.sort(function (a, b) { return a.name.localeCompare(b.name); }); draw(); }
+
+  // ---------- sheets ----------
+  function sheet(html) {
+    var s = document.createElement('div'); s.className = 'sheet'; s.innerHTML = '<div>' + html + '</div>';
+    s.onclick = function (e) { if (e.target === s) close(); };
+    function close() { if (s.onclose) s.onclose(); s.remove(); }
+    s.close = close; document.body.appendChild(s);
+    s.querySelectorAll('[data-close]').forEach(function (b) { b.onclick = close; });
+    return s;
+  }
+
+  // ---------- scan ----------
+  var SC = { stream: null, raf: 0 };
+  function stopScan() { cancelAnimationFrame(SC.raf); if (SC.stream) SC.stream.getTracks().forEach(function (t) { t.stop(); }); SC.stream = null; }
+  $('scanBtn').onclick = async function () {
+    var s = sheet('<div class="sh-h"><h2 style="margin:0">Scan the card</h2><button class="x" data-close aria-label="Close">×</button></div><p class="m" style="margin-bottom:10px">Ask the client to open the card in Wallet and hold it up to the camera.</p><div class="scanbox"><video id="vid" playsinline muted></video></div><div id="scMsg"></div>');
+    s.onclose = stopScan;
+    try {
+      SC.stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' }, audio: false });
+      var v = $('vid'); v.srcObject = SC.stream; await v.play();
+      var c = document.createElement('canvas'), ctx = c.getContext('2d', { willReadFrequently: true }), busy = false;
+      (function tick() {
+        SC.raf = requestAnimationFrame(tick);
+        if (busy || v.readyState < 2) return;
+        var w = v.videoWidth, h = v.videoHeight; if (!w) return;
+        var sc = Math.min(1, 720 / Math.max(w, h)); c.width = w * sc; c.height = h * sc;
+        ctx.drawImage(v, 0, 0, c.width, c.height);
+        var code = window.jsQR && jsQR(ctx.getImageData(0, 0, c.width, c.height).data, c.width, c.height, { inversionAttempts: 'dontInvert' });
+        if (code && /^TPR-\d{6}$/i.test(code.data.trim())) { busy = true; stopScan(); if (navigator.vibrate) navigator.vibrate(60); s.close(); addSession({ serial: code.data.trim().toUpperCase() }); }
+      })();
+    } catch (e) { $('scMsg').innerHTML = '<div class="warn">Camera not available. Allow camera access for this page, or search the client by name instead.</div>'; }
+  };
+
+  async function addSession(args, force) {
+    var r = await api('session', Object.assign({}, args, force ? { force: true } : {}));
+    if (r.error) return toast(errText(r.error));
+    if (r.member) upsert(r.member);
+    if (r.warn === 'already_today') {
+      var w = sheet('<div class="sh-h"><h2 style="margin:0">' + esc(r.member.name) + '</h2><button class="x" data-close aria-label="Close">×</button></div><div class="warn">A session was already added today. Add another one?</div><div class="grid2" style="margin-top:14px"><button class="btn ghost" data-close>No</button><button class="btn" id="force">Yes, add</button></div>');
+      $('force').onclick = function () { w.close(); addSession(args, true); };
+      return;
+    }
+    var m = r.member, rd = ready(m);
+    var d = sheet('<div class="sh-h"><span class="ok">✓ Session added</span><button class="x" data-close aria-label="Close">×</button></div>' +
+      '<h2 style="margin:6px 0 2px">' + esc(m.name) + '</h2><div class="row" style="align-items:baseline;gap:10px"><span class="big-n">' + m.sessions + '</span><span class="m">sessions</span></div>' +
+      (rd ? '<div class="good">🎁 Surprise reward reached. Give it to her today, then tap <b>Reward given</b> on her profile.</div>' : '') +
+      (freeLeft(m) ? '<div class="good">She has ' + freeLeft(m) + ' free session' + (freeLeft(m) > 1 ? 's' : '') + ' from referrals.</div>' : '') +
+      (r.push && r.push.sent ? '<p class="m">Her Wallet card is updating now.</p>' : '<p class="m">Her card will update the next time she opens it.</p>') +
+      '<div class="grid2" style="margin-top:14px"><button class="btn ghost" id="undo">Undo</button><button class="btn" id="prof">Open profile</button></div>');
+    $('undo').onclick = async function () { this.disabled = true; var u = await api('undo', { id: m.id }); if (u.member) upsert(u.member); d.close(); toast(u.error ? errText(u.error) : 'Undone'); };
+    $('prof').onclick = function () { d.close(); openMember(m.id); };
+  }
+
+  // ---------- member ----------
+  async function openMember(id) {
+    var r = await api('get', { id: id }); if (r.error) return toast(errText(r.error));
+    var m = r.member; upsert(Object.assign({}, m, { card_url: (S.members.find(function (x) { return x.id === id; }) || {}).card_url || m.card_url }));
+    var url = location.origin + '/pilates-room/card/' + m.share_code, rd = ready(m), fl = freeLeft(m);
+    var phone = String(m.phone || '').replace(/[^\d]/g, '');
+    var msg = 'Hi ' + String(m.name).split(' ')[0] + '! Here is your The Pilates Room rewards card. Tap to add it to your Apple Wallet: ' + url + '\nEvery session you complete is added to it, on the way to your surprise rewards.';
+    var labels = { session: '+1 session', created: 'Card created', set: 'Count changed', free_add: '+1 free session (referral)', free_use: 'Free session used', reward: 'Reward given' };
+    var s = sheet('<div class="sh-h"><h2 style="margin:0">' + esc(m.name) + '</h2><button class="x" data-close aria-label="Close">×</button></div>' +
+      '<p class="m">' + esc(m.serial) + (m.phone ? ' · ' + esc(m.phone) : '') + '</p>' +
+      '<div class="row" style="align-items:baseline;gap:10px;margin-top:10px"><span class="big-n">' + m.sessions + '</span><span class="m">sessions</span></div>' +
+      '<button class="btn" id="mPlus" style="margin-top:12px">+1 session</button>' +
+      (rd ? '<div class="good">🎁 Surprise reward reached.</div><button class="btn gold" id="mReward" style="margin-top:8px">Reward given</button>' : '') +
+      '<div class="card"><h2>Free sessions</h2><p class="m">' + fl + ' available · ' + (m.free_used || 0) + ' used</p><div class="grid2" style="margin-top:10px"><button class="btn ghost" id="mFreeAdd">+1 referral</button><button class="btn ghost" id="mFreeUse"' + (fl ? '' : ' disabled') + '>Use one</button></div></div>' +
+      '<div class="card"><h2>Rewards card</h2><div class="grid2"><a class="btn" id="mWa" href="https://wa.me/' + phone + '?text=' + encodeURIComponent(msg) + '" target="_blank" rel="noopener">Send on WhatsApp</a><button class="btn ghost" id="mCopy">Copy link</button></div></div>' +
+      '<div class="card"><h2>Details</h2><label for="eN">Name</label><input id="eN" value="' + esc(m.name) + '"><label for="eP">Phone</label><input id="eP" inputmode="tel" value="' + esc(m.phone || '') + '"><label for="eE">Email</label><input id="eE" type="email" value="' + esc(m.email || '') + '">' +
+      '<label for="eS">Sessions (correct the count)</label><input id="eS" inputmode="numeric" value="' + m.sessions + '">' +
+      '<button class="btn ghost" id="mSave" style="margin-top:12px">Save changes</button></div>' +
+      '<div class="card"><h2>History</h2><div class="log">' + (r.log || []).map(function (l) { return '<div>' + new Date(l.at).toLocaleString('en-GB', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }) + ' · ' + esc(labels[l.action] || l.action) + (l.note ? ' · ' + esc(l.note) : '') + '</div>'; }).join('') + '</div></div>' +
+      '<button class="btn ghost" id="mDel" style="margin-top:14px;color:var(--warn)">Remove client</button>');
+    $('mPlus').onclick = function () { s.close(); addSession({ id: m.id }); };
+    if ($('mReward')) $('mReward').onclick = async function () { var lvl = (m.sessions >= 10 && !m.reward10_at) ? '10' : '20'; var x = await api('reward_given', { id: m.id, level: lvl }); if (x.error) return toast(errText(x.error)); upsert(x.member); s.close(); toast('Reward marked as given'); };
+    $('mFreeAdd').onclick = async function () { var who = prompt('Who did she refer? (optional)') ; if (who === null) return; var x = await api('free_add', { id: m.id, note: who ? 'referred ' + who : '' }); if (x.error) return toast(errText(x.error)); upsert(x.member); s.close(); openMember(m.id); toast('Free session added'); };
+    $('mFreeUse').onclick = async function () { var x = await api('free_use', { id: m.id }); if (x.error) return toast(errText(x.error)); upsert(x.member); s.close(); openMember(m.id); toast('Free session used'); };
+    $('mCopy').onclick = function () { (navigator.clipboard ? navigator.clipboard.writeText(url) : Promise.reject()).then(function () { toast('Link copied'); }, function () { prompt('Copy this link', url); }); };
+    $('mSave').onclick = async function () {
+      var x = await api('edit', { id: m.id, name: $('eN').value, phone: $('eP').value, email: $('eE').value }); if (x.error) return toast(errText(x.error));
+      var n = parseInt($('eS').value, 10); if (n !== m.sessions) { x = await api('set_sessions', { id: m.id, sessions: n }); if (x.error) return toast(errText(x.error)); }
+      upsert(x.member); s.close(); toast('Saved');
+    };
+    $('mDel').onclick = async function () { if (!confirm('Remove ' + m.name + '? Her card will stop updating.')) return; var x = await api('archive', { id: m.id }); if (x.error) return toast(errText(x.error)); S.members = S.members.filter(function (y) { return y.id !== m.id; }); draw(); s.close(); toast('Client removed'); };
+  }
+
+  // ---------- add ----------
+  $('addBtn').onclick = function () {
+    var s = sheet('<div class="sh-h"><h2 style="margin:0">New client</h2><button class="x" data-close aria-label="Close">×</button></div>' +
+      '<label for="nN">Name</label><input id="nN" autocomplete="off"><label for="nP">WhatsApp number</label><input id="nP" inputmode="tel" placeholder="+971 50 123 4567">' +
+      '<label for="nE">Email (optional)</label><input id="nE" type="email"><div class="grid2"><div><label for="nS">Sessions done so far</label><input id="nS" inputmode="numeric" value="0"></div><div><label for="nF">Free sessions earned</label><input id="nF" inputmode="numeric" value="0"></div></div>' +
+      '<button class="btn" id="nGo" style="margin-top:16px">Create card</button>');
+    $('nN').focus();
+    $('nGo').onclick = async function () {
+      this.disabled = true;
+      var x = await api('add', { name: $('nN').value, phone: $('nP').value, email: $('nE').value, sessions: parseInt($('nS').value, 10) || 0, free: parseInt($('nF').value, 10) || 0 });
+      this.disabled = false; if (x.error) return toast(errText(x.error));
+      upsert(x.member); s.close(); openMember(x.member.id); toast('Card created. Send it to her on WhatsApp.');
+    };
+  };
+
+  // ---------- setup (coach only) ----------
+  var SB = null;
+  function loadScript(src) { return new Promise(function (ok, no) { var s = document.createElement('script'); s.src = src; s.onload = ok; s.onerror = no; document.head.appendChild(s); }); }
+  async function sb() {
+    if (SB) return SB;
+    await loadScript('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js');
+    SB = window.supabase.createClient('https://iwtkphupsobwiaiqvkok.supabase.co', 'sb_publishable_L1RcJTZ1UTT_XocBLPLSYg_tPpPFWbU', { auth: { persistSession: true, autoRefreshToken: true, flowType: 'pkce' } });
+    return SB;
+  }
+  async function admin(action, args) { var c = await sb(); var r = await c.rpc('tpr_admin', { p_action: action, p_args: args || {} }); if (r.error) throw new Error(r.error.message); return r.data; }
+  function download(name, text) { var a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([text], { type: 'application/octet-stream' })); a.download = name; document.body.appendChild(a); a.click(); a.remove(); }
+  async function setup() {
+    var box = $('setupBody'); box.innerHTML = '<p class="m">Checking…</p>';
+    var st;
+    try { var c = await sb(); var u = (await c.auth.getUser()).data.user; if (!u) throw new Error('signin'); st = await admin('status'); }
+    catch (e) { box.innerHTML = '<p class="m">Sign in to the Mr &amp; Mrs Lifestyle tracker with your coach account on this phone or computer first, then come back here.</p><a class="btn" href="/workout-tracker.html" style="margin-top:12px">Open the tracker to sign in</a>'; return; }
+    var server = false, mismatch = false; try { var t = await (await fetch('/api/tpr', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '{"action":"ping"}' })).json(); server = !!t.on; mismatch = t.error === 'secret_mismatch'; } catch (e) {}
+    box.innerHTML =
+      '<div class="step' + (st.has_pin ? ' done' : '') + '"><span>1</span><div style="flex:1"><b>Studio PIN</b><p class="m">' + (st.has_pin ? 'Set. You can change it below.' : 'Choose a PIN of at least 6 digits for Chloe\'s phone.') + '</p><div class="row" style="margin-top:8px"><input id="sPin" type="password" inputmode="numeric" placeholder="New PIN" autocomplete="new-password"><button class="btn sm" id="sPinGo">Save</button></div></div></div>' +
+      '<div class="step' + (st.has_cert ? ' done' : '') + '"><span>2</span><div style="flex:1"><b>Apple certificate</b>' +
+        (st.has_cert ? '<p class="m">Installed: <code>' + esc(st.pass_type_id) + '</code> · team <code>' + esc(st.team_id) + '</code></p>' : '') +
+        '<p class="m">a) Download the certificate request. b) Upload it in your Apple Developer account for your Pass Type ID and download the certificate (<code>pass.cer</code>). c) Upload <code>pass.cer</code> here.</p>' +
+        '<button class="btn ghost" id="sCsr" style="margin-top:8px">a) Download certificate request</button>' +
+        '<label for="sCer">c) Upload pass.cer</label><input id="sCer" type="file" accept=".cer,.crt,.pem"><div id="sCerMsg"></div></div></div>' +
+      '<div class="step' + (server ? ' done' : '') + '"><span>3</span><div style="flex:1"><b>Switch it on</b><p class="m">' + (server ? 'On.' : mismatch ? 'The TPR_SECRET in Vercel does not match. Copy the value below again, save it in Vercel and redeploy.' : 'In Vercel → mrandmrslifestyle project → Settings → Environment Variables, add <code>TPR_SECRET</code> with the value below, then redeploy.') + '</p><button class="btn ghost sm" id="sSec" style="margin-top:8px">Show the TPR_SECRET value</button><div id="sSecV"></div></div></div>' +
+      '<p class="m" style="margin-top:16px">' + st.members + ' client card' + (st.members === 1 ? '' : 's') + ' so far.</p>';
+    $('sPinGo').onclick = async function () { var p = $('sPin').value.trim(); if (!/^\d{6,12}$/.test(p)) return toast('Use 6 to 12 digits'); try { await admin('set_pin', { pin: p }); toast('PIN saved'); setup(); } catch (e) { toast(e.message); } };
+    $('sSec').onclick = async function () { try { var r = await admin('secret'); $('sSecV').innerHTML = '<p class="m" style="margin-top:8px"><code>' + esc(r.secret) + '</code></p>'; } catch (e) { toast(e.message); } };
+    $('sCsr').onclick = async function () {
+      this.disabled = true; this.textContent = 'Creating… (a few seconds)';
+      try {
+        await loadScript('https://cdn.jsdelivr.net/npm/node-forge@1.3.1/dist/forge.min.js');
+        var existing = (await admin('pending_key')).key, key;
+        if (existing) key = forge.pki.privateKeyFromPem(existing);
+        else { var kp = await new Promise(function (ok, no) { forge.pki.rsa.generateKeyPair({ bits: 2048 }, function (e, k) { e ? no(e) : ok(k); }); }); key = kp.privateKey; await admin('store_pending_key', { key: forge.pki.privateKeyToPem(key) }); }
+        var csr = forge.pki.createCertificationRequest();
+        csr.publicKey = forge.pki.setRsaPublicKey(key.n, key.e);
+        csr.setSubject([{ name: 'commonName', value: 'The Pilates Room by Chloe' }, { name: 'emailAddress', value: 'info@thepilatesroombychloe.com' }, { name: 'countryName', value: 'AE' }]);
+        csr.sign(key, forge.md.sha256.create());
+        download('ThePilatesRoom.certSigningRequest', forge.pki.certificationRequestToPem(csr));
+        toast('Request downloaded');
+      } catch (e) { toast('Could not create it: ' + e.message); }
+      this.disabled = false; this.textContent = 'a) Download certificate request';
+    };
+    $('sCer').onchange = async function () {
+      var f = this.files[0]; if (!f) return; var msg = $('sCerMsg');
+      try {
+        await loadScript('https://cdn.jsdelivr.net/npm/node-forge@1.3.1/dist/forge.min.js');
+        var buf = new Uint8Array(await f.arrayBuffer()), txt = new TextDecoder().decode(buf), cert;
+        if (/BEGIN CERTIFICATE/.test(txt)) cert = forge.pki.certificateFromPem(txt);
+        else { var bin = ''; for (var i = 0; i < buf.length; i++) bin += String.fromCharCode(buf[i]); cert = forge.pki.certificateFromAsn1(forge.asn1.fromDer(bin)); }
+        var uid = cert.subject.getField({ type: '0.9.2342.19200300.100.1.1' }), ou = cert.subject.getField('OU');
+        if (!uid || !/^pass\./.test(uid.value)) throw new Error('This is not a Pass Type ID certificate.');
+        var pend = (await admin('pending_key')).key; if (!pend) throw new Error('Download the certificate request first (step a).');
+        var pk = forge.pki.privateKeyFromPem(pend);
+        if (pk.n.toString(16) !== cert.publicKey.n.toString(16)) throw new Error('This certificate was made from a different request. Use the request downloaded from this page.');
+        await admin('store_cert', { cert: forge.pki.certificateToPem(cert), pass_type_id: uid.value, team_id: ou ? ou.value : '' });
+        msg.innerHTML = '<div class="good">Certificate installed for ' + esc(uid.value) + '.</div>'; setTimeout(setup, 1200);
+      } catch (e) { msg.innerHTML = '<div class="warn">' + esc(e.message) + '</div>'; }
+    };
+  }
+
+  // start
+  var saved = ls('tpr_pin');
+  if (location.hash === '#setup') { $('tabs').hidden = false; go('setup'); }
+  else if (saved) { show('vHome'); unlock(saved, true); }
+  else lock();
+})();
+</script>
+</body>
+</html>
