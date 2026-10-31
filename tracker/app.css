@@ -373,6 +373,8 @@ details.wk .wk-body b{color:var(--text);font-weight:600}
 .fd-ai-row{display:flex;align-items:center;gap:10px}
 .fd-ai-row label{display:flex;align-items:center;gap:6px;font-size:.85rem;color:var(--muted)}
 .fd-ai-row .tk-input{width:90px}
+.fd-ai-row{flex-wrap:wrap}
+.fd-ai-sel{width:auto;min-width:72px;min-height:40px;padding:6px 28px 6px 10px}
 .fd-ai-k{margin-left:auto;font-weight:700;color:var(--gold)}
 .fd-cams{margin-top:10px}.fd-cams .fd-cam{margin-top:0;text-align:center}
 /* mood scale: line icons + labels instead of emojis */
