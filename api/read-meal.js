@@ -85,6 +85,11 @@ module.exports = async (req, res) => {
   try {
     const u = await fetch(SUPA_URL + '/auth/v1/user', { headers: { apikey: SUPA_KEY, Authorization: auth } });
     if (!u.ok) return send(res, 401, { error: 'sign_in_required' });
+    // Only coaches and clients a coach has approved
+    const who = await u.json().catch(() => ({}));
+    const pr = await fetch(SUPA_URL + '/rest/v1/profiles?select=role,access&id=eq.' + encodeURIComponent(who.id || ''), { headers: { apikey: SUPA_KEY, Authorization: auth } });
+    const me = pr.ok ? ((await pr.json().catch(() => []))[0] || {}) : {};
+    if (me.role !== 'coach' && me.access !== 'approved') return send(res, 403, { error: 'not_approved' });
   } catch (e) { return send(res, 502, { error: 'auth_check_failed' }); }
 
   // 2) The photo

@@ -382,3 +382,100 @@ create policy "food read" on public.food_logs for select using (user_id = auth.u
 drop policy if exists "food own" on public.food_logs;
 create policy "food own" on public.food_logs for all
   using (user_id = auth.uid() or public.is_coach()) with check (user_id = auth.uid() or public.is_coach());
+
+-- ---------- v17: coach approval — new sign-ups wait until a coach approves them ----------
+-- access: pending (just signed up), approved (can use the tracker), declined. Everyone already here stays approved.
+alter table public.profiles add column if not exists access text not null default 'pending' check (access in ('pending','approved','declined'));
+alter table public.profiles add column if not exists access_at timestamptz;
+update public.profiles set access = 'approved', access_at = coalesce(access_at, now()) where access = 'pending';
+update public.profiles set access = 'approved' where role = 'coach';
+
+-- true for coaches and approved clients
+create or replace function public.is_approved() returns boolean
+language sql stable security definer set search_path = public as $$
+  select exists (select 1 from public.profiles where id = auth.uid() and (role = 'coach' or access = 'approved'));
+$$;
+
+-- clients cannot promote themselves to coach or approve themselves
+create or replace function public.protect_role() returns trigger
+language plpgsql security definer set search_path = public as $$
+begin
+  if auth.uid() is not null and not public.is_coach() then
+    if new.role is distinct from old.role then new.role := old.role; end if;
+    if new.access is distinct from old.access then new.access := old.access; new.access_at := old.access_at; end if;
+  end if;
+  if new.access is distinct from old.access then new.access_at := now(); end if;
+  return new;
+end $$;
+
+-- invited clients are approved straight away (the coach invited them)
+create or replace function public.apply_invite() returns trigger
+language plpgsql security definer set search_path = public as $$
+declare inv public.client_invites; t public.program_templates;
+begin
+  select * into inv from public.client_invites where lower(email) = lower(new.email) and accepted_at is null order by created_at desc limit 1;
+  if inv.id is null then return new; end if;
+  update public.profiles set access = 'approved', access_at = now() where id = new.id;
+  if coalesce(inv.name, '') <> '' then update public.profiles set name = inv.name where id = new.id; end if;
+  if inv.template_id is not null then
+    select * into t from public.program_templates where id = inv.template_id;
+    if t.id is not null then
+      insert into public.programs (client_id, name, notes, days, active, created_by, template_id)
+      values (new.id, t.name, t.notes, t.days, true, inv.created_by, t.id);
+    end if;
+  end if;
+  update public.client_invites set accepted_at = now(), accepted_user = new.id where id = inv.id;
+  return new;
+end $$;
+
+-- tell the coaches (bell) when someone new asks for access; runs after apply_invite (alphabetical)
+create or replace function public.notify_access_request() returns trigger
+language plpgsql security definer set search_path = public as $$
+declare p public.profiles;
+begin
+  select * into p from public.profiles where id = new.id;
+  if p.access = 'pending' and p.role <> 'coach' then
+    insert into public.coach_notifications (client_id, kind, title, body)
+    values (p.id, 'access', coalesce(nullif(p.name, ''), split_part(p.email, '@', 1)) || ' asked for access to the tracker', p.email || ' · tap to approve or decline');
+  end if;
+  return new;
+end $$;
+drop trigger if exists profiles_zz_notify_access on public.profiles;
+create trigger profiles_zz_notify_access after insert on public.profiles for each row execute function public.notify_access_request();
+
+-- the tracker's data: own rows only once approved (coaches unchanged)
+drop policy if exists "workouts read" on public.workouts;
+create policy "workouts read" on public.workouts for select using ((user_id = auth.uid() and public.is_approved()) or public.is_coach());
+drop policy if exists "workouts own" on public.workouts;
+create policy "workouts own" on public.workouts for all
+  using ((user_id = auth.uid() and public.is_approved()) or public.is_coach()) with check ((user_id = auth.uid() and public.is_approved()) or public.is_coach());
+drop policy if exists "body read" on public.body_logs;
+create policy "body read" on public.body_logs for select using ((user_id = auth.uid() and public.is_approved()) or public.is_coach());
+drop policy if exists "body own" on public.body_logs;
+create policy "body own" on public.body_logs for all
+  using ((user_id = auth.uid() and public.is_approved()) or public.is_coach()) with check ((user_id = auth.uid() and public.is_approved()) or public.is_coach());
+drop policy if exists "programs read" on public.programs;
+create policy "programs read" on public.programs for select using ((client_id = auth.uid() and public.is_approved()) or public.is_coach());
+drop policy if exists "live read" on public.live_workouts;
+create policy "live read" on public.live_workouts for select using ((user_id = auth.uid() and public.is_approved()) or public.is_coach());
+drop policy if exists "live write" on public.live_workouts;
+create policy "live write" on public.live_workouts for all using ((user_id = auth.uid() and public.is_approved()) or public.is_coach()) with check ((user_id = auth.uid() and public.is_approved()) or public.is_coach());
+drop policy if exists "habits read" on public.habit_logs;
+create policy "habits read" on public.habit_logs for select using ((user_id = auth.uid() and public.is_approved()) or public.is_coach());
+drop policy if exists "habits own" on public.habit_logs;
+create policy "habits own" on public.habit_logs for all
+  using ((user_id = auth.uid() and public.is_approved()) or public.is_coach()) with check ((user_id = auth.uid() and public.is_approved()) or public.is_coach());
+drop policy if exists "food read" on public.food_logs;
+create policy "food read" on public.food_logs for select using ((user_id = auth.uid() and public.is_approved()) or public.is_coach());
+drop policy if exists "food own" on public.food_logs;
+create policy "food own" on public.food_logs for all
+  using ((user_id = auth.uid() and public.is_approved()) or public.is_coach()) with check ((user_id = auth.uid() and public.is_approved()) or public.is_coach());
+drop policy if exists "videos coach and clients" on public.exercise_videos;
+create policy "videos coach and clients" on public.exercise_videos for select
+  using (public.is_coach() or (public.is_approved() and exists (select 1 from public.programs p where p.client_id = auth.uid())));
+drop policy if exists "photos read" on storage.objects;
+create policy "photos read" on storage.objects for select
+  using (bucket_id = 'progress-photos' and (((storage.foldername(name))[1] = auth.uid()::text and public.is_approved()) or public.is_coach()));
+drop policy if exists "photos insert" on storage.objects;
+create policy "photos insert" on storage.objects for insert
+  with check (bucket_id = 'progress-photos' and (((storage.foldername(name))[1] = auth.uid()::text and public.is_approved()) or public.is_coach()));

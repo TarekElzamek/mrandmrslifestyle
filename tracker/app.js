@@ -180,6 +180,7 @@
     }
     if (!me) { $('view').innerHTML = '<div class="tk-empty">We couldn\'t load your profile. Please refresh the page.</div>'; return; }
     S.me = me;
+    if (me.role !== 'coach' && me.access !== 'approved') { renderWaiting(me); return; }
     var saved = lsGet('mm_target', null);
     var qp = new URLSearchParams(location.search), qc = qp.get('client');
     if (qc) { qp.delete('client'); history.replaceState(null, '', location.pathname + (qp.toString() ? '?' + qp : '') + location.hash); if (me.role === 'coach') saved = qc; }
@@ -194,6 +195,23 @@
     loadVideos();
     await loadTarget();
     applyPendingEx();
+  }
+
+  // Signed in but not approved by a coach yet (or declined): no tracker, just the status and a way to reach us.
+  function renderWaiting(me) {
+    $('gear').hidden = true;
+    var nav = document.querySelector('.tk-nav'); if (nav) nav.hidden = true;
+    var declined = me.access === 'declined', first = (me.name || '').split(' ')[0];
+    var wa = 'https://wa.me/971507871515?text=' + encodeURIComponent('Hi Tarek, I signed in to the Mr & Mrs Lifestyle tracker as ' + me.email + '. Can you approve my access?');
+    $('view').innerHTML = '<div class="tk-card gold" style="margin-top:24px"><span class="tk-tag">' + (declined ? 'Access not approved' : 'Request sent') + '</span>' +
+      '<h1 class="tk-h1" style="margin:6px 0 10px">' + (declined ? 'Your access <em>wasn\'t approved</em>' : 'Thanks' + (first ? ', ' + esc(first) : '') + '. <em>Almost there.</em>') + '</h1>' +
+      '<p class="tk-muted">' + (declined ? 'The tracker is for Mr &amp; Mrs Lifestyle coaching clients. If you think this is a mistake, or you\'d like to start coaching with us, message us on WhatsApp.' : 'The tracker is for Mr &amp; Mrs Lifestyle coaching clients. Your coach has been notified and will approve your access shortly. You\'ll get in as soon as it\'s approved.') + '</p>' +
+      '<p class="tk-small" style="margin-top:8px">Signed in as ' + esc(me.email) + '</p>' +
+      '<div class="tk-grid2" style="margin-top:16px">' + (declined ? '' : '<button type="button" class="tk-btn" id="wCheck">Check again</button>') + '<a class="tk-btn ghost" href="' + wa + '" target="_blank" rel="noopener">Message us on WhatsApp</a></div>' +
+      '<button type="button" class="tk-link" id="sOut" style="margin-top:14px">Sign out</button></div>';
+    if ($('wCheck')) $('wCheck').onclick = function () { location.reload(); };
+    $('sOut').onclick = signOut;
+    ev('tracker_waiting', { access: me.access });
   }
 
   async function loadTarget() {
@@ -748,6 +766,7 @@
       $('nList').innerHTML = h;
       m.querySelectorAll('[data-nid]').forEach(function (b) { b.onclick = async function () {
         var x = N.list.filter(function (y) { return y.id === b.dataset.nid; })[0]; if (!x || !x.client_id) return;
+        if (x.kind === 'access') { m.close(); if (viewingOther()) await backToClients(); go('clients'); return; }
         var r = await sb.from('profiles').select('*').eq('id', x.client_id).maybeSingle(); if (!r.data) return toast('Client not found');
         m.close(); await openClient(r.data); if (x.kind === 'finished') { S.tab = 'history'; render(); }
       }; });
@@ -819,7 +838,7 @@
     var m = modal('Programme templates', '<div id="tplList"><p class="tk-muted">Loading…</p></div>');
     var list = await loadTemplates(); if (!list) return m.close();
     var ar = await sb.from('programs').select('client_id,active,template_id').not('template_id', 'is', null);
-    var cr = await sb.from('profiles').select('id,name,email').neq('id', S.me.id).eq('archived', false);
+    var cr = await sb.from('profiles').select('id,name,email').neq('id', S.me.id).eq('archived', false).eq('access', 'approved');
     var A = ar.data || [], C = cr.data || [];
     function assignedTo(t) { return A.filter(function (x) { return x.template_id === t.id && x.active; }).map(function (x) { var c = C.filter(function (y) { return y.id === x.client_id; })[0]; return c ? (c.name || c.email) : null; }).filter(Boolean); }
     function draw() {
@@ -848,7 +867,7 @@
   async function openAssign(t) {
     var m = modal('Assign: ' + t.name, '<div class="tk-field"><label for="aQ" class="sr">Search clients</label><input class="tk-input" id="aQ" type="search" placeholder="Search by name or email"></div><div id="aList"><p class="tk-muted">Loading clients…</p></div>', function () { if (S.tab === 'plan') render(); });
     var q = await Promise.all([
-      sb.from('profiles').select('id,name,email').neq('id', S.me.id).eq('archived', false).order('name'),
+      sb.from('profiles').select('id,name,email').neq('id', S.me.id).eq('archived', false).eq('access', 'approved').order('name'),
       sb.from('programs').select('id,client_id,name,active,template_id')
     ]);
     if (q[0].error || q[1].error) { $('aList').innerHTML = '<p class="tk-muted">Could not load clients.</p>'; return; }
@@ -1811,7 +1830,8 @@
       sb.from('programs').select('client_id,active')
     ]);
     if (S.tab !== 'clients') return;
-    var ALL = q[0].data || [], P = ALL.filter(function (p) { return !p.archived; }), GONE = ALL.filter(function (p) { return p.archived; }), W = q[1].data || [], B = q[2].data || [], PR = q[3].data || [], edit = false;
+    var REQ = (q[0].data || []).filter(function (p) { return p.access === 'pending'; }), NO = (q[0].data || []).filter(function (p) { return p.access === 'declined'; });
+    var ALL = (q[0].data || []).filter(function (p) { return p.access === 'approved' || p.role === 'coach'; }), P = ALL.filter(function (p) { return !p.archived; }), GONE = ALL.filter(function (p) { return p.archived; }), W = q[1].data || [], B = q[2].data || [], PR = q[3].data || [], edit = false;
     var m30 = new Date(); m30.setDate(m30.getDate() - 30); var c30 = iso(m30);
     var rows = P.map(function (p) {
       var w = W.filter(function (x) { return x.user_id === p.id; }), b = B.filter(function (x) { return x.user_id === p.id; });
@@ -1819,9 +1839,18 @@
     });
     var h = '<h1 class="tk-h1">Your <em>clients</em></h1><p class="tk-sub">Everyone who signed in to the tracker. Tap a client to see their workouts, weight and programme, or to log today\'s session for them.</p>';
     h += '<div class="tk-grid3" style="margin-top:14px"><div class="tk-stat"><b>' + P.length + '</b><span>Clients</span></div><div class="tk-stat"><b>' + rows.filter(function (r) { return r.last && r.last >= iso(new Date(Date.now() - 7 * 864e5)); }).length + '</b><span>Trained 7 days</span></div><div class="tk-stat"><b>' + rows.filter(function (r) { return !r.prog; }).length + '</b><span>Need a plan</span></div></div>';
+    if (REQ.length) h += '<div class="tk-card gold" style="margin-top:14px"><span class="tk-tag">Access requests (' + REQ.length + ')</span><p class="tk-small" style="margin:4px 0 6px">Signed in and waiting for you. Approve your clients; decline anyone else.</p>' + REQ.map(function (p) { return '<div class="pick-item" style="cursor:default;flex-wrap:wrap">' + avatarHtml(p, 36) + '<div style="min-width:0;margin-left:10px;flex:1"><b>' + esc(p.name || p.email) + '</b><span>' + esc(p.email) + ' · ' + esc(timeAgo(p.created_at)) + '</span></div><div class="tk-row" style="gap:6px;margin-left:auto"><button type="button" class="tk-btn sm ghost" data-acc="declined:' + p.id + '">Decline</button><button type="button" class="tk-btn sm" data-acc="approved:' + p.id + '">Approve</button></div></div>'; }).join('') + '</div>';
     h += '<button type="button" class="tk-btn block" id="cAdd" style="margin-top:12px">+ Add client</button>';
     h += '<div class="tk-field"><label for="cQ" class="sr">Search clients</label><input class="tk-input" id="cQ" type="search" placeholder="Search by name or email"></div><div class="tk-row" style="justify-content:flex-end;margin:4px 0 8px"><button type="button" class="tk-btn sm ghost" id="cEdit">Edit list</button></div><div class="tk-card" id="cList"></div><div id="cGone"></div>';
+    if (NO.length) h += '<details style="margin-top:16px"><summary class="tk-small" style="cursor:pointer">Declined sign-ins (' + NO.length + ')</summary><div class="tk-card" style="margin-top:8px">' + NO.map(function (p) { return '<div class="pick-item" style="cursor:default">' + avatarHtml(p, 32) + '<div style="min-width:0;margin-left:10px"><b>' + esc(p.name || p.email) + '</b><span>' + esc(p.email) + '</span></div><button type="button" class="tk-btn sm" data-acc="approved:' + p.id + '" style="margin-left:auto">Approve</button></div>'; }).join('') + '</div></details>';
     v.innerHTML = h;
+    v.querySelectorAll('[data-acc]').forEach(function (b) { b.onclick = async function () {
+      var a = b.dataset.acc.split(':'), c = (q[0].data || []).filter(function (p) { return p.id === a[1]; })[0]; if (!c) return;
+      if (a[0] === 'declined' && !confirmBox('Decline ' + (c.name || c.email) + '? They won\'t be able to use the tracker. You can approve them later.')) return;
+      b.disabled = true; var r = await sb.from('profiles').update({ access: a[0] }).eq('id', c.id).select('access').single();
+      if (r.error || !r.data || r.data.access !== a[0]) { b.disabled = false; return toast(r.error ? r.error.message : 'Could not update'); }
+      toast((c.name || c.email) + (a[0] === 'approved' ? ' approved. They can use the tracker now.' : ' declined')); ev('tracker_access_' + a[0]); renderClients();
+    }; });
     function draw(ql) {
       var html = rows.filter(function (r) { return !ql || ((r.p.name || '') + ' ' + r.p.email).toLowerCase().indexOf(ql) > -1; }).map(function (r) {
         var age = r.last ? Math.round((parseDay(today()) - parseDay(r.last)) / 864e5) : null;
@@ -1929,7 +1958,7 @@
     leadsBanner();
     var since = new Date(); since.setDate(since.getDate() - 7);
     var q = await Promise.all([
-      sb.from('profiles').select('id,name,email,avatar_url').neq('id', S.me.id).eq('archived', false),
+      sb.from('profiles').select('id,name,email,avatar_url').neq('id', S.me.id).eq('archived', false).eq('access', 'approved'),
       sb.from('workouts').select('user_id,date,title,duration_min,created_at').gte('date', iso(since)).order('created_at', { ascending: false }).limit(500),
       sb.from('programs').select('client_id,active'),
       sb.from('live_workouts').select('user_id,data,updated_at').neq('user_id', S.me.id),
@@ -2050,7 +2079,7 @@
     $('wFrom').onclick = function () { toast('Open the client, go to their Plan tab and tap "Save as template"'); go('clients'); };
     var list = await loadTemplates(); if (S.tab !== 'workouts' || !list) return;
     var ar = await sb.from('programs').select('client_id,active,template_id').not('template_id', 'is', null);
-    var cr = await sb.from('profiles').select('id,name,email').neq('id', S.me.id).eq('archived', false);
+    var cr = await sb.from('profiles').select('id,name,email').neq('id', S.me.id).eq('archived', false).eq('access', 'approved');
     var A = ar.data || [], C = cr.data || [];
     var h = list.length ? '' : '<div class="tk-empty">No templates yet. Tap <b>+ New template</b>, or save a client\'s programme from their Plan tab.</div>';
     list.forEach(function (t) {
