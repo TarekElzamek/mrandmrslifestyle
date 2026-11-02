@@ -10,6 +10,7 @@
  *   POST   /v1/log
  */
 const tpr = require('./_lib/tpr');
+const IMAGES = require('./_lib/tpr-images');
 
 function send(res, code, body, type) {
   res.statusCode = code;
@@ -35,13 +36,13 @@ function cardPage(m, code) {
 <style>*{box-sizing:border-box;margin:0}body{background:#F6F1EA;color:#3A2617;font-family:Montserrat,Arial,sans-serif;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px 16px}
 .c{width:100%;max-width:420px;text-align:center}.wm{width:240px;max-width:80%}.tag{font-size:10px;letter-spacing:2px;color:#795033;text-transform:uppercase;margin-top:10px}
 .card{background:#3A2617;color:#F6F1EA;border-radius:16px;padding:22px 20px;margin:26px 0 22px;text-align:left;box-shadow:0 14px 34px rgba(58,38,23,.25)}
-.k{font-size:10px;letter-spacing:1.5px;color:#CDB9A6;text-transform:uppercase;font-weight:600}.v{font-family:Cinzel,serif;font-size:28px;margin:4px 0 12px}.n{font-size:15px}
+.k{font-size:10px;letter-spacing:1.5px;color:#CDB9A6;text-transform:uppercase;font-weight:600}.v{font-family:Cinzel,serif;font-size:28px;margin:4px 0 12px}.n{font-size:15px}.stamps{display:block;width:calc(100% + 40px);margin:0 -20px 14px;height:auto}
 h1{font-family:Cinzel,serif;font-weight:500;font-size:22px;letter-spacing:.5px}p{font-size:14px;line-height:1.6;color:#6F5A48;margin-top:8px}
 .btn{display:flex;align-items:center;justify-content:center;gap:10px;background:#000;color:#fff;text-decoration:none;border-radius:12px;padding:15px 18px;font-weight:600;font-size:16px;margin-top:20px}
 .btn svg{width:22px;height:22px}.and{display:none;background:#fff;border:1px solid #E9DED2;border-radius:12px;padding:14px;font-size:13px;color:#6F5A48;margin-top:18px;line-height:1.5}
 .small{font-size:12px;color:#6F5A48;margin-top:18px}</style></head><body><div class="c">
 <img class="wm" src="/pilates-room/tpr-wordmark.png" alt="The Pilates Room by Chloe"><div class="tag">Rewards card</div>
-<div class="card"><div class="k">${esc(st.primaryLabel)}</div><div class="v">${esc(st.primary)}</div><div class="k">Member</div><div class="n">${esc(m.name)}</div></div>
+<div class="card"><div class="k">${esc(st.primaryLabel)}</div><div class="v">${esc(st.primary)}</div><img class="stamps" alt="${st.filled} of 10 sessions" src="data:image/png;base64,${IMAGES.stamps[st.filled + ':strip@2x.png']}"><div class="k">Member</div><div class="n">${esc(m.name)}</div></div>
 <h1>Hi ${esc(first)}, your card is ready</h1>
 <p>Add it to Apple Wallet. Every session you complete is added by Chloe, and your card updates by itself on the way to your surprise rewards.</p>
 <a class="btn" id="add" href="${file}"><svg viewBox="0 0 24 24" fill="#fff" aria-hidden="true"><path d="M3 6.5A2.5 2.5 0 0 1 5.5 4h13A2.5 2.5 0 0 1 21 6.5v1H3v-1Zm0 3h18v8A2.5 2.5 0 0 1 18.5 20h-13A2.5 2.5 0 0 1 3 17.5v-8Zm12 4.5a1 1 0 1 0 0 2h3a1 1 0 1 0 0-2h-3Z"/></svg>Add to Apple Wallet</a>
