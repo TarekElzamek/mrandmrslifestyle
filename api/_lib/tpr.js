@@ -52,13 +52,12 @@ async function wwdr() {
 // ---------- what the card says ----------
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 function cardState(m) {
-  // Stamp card: 10 reformers per round, a completed session lights one up in pink.
   const s = m.sessions || 0;
   const ready = (s >= 10 && !m.reward10_at) || (s >= 20 && !m.reward20_at);
-  if (ready) return { ready, filled: 10, header: '10/10', primary: 'Reward ready', primaryLabel: 'YOUR SURPRISE REWARD IS WAITING', next: 'Ready to collect' };
-  if (s < 10) return { ready, filled: s, header: `${s}/10`, primary: `${s} of 10`, primaryLabel: 'SESSIONS TO YOUR NEXT REWARD', next: `Surprise · ${10 - s} to go` };
-  if (s < 20) return { ready, filled: s - 10, header: `${s - 10}/10`, primary: `${s - 10} of 10`, primaryLabel: 'SESSIONS TO YOUR NEXT REWARD', next: `Surprise · ${20 - s} to go` };
-  return { ready, filled: 10, header: `${s}`, primary: `${s} sessions`, primaryLabel: 'THANK YOU FOR TRAINING WITH US', next: 'More surprises soon' };
+  if (ready) return { ready, primary: 'Reward ready', primaryLabel: 'YOUR SURPRISE REWARD IS WAITING', next: 'Ready to collect' };
+  if (s < 10) return { ready, primary: `${s} of 10`, primaryLabel: 'SESSIONS TO YOUR NEXT REWARD', next: `Surprise · ${10 - s} to go` };
+  if (s < 20) return { ready, primary: `${s} of 20`, primaryLabel: 'SESSIONS TO YOUR NEXT REWARD', next: `Surprise · ${20 - s} to go` };
+  return { ready, primary: `${s} sessions`, primaryLabel: 'THANK YOU FOR TRAINING WITH US', next: 'More surprises soon' };
 }
 function passJson(m, k) {
   const st = cardState(m);
@@ -81,15 +80,15 @@ function passJson(m, k) {
     labelColor: 'rgb(205, 185, 166)',
     sharingProhibited: true,
     storeCard: {
-      headerFields: [{ key: 'sessions', label: 'SESSIONS', value: st.header }],
+      headerFields: [{ key: 'sessions', label: 'SESSIONS', value: m.sessions || 0 }],
+      primaryFields: [{ key: 'progress', label: st.primaryLabel, value: st.primary }],
       secondaryFields: [{ key: 'member', label: 'MEMBER', value: m.name }, next],
       auxiliaryFields: [
         { key: 'free', label: 'FREE SESSIONS', value: free ? `${free} (referral)` : '0', changeMessage: 'Free sessions on your card: %@' },
         { key: 'since', label: 'MEMBER SINCE', value: `${MONTHS[since.getUTCMonth()]} ${since.getUTCFullYear()}`, textAlignment: 'PKTextAlignmentRight' }
       ],
       backFields: [
-        { key: 'total', label: 'Sessions completed', value: String(m.sessions || 0) },
-        { key: 'how', label: 'How it works', value: 'Every session you complete lights up a reformer on your card in pink. Chloe adds it after your session and the card updates by itself.' },
+        { key: 'how', label: 'How it works', value: 'Every session you complete at The Pilates Room is added to this card by Chloe. It updates by itself, so there is nothing for you to do.' },
         { key: 'rewards', label: 'Your rewards', value: 'A surprise reward after 10 sessions, and another after 20. You will see it here the moment it is ready.' },
         { key: 'referral', label: 'Refer a friend', value: 'Every friend you refer who buys a package earns you a free session.' },
         { key: 'free_left', label: 'Free sessions', value: `${free} available · ${m.free_used || 0} used` },
@@ -138,9 +137,7 @@ async function buildPass(m, opts) {
   const k = (opts && opts.keys) || await keys();
   const w = (opts && opts.wwdr) || await wwdr();
   const files = [['pass.json', Buffer.from(JSON.stringify(passJson(m, k)))]];
-  for (const [n, b64] of Object.entries(IMAGES.files)) files.push([n, Buffer.from(b64, 'base64')]);
-  const filled = cardState(m).filled;
-  for (const [n, b64] of Object.entries(IMAGES.stamps)) { const [c, name] = n.split(':'); if (+c === filled) files.push([name, Buffer.from(b64, 'base64')]); }
+  for (const [n, b64] of Object.entries(IMAGES)) files.push([n, Buffer.from(b64, 'base64')]);
   const manifest = {};
   for (const [n, d] of files) manifest[n] = crypto.createHash('sha1').update(d).digest('hex');
   const mbuf = Buffer.from(JSON.stringify(manifest));
