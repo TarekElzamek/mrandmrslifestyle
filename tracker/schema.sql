@@ -713,7 +713,7 @@ begin
     if coalesce(length(p_args->>'pin'), 0) < 6 then return jsonb_build_object('error', 'pin_too_short'); end if;
     insert into public.private_config (key, value) values ('tpr_pin_hash', crypt(p_args->>'pin', gen_salt('bf')))
       on conflict (key) do update set value = excluded.value;
-    delete from public.tpr_pin_fails;
+    delete from public.tpr_pin_fails where true;
     return jsonb_build_object('ok', true);
   elsif p_action = 'store_pending_key' then
     insert into public.private_config (key, value) values ('tpr_pending_key', p_args->>'key')
