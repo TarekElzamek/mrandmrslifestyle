@@ -84,16 +84,16 @@ function passJson(m, k) {
     storeCard: {
       headerFields: [{ key: 'sessions', label: 'SESSIONS', value: m.sessions || 0 }],
       primaryFields: [{ key: 'milestone', label: st.clubLabel, value: st.club, changeMessage: 'Welcome to the %@! A handwritten card and a surprise gift are waiting for you at the studio.' }],
-      secondaryFields: [
-        { key: 'member', label: 'MEMBER', value: m.name },
-        { key: 'since', label: 'MEMBER SINCE', value: `${MONTHS_LONG[since.getUTCMonth()]} ${since.getUTCFullYear()}`, textAlignment: 'PKTextAlignmentRight' }
-      ],
+      // Apple puts these in one row under the photo, so keep three short fields; "member since" is on the back
+      secondaryFields: [{ key: 'member', label: 'MEMBER', value: m.name }],
       auxiliaryFields: [
-        { key: 'referrals', label: 'SUCCESSFUL REFERRALS', value: m.referrals || 0, changeMessage: 'Thank you for your referral! Successful referrals: %@' },
-        { key: 'free', label: 'FREE SESSIONS AVAILABLE', value: free, textAlignment: 'PKTextAlignmentRight', changeMessage: 'Free sessions available on your card: %@' }
+        { key: 'referrals', label: 'REFERRALS', value: m.referrals || 0, textAlignment: 'PKTextAlignmentCenter', changeMessage: 'Thank you for your referral! Successful referrals: %@' },
+        { key: 'free', label: 'FREE SESSIONS', value: free, textAlignment: 'PKTextAlignmentRight', changeMessage: 'Free sessions available on your card: %@' }
       ],
       backFields: [
         { key: 'circle', label: 'The Inner Circle', value: 'Every 10 sessions you join a new club: the 10 Session Club, the 20 Session Club, the 30 Session Club and onwards. At every milestone you receive a handwritten card celebrating your progress and a surprise gift.' },
+        { key: 'since', label: 'Member since', value: `${MONTHS_LONG[since.getUTCMonth()]} ${since.getUTCFullYear()}` },
+        { key: 'refs', label: 'Successful referrals', value: String(m.referrals || 0) },
         { key: 'next', label: 'Your next club', value: st.ready ? `You have reached the ${st.club}. Your gift is waiting at the studio.` : `${st.toGo} more session${st.toGo === 1 ? '' : 's'} to the ${clubName((m.sessions || 0) + st.toGo)}.` },
         { key: 'referral', label: 'Refer a friend', value: 'When a friend you refer buys her first package and names you, you earn a free session. Your successful referrals stay on your card.' },
         { key: 'free_left', label: 'Free sessions', value: `${free} available · ${m.free_used || 0} used. Includes referral rewards and any free sessions given as milestone gifts.` },
