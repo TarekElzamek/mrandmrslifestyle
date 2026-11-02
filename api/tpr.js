@@ -15,7 +15,7 @@ async function readJson(req) {
   const chunks = []; for await (const c of req) chunks.push(c);
   try { return JSON.parse(Buffer.concat(chunks).toString('utf8') || '{}'); } catch (e) { return {}; }
 }
-const ACTIONS = ['check', 'list', 'get', 'add', 'session', 'undo', 'set_sessions', 'free_add', 'free_use', 'reward_given', 'edit', 'archive'];
+const ACTIONS = ['check', 'list', 'get', 'add', 'session', 'undo', 'set_sessions', 'free_add', 'free_gift', 'free_use', 'reward_given', 'edit', 'archive'];
 
 module.exports = async (req, res) => {
   if (req.method !== 'POST') return send(res, 405, { error: 'method_not_allowed' });

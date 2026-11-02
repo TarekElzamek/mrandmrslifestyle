@@ -50,21 +50,23 @@ async function wwdr() {
 }
 
 // ---------- what the card says ----------
-const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+const MONTHS_LONG = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+// The Inner Circle: a new club every 10 sessions, a milestone gift at each one.
+function clubName(n) { return n < 10 ? 'New Member' : `${Math.floor(n / 10) * 10} Session Club`; }
 function cardState(m) {
   const s = m.sessions || 0;
-  const ready = (s >= 10 && !m.reward10_at) || (s >= 20 && !m.reward20_at);
-  if (ready) return { ready, primary: 'Reward ready', primaryLabel: 'YOUR SURPRISE REWARD IS WAITING', next: 'Ready to collect' };
-  if (s < 10) return { ready, primary: `${s} of 10`, primaryLabel: 'SESSIONS TO YOUR NEXT REWARD', next: `Surprise · ${10 - s} to go` };
-  if (s < 20) return { ready, primary: `${s} of 20`, primaryLabel: 'SESSIONS TO YOUR NEXT REWARD', next: `Surprise · ${20 - s} to go` };
-  return { ready, primary: `${s} sessions`, primaryLabel: 'THANK YOU FOR TRAINING WITH US', next: 'More surprises soon' };
+  const ready = Math.floor(s / 10) > (m.rewards_given || 0);
+  const toGo = 10 - (s % 10);
+  return {
+    ready, club: clubName(s),
+    clubLabel: ready ? 'MILESTONE REACHED · GIFT WAITING' : `INNER CIRCLE · ${toGo} TO ${clubName(s + toGo).toUpperCase()}`,
+    toGo
+  };
 }
 function passJson(m, k) {
   const st = cardState(m);
   const free = Math.max(0, (m.free_earned || 0) - (m.free_used || 0));
   const since = new Date(m.created_at);
-  const next = { key: 'next', label: 'NEXT REWARD', value: st.next, textAlignment: 'PKTextAlignmentRight' };
-  if (st.ready) next.changeMessage = 'Your surprise reward is ready! Collect it at your next session.';
   return {
     formatVersion: 1,
     passTypeIdentifier: k.passTypeId,
@@ -73,7 +75,7 @@ function passJson(m, k) {
     authenticationToken: m.auth_token,
     webServiceURL: WALLET_URL,
     organizationName: 'The Pilates Room by Chloe',
-    description: 'The Pilates Room rewards card',
+    description: 'The Pilates Room · The Inner Circle',
     logoText: 'THE PILATES ROOM',
     foregroundColor: 'rgb(246, 241, 234)',
     backgroundColor: 'rgb(58, 38, 23)',
@@ -81,17 +83,21 @@ function passJson(m, k) {
     sharingProhibited: true,
     storeCard: {
       headerFields: [{ key: 'sessions', label: 'SESSIONS', value: m.sessions || 0 }],
-      primaryFields: [{ key: 'progress', label: st.primaryLabel, value: st.primary }],
-      secondaryFields: [{ key: 'member', label: 'MEMBER', value: m.name }, next],
+      primaryFields: [{ key: 'milestone', label: st.clubLabel, value: st.club, changeMessage: 'Welcome to the %@! A handwritten card and a surprise gift are waiting for you at the studio.' }],
+      secondaryFields: [
+        { key: 'member', label: 'MEMBER', value: m.name },
+        { key: 'since', label: 'MEMBER SINCE', value: `${MONTHS_LONG[since.getUTCMonth()]} ${since.getUTCFullYear()}`, textAlignment: 'PKTextAlignmentRight' }
+      ],
       auxiliaryFields: [
-        { key: 'free', label: 'FREE SESSIONS', value: free ? `${free} (referral)` : '0', changeMessage: 'Free sessions on your card: %@' },
-        { key: 'since', label: 'MEMBER SINCE', value: `${MONTHS[since.getUTCMonth()]} ${since.getUTCFullYear()}`, textAlignment: 'PKTextAlignmentRight' }
+        { key: 'referrals', label: 'SUCCESSFUL REFERRALS', value: m.referrals || 0, changeMessage: 'Thank you for your referral! Successful referrals: %@' },
+        { key: 'free', label: 'FREE SESSIONS AVAILABLE', value: free, textAlignment: 'PKTextAlignmentRight', changeMessage: 'Free sessions available on your card: %@' }
       ],
       backFields: [
+        { key: 'circle', label: 'The Inner Circle', value: 'Every 10 sessions you join a new club: the 10 Session Club, the 20 Session Club, the 30 Session Club and onwards. At every milestone you receive a handwritten card celebrating your progress and a surprise gift.' },
+        { key: 'next', label: 'Your next club', value: st.ready ? `You have reached the ${st.club}. Your gift is waiting at the studio.` : `${st.toGo} more session${st.toGo === 1 ? '' : 's'} to the ${clubName((m.sessions || 0) + st.toGo)}.` },
+        { key: 'referral', label: 'Refer a friend', value: 'When a friend you refer buys her first package and names you, you earn a free session. Your successful referrals stay on your card.' },
+        { key: 'free_left', label: 'Free sessions', value: `${free} available · ${m.free_used || 0} used. Includes referral rewards and any free sessions given as milestone gifts.` },
         { key: 'how', label: 'How it works', value: 'Every session you complete at The Pilates Room is added to this card by Chloe. It updates by itself, so there is nothing for you to do.' },
-        { key: 'rewards', label: 'Your rewards', value: 'A surprise reward after 10 sessions, and another after 20. You will see it here the moment it is ready.' },
-        { key: 'referral', label: 'Refer a friend', value: 'Every friend you refer who buys a package earns you a free session.' },
-        { key: 'free_left', label: 'Free sessions', value: `${free} available · ${m.free_used || 0} used` },
         { key: 'contact', label: 'Book or ask', value: 'WhatsApp +971 54 701 1995\ninfo@thepilatesroombychloe.com\nMeydan Avenue, Block A, Shop 3, Dubai' },
         { key: 'number', label: 'Card number', value: m.serial },
         { key: 'terms', label: 'Terms', value: 'Rewards are personal and not exchangeable for cash. One session counts per visit. The Pilates Room may update the rewards programme at any time.' }

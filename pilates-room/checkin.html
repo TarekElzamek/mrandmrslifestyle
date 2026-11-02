@@ -122,7 +122,7 @@ code{background:var(--cream);border:1px solid var(--sand);border-radius:6px;padd
     return j;
   }
   function errText(e) {
-    return ({ not_found: 'No client with that card.', no_free_sessions: 'No free sessions left to use.', not_reached: 'This reward has not been reached yet.',
+    return ({ not_found: 'No client with that card.', no_free_sessions: 'No free sessions left to use.', not_reached: 'This milestone has not been reached yet.', limit: 'Limit reached.',
       name_required: 'Enter the client\'s name.', nothing_to_undo: 'Nothing to undo.', bad_number: 'Enter a valid number.', no_pin: 'No studio PIN yet. Open Setup first.',
       not_configured: 'The card system is not switched on yet (Setup step 3).', server_error: 'Something went wrong. Try again.' })[e] || e;
   }
@@ -149,7 +149,9 @@ code{background:var(--cream);border:1px solid var(--sand);border-radius:6px;padd
   }
 
   // ---------- list ----------
-  function ready(m) { return (m.sessions >= 10 && !m.reward10_at) || (m.sessions >= 20 && !m.reward20_at); }
+  function ready(m) { return Math.floor(m.sessions / 10) > (m.rewards_given || 0); }
+  function club(n) { return n < 10 ? 'New Member' : Math.floor(n / 10) * 10 + ' Session Club'; }
+  function nextGift(m) { return ((m.rewards_given || 0) + 1) * 10 + ' Session Club'; }
   function freeLeft(m) { return Math.max(0, (m.free_earned || 0) - (m.free_used || 0)); }
   function initials(n) { return String(n || '?').split(' ').map(function (x) { return x[0]; }).join('').slice(0, 2).toUpperCase(); }
   async function load() {
@@ -160,7 +162,7 @@ code{background:var(--cream);border:1px solid var(--sand);border-radius:6px;padd
     var q = $('q').value.trim().toLowerCase();
     var rows = S.members.filter(function (m) { return !q || (m.name + ' ' + (m.phone || '') + ' ' + m.serial).toLowerCase().indexOf(q) > -1; });
     $('list').innerHTML = rows.length ? rows.map(function (m) {
-      return '<div class="it" data-id="' + m.id + '"><span class="av">' + esc(initials(m.name)) + '</span><div style="min-width:0"><b>' + esc(m.name) + (ready(m) ? '<span class="pill r">Reward</span>' : '') + (freeLeft(m) ? '<span class="pill f">' + freeLeft(m) + ' free</span>' : '') + '</b><small>' + esc(m.serial) + (m.last_session ? ' · last ' + esc(m.last_session) : '') + '</small></div><span class="n">' + m.sessions + '</span></div>';
+      return '<div class="it" data-id="' + m.id + '"><span class="av">' + esc(initials(m.name)) + '</span><div style="min-width:0"><b>' + esc(m.name) + (ready(m) ? '<span class="pill r">Gift</span>' : '') + (freeLeft(m) ? '<span class="pill f">' + freeLeft(m) + ' free</span>' : '') + '</b><small>' + esc(club(m.sessions)) + ' · ' + esc(m.serial) + (m.last_session ? ' · last ' + esc(m.last_session) : '') + '</small></div><span class="n">' + m.sessions + '</span></div>';
     }).join('') : '<p class="m">' + (S.members.length ? 'No match.' : 'No clients yet. Tap + New to add your first client.') + '</p>';
     $('list').querySelectorAll('[data-id]').forEach(function (el) { el.onclick = function () { openMember(+el.dataset.id); }; });
   }
@@ -211,8 +213,9 @@ code{background:var(--cream);border:1px solid var(--sand);border-radius:6px;padd
     var m = r.member, rd = ready(m);
     var d = sheet('<div class="sh-h"><span class="ok">✓ Session added</span><button class="x" data-close aria-label="Close">×</button></div>' +
       '<h2 style="margin:6px 0 2px">' + esc(m.name) + '</h2><div class="row" style="align-items:baseline;gap:10px"><span class="big-n">' + m.sessions + '</span><span class="m">sessions</span></div>' +
-      (rd ? '<div class="good">🎁 Surprise reward reached. Give it to her today, then tap <b>Reward given</b> on her profile.</div>' : '') +
-      (freeLeft(m) ? '<div class="good">She has ' + freeLeft(m) + ' free session' + (freeLeft(m) > 1 ? 's' : '') + ' from referrals.</div>' : '') +
+      '<p class="m">' + esc(club(m.sessions)) + '</p>' +
+      (rd ? '<div class="good">🎉 She reached the <b>' + esc(nextGift(m)) + '</b>. Give her the handwritten card and her surprise gift, then tap <b>Milestone gift given</b> on her profile.</div>' : '') +
+      (freeLeft(m) ? '<div class="good">She has ' + freeLeft(m) + ' free session' + (freeLeft(m) > 1 ? 's' : '') + ' available.</div>' : '') +
       (r.push && r.push.sent ? '<p class="m">Her Wallet card is updating now.</p>' : '<p class="m">Her card will update the next time she opens it.</p>') +
       '<div class="grid2" style="margin-top:14px"><button class="btn ghost" id="undo">Undo</button><button class="btn" id="prof">Open profile</button></div>');
     $('undo').onclick = async function () { this.disabled = true; var u = await api('undo', { id: m.id }); if (u.member) upsert(u.member); d.close(); toast(u.error ? errText(u.error) : 'Undone'); };
@@ -225,14 +228,14 @@ code{background:var(--cream);border:1px solid var(--sand);border-radius:6px;padd
     var m = r.member; upsert(Object.assign({}, m, { card_url: (S.members.find(function (x) { return x.id === id; }) || {}).card_url || m.card_url }));
     var url = location.origin + '/pilates-room/card/' + m.share_code, rd = ready(m), fl = freeLeft(m);
     var phone = String(m.phone || '').replace(/[^\d]/g, '');
-    var msg = 'Hi ' + String(m.name).split(' ')[0] + '! Here is your The Pilates Room rewards card. Tap to add it to your Apple Wallet: ' + url + '\nEvery session you complete is added to it, on the way to your surprise rewards.';
-    var labels = { session: '+1 session', created: 'Card created', set: 'Count changed', free_add: '+1 free session (referral)', free_use: 'Free session used', reward: 'Reward given' };
+    var msg = 'Hi ' + String(m.name).split(' ')[0] + '! Welcome to The Inner Circle 🤍 Here is your The Pilates Room card. Tap to add it to your Apple Wallet: ' + url + '\nEvery session you complete is added to it, and every 10 sessions you join a new club with a little surprise waiting for you.';
+    var labels = { session: '+1 session', created: 'Card created', set: 'Count changed', free_add: 'Successful referral (+1 free session)', free_gift: '+1 free session (gift)', free_use: 'Free session used', reward: 'Milestone gift given' };
     var s = sheet('<div class="sh-h"><h2 style="margin:0">' + esc(m.name) + '</h2><button class="x" data-close aria-label="Close">×</button></div>' +
       '<p class="m">' + esc(m.serial) + (m.phone ? ' · ' + esc(m.phone) : '') + '</p>' +
-      '<div class="row" style="align-items:baseline;gap:10px;margin-top:10px"><span class="big-n">' + m.sessions + '</span><span class="m">sessions</span></div>' +
+      '<div class="row" style="align-items:baseline;gap:10px;margin-top:10px"><span class="big-n">' + m.sessions + '</span><span class="m">sessions · ' + esc(club(m.sessions)) + '</span></div>' +
       '<button class="btn" id="mPlus" style="margin-top:12px">+1 session</button>' +
-      (rd ? '<div class="good">🎁 Surprise reward reached.</div><button class="btn gold" id="mReward" style="margin-top:8px">Reward given</button>' : '') +
-      '<div class="card"><h2>Free sessions</h2><p class="m">' + fl + ' available · ' + (m.free_used || 0) + ' used</p><div class="grid2" style="margin-top:10px"><button class="btn ghost" id="mFreeAdd">+1 referral</button><button class="btn ghost" id="mFreeUse"' + (fl ? '' : ' disabled') + '>Use one</button></div></div>' +
+      (rd ? '<div class="good">🎉 ' + esc(nextGift(m)) + ' reached: handwritten card and surprise gift.</div><button class="btn gold" id="mReward" style="margin-top:8px">Milestone gift given</button>' : '') +
+      '<div class="card"><h2>Referrals and free sessions</h2><p class="m">' + (m.referrals || 0) + ' successful referral' + ((m.referrals || 0) === 1 ? '' : 's') + ' · ' + fl + ' free available · ' + (m.free_used || 0) + ' used</p><p class="m" style="font-size:12px">A referral counts when the friend buys her first package and names her.</p><div class="grid2" style="margin-top:10px"><button class="btn ghost" id="mFreeAdd">+1 referral</button><button class="btn ghost" id="mFreeGift">+1 free (gift)</button></div><button class="btn ghost" id="mFreeUse" style="margin-top:8px"' + (fl ? '' : ' disabled') + '>Use a free session</button></div>' +
       '<div class="card"><h2>Rewards card</h2><div class="grid2"><a class="btn" id="mWa" href="https://wa.me/' + phone + '?text=' + encodeURIComponent(msg) + '" target="_blank" rel="noopener">Send on WhatsApp</a><button class="btn ghost" id="mCopy">Copy link</button></div></div>' +
       '<div class="card"><h2>Details</h2><label for="eN">Name</label><input id="eN" value="' + esc(m.name) + '"><label for="eP">Phone</label><input id="eP" inputmode="tel" value="' + esc(m.phone || '') + '"><label for="eE">Email</label><input id="eE" type="email" value="' + esc(m.email || '') + '">' +
       '<label for="eS">Sessions (correct the count)</label><input id="eS" inputmode="numeric" value="' + m.sessions + '">' +
@@ -240,8 +243,9 @@ code{background:var(--cream);border:1px solid var(--sand);border-radius:6px;padd
       '<div class="card"><h2>History</h2><div class="log">' + (r.log || []).map(function (l) { return '<div>' + new Date(l.at).toLocaleString('en-GB', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }) + ' · ' + esc(labels[l.action] || l.action) + (l.note ? ' · ' + esc(l.note) : '') + '</div>'; }).join('') + '</div></div>' +
       '<button class="btn ghost" id="mDel" style="margin-top:14px;color:var(--warn)">Remove client</button>');
     $('mPlus').onclick = function () { s.close(); addSession({ id: m.id }); };
-    if ($('mReward')) $('mReward').onclick = async function () { var lvl = (m.sessions >= 10 && !m.reward10_at) ? '10' : '20'; var x = await api('reward_given', { id: m.id, level: lvl }); if (x.error) return toast(errText(x.error)); upsert(x.member); s.close(); toast('Reward marked as given'); };
-    $('mFreeAdd').onclick = async function () { var who = prompt('Who did she refer? (optional)') ; if (who === null) return; var x = await api('free_add', { id: m.id, note: who ? 'referred ' + who : '' }); if (x.error) return toast(errText(x.error)); upsert(x.member); s.close(); openMember(m.id); toast('Free session added'); };
+    if ($('mReward')) $('mReward').onclick = async function () { var x = await api('reward_given', { id: m.id }); if (x.error) return toast(errText(x.error)); upsert(x.member); s.close(); toast('Milestone gift marked as given'); };
+    $('mFreeGift').onclick = async function () { var x = await api('free_gift', { id: m.id, note: 'milestone gift' }); if (x.error) return toast(errText(x.error)); upsert(x.member); s.close(); openMember(m.id); toast('Free session added'); };
+    $('mFreeAdd').onclick = async function () { var who = prompt('Who did she refer? (optional)') ; if (who === null) return; var x = await api('free_add', { id: m.id, note: who ? 'referred ' + who : '' }); if (x.error) return toast(errText(x.error)); upsert(x.member); s.close(); openMember(m.id); toast('Referral added: +1 free session'); };
     $('mFreeUse').onclick = async function () { var x = await api('free_use', { id: m.id }); if (x.error) return toast(errText(x.error)); upsert(x.member); s.close(); openMember(m.id); toast('Free session used'); };
     $('mCopy').onclick = function () { (navigator.clipboard ? navigator.clipboard.writeText(url) : Promise.reject()).then(function () { toast('Link copied'); }, function () { prompt('Copy this link', url); }); };
     $('mSave').onclick = async function () {
@@ -256,12 +260,12 @@ code{background:var(--cream);border:1px solid var(--sand);border-radius:6px;padd
   $('addBtn').onclick = function () {
     var s = sheet('<div class="sh-h"><h2 style="margin:0">New client</h2><button class="x" data-close aria-label="Close">×</button></div>' +
       '<label for="nN">Name</label><input id="nN" autocomplete="off"><label for="nP">WhatsApp number</label><input id="nP" inputmode="tel" placeholder="+971 50 123 4567">' +
-      '<label for="nE">Email (optional)</label><input id="nE" type="email"><div class="grid2"><div><label for="nS">Sessions done so far</label><input id="nS" inputmode="numeric" value="0"></div><div><label for="nF">Free sessions earned</label><input id="nF" inputmode="numeric" value="0"></div></div>' +
+      '<label for="nE">Email (optional)</label><input id="nE" type="email"><div class="grid2"><div><label for="nS">Sessions done so far</label><input id="nS" inputmode="numeric" value="0"></div><div><label for="nF">Free sessions available</label><input id="nF" inputmode="numeric" value="0"></div></div><label for="nR">Successful referrals so far</label><input id="nR" inputmode="numeric" value="0">' +
       '<button class="btn" id="nGo" style="margin-top:16px">Create card</button>');
     $('nN').focus();
     $('nGo').onclick = async function () {
       this.disabled = true;
-      var x = await api('add', { name: $('nN').value, phone: $('nP').value, email: $('nE').value, sessions: parseInt($('nS').value, 10) || 0, free: parseInt($('nF').value, 10) || 0 });
+      var x = await api('add', { name: $('nN').value, phone: $('nP').value, email: $('nE').value, sessions: parseInt($('nS').value, 10) || 0, free: parseInt($('nF').value, 10) || 0, referrals: parseInt($('nR').value, 10) || 0 });
       this.disabled = false; if (x.error) return toast(errText(x.error));
       upsert(x.member); s.close(); openMember(x.member.id); toast('Card created. Send it to her on WhatsApp.');
     };

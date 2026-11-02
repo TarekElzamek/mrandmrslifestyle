@@ -500,6 +500,8 @@ create table if not exists public.tpr_members (
   reward20_at timestamptz,
   free_earned int not null default 0 check (free_earned between 0 and 500),
   free_used int not null default 0 check (free_used between 0 and 500),
+  referrals int not null default 0 check (referrals between 0 and 500),
+  rewards_given int not null default 0 check (rewards_given between 0 and 500),
   last_session date,
   archived boolean not null default false,
   created_at timestamptz not null default now(),
@@ -513,6 +515,11 @@ create table if not exists public.tpr_log (
   note text,
   at timestamptz not null default now()
 );
+-- v19 The Inner Circle: a new club every 10 sessions, referral count kept on the card
+alter table public.tpr_members add column if not exists referrals int not null default 0 check (referrals between 0 and 500);
+alter table public.tpr_members add column if not exists rewards_given int not null default 0 check (rewards_given between 0 and 500);
+update public.tpr_members set rewards_given = (reward10_at is not null)::int + (reward20_at is not null)::int
+  where rewards_given = 0 and (reward10_at is not null or reward20_at is not null);
 create index if not exists tpr_log_member_idx on public.tpr_log(member_id, at desc);
 create table if not exists public.tpr_devices (
   device_id text not null,
@@ -537,7 +544,7 @@ create or replace function public.tpr_member_json(m public.tpr_members, with_sec
 language sql stable set search_path = public as $$
   select jsonb_build_object('id', m.id, 'serial', m.serial, 'name', m.name, 'phone', m.phone, 'email', m.email,
     'sessions', m.sessions, 'reward10_at', m.reward10_at, 'reward20_at', m.reward20_at,
-    'free_earned', m.free_earned, 'free_used', m.free_used, 'last_session', m.last_session,
+    'free_earned', m.free_earned, 'free_used', m.free_used, 'referrals', m.referrals, 'rewards_given', m.rewards_given, 'last_session', m.last_session,
     'archived', m.archived, 'created_at', m.created_at, 'updated_at', m.updated_at,
     'updated_epoch', floor(extract(epoch from m.updated_at))::bigint, 'share_code', m.share_code)
     || case when with_secret then jsonb_build_object('auth_token', m.auth_token) else '{}'::jsonb end
@@ -620,9 +627,12 @@ begin
   end if;
   if p_action = 'add' then
     if coalesce(trim(p_args->>'name'), '') = '' then return jsonb_build_object('error', 'name_required'); end if;
-    insert into public.tpr_members (name, phone, email, sessions, free_earned)
+    -- an existing client starts at her current club with no gifts owed for milestones before the card existed
+    v := least(5000, greatest(0, coalesce((p_args->>'sessions')::int, 0)));
+    insert into public.tpr_members (name, phone, email, sessions, free_earned, referrals, rewards_given)
       values (trim(p_args->>'name'), nullif(trim(p_args->>'phone'), ''), nullif(trim(p_args->>'email'), ''),
-              greatest(0, coalesce((p_args->>'sessions')::int, 0)), greatest(0, coalesce((p_args->>'free')::int, 0)))
+              v, least(500, greatest(0, coalesce((p_args->>'free')::int, 0))),
+              least(500, greatest(0, coalesce((p_args->>'referrals')::int, 0))), v / 10)
       returning * into m;
     insert into public.tpr_log (member_id, action, delta, note) values (m.id, 'created', m.sessions, 'starting count');
     return jsonb_build_object('member', public.tpr_member_json(m));
@@ -646,13 +656,15 @@ begin
     insert into public.tpr_log (member_id, action, delta) values (m.id, 'session', 1) returning id into lid;
     return jsonb_build_object('member', public.tpr_member_json(m), 'log_id', lid, 'changed', true);
   elsif p_action = 'undo' then
-    select id, action, delta into lid, la, ld from public.tpr_log where member_id = m.id and action in ('session', 'free_add', 'free_use') and note is distinct from 'undone' order by at desc limit 1;
+    select id, action, delta into lid, la, ld from public.tpr_log where member_id = m.id and action in ('session', 'free_add', 'free_gift', 'free_use') and note is distinct from 'undone' order by at desc limit 1;
     if lid is null then return jsonb_build_object('error', 'nothing_to_undo'); end if;
     if la = 'session' then
       update public.tpr_members set sessions = greatest(0, sessions - 1),
         last_session = (select max((l2.at at time zone 'Asia/Dubai')::date) from public.tpr_log l2 where l2.member_id = m.id and l2.action = 'session' and l2.id <> lid and l2.note is distinct from 'undone'),
         updated_at = now() where id = m.id returning * into m;
     elsif la = 'free_add' then
+      update public.tpr_members set free_earned = greatest(0, free_earned - 1), referrals = greatest(0, referrals - 1), updated_at = now() where id = m.id returning * into m;
+    elsif la = 'free_gift' then
       update public.tpr_members set free_earned = greatest(0, free_earned - 1), updated_at = now() where id = m.id returning * into m;
     else
       update public.tpr_members set free_used = greatest(0, free_used - 1), updated_at = now() where id = m.id returning * into m;
@@ -663,11 +675,19 @@ begin
     v := (p_args->>'sessions')::int;
     if v is null or v < 0 or v > 5000 then return jsonb_build_object('error', 'bad_number'); end if;
     insert into public.tpr_log (member_id, action, delta, note) values (m.id, 'set', v - m.sessions, 'count set to ' || v);
-    update public.tpr_members set sessions = v, updated_at = now() where id = m.id returning * into m;
+    update public.tpr_members set sessions = v, rewards_given = least(rewards_given, v / 10), updated_at = now() where id = m.id returning * into m;
     return jsonb_build_object('member', public.tpr_member_json(m), 'changed', true);
   elsif p_action = 'free_add' then
-    update public.tpr_members set free_earned = free_earned + 1, updated_at = now() where id = m.id returning * into m;
+    -- successful referral: the friend bought her first package and named this client
+    if m.free_earned >= 500 or m.referrals >= 500 then return jsonb_build_object('error', 'limit'); end if;
+    update public.tpr_members set free_earned = free_earned + 1, referrals = referrals + 1, updated_at = now() where id = m.id returning * into m;
     insert into public.tpr_log (member_id, action, delta, note) values (m.id, 'free_add', 1, nullif(trim(p_args->>'note'), ''));
+    return jsonb_build_object('member', public.tpr_member_json(m), 'changed', true);
+  elsif p_action = 'free_gift' then
+    -- a free session given as a milestone gift (no referral)
+    if m.free_earned >= 500 then return jsonb_build_object('error', 'limit'); end if;
+    update public.tpr_members set free_earned = free_earned + 1, updated_at = now() where id = m.id returning * into m;
+    insert into public.tpr_log (member_id, action, delta, note) values (m.id, 'free_gift', 1, nullif(trim(p_args->>'note'), ''));
     return jsonb_build_object('member', public.tpr_member_json(m), 'changed', true);
   elsif p_action = 'free_use' then
     if m.free_used >= m.free_earned then return jsonb_build_object('error', 'no_free_sessions'); end if;
@@ -675,12 +695,10 @@ begin
     insert into public.tpr_log (member_id, action, delta) values (m.id, 'free_use', 1);
     return jsonb_build_object('member', public.tpr_member_json(m), 'changed', true);
   elsif p_action = 'reward_given' then
-    if (p_args->>'level') = '10' and m.sessions >= 10 then
-      update public.tpr_members set reward10_at = coalesce(reward10_at, now()), updated_at = now() where id = m.id returning * into m;
-    elsif (p_args->>'level') = '20' and m.sessions >= 20 then
-      update public.tpr_members set reward20_at = coalesce(reward20_at, now()), updated_at = now() where id = m.id returning * into m;
-    else return jsonb_build_object('error', 'not_reached'); end if;
-    insert into public.tpr_log (member_id, action, delta, note) values (m.id, 'reward', 0, 'reward ' || (p_args->>'level') || ' given');
+    -- one milestone gift every 10 sessions (10 Session Club, 20 Session Club, ...)
+    if m.sessions / 10 <= m.rewards_given then return jsonb_build_object('error', 'not_reached'); end if;
+    update public.tpr_members set rewards_given = rewards_given + 1, updated_at = now() where id = m.id returning * into m;
+    insert into public.tpr_log (member_id, action, delta, note) values (m.id, 'reward', 0, m.rewards_given * 10 || ' Session Club gift given');
     return jsonb_build_object('member', public.tpr_member_json(m), 'changed', true);
   elsif p_action = 'edit' then
     if coalesce(trim(p_args->>'name'), '') = '' then return jsonb_build_object('error', 'name_required'); end if;
