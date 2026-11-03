@@ -172,6 +172,8 @@ code{background:var(--cream);border:1px solid var(--sand);border-radius:6px;padd
 
   // ---------- sheets ----------
   function sheet(html) {
+    // only one sheet at a time: a second one on top would share the same button ids and its buttons would not respond
+    document.querySelectorAll('.sheet').forEach(function (o) { if (o.close) o.close(); else o.remove(); });
     var s = document.createElement('div'); s.className = 'sheet'; s.innerHTML = '<div>' + html + '</div>';
     s.onclick = function (e) { if (e.target === s) close(); };
     function close() { if (s.onclose) s.onclose(); s.remove(); }
@@ -224,8 +226,12 @@ code{background:var(--cream);border:1px solid var(--sand);border-radius:6px;padd
   }
 
   // ---------- member ----------
+  var opening = false;
   async function openMember(id) {
-    var r = await api('get', { id: id }); if (r.error) return toast(errText(r.error));
+    if (opening) return; opening = true;
+    var r; try { r = await api('get', { id: id }); } catch (e) { opening = false; return toast('Could not open the client. Check the connection.'); }
+    opening = false;
+    if (r.error) return toast(errText(r.error));
     var m = r.member; upsert(Object.assign({}, m, { card_url: (S.members.find(function (x) { return x.id === id; }) || {}).card_url || m.card_url }));
     var url = location.origin + '/pilates-room/card/' + m.share_code, rd = ready(m), fl = freeLeft(m);
     var phone = String(m.phone || '').replace(/[^\d]/g, '');
@@ -250,9 +256,15 @@ code{background:var(--cream);border:1px solid var(--sand);border-radius:6px;padd
     $('mFreeUse').onclick = async function () { var x = await api('free_use', { id: m.id }); if (x.error) return toast(errText(x.error)); upsert(x.member); s.close(); openMember(m.id); toast('Free session used'); };
     $('mCopy').onclick = function () { (navigator.clipboard ? navigator.clipboard.writeText(url) : Promise.reject()).then(function () { toast('Link copied'); }, function () { prompt('Copy this link', url); }); };
     $('mSave').onclick = async function () {
-      var x = await api('edit', { id: m.id, name: $('eN').value, phone: $('eP').value, email: $('eE').value }); if (x.error) return toast(errText(x.error));
-      var n = parseInt($('eS').value, 10); if (n !== m.sessions) { x = await api('set_sessions', { id: m.id, sessions: n }); if (x.error) return toast(errText(x.error)); }
-      upsert(x.member); s.close(); toast('Saved');
+      var btn = this, n = parseInt(String($('eS').value).replace(/[^\d]/g, ''), 10);
+      if (isNaN(n)) return toast('Enter the number of sessions.');
+      btn.disabled = true; btn.textContent = 'Saving…';
+      try {
+        var x = await api('edit', { id: m.id, name: $('eN').value, phone: $('eP').value, email: $('eE').value });
+        if (!x.error && n !== m.sessions) x = await api('set_sessions', { id: m.id, sessions: n });
+        if (x.error) { btn.disabled = false; btn.textContent = 'Save changes'; return toast(errText(x.error)); }
+        upsert(x.member); s.close(); toast(n !== m.sessions ? 'Saved: ' + n + ' sessions. Her card is updating.' : 'Saved');
+      } catch (e) { btn.disabled = false; btn.textContent = 'Save changes'; toast('Could not save. Check the connection and try again.'); }
     };
     $('mDel').onclick = async function () { if (!confirm('Remove ' + m.name + '? Her card will stop updating.')) return; var x = await api('archive', { id: m.id }); if (x.error) return toast(errText(x.error)); S.members = S.members.filter(function (y) { return y.id !== m.id; }); draw(); s.close(); toast('Client removed'); };
   }
