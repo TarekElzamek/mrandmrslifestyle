@@ -46,7 +46,8 @@ b.k{color:var(--gold);font-weight:600}
   async function admin(a, args) { var r = await sb.rpc('health_admin', { p_action: a, p_args: args || {} }); if (r.error) throw new Error(r.error.message); return r.data; }
   async function load() {
     var st;
-    try { var u = (await sb.auth.getUser()).data.user; if (!u) throw 0; st = await admin('status'); }
+    var mine = null;
+    try { var u = (await sb.auth.getUser()).data.user; if (!u) throw 0; st = await admin('status'); mine = (await sb.rpc('health_my_link', {})).data; }
     catch (e) { $('box').innerHTML = '<div class="card"><p>Sign in to the tracker with your coach account first, then come back to this page.</p><a class="btn" href="/workout-tracker.html">Open the tracker</a></div>'; return; }
     var h = '';
     h += '<div class="card"><span class="tag">Status</span><div class="stat"><span>Whoop app: <b class="' + (st.whoop_client_id && st.has_whoop_secret ? 'ok">Ready' : 'warn">Not set up') + '</b></span><span>Apple shortcut: <b class="' + (st.shortcut_url ? 'ok">Ready' : 'warn">Not set up') + '</b></span></div><div class="stat"><span><b>' + st.apple_clients + '</b> clients syncing Apple Watch</span><span><b>' + st.whoop_clients + '</b> clients connected to Whoop</span></div></div>';
@@ -68,20 +69,19 @@ b.k{color:var(--gold);font-weight:600}
 
     // ---- Apple shortcut ----
     h += '<div class="card"><span class="tag">Step 2 · Apple Watch</span><h2>Build the shortcut once, on your iPhone</h2><p class="sub">Apple doesn\'t let websites read Health data, so a small shortcut on the client\'s iPhone sends her daily totals. You build it once and share the link; clients just install it.</p><ol>' +
-      '<li>Open the <b class="k">Shortcuts</b> app → <b>+</b> (top right). Tap the name at the top and call it <b>M&amp;M Watch Sync</b>.</li>' +
+            '<li>Open the <b class="k">Shortcuts</b> app → <b>+</b> (top right). Tap the name at the top and call it <b>M&amp;M Watch Sync</b>.</li>' +
       '<li>Add a <b class="k">Text</b> action. Leave it empty. (This will hold the client\'s sync code.)</li>' +
-      '<li>Add <b class="k">Find Health Samples</b>: Type <b>Steps</b>, add filter <b>Start Date is Today</b>, set <b>Group By: Day</b>.</li>' +
-      '<li>Add <b class="k">Calculate Statistics</b>: <b>Sum</b> of Health Samples.</li>' +
-      '<li>Add <b class="k">Find Health Samples</b>: Type <b>Active Energy</b>, <b>Start Date is Today</b>, <b>Group By: Day</b>. Then <b class="k">Calculate Statistics</b>: <b>Sum</b>.</li>' +
-      '<li>Add <b class="k">Find Health Samples</b>: Type <b>Heart Rate</b>, <b>Start Date is Today</b> (no grouping). Then <b class="k">Calculate Statistics</b>: <b>Average</b>.</li>' +
+      '<li>Add <b class="k">Find Health Samples</b>: Type <b>Steps</b>, add filter <b>Start Date is Today</b>, set <b>Group By: Day</b>. Then <b class="k">Calculate Statistics</b>: <b>Sum</b>. Then <b class="k">Set Variable</b>: name <b>Steps</b>.</li>' +
+      '<li>Add <b class="k">Find Health Samples</b>: Type <b>Active Energy</b>, <b>Start Date is Today</b>, <b>Group By: Day</b>. Then <b class="k">Calculate Statistics</b>: <b>Sum</b>. Then <b class="k">Set Variable</b>: name <b>Calories</b>.</li>' +
+      '<li>Add <b class="k">Find Health Samples</b>: Type <b>Heart Rate</b>, <b>Start Date is Today</b> (no grouping). Then <b class="k">Calculate Statistics</b>: <b>Average</b>. Then <b class="k">Set Variable</b>: name <b>HeartRate</b>.</li>' +
       '<li>Add <b class="k">Format Date</b>: Date <b>Current Date</b>, Date Format <b>Custom</b>, Format String <b>yyyy-MM-dd</b>.</li>' +
       '<li>Add <b class="k">Get Contents of URL</b>:' + copyRow(ENDPOINT) +
         '<ol type="a"><li>Method: <b>POST</b>, Request Body: <b>JSON</b></li>' +
-        '<li>Add 5 Text fields (key → value, pick each value from the variables bar above the keyboard):<br><b>code</b> → Text · <b>date</b> → Formatted Date · <b>steps</b> → Statistics (the first one) · <b>active_kcal</b> → Statistics (the second) · <b>avg_hr</b> → Statistics (the third)</li></ol></li>' +
+        '<li>Add 5 Text fields (key → value):<br><b>code</b> → Text · <b>date</b> → Formatted Date · <b>steps</b> → Steps · <b>active_kcal</b> → Calories · <b>avg_hr</b> → HeartRate</li></ol></li>' +
       '<li>Tap <b>ⓘ</b> (bottom) → <b>Setup</b> → <b>Add Import Question</b> → choose the empty Text action. Question: <b>Paste your sync code from the tracker</b>.</li>' +
-      '<li>Test: paste <b>your own</b> sync code (Today → Connect → Apple Watch on your tracker) into the Text action and tap ▶. You should see <i>Synced to your Mr &amp; Mrs Lifestyle tracker</i>. Then <b>clear the Text action again</b> so your code isn\'t shared.</li>' +
+      '<li>Test: paste your own sync code into the Text action and tap ▶. You should see <i>Synced to your Mr &amp; Mrs Lifestyle tracker</i>. Then <b>clear the Text action again</b> so your code isn\'t shared.' + (mine && mine.apple_token ? '<br>Your own sync code:' + copyRow(mine.apple_token) : '') + '</li>' +
       '<li>Tap <b>Share</b> → <b>Copy iCloud Link</b>, and paste it below.</li></ol>' +
-      '<label for="sUrl">iCloud link of the shortcut</label><input id="sUrl" inputmode="url" placeholder="https://www.icloud.com/shortcuts/…" value="' + esc(st.shortcut_url || '') + '">' +
+'<label for="sUrl">iCloud link of the shortcut</label><input id="sUrl" inputmode="url" placeholder="https://www.icloud.com/shortcuts/…" value="' + esc(st.shortcut_url || '') + '">' +
       '<button type="button" class="btn" id="sSave">Save shortcut link</button>' +
       '<p class="note">Health units: if a client\'s iPhone shows energy in kilojoules instead of kilocalories (Health → Profile → Units), active calories will look about 4 times too high. In the UAE iPhones use kcal by default.</p></div>';
     $('box').innerHTML = h;
