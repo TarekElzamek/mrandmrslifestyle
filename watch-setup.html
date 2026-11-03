@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>Watch sync setup · Mr &amp; Mrs Lifestyle</title>
+<link rel="icon" href="/logo.png">
+<style>
+:root{--bg:#0a0a0a;--card:#151515;--card2:#1c1c1c;--line:#2a2a2a;--text:#f2ede3;--muted:#9a9488;--gold:#C9A84C;--ok:#5cb87a;--warn:#e07a6b}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font:15px/1.55 -apple-system,"Segoe UI",Roboto,Arial,sans-serif;padding:calc(env(safe-area-inset-top) + 18px) 16px 40px}
+.wrap{max-width:640px;margin:0 auto}
+h1{font-family:Georgia,serif;font-weight:400;font-size:26px}h1 em{color:var(--gold)}
+h2{font-family:Georgia,serif;font-weight:400;font-size:20px;margin-bottom:6px}
+.sub{color:var(--muted);margin-top:6px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;margin-top:16px}
+.tag{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);font-weight:700}
+label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin:14px 0 6px}
+input{width:100%;background:var(--card2);border:1px solid var(--line);border-radius:10px;padding:12px;color:var(--text);font:inherit;font-size:16px}
+.btn{display:inline-flex;align-items:center;justify-content:center;border:0;border-radius:10px;background:var(--gold);color:#0a0a0a;font:700 15px inherit;font-family:inherit;padding:12px 18px;margin-top:14px;cursor:pointer;text-decoration:none}
+.btn.ghost{background:transparent;color:var(--gold);border:1px solid var(--gold)}
+.copy{display:flex;gap:8px;align-items:center;background:var(--card2);border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-top:6px}
+.copy code{flex:1;color:var(--gold);word-break:break-all;font-size:14px}
+.copy button{background:none;border:1px solid var(--line);color:var(--text);border-radius:8px;padding:6px 10px;font:600 13px inherit;cursor:pointer}
+ol{padding-left:22px;margin-top:10px}ol li{margin:9px 0}ol ol{margin-top:4px}
+b.k{color:var(--gold);font-weight:600}
+.ok{color:var(--ok)}.warn{color:var(--warn)}
+.stat{display:flex;gap:18px;flex-wrap:wrap;margin-top:8px;color:var(--muted)}.stat b{color:var(--text)}
+.note{font-size:13px;color:var(--muted);margin-top:8px}
+</style>
+</head>
+<body><div class="wrap">
+<h1>Watch sync <em>setup</em></h1>
+<p class="sub">One-time setup for the coach. After this, clients tap <b>Connect</b> on their Today page and their Apple Watch and Whoop data fills in by itself.</p>
+<div id="box"><div class="card"><p class="sub">Checking your sign-in…</p></div></div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script>
+(function () {
+  var sb = window.supabase.createClient('https://iwtkphupsobwiaiqvkok.supabase.co', 'sb_publishable_L1RcJTZ1UTT_XocBLPLSYg_tPpPFWbU', { auth: { persistSession: true, autoRefreshToken: true, flowType: 'pkce' } });
+  var REDIRECT = location.origin + '/api/whoop/callback', PRIVACY = location.origin + '/privacy.html', ENDPOINT = location.origin + '/api/health';
+  function $(id) { return document.getElementById(id); }
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+  function copyRow(v) { return '<div class="copy"><code>' + esc(v) + '</code><button type="button" data-copy="' + esc(v) + '">Copy</button></div>'; }
+  async function admin(a, args) { var r = await sb.rpc('health_admin', { p_action: a, p_args: args || {} }); if (r.error) throw new Error(r.error.message); return r.data; }
+  async function load() {
+    var st;
+    try { var u = (await sb.auth.getUser()).data.user; if (!u) throw 0; st = await admin('status'); }
+    catch (e) { $('box').innerHTML = '<div class="card"><p>Sign in to the tracker with your coach account first, then come back to this page.</p><a class="btn" href="/workout-tracker.html">Open the tracker</a></div>'; return; }
+    var h = '';
+    h += '<div class="card"><span class="tag">Status</span><div class="stat"><span>Whoop app: <b class="' + (st.whoop_client_id && st.has_whoop_secret ? 'ok">Ready' : 'warn">Not set up') + '</b></span><span>Apple shortcut: <b class="' + (st.shortcut_url ? 'ok">Ready' : 'warn">Not set up') + '</b></span></div><div class="stat"><span><b>' + st.apple_clients + '</b> clients syncing Apple Watch</span><span><b>' + st.whoop_clients + '</b> clients connected to Whoop</span></div></div>';
+
+    // ---- Whoop ----
+    h += '<div class="card"><span class="tag">Step 1 · Whoop</span><h2>Create the free Whoop app</h2><ol>' +
+      '<li>Open <a href="https://developer-dashboard.whoop.com" target="_blank" rel="noopener" style="color:var(--gold)">developer-dashboard.whoop.com</a> and sign in with your Whoop account. Create a team if it asks.</li>' +
+      '<li>Tap <b class="k">Create App</b> and fill in:<ol type="a">' +
+        '<li>Name: <b>Mr &amp; Mrs Lifestyle</b> (add the logo if it asks)</li>' +
+        '<li>Scopes: tick <b>read:recovery</b>, <b>read:cycles</b>, <b>read:sleep</b>, <b>read:profile</b></li>' +
+        '<li>Redirect URL:' + copyRow(REDIRECT) + '</li>' +
+        '<li>Privacy policy URL:' + copyRow(PRIVACY) + '</li>' +
+        '<li>Leave the webhook URL empty.</li></ol></li>' +
+      '<li>Save the app, then copy its <b class="k">Client ID</b> and <b class="k">Client Secret</b> into the boxes below.</li></ol>' +
+      '<label for="wId">Whoop Client ID</label><input id="wId" autocomplete="off" value="' + esc(st.whoop_client_id || '') + '">' +
+      '<label for="wSec">Whoop Client Secret' + (st.has_whoop_secret ? ' (saved; leave empty to keep it)' : '') + '</label><input id="wSec" type="password" autocomplete="new-password">' +
+      '<button type="button" class="btn" id="wSave">Save Whoop keys</button>' +
+      '<p class="note">Whoop allows up to 10 clients while the app is new. Before more than 10 clients connect, submit the app for Whoop\'s review from the same dashboard (it needs the privacy policy link above, which is ready).</p></div>';
+
+    // ---- Apple shortcut ----
+    h += '<div class="card"><span class="tag">Step 2 · Apple Watch</span><h2>Build the shortcut once, on your iPhone</h2><p class="sub">Apple doesn\'t let websites read Health data, so a small shortcut on the client\'s iPhone sends her daily totals. You build it once and share the link; clients just install it.</p><ol>' +
+      '<li>Open the <b class="k">Shortcuts</b> app → <b>+</b> (top right). Tap the name at the top and call it <b>M&amp;M Watch Sync</b>.</li>' +
+      '<li>Add a <b class="k">Text</b> action. Leave it empty. (This will hold the client\'s sync code.)</li>' +
+      '<li>Add <b class="k">Find Health Samples</b>: Type <b>Steps</b>, add filter <b>Start Date is Today</b>, set <b>Group By: Day</b>.</li>' +
+      '<li>Add <b class="k">Calculate Statistics</b>: <b>Sum</b> of Health Samples.</li>' +
+      '<li>Add <b class="k">Find Health Samples</b>: Type <b>Active Energy</b>, <b>Start Date is Today</b>, <b>Group By: Day</b>. Then <b class="k">Calculate Statistics</b>: <b>Sum</b>.</li>' +
+      '<li>Add <b class="k">Find Health Samples</b>: Type <b>Heart Rate</b>, <b>Start Date is Today</b> (no grouping). Then <b class="k">Calculate Statistics</b>: <b>Average</b>.</li>' +
+      '<li>Add <b class="k">Format Date</b>: Date <b>Current Date</b>, Date Format <b>Custom</b>, Format String <b>yyyy-MM-dd</b>.</li>' +
+      '<li>Add <b class="k">Get Contents of URL</b>:' + copyRow(ENDPOINT) +
+        '<ol type="a"><li>Method: <b>POST</b>, Request Body: <b>JSON</b></li>' +
+        '<li>Add 5 Text fields (key → value, pick each value from the variables bar above the keyboard):<br><b>code</b> → Text · <b>date</b> → Formatted Date · <b>steps</b> → Statistics (the first one) · <b>active_kcal</b> → Statistics (the second) · <b>avg_hr</b> → Statistics (the third)</li></ol></li>' +
+      '<li>Tap <b>ⓘ</b> (bottom) → <b>Setup</b> → <b>Add Import Question</b> → choose the empty Text action. Question: <b>Paste your sync code from the tracker</b>.</li>' +
+      '<li>Test: paste <b>your own</b> sync code (Today → Connect → Apple Watch on your tracker) into the Text action and tap ▶. You should see <i>Synced to your Mr &amp; Mrs Lifestyle tracker</i>. Then <b>clear the Text action again</b> so your code isn\'t shared.</li>' +
+      '<li>Tap <b>Share</b> → <b>Copy iCloud Link</b>, and paste it below.</li></ol>' +
+      '<label for="sUrl">iCloud link of the shortcut</label><input id="sUrl" inputmode="url" placeholder="https://www.icloud.com/shortcuts/…" value="' + esc(st.shortcut_url || '') + '">' +
+      '<button type="button" class="btn" id="sSave">Save shortcut link</button>' +
+      '<p class="note">Health units: if a client\'s iPhone shows energy in kilojoules instead of kilocalories (Health → Profile → Units), active calories will look about 4 times too high. In the UAE iPhones use kcal by default.</p></div>';
+    $('box').innerHTML = h;
+    document.querySelectorAll('[data-copy]').forEach(function (b) { b.onclick = function () { navigator.clipboard.writeText(b.dataset.copy).then(function () { b.textContent = 'Copied'; setTimeout(function () { b.textContent = 'Copy'; }, 1500); }); }; });
+    $('wSave').onclick = async function () {
+      var id = $('wId').value.trim(), sec = $('wSec').value.trim();
+      if (!id) return alert('Paste the Whoop Client ID first.');
+      try { await admin('set', { whoop_client_id: id, whoop_client_secret: sec }); load(); } catch (e) { alert(e.message); }
+    };
+    $('sSave').onclick = async function () {
+      try { var r = await admin('set', { shortcut_url: $('sUrl').value.trim() }); if (r && r.error) return alert('That link should start with https://www.icloud.com/shortcuts/'); load(); } catch (e) { alert(e.message); }
+    };
+  }
+  load();
+})();
+</script>
+</body>
+</html>

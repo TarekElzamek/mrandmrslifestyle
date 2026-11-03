@@ -804,6 +804,9 @@
     },
     "api/tpr.js": {
       "maxDuration": 30
+    },
+    "api/health.js": {
+      "maxDuration": 60
     }
   },
   "rewrites": [
@@ -814,6 +817,10 @@
     {
       "source": "/api/tpr-wallet/:path*",
       "destination": "/api/tpr-wallet?p=:path*"
+    },
+    {
+      "source": "/api/whoop/callback",
+      "destination": "/api/health?action=whoop_callback"
     }
   ]
 }

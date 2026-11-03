@@ -92,6 +92,7 @@
     water: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11z"/></svg>',
     sleep: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg>',
     bolt: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg>',
+    heart: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1.1L12 21l7.8-7.5 1-1.1a5.5 5.5 0 0 0 0-7.8z"/></svg>',
     smile: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8.5 14.5s1.2 1.8 3.5 1.8 3.5-1.8 3.5-1.8"/><path d="M9 9.5h.01M15 9.5h.01"/></svg>',
     inbox: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg>',
     hub: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h5v-6h4v6h5V10"/></svg>',
@@ -221,8 +222,11 @@
       sb.from('workouts').select('*').eq('user_id', id).order('date', { ascending: false }).order('created_at', { ascending: false }).limit(1000),
       sb.from('body_logs').select('*').eq('user_id', id).order('date', { ascending: true }).limit(1000),
       sb.from('habit_logs').select('*').eq('user_id', id).order('date', { ascending: true }).limit(400),
-      sb.from('food_logs').select('*').eq('user_id', id).gte('date', iso(new Date(Date.now() - 60 * 864e5))).order('created_at', { ascending: true }).limit(2000)
+      sb.from('food_logs').select('*').eq('user_id', id).gte('date', iso(new Date(Date.now() - 60 * 864e5))).order('created_at', { ascending: true }).limit(2000),
+      sb.from('health_daily').select('*').eq('user_id', id).gte('date', iso(new Date(Date.now() - 35 * 864e5))).limit(200),
+      sb.rpc('health_my_link', viewingOther() ? { p_user: id } : {})
     ]);
+    S.health = q[5].data || []; S.hlink = q[6].data || null; watchRefresh(id);
     S.programs = q[0].data || []; S.workouts = q[1].data || []; S.body = q[2].data || []; S.habits = q[3].data || []; S.hDay = null; S.food = q[4].data || []; S.fDay = null; if (!viewingOther() && S.me && lsGet('mm_badges_' + S.me.id, null) == null) lsSet('mm_badges_' + S.me.id, Object.keys(badgeDates()));
     S.draft = lsGet('mm_draft_' + id, null); S.overview = true; // always open on the home page; the workout is one tap away (Resume) LIVE.lastRev = (S.draft && S.draft.rev) || 0;
     try { var lv = await sb.from('live_workouts').select('*').eq('user_id', id).maybeSingle(); if (lv && lv.data && (+lv.data.rev || 0) > LIVE.lastRev) { LIVE.lastRev = +lv.data.rev; S.draft = lv.data.data || null; lsSet('mm_draft_' + id, S.draft); } else if (S.draft) pushLive(); } catch (e) {}
@@ -230,6 +234,12 @@
     S.progEx = null; S.calDay = null;
     if (S.draft && COACH_TABS.indexOf(S.tab) < 0) S.tab = 'today';
     render();
+    // back from Whoop sign-in
+    var wq = new URLSearchParams(location.search).get('whoop');
+    if (wq) {
+      history.replaceState(null, '', location.pathname + location.hash);
+      toast({ connected: 'Whoop connected. Your recovery and sleep will show on Today.', cancelled: 'Whoop connection cancelled', expired: 'That Whoop sign-in expired. Tap Connect Whoop again.' }[wq] || 'Could not connect Whoop. Try again.');
+    }
   }
 
   // ---------- history-derived data ----------
@@ -302,6 +312,7 @@
     h += '<h1 class="tk-h1">' + (viewingOther() ? esc(S.target.name || 'Client') + '\'s <em>training</em>' : 'Hi ' + esc(name || 'there') + ', ready to <em>train?</em>') + '</h1>';
     h += '<div class="tk-grid3" style="margin-top:14px"><div class="tk-stat"><b>' + thisWeekCount() + '</b><span>This week</span></div><div class="tk-stat"><b>' + weekStreak() + '</b><span>Week streak</span></div><div class="tk-stat"><b>' + S.workouts.length + '</b><span>Workouts</span></div></div>';
     h += todayHabitsCard();
+    h += watchCard();
     h += todayFoodCard();
     if (prog && (prog.days || []).length) {
       h += '<div class="tk-card gold"><span class="tk-tag">Your programme</span><h2 class="tk-h2" style="margin:4px 0 6px">' + esc(prog.name) + '</h2>' + (prog.notes ? '<p class="tk-muted">' + esc(prog.notes) + '</p>' : '');
@@ -321,7 +332,7 @@
     if ($('resumeW')) $('resumeW').onclick = function () { S.overview = false; render(); window.scrollTo(0, 0); };
     if ($('discardW')) $('discardW').onclick = function () { if (!confirmBox('Discard this unfinished workout?')) return; stopRest(); S.draft = null; saveDraft(); toast('Workout discarded'); render(); };
     $('goBody').onclick = function () { S.tab = 'body'; render(); };
-    wireHabitCard(v); $('goHabits').onclick = function () { go('habits'); };
+    wireHabitCard(v); $('goHabits').onclick = function () { go('habits'); }; wireWatchCard(v);
     $('goFood').onclick = function () { go('food'); }; $('addFoodT').onclick = function () { openAddFood(); };
   }
 
@@ -1273,6 +1284,106 @@
     box.querySelectorAll('[data-hen]').forEach(function (b) { b.onclick = function () { var x = hRow(d) || {}, v = +b.dataset.hen; v = x.energy === v ? null : v; hSet(d, 'energy', v); box.querySelectorAll('[data-hen]').forEach(function (o) { o.setAttribute('aria-pressed', String(+o.dataset.hen === v)); }); repaint(); }; });
     box.querySelectorAll('[data-hmo]').forEach(function (b) { b.onclick = function () { var x = hRow(d) || {}, v = +b.dataset.hmo; v = x.mood === v ? null : v; hSet(d, 'mood', v); box.querySelectorAll('[data-hmo]').forEach(function (o) { o.setAttribute('aria-pressed', String(+o.dataset.hmo === v)); }); repaint(); }; });
     if ($('hNote')) $('hNote').oninput = function () { hSet(d, 'note', this.value.trim() || null); };
+  }
+  // ---------- WATCH DATA (Apple Watch through an iPhone Shortcut, Whoop through its official API) ----------
+  var WHOOP_SCOPES = 'read:recovery read:cycles read:sleep read:profile offline';
+  function hd(d, src) { return (S.health || []).filter(function (x) { return x.date === d && x.source === src; })[0] || null; }
+  function agoLabel(ts) {
+    if (!ts) return '';
+    var m = Math.round((Date.now() - new Date(ts).getTime()) / 60000);
+    return m < 2 ? 'just now' : m < 60 ? m + ' min ago' : m < 24 * 60 ? Math.round(m / 60) + ' h ago' : new Date(ts).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
+  }
+  function wStat(label, val, unit, sub) {
+    return '<div class="wt-stat"><span>' + label + '</span><b>' + (val == null ? '–' : val) + (val != null && unit ? ' <small>' + unit + '</small>' : '') + '</b>' + (sub ? '<em>' + sub + '</em>' : '') + '</div>';
+  }
+  function watchCard() {
+    var L = S.hlink || {}, d = today(), a = hd(d, 'apple'), w = hd(d, 'whoop');
+    var other = viewingOther(), first = esc((S.target.name || 'Client').split(' ')[0]);
+    var appleOn = !!L.apple_last_at, whoopOn = !!L.whoop_connected;
+    var h = '<div class="tk-card wt-card"><div class="hb-head"><span class="tk-tag">' + (other ? first + '\'s watch' : 'Your watch') + ' · today</span>' +
+      (other ? '' : '<button type="button" class="tk-btn sm plain" id="wtConnect">' + (appleOn && whoopOn ? 'Settings' : 'Connect') + '</button>') + '</div>';
+    if (!appleOn && !whoopOn) {
+      h += '<p class="tk-muted" style="margin-top:6px">' + (other ? first + ' hasn\'t connected an Apple Watch or Whoop yet. Ask ' + first + ' to tap Connect on the Today page.' : 'Connect your Apple Watch and Whoop once, and your steps, active calories, heart rate, recovery and sleep fill in here by themselves.') + '</p>';
+      if (!other) h += '<div class="tk-grid2" style="margin-top:12px"><button type="button" class="tk-btn" id="wtApple">Connect Apple Watch</button><button type="button" class="tk-btn ghost" id="wtWhoop">Connect Whoop</button></div>';
+      return h + '</div>';
+    }
+    var eaten = fTot(d).kcal;
+    h += '<div class="wt-grid">' +
+      wStat(ICON.steps + 'Steps', a && a.steps != null ? nf(a.steps) : null, '', 'Goal ' + nf(hGoals().steps)) +
+      wStat(ICON.bolt + 'Active calories', a && a.active_kcal != null ? nf(a.active_kcal) : null, 'kcal', eaten ? nf(eaten) + ' kcal eaten' : '') +
+      wStat(ICON.heart + 'Avg heart rate', a && a.avg_hr != null ? a.avg_hr : w && w.avg_hr != null ? w.avg_hr : null, 'bpm', w && w.resting_hr != null ? 'Resting ' + w.resting_hr + ' bpm' : '');
+    if (whoopOn || w) {
+      var rc = w && w.recovery != null ? w.recovery : null;
+      h += wStat(ICON.bolt + 'Recovery', rc, '%', rc == null ? '' : rc >= 67 ? '<i class="wt-g">Green · ready to push</i>' : rc >= 34 ? '<i class="wt-y">Yellow · train steady</i>' : '<i class="wt-r">Red · go easy today</i>') +
+        wStat(ICON.sleep + 'Sleep', w && w.sleep_hours != null ? r1(+w.sleep_hours) : null, 'h', w && w.sleep_perf != null ? w.sleep_perf + '% sleep performance' : '') +
+        wStat(ICON.bolt + 'Strain', w && w.strain != null ? r1(+w.strain) : null, '', w && w.hrv != null ? 'HRV ' + Math.round(+w.hrv) + ' ms' : '');
+    }
+    h += '</div><p class="tk-small wt-foot">' +
+      (appleOn ? 'Apple Watch synced ' + agoLabel(L.apple_last_at) : (other ? 'Apple Watch not connected' : '<button type="button" class="tk-link" id="wtApple">Connect Apple Watch</button>')) + ' · ' +
+      (whoopOn ? 'Whoop synced ' + agoLabel(L.whoop_last_at) : (other ? 'Whoop not connected' : '<button type="button" class="tk-link" id="wtWhoop">Connect Whoop</button>')) + '</p>' +
+      (L.whoop_error && !other ? '<p class="tk-small wt-err">' + esc(L.whoop_error) + '</p>' : '');
+    return h + '</div>';
+  }
+  function wireWatchCard(root) {
+    if ($('wtConnect')) $('wtConnect').onclick = openWatchSetup;
+    if ($('wtApple')) $('wtApple').onclick = openAppleSetup;
+    if ($('wtWhoop')) $('wtWhoop').onclick = connectWhoop;
+  }
+  function openWatchSetup() {
+    var L = S.hlink || {};
+    var m = modal('Connect your watch', '<p class="tk-muted">Connect once. After that, your data fills in by itself and your coach sees it too.</p>' +
+      '<div class="li"><div class="grow"><b>Apple Watch</b><span class="tk-small">' + (L.apple_last_at ? 'Connected · last sync ' + agoLabel(L.apple_last_at) : 'Steps, active calories and heart rate') + '</span></div><button type="button" class="tk-btn sm" id="wsApple">' + (L.apple_last_at ? 'Set up again' : 'Connect') + '</button></div>' +
+      '<div class="li"><div class="grow"><b>Whoop</b><span class="tk-small">' + (L.whoop_connected ? 'Connected · last sync ' + agoLabel(L.whoop_last_at) : 'Recovery, sleep, strain and heart rate') + '</span></div>' + (L.whoop_connected ? '<button type="button" class="tk-btn sm ghost" id="wsWhoopOff">Disconnect</button>' : '<button type="button" class="tk-btn sm" id="wsWhoop">Connect</button>') + '</div>');
+    $('wsApple').onclick = function () { m.close(); openAppleSetup(); };
+    if ($('wsWhoop')) $('wsWhoop').onclick = function () { m.close(); connectWhoop(); };
+    if ($('wsWhoopOff')) $('wsWhoopOff').onclick = async function () {
+      if (!confirmBox('Disconnect Whoop? Your past data stays in the tracker.')) return;
+      var r = await sb.rpc('health_whoop', { p_action: 'disconnect' }); if (r.error) return toast(r.error.message);
+      m.close(); await watchReload(); toast('Whoop disconnected');
+    };
+  }
+  function openAppleSetup() {
+    var L = S.hlink || {}, code = L.apple_token || '';
+    if (!L.shortcut_url) { modal('Connect Apple Watch', '<p class="tk-muted">Apple Watch syncing is being set up by your coach. Check back soon: the button will work as soon as it\'s ready.</p>'); return; }
+    var m = modal('Connect Apple Watch', '<p class="tk-muted">Takes 2 minutes on your iPhone, once. Do it on the iPhone paired with your Apple Watch.</p>' +
+      '<ol class="wt-steps">' +
+      '<li><b>Copy your sync code</b><div class="wt-code"><code id="wsCode">' + esc(code) + '</code><button type="button" class="tk-btn sm" id="wsCopy">Copy</button></div><span class="tk-small">It\'s personal: it sends your data to your own tracker.</span></li>' +
+      '<li><b>Install the shortcut</b><a class="tk-btn block" href="' + esc(L.shortcut_url) + '" target="_blank" rel="noopener" style="margin-top:8px">Get the M&amp;M Watch Sync shortcut</a><span class="tk-small">Tap <b>Add Shortcut</b>. When it asks for your sync code, paste it. Allow access to Health when asked (steps, active energy, heart rate).</span></li>' +
+      '<li><b>Make it run by itself</b><span class="tk-small">Open the <b>Shortcuts</b> app → <b>Automation</b> → <b>+</b> → <b>App</b> → choose <b>WhatsApp</b> → tick <b>Is Opened</b> → <b>Run Immediately</b> → <b>Next</b> → choose <b>M&amp;M Watch Sync</b>. Your data then syncs every time you open WhatsApp.</span></li>' +
+      '<li><b>Test it</b><span class="tk-small">Run the shortcut once in the Shortcuts app. Your steps appear here within seconds.</span></li></ol>' +
+      '<button type="button" class="tk-btn ghost block" id="wsCheck" style="margin-top:12px">I ran it, check now</button>');
+    $('wsCopy').onclick = function () { (navigator.clipboard ? navigator.clipboard.writeText(code) : Promise.reject()).then(function () { toast('Sync code copied'); }, function () { prompt('Copy your sync code', code); }); };
+    $('wsCheck').onclick = async function () { await watchReload(); var a = hd(today(), 'apple'); if (a) { m.close(); toast('Apple Watch connected'); } else toast('Nothing received yet. Run the shortcut on your iPhone, then check again.'); };
+  }
+  async function connectWhoop() {
+    var L = S.hlink || {};
+    if (!L.whoop_ready) { modal('Connect Whoop', '<p class="tk-muted">Whoop syncing is being set up by your coach. Check back soon: the button will work as soon as it\'s ready.</p>'); return; }
+    var r = await sb.rpc('health_whoop', { p_action: 'start' }); if (r.error || !r.data || !r.data.client_id) return toast('Could not start Whoop sign-in. Try again.');
+    ev('tracker_whoop_connect');
+    location.href = 'https://api.prod.whoop.com/oauth/oauth2/auth?' + new URLSearchParams({ client_id: r.data.client_id, redirect_uri: location.origin + '/api/whoop/callback', response_type: 'code', scope: WHOOP_SCOPES, state: r.data.state }).toString();
+  }
+  async function watchReload() {
+    var id = S.target.id;
+    var q = await Promise.all([
+      sb.from('health_daily').select('*').eq('user_id', id).gte('date', iso(new Date(Date.now() - 35 * 864e5))).limit(200),
+      sb.rpc('health_my_link', viewingOther() ? { p_user: id } : {}),
+      sb.from('habit_logs').select('*').eq('user_id', id).order('date', { ascending: true }).limit(400)
+    ]);
+    if (id !== S.target.id) return;
+    S.health = q[0].data || S.health; S.hlink = q[1].data || S.hlink; if (q[2].data) S.habits = q[2].data;
+    if (S.tab === 'today' && !(S.draft && !S.overview) && !document.querySelector('.modal')) {
+      var c = document.querySelector('.wt-card'); if (c) { c.outerHTML = watchCard(); wireWatchCard(document); }
+    }
+  }
+  // fresh Whoop data when the page opens (the server skips it if it synced in the last hour)
+  async function watchRefresh(id) {
+    if (!S.hlink || !S.hlink.whoop_connected) return;
+    try {
+      var ss = await sb.auth.getSession(), jwt = ss && ss.data && ss.data.session && ss.data.session.access_token; if (!jwt) return;
+      var r = await fetch('/api/health?action=sync', { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + jwt }, body: JSON.stringify({ user_id: id }) });
+      var j = await r.json().catch(function () { return {}; });
+      if (j.synced && j.synced.length && id === S.target.id) await watchReload();
+    } catch (e) {}
   }
   function todayHabitsCard() {
     var who = viewingOther() ? esc((S.target.name || 'Client').split(' ')[0]) + '\'s' : 'Today\'s';

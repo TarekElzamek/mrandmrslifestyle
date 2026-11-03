@@ -751,3 +751,209 @@ begin
 end $$;
 revoke all on function public.tpr_admin(text, jsonb) from public, anon;
 grant execute on function public.tpr_admin(text, jsonb) to authenticated;
+
+-- ---------- v20: watch data (Apple Watch via an iPhone Shortcut, Whoop via its official API) ----------
+-- One row per client, day and source. Clients read their own rows, coaches read everyone's.
+-- Rows are only written by the website server (health_server), never directly by the app.
+create table if not exists public.health_daily (
+  user_id uuid not null references public.profiles(id) on delete cascade,
+  date date not null,
+  source text not null check (source in ('apple', 'whoop')),
+  steps int check (steps between 0 and 200000),
+  active_kcal int check (active_kcal between 0 and 20000),
+  total_kcal int check (total_kcal between 0 and 30000),
+  avg_hr smallint check (avg_hr between 20 and 250),
+  resting_hr smallint check (resting_hr between 20 and 250),
+  hrv numeric(5,1) check (hrv between 0 and 500),
+  recovery smallint check (recovery between 0 and 100),
+  strain numeric(4,1) check (strain between 0 and 30),
+  sleep_hours numeric(4,2) check (sleep_hours between 0 and 24),
+  sleep_perf smallint check (sleep_perf between 0 and 100),
+  synced_at timestamptz not null default now(),
+  primary key (user_id, date, source)
+);
+alter table public.health_daily enable row level security;
+drop policy if exists "health read" on public.health_daily;
+create policy "health read" on public.health_daily for select using (user_id = auth.uid() or public.is_coach());
+revoke insert, update, delete on public.health_daily from anon, authenticated;
+grant select on public.health_daily to authenticated;
+
+-- connection details per client (private: tokens never leave the server)
+create table if not exists public.health_links (
+  user_id uuid primary key references public.profiles(id) on delete cascade,
+  apple_token text unique not null default encode(extensions.gen_random_bytes(12), 'hex'),
+  apple_last_at timestamptz,
+  whoop_user_id bigint,
+  whoop_access text,
+  whoop_refresh text,
+  whoop_expires timestamptz,
+  whoop_connected_at timestamptz,
+  whoop_last_at timestamptz,
+  whoop_error text
+);
+create table if not exists public.health_oauth_states (
+  state text primary key,
+  user_id uuid not null references public.profiles(id) on delete cascade,
+  created_at timestamptz not null default now()
+);
+alter table public.health_links enable row level security;
+alter table public.health_oauth_states enable row level security;
+revoke all on public.health_links, public.health_oauth_states from anon, authenticated;
+
+-- signed-in client (or coach for a client): connection status and the client's personal sync code
+create or replace function public.health_my_link(p_user uuid default null) returns jsonb
+language plpgsql security definer set search_path = public, extensions as $$
+declare u uuid := coalesce(p_user, auth.uid()); l public.health_links;
+begin
+  if auth.uid() is null or (u <> auth.uid() and not public.is_coach()) then raise exception 'forbidden'; end if;
+  insert into public.health_links (user_id) values (u) on conflict (user_id) do nothing;
+  select * into l from public.health_links where user_id = u;
+  return jsonb_build_object(
+    'apple_token', case when u = auth.uid() then l.apple_token end,
+    'apple_last_at', l.apple_last_at,
+    'whoop_connected', l.whoop_refresh is not null, 'whoop_last_at', l.whoop_last_at, 'whoop_error', l.whoop_error,
+    'whoop_ready', (select value from public.private_config where key = 'whoop_client_id') is not null,
+    'shortcut_url', (select value from public.private_config where key = 'apple_shortcut_url'));
+end $$;
+revoke all on function public.health_my_link(uuid) from public, anon;
+grant execute on function public.health_my_link(uuid) to authenticated;
+
+-- signed-in client: start the Whoop sign-in (returns a one-time state) or disconnect
+create or replace function public.health_whoop(p_action text) returns jsonb
+language plpgsql security definer set search_path = public, extensions as $$
+declare s text;
+begin
+  if auth.uid() is null then raise exception 'forbidden'; end if;
+  if p_action = 'start' then
+    delete from public.health_oauth_states where created_at < now() - interval '1 hour';
+    s := encode(gen_random_bytes(16), 'hex');
+    insert into public.health_oauth_states (state, user_id) values (s, auth.uid());
+    return jsonb_build_object('state', s, 'client_id', (select value from public.private_config where key = 'whoop_client_id'));
+  elsif p_action = 'disconnect' then
+    update public.health_links set whoop_access = null, whoop_refresh = null, whoop_expires = null, whoop_user_id = null, whoop_error = null where user_id = auth.uid();
+    return jsonb_build_object('ok', true);
+  end if;
+  raise exception 'bad action';
+end $$;
+revoke all on function public.health_whoop(text) from public, anon;
+grant execute on function public.health_whoop(text) to authenticated;
+
+-- coach-only setup: Whoop app keys and the Apple Shortcut link
+create or replace function public.health_admin(p_action text, p_args jsonb default '{}'::jsonb) returns jsonb
+language plpgsql security definer set search_path = public as $$
+begin
+  if not public.is_coach() then raise exception 'coach only'; end if;
+  if p_action = 'status' then
+    return jsonb_build_object('whoop_client_id', (select value from public.private_config where key = 'whoop_client_id'),
+      'has_whoop_secret', exists (select 1 from public.private_config where key = 'whoop_client_secret'),
+      'shortcut_url', (select value from public.private_config where key = 'apple_shortcut_url'),
+      'apple_clients', (select count(*) from public.health_links where apple_last_at is not null),
+      'whoop_clients', (select count(*) from public.health_links where whoop_refresh is not null));
+  elsif p_action = 'set' then
+    if coalesce(p_args->>'whoop_client_id', '') <> '' then
+      insert into public.private_config (key, value) values ('whoop_client_id', trim(p_args->>'whoop_client_id')) on conflict (key) do update set value = excluded.value; end if;
+    if coalesce(p_args->>'whoop_client_secret', '') <> '' then
+      insert into public.private_config (key, value) values ('whoop_client_secret', trim(p_args->>'whoop_client_secret')) on conflict (key) do update set value = excluded.value; end if;
+    if p_args ? 'shortcut_url' then
+      if coalesce(trim(p_args->>'shortcut_url'), '') = '' then delete from public.private_config where key = 'apple_shortcut_url';
+      elsif trim(p_args->>'shortcut_url') !~ '^https://www\.icloud\.com/shortcuts/' then return jsonb_build_object('error', 'bad_link');
+      else insert into public.private_config (key, value) values ('apple_shortcut_url', trim(p_args->>'shortcut_url')) on conflict (key) do update set value = excluded.value; end if;
+    end if;
+    return jsonb_build_object('ok', true);
+  end if;
+  raise exception 'bad action';
+end $$;
+revoke all on function public.health_admin(text, jsonb) from public, anon;
+grant execute on function public.health_admin(text, jsonb) to authenticated;
+
+-- website server only (same server secret as the rewards card)
+create or replace function public.health_server(p_secret text, p_action text, p_args jsonb default '{}'::jsonb) returns jsonb
+language plpgsql security definer set search_path = public as $$
+declare l public.health_links; u uuid; d date; r jsonb; n int := 0;
+begin
+  if p_secret is null or p_secret <> (select value from public.private_config where key = 'tpr_secret') then raise exception 'forbidden'; end if;
+
+  if p_action = 'apple' then
+    -- the iPhone Shortcut: today's totals from Apple Health
+    select * into l from public.health_links where apple_token = lower(trim(p_args->>'token'));
+    if l.user_id is null then return jsonb_build_object('error', 'bad_code'); end if;
+    d := (p_args->>'date')::date;
+    if d is null or d > (now() at time zone 'Asia/Dubai')::date + 1 or d < (now() at time zone 'Asia/Dubai')::date - 7 then return jsonb_build_object('error', 'bad_date'); end if;
+    insert into public.health_daily (user_id, date, source, steps, active_kcal, avg_hr, synced_at)
+      values (l.user_id, d, 'apple', (p_args->>'steps')::int, (p_args->>'active_kcal')::int, (p_args->>'avg_hr')::smallint, now())
+      on conflict (user_id, date, source) do update set
+        steps = coalesce(excluded.steps, health_daily.steps), active_kcal = coalesce(excluded.active_kcal, health_daily.active_kcal),
+        avg_hr = coalesce(excluded.avg_hr, health_daily.avg_hr), synced_at = now();
+    -- the Steps habit fills itself
+    if (p_args->>'steps') is not null then
+      insert into public.habit_logs (user_id, date, steps, updated_at) values (l.user_id, d, (p_args->>'steps')::int, now())
+        on conflict (user_id, date) do update set steps = excluded.steps, updated_at = now();
+    end if;
+    update public.health_links set apple_last_at = now() where user_id = l.user_id;
+    return jsonb_build_object('ok', true, 'date', d);
+
+  elsif p_action = 'whoop_keys' then
+    return jsonb_build_object('client_id', (select value from public.private_config where key = 'whoop_client_id'),
+      'client_secret', (select value from public.private_config where key = 'whoop_client_secret'));
+  elsif p_action = 'whoop_state' then
+    delete from public.health_oauth_states where state = p_args->>'state' and created_at > now() - interval '1 hour' returning user_id into u;
+    return jsonb_build_object('user_id', u);
+  elsif p_action = 'whoop_save' then
+    u := (p_args->>'user_id')::uuid;
+    insert into public.health_links (user_id) values (u) on conflict (user_id) do nothing;
+    update public.health_links set whoop_access = p_args->>'access', whoop_refresh = coalesce(p_args->>'refresh', whoop_refresh),
+      whoop_expires = now() + make_interval(secs => coalesce((p_args->>'expires_in')::int, 3600) - 60),
+      whoop_user_id = coalesce((p_args->>'whoop_user_id')::bigint, whoop_user_id),
+      whoop_connected_at = coalesce(whoop_connected_at, now()), whoop_error = null
+      where user_id = u;
+    return jsonb_build_object('ok', true);
+  elsif p_action = 'whoop_users' then
+    -- connected clients, optionally one client, optionally only those not synced recently
+    return (select coalesce(jsonb_agg(jsonb_build_object('user_id', user_id, 'access', whoop_access, 'refresh', whoop_refresh,
+        'expired', whoop_expires is null or whoop_expires < now())), '[]'::jsonb)
+      from public.health_links where whoop_refresh is not null
+        and ((p_args->>'user_id') is null or user_id = (p_args->>'user_id')::uuid)
+        and ((p_args->>'stale_minutes') is null or whoop_last_at is null or whoop_last_at < now() - make_interval(mins => (p_args->>'stale_minutes')::int)));
+  elsif p_action = 'whoop_error' then
+    update public.health_links set whoop_error = left(p_args->>'error', 200),
+      whoop_refresh = case when coalesce((p_args->>'disconnect')::boolean, false) then null else whoop_refresh end
+      where user_id = (p_args->>'user_id')::uuid;
+    return jsonb_build_object('ok', true);
+  elsif p_action = 'whoop_days' then
+    -- [{date, total_kcal, avg_hr, strain, recovery, resting_hr, hrv, sleep_hours, sleep_perf}]
+    u := (p_args->>'user_id')::uuid;
+    for r in select * from jsonb_array_elements(coalesce(p_args->'days', '[]'::jsonb)) loop
+      insert into public.health_daily (user_id, date, source, total_kcal, avg_hr, strain, recovery, resting_hr, hrv, sleep_hours, sleep_perf, synced_at)
+        values (u, (r->>'date')::date, 'whoop', (r->>'total_kcal')::int, (r->>'avg_hr')::smallint, (r->>'strain')::numeric,
+          (r->>'recovery')::smallint, (r->>'resting_hr')::smallint, (r->>'hrv')::numeric, (r->>'sleep_hours')::numeric, (r->>'sleep_perf')::smallint, now())
+        on conflict (user_id, date, source) do update set
+          total_kcal = coalesce(excluded.total_kcal, health_daily.total_kcal), avg_hr = coalesce(excluded.avg_hr, health_daily.avg_hr),
+          strain = coalesce(excluded.strain, health_daily.strain), recovery = coalesce(excluded.recovery, health_daily.recovery),
+          resting_hr = coalesce(excluded.resting_hr, health_daily.resting_hr), hrv = coalesce(excluded.hrv, health_daily.hrv),
+          sleep_hours = coalesce(excluded.sleep_hours, health_daily.sleep_hours), sleep_perf = coalesce(excluded.sleep_perf, health_daily.sleep_perf),
+          synced_at = now();
+      -- the Sleep habit fills itself when the client hasn't typed it
+      if (r->>'sleep_hours') is not null then
+        insert into public.habit_logs (user_id, date, sleep, updated_at) values (u, (r->>'date')::date, round((r->>'sleep_hours')::numeric, 1), now())
+          on conflict (user_id, date) do update set sleep = coalesce(habit_logs.sleep, excluded.sleep), updated_at = now();
+      end if;
+      n := n + 1;
+    end loop;
+    update public.health_links set whoop_last_at = now(), whoop_error = null where user_id = u;
+    return jsonb_build_object('ok', true, 'days', n);
+  elsif p_action = 'cron_ok' then
+    return jsonb_build_object('ok', p_args->>'secret' = (select value from public.private_config where key = 'cron_secret'));
+  end if;
+  raise exception 'bad action';
+end $$;
+revoke all on function public.health_server(text, text, jsonb) from public;
+grant execute on function public.health_server(text, text, jsonb) to anon, authenticated;
+
+-- Whoop data refresh every 3 hours (the page also refreshes a client's data when it's opened)
+select cron.unschedule('whoop-sync') where exists (select 1 from cron.job where jobname = 'whoop-sync');
+select cron.schedule('whoop-sync', '20 */3 * * *', $cron$
+  select net.http_post(
+    url := 'https://www.mrandmrslifestyle.com/api/health?action=cron',
+    headers := jsonb_build_object('Content-Type', 'application/json', 'x-cron-secret', (select value from public.private_config where key = 'cron_secret')),
+    body := '{}'::jsonb, timeout_milliseconds := 60000);
+$cron$);
