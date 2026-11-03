@@ -10,6 +10,7 @@
  *   POST   /v1/log
  */
 const tpr = require('./_lib/tpr');
+const IMAGES = require('./_lib/tpr-images');
 
 function send(res, code, body, type) {
   res.statusCode = code;
@@ -35,15 +36,15 @@ function cardPage(m, code) {
 <style>*{box-sizing:border-box;margin:0}body{background:#F6F1EA;color:#3A2617;font-family:Montserrat,Arial,sans-serif;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px 16px}
 .c{width:100%;max-width:420px;text-align:center}.wm{width:240px;max-width:80%}.tag{font-size:10px;letter-spacing:2px;color:#795033;text-transform:uppercase;margin-top:10px}
 .card{background:#3A2617;color:#F6F1EA;border-radius:16px;padding:22px 20px;margin:26px 0 22px;text-align:left;box-shadow:0 14px 34px rgba(58,38,23,.25)}
-.k{font-size:10px;letter-spacing:1.5px;color:#CDB9A6;text-transform:uppercase;font-weight:600}.v{font-family:Cinzel,serif;font-size:28px;margin:4px 0 12px}.n{font-size:15px}.g{display:grid;grid-template-columns:1fr 1fr;gap:14px 12px}
+.k{font-size:10px;letter-spacing:1.5px;color:#CDB9A6;text-transform:uppercase;font-weight:600}.v{font-family:Cinzel,serif;font-size:28px;margin:4px 0 12px}.n{font-size:15px}.g{display:grid;grid-template-columns:1fr 1fr;gap:14px 12px}.bar{display:block;width:calc(100% + 40px);margin:0 -20px 14px;height:auto}
 h1{font-family:Cinzel,serif;font-weight:500;font-size:22px;letter-spacing:.5px}p{font-size:14px;line-height:1.6;color:#6F5A48;margin-top:8px}
 .btn{display:flex;align-items:center;justify-content:center;gap:10px;background:#000;color:#fff;text-decoration:none;border-radius:12px;padding:15px 18px;font-weight:600;font-size:16px;margin-top:20px}
 .btn svg{width:22px;height:22px}.and{display:none;background:#fff;border:1px solid #E9DED2;border-radius:12px;padding:14px;font-size:13px;color:#6F5A48;margin-top:18px;line-height:1.5}
 .small{font-size:12px;color:#6F5A48;margin-top:18px}</style></head><body><div class="c">
 <img class="wm" src="/pilates-room/tpr-wordmark.png" alt="The Pilates Room by Chloe"><div class="tag">The Inner Circle</div>
-<div class="card"><div class="k">${esc(st.clubLabel)}</div><div class="v">${esc(st.club)}</div><div class="g"><div><div class="k">Member</div><div class="n">${esc(m.name)}</div></div><div><div class="k">Sessions</div><div class="n">${m.sessions || 0}</div></div><div><div class="k">Successful referrals</div><div class="n">${m.referrals || 0}</div></div><div><div class="k">Free sessions</div><div class="n">${Math.max(0, (m.free_earned || 0) - (m.free_used || 0))}</div></div></div></div>
+<div class="card"><div class="k">${esc(st.label)}</div><div class="v">${esc(st.title)}</div><img class="bar" alt="${st.filled} of 10 sessions" src="data:image/png;base64,${IMAGES.stamps[st.filled + ':strip@2x.png']}"><div class="g"><div><div class="k">Member</div><div class="n">${esc(m.name)}</div></div><div style="text-align:right"><div class="k">Sessions</div><div class="n">${m.sessions || 0}</div></div></div></div>
 <h1>Hi ${esc(first)}, your card is ready</h1>
-<p>Welcome to The Inner Circle. Add your card to Apple Wallet: every session you complete is added by Chloe, and every 10 sessions you join a new club, with a handwritten card and a surprise gift waiting for you.</p>
+<p>Welcome to The Inner Circle. Add your card to Apple Wallet: every session you complete is added by Chloe, and every 10 sessions you rise to a new title, from Princess to Goddess, with a handwritten card and a surprise gift waiting for you.</p>
 <a class="btn" id="add" href="${file}"><svg viewBox="0 0 24 24" fill="#fff" aria-hidden="true"><path d="M3 6.5A2.5 2.5 0 0 1 5.5 4h13A2.5 2.5 0 0 1 21 6.5v1H3v-1Zm0 3h18v8A2.5 2.5 0 0 1 18.5 20h-13A2.5 2.5 0 0 1 3 17.5v-8Zm12 4.5a1 1 0 1 0 0 2h3a1 1 0 1 0 0-2h-3Z"/></svg>Add to Apple Wallet</a>
 <div class="and" id="and">Google Wallet is coming soon. Your sessions are already being counted, so nothing is lost: we'll send you your Android card as soon as it's ready.</div>
 <p class="small">Questions? WhatsApp <a href="https://wa.me/971547011995" style="color:#795033">+971 54 701 1995</a></p>

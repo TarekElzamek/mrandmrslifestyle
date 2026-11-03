@@ -51,21 +51,23 @@ async function wwdr() {
 
 // ---------- what the card says ----------
 const MONTHS_LONG = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-// The Inner Circle: a new club every 10 sessions, a milestone gift at each one.
-function clubName(n) { return n < 10 ? 'New Member' : `${Math.floor(n / 10) * 10} Session Club`; }
+// The Inner Circle: a new title every 10 sessions (Princess, Queen, Empress, Goddess) and a gift every 10 sessions.
+const TITLES = ['Princess', 'Queen', 'Empress', 'Goddess'];
+function titleFor(n) { return TITLES[Math.min(TITLES.length - 1, Math.floor(n / 10))]; }
 function cardState(m) {
   const s = m.sessions || 0;
   const ready = Math.floor(s / 10) > (m.rewards_given || 0);
   const toGo = 10 - (s % 10);
+  const title = titleFor(s), nextTitle = titleFor(s + toGo);
+  const target = nextTitle !== title ? nextTitle.toUpperCase() : 'YOUR NEXT GIFT';
   return {
-    ready, club: clubName(s),
-    clubLabel: ready ? 'MILESTONE REACHED · GIFT WAITING' : `INNER CIRCLE · ${toGo} TO ${clubName(s + toGo).toUpperCase()}`,
-    toGo
+    ready, title, toGo, filled: s % 10,
+    label: ready ? 'NEW MILESTONE · YOUR GIFT IS WAITING' : `INNER CIRCLE · ${toGo} TO ${target}`,
+    next: nextTitle !== title ? `${toGo} more session${toGo === 1 ? '' : 's'} to become ${nextTitle}.` : `${toGo} more session${toGo === 1 ? '' : 's'} to your next gift.`
   };
 }
 function passJson(m, k) {
   const st = cardState(m);
-  const free = Math.max(0, (m.free_earned || 0) - (m.free_used || 0));
   const since = new Date(m.created_at);
   return {
     formatVersion: 1,
@@ -83,20 +85,14 @@ function passJson(m, k) {
     sharingProhibited: true,
     storeCard: {
       headerFields: [{ key: 'sessions', label: 'SESSIONS', value: m.sessions || 0 }],
-      primaryFields: [{ key: 'milestone', label: st.clubLabel, value: st.club, changeMessage: 'Welcome to the %@! A handwritten card and a surprise gift are waiting for you at the studio.' }],
-      // Apple puts these in one row under the photo, so keep three short fields; "member since" is on the back
-      secondaryFields: [{ key: 'member', label: 'MEMBER', value: m.name }],
-      auxiliaryFields: [
-        { key: 'referrals', label: 'REFERRALS', value: m.referrals || 0, textAlignment: 'PKTextAlignmentCenter', changeMessage: 'Thank you for your referral! Successful referrals: %@' },
-        { key: 'free', label: 'FREE SESSIONS', value: free, textAlignment: 'PKTextAlignmentRight', changeMessage: 'Free sessions available on your card: %@' }
+      primaryFields: [{ key: 'title', label: st.label, value: st.title, changeMessage: 'You are now a %@! A handwritten card and a surprise gift are waiting for you at the studio.' }],
+      secondaryFields: [
+        { key: 'member', label: 'MEMBER', value: m.name },
+        { key: 'since', label: 'MEMBER SINCE', value: `${MONTHS_LONG[since.getUTCMonth()]} ${since.getUTCFullYear()}`, textAlignment: 'PKTextAlignmentRight' }
       ],
       backFields: [
-        { key: 'circle', label: 'The Inner Circle', value: 'Every 10 sessions you join a new club: the 10 Session Club, the 20 Session Club, the 30 Session Club and onwards. At every milestone you receive a handwritten card celebrating your progress and a surprise gift.' },
-        { key: 'since', label: 'Member since', value: `${MONTHS_LONG[since.getUTCMonth()]} ${since.getUTCFullYear()}` },
-        { key: 'refs', label: 'Successful referrals', value: String(m.referrals || 0) },
-        { key: 'next', label: 'Your next club', value: st.ready ? `You have reached the ${st.club}. Your gift is waiting at the studio.` : `${st.toGo} more session${st.toGo === 1 ? '' : 's'} to the ${clubName((m.sessions || 0) + st.toGo)}.` },
-        { key: 'referral', label: 'Refer a friend', value: 'When a friend you refer buys her first package and names you, you earn a free session. Your successful referrals stay on your card.' },
-        { key: 'free_left', label: 'Free sessions', value: `${free} available · ${m.free_used || 0} used. Includes referral rewards and any free sessions given as milestone gifts.` },
+        { key: 'circle', label: 'The Inner Circle', value: 'Every 10 sessions you rise to a new title: Princess, Queen, Empress and Goddess. Each pink segment on your card is one session. At every 10 sessions you receive a handwritten card celebrating your progress and a surprise gift.' },
+        { key: 'next', label: 'Your next step', value: st.ready ? 'You have reached a new milestone. Your gift is waiting at the studio.' : st.next },
         { key: 'how', label: 'How it works', value: 'Every session you complete at The Pilates Room is added to this card by Chloe. It updates by itself, so there is nothing for you to do.' },
         { key: 'contact', label: 'Book or ask', value: 'WhatsApp +971 54 701 1995\ninfo@thepilatesroombychloe.com\nMeydan Avenue, Block A, Shop 3, Dubai' },
         { key: 'number', label: 'Card number', value: m.serial },
@@ -143,7 +139,9 @@ async function buildPass(m, opts) {
   const k = (opts && opts.keys) || await keys();
   const w = (opts && opts.wwdr) || await wwdr();
   const files = [['pass.json', Buffer.from(JSON.stringify(passJson(m, k)))]];
-  for (const [n, b64] of Object.entries(IMAGES)) files.push([n, Buffer.from(b64, 'base64')]);
+  for (const [n, b64] of Object.entries(IMAGES.files)) files.push([n, Buffer.from(b64, 'base64')]);
+  const filled = cardState(m).filled;
+  for (const [n, b64] of Object.entries(IMAGES.stamps)) { const [c, name] = n.split(':'); if (+c === filled) files.push([name, Buffer.from(b64, 'base64')]); }
   const manifest = {};
   for (const [n, d] of files) manifest[n] = crypto.createHash('sha1').update(d).digest('hex');
   const mbuf = Buffer.from(JSON.stringify(manifest));
@@ -172,4 +170,4 @@ async function pushUpdate(serial) {
   });
 }
 
-module.exports = { rpc, server, staff, keys, wwdr, buildPass, passJson, cardState, pushUpdate, SITE, WALLET_URL, forge };
+module.exports = { titleFor, rpc, server, staff, keys, wwdr, buildPass, passJson, cardState, pushUpdate, SITE, WALLET_URL, forge };

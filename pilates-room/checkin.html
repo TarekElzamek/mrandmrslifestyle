@@ -150,8 +150,9 @@ code{background:var(--cream);border:1px solid var(--sand);border-radius:6px;padd
 
   // ---------- list ----------
   function ready(m) { return Math.floor(m.sessions / 10) > (m.rewards_given || 0); }
-  function club(n) { return n < 10 ? 'New Member' : Math.floor(n / 10) * 10 + ' Session Club'; }
-  function nextGift(m) { return ((m.rewards_given || 0) + 1) * 10 + ' Session Club'; }
+  var TITLES = ['Princess', 'Queen', 'Empress', 'Goddess'];
+  function club(n) { return TITLES[Math.min(3, Math.floor(n / 10))]; }
+  function nextGift(m) { var n = ((m.rewards_given || 0) + 1) * 10; return n + '-session milestone (' + club(n) + ')'; }
   function freeLeft(m) { return Math.max(0, (m.free_earned || 0) - (m.free_used || 0)); }
   function initials(n) { return String(n || '?').split(' ').map(function (x) { return x[0]; }).join('').slice(0, 2).toUpperCase(); }
   async function load() {
@@ -228,7 +229,7 @@ code{background:var(--cream);border:1px solid var(--sand);border-radius:6px;padd
     var m = r.member; upsert(Object.assign({}, m, { card_url: (S.members.find(function (x) { return x.id === id; }) || {}).card_url || m.card_url }));
     var url = location.origin + '/pilates-room/card/' + m.share_code, rd = ready(m), fl = freeLeft(m);
     var phone = String(m.phone || '').replace(/[^\d]/g, '');
-    var msg = 'Hi ' + String(m.name).split(' ')[0] + '! Welcome to The Inner Circle 🤍 Here is your The Pilates Room card. Tap to add it to your Apple Wallet: ' + url + '\nEvery session you complete is added to it, and every 10 sessions you join a new club with a little surprise waiting for you.';
+    var msg = 'Hi ' + String(m.name).split(' ')[0] + '! Welcome to The Inner Circle 🤍 Here is your The Pilates Room card. Tap to add it to your Apple Wallet: ' + url + '\nEvery session you complete is added to it, and every 10 sessions you rise to a new title, from Princess to Goddess, with a little surprise waiting for you.';
     var labels = { session: '+1 session', created: 'Card created', set: 'Count changed', free_add: 'Successful referral (+1 free session)', free_gift: '+1 free session (gift)', free_use: 'Free session used', reward: 'Milestone gift given' };
     var s = sheet('<div class="sh-h"><h2 style="margin:0">' + esc(m.name) + '</h2><button class="x" data-close aria-label="Close">×</button></div>' +
       '<p class="m">' + esc(m.serial) + (m.phone ? ' · ' + esc(m.phone) : '') + '</p>' +
