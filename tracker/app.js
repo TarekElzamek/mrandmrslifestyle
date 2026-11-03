@@ -2012,11 +2012,24 @@
   // ---------- website leads (saved by track.js from every website form) ----------
   var LEAD_ST = [['new', 'New'], ['contacted', 'Contacted'], ['won', 'Client'], ['lost', 'Not now']];
   async function leadsBanner() {
+    watchBanner();
     try {
       var r = await sb.from('leads').select('id', { count: 'exact', head: true }).eq('status', 'new');
       var n = r && r.count; var el = $('leadsBanner'); if (!el || !n) return;
       el.innerHTML = '<button type="button" class="tk-card gold" id="lbOpen" style="display:block;width:100%;text-align:start;cursor:pointer"><div class="li"><div class="grow"><b>' + n + ' new website lead' + (n === 1 ? '' : 's') + '</b><span class="tk-small">Tap to see who enquired and follow up.</span></div>' + ICON.inbox + '</div></button>';
       $('lbOpen').onclick = openLeads;
+    } catch (e) {}
+  }
+  // coach hub: reminder until Apple Watch and Whoop syncing are set up
+  async function watchBanner() {
+    try {
+      var r = await sb.rpc('health_admin', { p_action: 'status' }); var st = r && r.data; var el = $('leadsBanner'); if (!el || !st) return;
+      var whoop = !!(st.whoop_client_id && st.has_whoop_secret), apple = !!st.shortcut_url;
+      var html = '<a class="tk-card' + (whoop && apple ? '' : ' gold') + '" href="/watch-setup.html" style="display:block;text-decoration:none;color:inherit"><div class="li"><div class="grow"><b>' + (whoop && apple ? 'Watch sync is on' : 'Set up Apple Watch &amp; Whoop sync') + '</b><span class="tk-small">' +
+        (whoop && apple ? st.apple_clients + ' clients syncing Apple Watch · ' + st.whoop_clients + ' connected to Whoop' : 'Apple Watch: ' + (apple ? 'ready' : 'not set up') + ' · Whoop: ' + (whoop ? 'ready' : 'not set up') + '. One-time setup, then clients connect in one tap.') +
+        '</span></div><span class="tk-btn sm' + (whoop && apple ? ' plain' : '') + '">' + (whoop && apple ? 'Settings' : 'Set up') + '</span></div></a>';
+      var box = document.getElementById('watchBanner'); if (!box) { box = document.createElement('div'); box.id = 'watchBanner'; el.parentNode.insertBefore(box, el.nextSibling); }
+      box.innerHTML = html;
     } catch (e) {}
   }
   async function openLeads() {
