@@ -163,6 +163,7 @@ footer p { font-size: 0.75rem; color: rgba(255,255,255,0.58); }
     <div class="field-group">
       <input type="text" id="firstName" placeholder="First Name" autocomplete="given-name">
       <input type="email" id="email" placeholder="Email Address" autocomplete="email">
+      <input type="text" id="company" name="company" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
       <select id="goal">
         <option value="" disabled selected>My main goal is...</option>
         <option>Lose fat & get lean</option><option>Build muscle & strength</option>
@@ -171,8 +172,9 @@ footer p { font-size: 0.75rem; color: rgba(255,255,255,0.58); }
         <option>General health & fitness</option>
       </select>
     </div>
-    <button class="form-btn" onclick="handleSubmit()">✦ Send Me The Blueprint — Free</button>
-    <div class="form-trust">100% Free · No Spam · Unsubscribe Anytime</div>
+    <button class="form-btn" id="guideBtn" onclick="handleSubmit()">✦ Send Me The Blueprint — Free</button>
+    <div id="formMsg" role="alert" style="display:none;margin-top:0.8rem;padding:0.75rem 0.9rem;border-radius:4px;background:rgba(224,122,107,0.12);border:1px solid rgba(224,122,107,0.5);color:#f2c4bc;font-size:0.85rem;line-height:1.5"></div>
+    <div class="form-trust">100% Free · We email you the download link · No Spam</div>
     <div class="guide-preview">
       <h4><span class="mm-i" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2V5z"/><path d="M4 19a2 2 0 0 1 2-2h13"/></svg></span> Inside Your Free Blueprint:</h4>
       <ul>
@@ -185,12 +187,19 @@ footer p { font-size: 0.75rem; color: rgba(255,255,255,0.58); }
       </ul>
     </div>
     <div class="success-state" id="successState" style="text-align:center; padding:1.5rem 0;">
-      <div style="font-size:3rem; margin-bottom:0.75rem;"><span class="mm-i" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="m8 12 3 3 5-6"/></svg></span></div>
-      <h3 style="font-size:1.4rem; margin-bottom:0.5rem; color:#fff;">Your Blueprint Is Ready!</h3>
-      <p style="color:rgba(255,255,255,0.6); margin-bottom:1.5rem; font-size:0.9rem; line-height:1.6;">Click the button below to download your free guide instantly.<br>We've also sent a copy to your email.</p>
-      <a id="downloadBtn" href="dubai-transformation-blueprint.pdf" download="Dubai-Transformation-Blueprint.pdf" style="display:inline-block; background:var(--gold); color:var(--black); text-decoration:none; padding:1rem 2rem; border-radius:4px; font-weight:700; font-size:0.9rem; letter-spacing:0.06em; text-transform:uppercase; margin-bottom:1rem; width:100%; text-align:center; box-shadow:0 4px 20px rgba(201,168,76,0.4);">⬇ Download Free Blueprint Now</a>
+      <div id="ssSent">
+        <div style="font-size:3rem; margin-bottom:0.75rem;"><span class="mm-i" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></span></div>
+        <h3 style="font-size:1.4rem; margin-bottom:0.5rem; color:#fff;">Check your inbox</h3>
+        <p style="color:rgba(255,255,255,0.7); margin-bottom:1rem; font-size:0.95rem; line-height:1.6;">We've sent your download link to <b id="ssEmail" style="color:var(--gold)"></b>.<br>Open the email and tap <b>Download my blueprint</b>.</p>
+        <p style="color:rgba(255,255,255,0.55); font-size:0.8rem; line-height:1.6; margin-bottom:1.2rem;">Not there in 2 minutes? Check your spam or promotions folder, or <a href="#" id="ssRetry" style="color:var(--gold)">enter a different email</a>.</p>
+      </div>
+      <div id="ssReady" style="display:none">
+        <div style="font-size:3rem; margin-bottom:0.75rem;"><span class="mm-i" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="m8 12 3 3 5-6"/></svg></span></div>
+        <h3 style="font-size:1.4rem; margin-bottom:0.5rem; color:#fff;">Email confirmed. Your Blueprint is ready!</h3>
+        <p style="color:rgba(255,255,255,0.6); margin-bottom:1.5rem; font-size:0.9rem; line-height:1.6;">Your download should start by itself. If it doesn't, tap the button below.</p>
+        <a id="downloadBtn" href="#" style="display:inline-block; background:var(--gold); color:var(--black); text-decoration:none; padding:1rem 2rem; border-radius:4px; font-weight:700; font-size:0.9rem; letter-spacing:0.06em; text-transform:uppercase; margin-bottom:1rem; width:100%; text-align:center; box-shadow:0 4px 20px rgba(201,168,76,0.4);">⬇ Download Free Blueprint Now</a>
+      </div>
       <div style="margin:1rem 0; border-top:1px solid rgba(255,255,255,0.1); padding-top:1rem;">
-        <p style="color:rgba(255,255,255,0.62); font-size:0.75rem; margin-bottom:1rem;"><span class="mm-i" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></span> A copy has also been sent to your email (check spam if not received within 5 minutes)</p>
         <a href="apply.html" style="display:inline-block; border:1px solid rgba(201,168,76,0.4); color:var(--gold); text-decoration:none; padding:0.75rem 1.5rem; border-radius:4px; font-weight:600; font-size:0.82rem; letter-spacing:0.06em; text-transform:uppercase;">Apply for Free Coaching Call →</a>
       </div>
     </div>
@@ -290,18 +299,44 @@ footer p { font-size: 0.75rem; color: rgba(255,255,255,0.58); }
 
 <script>
 function scrollToForm() { document.getElementById('formCard').scrollIntoView({ behavior: 'smooth', block: 'center' }); setTimeout(() => document.getElementById('firstName').focus(), 600); }
+function formParts(show) { const form = document.getElementById('formCard'); ['.form-card-tag', 'h2', '.subtitle', '.field-group', '.form-btn', '.form-trust', '.guide-preview'].forEach(q => { const el = form.querySelector(q); if (el) el.style.display = show ? '' : 'none'; }); document.getElementById('successState').style.display = show ? 'none' : 'block'; }
+function formMsg(t) { const m = document.getElementById('formMsg'); m.textContent = t || ''; m.style.display = t ? 'block' : 'none'; }
 async function handleSubmit() {
   const firstName = document.getElementById('firstName').value.trim(); const email = document.getElementById('email').value.trim(); const goal = document.getElementById('goal').value;
-  if (!firstName) { alert('Please enter your first name.'); return; }
-  if (!email || !email.includes('@')) { alert('Please enter a valid email address.'); return; }
-  if (!goal) { alert('Please select your main goal.'); return; }
-  await submitToFormspree(CONFIG.formspreeGuide, { _subject: '📋 New Blueprint Download — ' + firstName + ' wants the guide!', _replyto: email, name: firstName, email: email, goal: goal, source: 'Free Blueprint Download Page' });
-  const form = document.getElementById('formCard');
-  form.querySelector('.form-card-tag').style.display = 'none'; form.querySelector('h2').style.display = 'none'; form.querySelector('.subtitle').style.display = 'none'; form.querySelector('.field-group').style.display = 'none'; form.querySelector('.form-btn').style.display = 'none'; form.querySelector('.form-trust').style.display = 'none'; form.querySelector('.guide-preview').style.display = 'none';
-  document.getElementById('successState').style.display = 'block';
-  setTimeout(() => { const link = document.createElement('a'); link.href = 'dubai-transformation-blueprint.pdf'; link.download = 'Dubai-Transformation-Blueprint.pdf'; document.body.appendChild(link); link.click(); document.body.removeChild(link); }, 800);
+  formMsg('');
+  if (!firstName) return formMsg('Please enter your first name.');
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) return formMsg('Please enter a valid email address.');
+  if (!goal) return formMsg('Please select your main goal.');
+  const btn = document.getElementById('guideBtn'); btn.disabled = true; const label = btn.textContent; btn.textContent = 'Checking your email…';
+  let r = null;
+  try { const res = await fetch('/api/guide', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name: firstName, email: email, goal: goal, company: document.getElementById('company').value }) }); r = await res.json().catch(() => ({})); if (!res.ok && !r.error) r.error = 'Sorry, something went wrong. Please try again.'; }
+  catch (e) { r = { error: 'No connection. Please try again.' }; }
+  btn.disabled = false; btn.textContent = label;
+  if (r.error) return formMsg(r.error);
+  if (window.gtag) gtag('event', 'guide_email_sent');
+  document.getElementById('ssEmail').textContent = email;
+  document.getElementById('ssSent').style.display = 'block'; document.getElementById('ssReady').style.display = 'none';
+  formParts(false);
   document.getElementById('successState').scrollIntoView({ behavior: 'smooth', block: 'center' });
 }
+document.getElementById('ssRetry').onclick = function (e) { e.preventDefault(); formParts(true); document.getElementById('email').focus(); };
+// back from the link in the email
+(function () {
+  const q = new URLSearchParams(location.search), t = new URLSearchParams(location.hash.slice(1)).get('t');
+  if (q.get('verified') && t) {
+    const href = '/api/guide?f=pdf&t=' + encodeURIComponent(t);
+    document.getElementById('downloadBtn').href = href;
+    document.getElementById('ssSent').style.display = 'none'; document.getElementById('ssReady').style.display = 'block';
+    formParts(false);
+    history.replaceState(null, '', location.pathname);
+    setTimeout(() => { document.getElementById('successState').scrollIntoView({ behavior: 'smooth', block: 'center' }); location.href = href; }, 600);
+    if (window.gtag) gtag('event', 'guide_download_verified');
+  } else if (q.get('link') === 'expired') {
+    history.replaceState(null, '', location.pathname);
+    formMsg('That download link has expired. Enter your email again and we\'ll send you a new one.');
+    setTimeout(scrollToForm, 400);
+  }
+})();
 const observer = new IntersectionObserver(entries => { entries.forEach(e => { if (e.isIntersecting) { e.target.style.opacity = '1'; e.target.style.transform = 'translateY(0)'; } }); }, { threshold: 0.1 });
 document.querySelectorAll('.chapter-card, .mini-card').forEach(el => { el.style.opacity = '0'; el.style.transform = 'translateY(20px)'; el.style.transition = 'opacity 0.6s ease, transform 0.6s ease'; observer.observe(el); });
 </script>

@@ -1,6 +1,11 @@
 {
   "redirects": [
     {
+      "source": "/dubai-transformation-blueprint.pdf",
+      "destination": "/free-guide.html",
+      "permanent": false
+    },
+    {
       "source": "/reformer-pilates-meydan.html",
       "destination": "/female-personal-trainer-dubai.html",
       "permanent": true
@@ -807,6 +812,9 @@
     },
     "api/health.js": {
       "maxDuration": 60
+    },
+    "api/guide.js": {
+      "maxDuration": 30
     }
   },
   "rewrites": [
