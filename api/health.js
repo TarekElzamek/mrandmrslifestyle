@@ -207,7 +207,6 @@ module.exports = async (req, res) => {
     // default: the iPhone Shortcut sending today's Apple Health totals
     const code = String(b.code || b.token || url.searchParams.get('code') || '').trim();
     if (!code) return send(res, 400, { error: 'missing_code' });
-    console.log('apple sync raw', JSON.stringify({ steps: b.steps, active_kcal: b.active_kcal, avg_hr: b.avg_hr, date: b.date }).slice(0, 500)); // temporary: checking what the Shortcut sends
     const steps = num(b.steps), kcal = num(b.active_kcal != null ? b.active_kcal : b.calories), hr = num(b.avg_hr != null ? b.avg_hr : b.heart_rate);
     const r = await server('apple', {
       token: code, date: dayOf(b.date),

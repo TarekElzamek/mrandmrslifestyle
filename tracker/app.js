@@ -1349,6 +1349,7 @@
       '<ol class="wt-steps">' +
       '<li><b>Copy your sync code</b><div class="wt-code"><code id="wsCode">' + esc(code) + '</code><button type="button" class="tk-btn sm" id="wsCopy">Copy</button></div><span class="tk-small">It\'s personal: it sends your data to your own tracker.</span></li>' +
       '<li><b>Install the shortcut</b><a class="tk-btn block" href="' + esc(L.shortcut_url) + '" target="_blank" rel="noopener" style="margin-top:8px">Get the M&amp;M Watch Sync shortcut</a><span class="tk-small">Tap <b>Add Shortcut</b>. When it asks for your sync code, paste it. Allow access to Health when asked (steps, active energy, heart rate).</span></li>' +
+      '<li><b>Allow heart rate</b><span class="tk-small">Open iPhone <b>Settings</b> → <b>Apps</b> → <b>Shortcuts</b> → <b>Advanced</b> → switch on <b>Allow Sharing Large Amounts of Data</b>. Heart rate is recorded many times a day, so iPhone needs this to send your daily average.</span></li>' +
       '<li><b>Make it run by itself</b><span class="tk-small">Open the <b>Shortcuts</b> app → <b>Automation</b> → <b>+</b> → <b>App</b> → choose <b>WhatsApp</b> → tick <b>Is Opened</b> → <b>Run Immediately</b> → <b>Next</b> → choose <b>M&amp;M Watch Sync</b>. Your data then syncs every time you open WhatsApp.</span></li>' +
       '<li><b>Test it</b><span class="tk-small">Run the shortcut once in the Shortcuts app. Your steps appear here within seconds.</span></li></ol>' +
       '<button type="button" class="tk-btn ghost block" id="wsCheck" style="margin-top:12px">I ran it, check now</button>');

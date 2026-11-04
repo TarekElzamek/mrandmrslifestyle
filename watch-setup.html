@@ -74,6 +74,7 @@ b.k{color:var(--gold);font-weight:600}
       '<li>Add <b class="k">Find Health Samples</b>: Type <b>Steps</b>, add filter <b>Start Date is Today</b>, set <b>Group By: Day</b>. Then <b class="k">Calculate Statistics</b>: <b>Sum</b>. Then <b class="k">Set Variable</b>: name <b>Steps</b>.</li>' +
       '<li>Add <b class="k">Find Health Samples</b>: Type <b>Active Energy</b>, <b>Start Date is Today</b>, <b>Group By: Day</b>. Then <b class="k">Calculate Statistics</b>: <b>Sum</b>. Then <b class="k">Set Variable</b>: name <b>Calories</b>.</li>' +
       '<li>Add <b class="k">Find Health Samples</b>: Type <b>Heart Rate</b>, <b>Start Date is Today</b> (no grouping). Then <b class="k">Calculate Statistics</b>: <b>Average</b>. Then <b class="k">Set Variable</b>: name <b>HeartRate</b>.</li>' +
+      '<li>On the iPhone: <b>Settings</b> → <b>Apps</b> → <b>Shortcuts</b> → <b>Advanced</b> → switch on <b>Allow Sharing Large Amounts of Data</b>. Heart rate is recorded many times a day, and iPhone blocks the average without this. Clients do this once too (it\'s in their instructions).</li>' +
       '<li>Add <b class="k">Format Date</b>: Date <b>Current Date</b>, Date Format <b>Custom</b>, Format String <b>yyyy-MM-dd</b>.</li>' +
       '<li>Add <b class="k">Get Contents of URL</b>:' + copyRow(ENDPOINT) +
         '<ol type="a"><li>Method: <b>POST</b>, Request Body: <b>JSON</b></li>' +
