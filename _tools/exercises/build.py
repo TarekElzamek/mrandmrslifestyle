@@ -319,7 +319,7 @@ def build_page(d):
 
 def build_hub():
     n = len(ITEMS)
-    title = 'How to Squat, Deadlift &amp; Hip Thrust: Free Video Guides | Mr &amp; Mrs'
+    title = 'How to Squat, Deadlift &amp; Hip Thrust: Free Video Guides'
     desc = 'Free video guides to the big lifts: squat, deadlift, hip thrust, Bulgarian split squat and pull-up. Form, muscles worked and sets &amp; reps from Dubai coaches Tarek &amp; Chloe.'
     ld = [{"@context": "https://schema.org", "@type": "CollectionPage", "name": "Mr & Mrs Lifestyle Free Exercise Guides", "url": SITE + HUB, "description": html.unescape(desc),
            "mainEntity": {"@type": "ItemList", "numberOfItems": n, "itemListElement": [{"@type": "ListItem", "position": i + 1, "url": SITE + url(d), "name": d['title']} for i, d in enumerate(ITEMS)]}},

@@ -36,7 +36,7 @@ T = {
  'en': dict(
   path='/calories/mcdonalds-uae.html', alt='/ar/calories/mcdonalds-uae.html',
   title="McDonald's UAE Calories: Every Item Ranked + Lightest Picks",
-  desc="McDonald's UAE calories from the official menu: Big Mac 564 kcal, Big Tasty 793, McChicken 428. Every burger ranked, plus the lightest and highest-protein picks.",
+  desc="McDonald's UAE calories from the official menu: Big Mac 564 kcal, Big Tasty 793, McChicken 428. Every burger ranked, plus the lightest and high-protein picks.",
   tag="Fast-food calories · McDonald's UAE", h1="McDonald's UAE Calories: <em>Every Item Ranked</em>",
   sub="Official calories, protein, carbs and fat for the McDonald's UAE menu, sorted from highest to lowest, plus how our coaches would order if you're losing fat.",
   crumb="McDonald's UAE",

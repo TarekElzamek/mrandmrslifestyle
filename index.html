@@ -373,7 +373,7 @@
   .nav-cta { background: var(--gold); color: var(--black) !important; padding: 0.5rem 1.4rem; border-radius: 2px; font-weight: 600 !important; letter-spacing: 0.05em !important; transition: background 0.2s !important; }
   .nav-cta:hover { background: var(--gold-light) !important; }
   .hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; padding: 9.5rem 3rem 4rem; position: relative; overflow: hidden; }
-  .hero-bg { position: absolute; inset: 0; background: linear-gradient(135deg, rgba(10,10,10,0.98) 0%, rgba(20,20,20,0.9) 100%), url('https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=1800&q=80') center/cover no-repeat; }
+  .hero-bg { position: absolute; inset: 0; background: linear-gradient(135deg, rgba(10,10,10,0.98) 0%, rgba(20,20,20,0.9) 100%); }
   .hero-accent { position: absolute; top: -200px; right: -200px; width: 700px; height: 700px; background: radial-gradient(circle, rgba(201,168,76,0.08) 0%, transparent 70%); pointer-events: none; }
   .hero-content { position: relative; z-index: 2; max-width: 750px; }
   .hero-eyebrow { font-family: inherit; line-height: 1.4; margin-top: 0; display: inline-flex; align-items: center; gap: 0.75rem; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold); margin-bottom: 1.5rem; }
@@ -488,7 +488,7 @@
   .testi-name { font-weight: 600; font-size: 0.9rem; }
   .testi-detail { font-size: 0.75rem; color: var(--gold); margin-top: 0.15rem; }
   .pt-section { background: var(--black); display: grid; grid-template-columns: 1fr 1fr; gap: 0; padding: 0; }
-  .pt-photo { background: url('pt-section.jpg?v=6') center top/cover no-repeat; min-height: 600px; position: relative; }
+  .pt-photo { background: url('pt-section.jpg?v=7') center top/cover no-repeat; min-height: 600px; position: relative; }
   .pt-photo::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to right, transparent 60%, rgba(10,10,10,0.5)); }
   .pt-content { padding: 5rem 4rem; background: var(--charcoal); display: flex; flex-direction: column; justify-content: center; }
   .pt-locations { display: flex; flex-direction: column; gap: 1rem; margin: 2rem 0; }
@@ -728,10 +728,10 @@
     <h1 class="hero-eyebrow">Personal Trainer in Dubai &amp; Online Coaching</h1>
     <div class="hero-title">Stop <em>Trying.</em><br>Start<br><em>Transforming.</em></div>
     <p class="hero-sub">Real coaches. Real results. Whether you're in Dubai or anywhere in the world, Tarek & Chloe deliver the plan, nutrition guidance, and relentless support that finally makes the difference.</p>
-    <div class="hero-services" role="list" aria-label="Our three services">
-      <a role="listitem" href="#dubai-personal-training"><b>01</b><span>Dubai Personal Training<small>1-to-1 with Tarek · Al Quoz</small></span></a>
-      <a role="listitem" href="#ladies-private-pilates"><b>02</b><span>Ladies-Only Private Pilates<small>With Chloe · Meydan</small></span></a>
-      <a role="listitem" href="#online-coaching"><b>03</b><span>Worldwide Online Coaching<small>Train anywhere, coached by us</small></span></a>
+    <div class="hero-services" role="group" aria-label="Our three services">
+      <a href="#dubai-personal-training"><b>01</b><span>Dubai Personal Training<small>1-to-1 with Tarek · Al Quoz</small></span></a>
+      <a href="#ladies-private-pilates"><b>02</b><span>Ladies-Only Private Pilates<small>With Chloe · Meydan</small></span></a>
+      <a href="#online-coaching"><b>03</b><span>Worldwide Online Coaching<small>Train anywhere, coached by us</small></span></a>
     </div>
     <div class="hero-stats">
       <div><div class="stat-num">500+</div><div class="stat-label">Lives Changed</div></div>
@@ -801,7 +801,7 @@
   <div class="svc-grid">
     <article class="svc-card" id="dubai-personal-training">
       <div class="svc-media">
-        <img src="/services-dubai-pt.jpg?v=2" alt="Tarek, personal trainer at Nogs Gym, Al Quoz, Dubai" width="1200" height="960" loading="lazy">
+        <picture style="display:contents"><source type="image/webp" srcset="/services-dubai-pt-600.webp 600w, /services-dubai-pt-1200.webp 1200w" sizes="(max-width: 760px) 92vw, 380px"><img src="/services-dubai-pt.jpg?v=2" alt="Tarek, personal trainer at Nogs Gym, Al Quoz, Dubai" width="1200" height="960" loading="lazy"></picture>
         <span class="svc-badge">Men &amp; Women</span>
         <span class="svc-where"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg> Nogs Gym · Al Quoz, Dubai</span>
       </div>
@@ -815,7 +815,7 @@
     </article>
     <article class="svc-card" id="ladies-private-pilates">
       <div class="svc-media">
-        <img src="/services-ladies-pilates.jpg?v=2" alt="Private ladies-only reformer Pilates at The Pilates Room, Meydan, Dubai" width="1200" height="960" loading="lazy">
+        <picture style="display:contents"><source type="image/webp" srcset="/services-ladies-pilates-600.webp 600w, /services-ladies-pilates-1200.webp 1200w" sizes="(max-width: 760px) 92vw, 380px"><img src="/services-ladies-pilates.jpg?v=2" alt="Private ladies-only reformer Pilates at The Pilates Room, Meydan, Dubai" width="1200" height="960" loading="lazy"></picture>
         <span class="svc-badge">Ladies Only</span>
         <span class="svc-where"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg> The Pilates Room · Meydan</span>
       </div>
@@ -829,7 +829,7 @@
     </article>
     <article class="svc-card" id="online-coaching">
       <div class="svc-media">
-        <img src="/services-online-coaching.jpg?v=2" alt="Tarek and Chloe, Mr &amp; Mrs Lifestyle online coaches, running in Dubai" width="1200" height="960" loading="lazy">
+        <picture style="display:contents"><source type="image/webp" srcset="/services-online-coaching-600.webp 600w, /services-online-coaching-1200.webp 1200w" sizes="(max-width: 760px) 92vw, 380px"><img src="/services-online-coaching.jpg?v=2" alt="Tarek and Chloe, Mr &amp; Mrs Lifestyle online coaches, running in Dubai" width="1200" height="960" loading="lazy"></picture>
         <span class="svc-badge">Worldwide</span>
         <span class="svc-where"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.8 3.2 2.8 14.8 0 18M12 3c-2.8 3.2-2.8 14.8 0 18"/></svg> Online · Anywhere in the world</span>
       </div>
@@ -863,7 +863,7 @@
 </a>
   <div class="transforms-grid">
     <div class="transform-card">
-      <div class="transform-full-img"><img width="900" height="900" src="transform1.jpg" alt="John before and after 12 weeks of one-to-one personal training at Nogs Gym, Dubai" style="width:100%; display:block; border-bottom: 3px solid var(--gold);" loading="lazy"></div>
+      <div class="transform-full-img"><picture style="display:contents"><source type="image/webp" srcset="/transform1-600.webp 600w, /transform1-900.webp 900w" sizes="(max-width: 760px) 92vw, 25vw"><img width="900" height="900" src="transform1.jpg" alt="John before and after 12 weeks of one-to-one personal training at Nogs Gym, Dubai" style="width:100%; display:block; border-bottom: 3px solid var(--gold);" loading="lazy"></picture></div>
       <div class="transform-info">
         <div class="transform-name">John</div>
         <div class="transform-result">↓ 18 kg Body Fat (InBody est.) · 12 Weeks · 1-to-1 PT at Nogs Gym</div>
@@ -871,7 +871,7 @@
       </div>
     </div>
     <div class="transform-card">
-      <div class="transform-full-img"><img width="900" height="900" src="transform2.jpg" alt="Charlotte body transformation Dubai — reduced body fat and rebuilt confidence with online coaching" style="width:100%; display:block; border-bottom: 3px solid var(--gold);" loading="lazy"></div>
+      <div class="transform-full-img"><picture style="display:contents"><source type="image/webp" srcset="/transform2-600.webp 600w, /transform2-900.webp 900w" sizes="(max-width: 760px) 92vw, 25vw"><img width="900" height="900" src="transform2.jpg" alt="Charlotte body transformation Dubai — reduced body fat and rebuilt confidence with online coaching" style="width:100%; display:block; border-bottom: 3px solid var(--gold);" loading="lazy"></picture></div>
       <div class="transform-info">
         <div class="transform-name">Charlotte</div>
         <div class="transform-result">↓ Body Fat · Confidence Rebuilt · Elite Online Coaching</div>
@@ -879,7 +879,7 @@
       </div>
     </div>
     <div class="transform-card">
-      <div class="transform-full-img"><img width="900" height="900" src="transform3.jpg" alt="Max muscle gain transformation — gained 12kg muscle in 20 weeks with Mr and Mrs Lifestyle coaching" style="width:100%; display:block; border-bottom: 3px solid var(--gold);" loading="lazy"></div>
+      <div class="transform-full-img"><picture style="display:contents"><source type="image/webp" srcset="/transform3-600.webp 600w, /transform3-900.webp 900w" sizes="(max-width: 760px) 92vw, 25vw"><img width="900" height="900" src="transform3.jpg" alt="Max muscle gain transformation — gained 12kg muscle in 20 weeks with Mr and Mrs Lifestyle coaching" style="width:100%; display:block; border-bottom: 3px solid var(--gold);" loading="lazy"></picture></div>
       <div class="transform-info">
         <div class="transform-name">Max</div>
         <div class="transform-result">↑ 12kg Muscle · 20 Weeks with Tarek</div>
@@ -887,7 +887,7 @@
       </div>
     </div>
     <div class="transform-card">
-      <div class="transform-full-img"><img width="900" height="900" src="transform4.jpg" alt="Female fat loss transformation with Mr and Mrs Lifestyle coaching — waist visibly smaller, old jeans now too big" style="width:100%; display:block; border-bottom: 3px solid var(--gold);" loading="lazy"></div>
+      <div class="transform-full-img"><picture style="display:contents"><source type="image/webp" srcset="/transform4-600.webp 600w, /transform4-900.webp 900w" sizes="(max-width: 760px) 92vw, 25vw"><img width="900" height="900" src="transform4.jpg" alt="Female fat loss transformation with Mr and Mrs Lifestyle coaching — waist visibly smaller, old jeans now too big" style="width:100%; display:block; border-bottom: 3px solid var(--gold);" loading="lazy"></picture></div>
       <div class="transform-info">
         <div class="transform-name">Private Client</div>
         <div class="transform-result">↓ Significant Body Fat · Inches Off The Waist</div>
