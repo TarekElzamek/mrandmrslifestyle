@@ -65,7 +65,7 @@ function cardState(m) {
   const s = m.sessions || 0;
   const ch = chapterFor(s);
   return {
-    milestone: milestoneFor(s), chapter: ch, art: Math.min(7, Math.floor(s / 10)),
+    milestone: milestoneFor(s), chapter: ch, filled: s % 10,
     range: s >= 70 ? '70+ sessions' : `${Math.floor(s / 10) * 10}–${Math.floor(s / 10) * 10 + 9} sessions`,
     noteDue: Math.floor(s / 10) > (m.rewards_given || 0),
     rewards: Math.max(0, (m.free_earned || 0) - (m.free_used || 0))
@@ -84,14 +84,17 @@ function passJson(m, k) {
     webServiceURL: WALLET_URL,
     organizationName: 'The Pilates Room by Chloe',
     description: 'The Pilates Room by Chloe · The Chloe Method',
-    foregroundColor: 'rgb(246, 237, 227)',
+    logoText: 'THE PILATES ROOM',
+    foregroundColor: 'rgb(246, 241, 234)',
     backgroundColor: 'rgb(58, 38, 23)',
-    labelColor: 'rgb(239, 163, 172)',
+    labelColor: 'rgb(205, 185, 166)',
     sharingProhibited: true,
     storeCard: {
-      // the chapter (CHAPTER 3 · Strength · 20–29 sessions) is drawn into the artwork under the logo, in the brand fonts
+      // the range she is in, not the running count (the pink bar on the photo shows the sessions)
+      headerFields: [{ key: 'range', label: 'SESSIONS', value: st.range.replace(' sessions', '') }],
+      primaryFields: [{ key: 'chapter', label: st.chapter.inner ? `TPR · ${st.milestone.toUpperCase()}` : `CHAPTER ${st.chapter.num} · ${st.milestone === 'Welcome' ? 'THE CHLOE METHOD' : st.milestone.toUpperCase()}`, value: st.chapter.inner ? 'Inner Circle' : st.chapter.name }],
       secondaryFields: [
-        { key: 'member', label: 'MEMBER', value: String(m.name || '').split(' ')[0] },
+        { key: 'member', label: 'MEMBER', value: m.name },
         { key: 'since', label: 'MEMBER SINCE', value: `${MONTHS_LONG[since.getUTCMonth()]} ${since.getUTCFullYear()}`, textAlignment: 'PKTextAlignmentRight' }
       ],
       // the referral reward balance only appears when she has one
@@ -104,7 +107,7 @@ function passJson(m, k) {
         { key: 'notes', label: 'Every 10 sessions', value: 'Chloe celebrates every 10 completed sessions with a handwritten note waiting on your Reformer at your next visit.' },
         { key: 'referral', label: 'Refer a friend', value: 'When a friend you refer buys her first package and attends her first paid session, you receive one complimentary private session.' },
         { key: 'since', label: 'Member since', value: `${MONTHS_LONG[since.getUTCMonth()]} ${since.getUTCFullYear()}` },
-        { key: 'how', label: 'How it works', value: 'Chloe records your completed sessions. Your card moves to the next chapter every 10 sessions by itself, so there is nothing for you to do.' },
+        { key: 'how', label: 'How it works', value: 'Chloe records your completed sessions. Each pink segment on your card is one session towards your next milestone, and the card moves to the next chapter every 10 sessions by itself.' },
         { key: 'contact', label: 'Book or ask', value: 'WhatsApp +971 54 701 1995\ninfo@thepilatesroombychloe.com\nMeydan Avenue, Block A, Shop 3, Dubai' },
         { key: 'number', label: 'Card number', value: m.serial },
         { key: 'terms', label: 'Terms', value: 'Rewards are personal and not exchangeable for cash. Complimentary sessions are private sessions at The Pilates Room by Chloe. The Pilates Room may update the programme at any time.' }
@@ -151,9 +154,9 @@ async function buildPass(m, opts) {
   const w = (opts && opts.wwdr) || await wwdr();
   const files = [['pass.json', Buffer.from(JSON.stringify(passJson(m, k)))]];
   for (const [n, b64] of Object.entries(IMAGES.files)) files.push([n, Buffer.from(b64, 'base64')]);
-  // the chapter artwork under the logo
-  const art = cardState(m).art;
-  for (const [n, b64] of Object.entries(IMAGES.chapters)) { const [c, name] = n.split(':'); if (+c === art) files.push([name, Buffer.from(b64, 'base64')]); }
+  // the towel photo with the pink bar: one segment per completed session towards the next milestone
+  const filled = cardState(m).filled;
+  for (const [n, b64] of Object.entries(IMAGES.stamps)) { const [c, name] = n.split(':'); if (+c === filled) files.push([name, Buffer.from(b64, 'base64')]); }
   const manifest = {};
   for (const [n, d] of files) manifest[n] = crypto.createHash('sha1').update(d).digest('hex');
   const mbuf = Buffer.from(JSON.stringify(manifest));
