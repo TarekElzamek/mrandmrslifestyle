@@ -65,7 +65,7 @@ function cardState(m) {
   const s = m.sessions || 0;
   const ch = chapterFor(s);
   return {
-    milestone: milestoneFor(s), chapter: ch, filled: s % 10,
+    milestone: milestoneFor(s), chapter: ch, filled: ch.inner ? 8 : ch.num, // pink segments = chapters reached (8 = Inner Circle)
     range: s >= 70 ? '70+ sessions' : `${Math.floor(s / 10) * 10}–${Math.floor(s / 10) * 10 + 9} sessions`,
     noteDue: Math.floor(s / 10) > (m.rewards_given || 0),
     rewards: Math.max(0, (m.free_earned || 0) - (m.free_used || 0))
@@ -106,7 +106,7 @@ function passJson(m, k) {
         { key: 'notes', label: 'Every 10 sessions', value: 'Chloe celebrates every 10 completed sessions with a handwritten note waiting on your Reformer at your next visit.' },
         { key: 'referral', label: 'Refer a friend', value: 'When a friend you refer buys her first package and attends her first paid session, you receive one complimentary private session.' },
         { key: 'since', label: 'Member since', value: `${MONTHS_LONG[since.getUTCMonth()]} ${since.getUTCFullYear()}` },
-        { key: 'how', label: 'How it works', value: 'Chloe records your completed sessions. Each pink segment on your card is one session towards your next milestone, and the card moves to the next chapter every 10 sessions by itself.' },
+        { key: 'how', label: 'How it works', value: 'Chloe records your completed sessions. The pink bar on your card has one segment for each chapter you have reached, and the card moves to the next chapter every 10 sessions by itself. All eight segments are pink when you join the TPR Inner Circle.' },
         { key: 'contact', label: 'Book or ask', value: 'WhatsApp +971 54 701 1995\ninfo@thepilatesroombychloe.com\nMeydan Avenue, Block A, Shop 3, Dubai' },
         { key: 'number', label: 'Card number', value: m.serial },
         { key: 'terms', label: 'Terms', value: 'Rewards are personal and not exchangeable for cash. Complimentary sessions are private sessions at The Pilates Room by Chloe. The Pilates Room may update the programme at any time.' }
