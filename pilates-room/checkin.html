@@ -122,7 +122,7 @@ code{background:var(--cream);border:1px solid var(--sand);border-radius:6px;padd
     return j;
   }
   function errText(e) {
-    return ({ not_found: 'No client with that card.', no_free_sessions: 'No free sessions left to use.', not_reached: 'This milestone has not been reached yet.', limit: 'Limit reached.',
+    return ({ not_found: 'No client with that card.', no_free_sessions: 'No free sessions left to use.', not_reached: 'This milestone has not been reached yet.', no_referral: 'She is not linked to a referrer.', already_earned: 'This referral reward was already given.', limit: 'Limit reached.',
       name_required: 'Enter the client\'s name.', nothing_to_undo: 'Nothing to undo.', bad_number: 'Enter a valid number.', no_pin: 'No studio PIN yet. Open Setup first.',
       not_configured: 'The card system is not switched on yet (Setup step 3).', server_error: 'Something went wrong. Try again.' })[e] || e;
   }
@@ -150,9 +150,11 @@ code{background:var(--cream);border:1px solid var(--sand);border-radius:6px;padd
 
   // ---------- list ----------
   function ready(m) { return Math.floor(m.sessions / 10) > (m.rewards_given || 0); }
-  var TITLES = ['Princess', 'Queen', 'Empress', 'Goddess'];
-  function club(n) { return TITLES[Math.min(3, Math.floor(n / 10))]; }
-  function nextGift(m) { var n = ((m.rewards_given || 0) + 1) * 10; return n + '-session milestone (' + club(n) + ')'; }
+  // The Chloe Method: a chapter every 10 completed sessions, TPR Inner Circle from 70
+  var CHAPTERS = ['Foundation', 'Control', 'Strength', 'Confidence', 'Refinement', 'Resilience', 'Lifestyle'];
+  function club(n) { var i = Math.floor((n || 0) / 10); return i >= 7 ? 'TPR Inner Circle' : 'Chapter ' + (i + 1) + ' · ' + CHAPTERS[i]; }
+  function milestone(n) { var t = Math.floor((n || 0) / 10) * 10; return t ? t + ' Session Club' : 'Welcome'; }
+  function nextGift(m) { var n = ((m.rewards_given || 0) + 1) * 10; return n + ' Session Club (' + club(n) + ')'; }
   function freeLeft(m) { return Math.max(0, (m.free_earned || 0) - (m.free_used || 0)); }
   function initials(n) { return String(n || '?').split(' ').map(function (x) { return x[0]; }).join('').slice(0, 2).toUpperCase(); }
   async function load() {
@@ -163,7 +165,7 @@ code{background:var(--cream);border:1px solid var(--sand);border-radius:6px;padd
     var q = $('q').value.trim().toLowerCase();
     var rows = S.members.filter(function (m) { return !q || (m.name + ' ' + (m.phone || '') + ' ' + m.serial).toLowerCase().indexOf(q) > -1; });
     $('list').innerHTML = rows.length ? rows.map(function (m) {
-      return '<div class="it" data-id="' + m.id + '"><span class="av">' + esc(initials(m.name)) + '</span><div style="min-width:0"><b>' + esc(m.name) + (ready(m) ? '<span class="pill r">Gift</span>' : '') + (freeLeft(m) ? '<span class="pill f">' + freeLeft(m) + ' free</span>' : '') + '</b><small>' + esc(club(m.sessions)) + ' · ' + esc(m.serial) + (m.last_session ? ' · last ' + esc(m.last_session) : '') + '</small></div><span class="n">' + m.sessions + '</span></div>';
+      return '<div class="it" data-id="' + m.id + '"><span class="av">' + esc(initials(m.name)) + '</span><div style="min-width:0"><b>' + esc(m.name) + (ready(m) ? '<span class="pill r">Note</span>' : '') + (freeLeft(m) ? '<span class="pill f">' + freeLeft(m) + ' free</span>' : '') + '</b><small>' + esc(club(m.sessions)) + ' · ' + esc(m.serial) + (m.last_session ? ' · last ' + esc(m.last_session) : '') + '</small></div><span class="n">' + m.sessions + '</span></div>';
     }).join('') : '<p class="m">' + (S.members.length ? 'No match.' : 'No clients yet. Tap + New to add your first client.') + '</p>';
     $('list').querySelectorAll('[data-id]').forEach(function (el) { el.onclick = function () { openMember(+el.dataset.id); }; });
   }
@@ -216,10 +218,10 @@ code{background:var(--cream);border:1px solid var(--sand);border-radius:6px;padd
     var m = r.member, rd = ready(m);
     var d = sheet('<div class="sh-h"><span class="ok">✓ Session added</span><button class="x" data-close aria-label="Close">×</button></div>' +
       '<h2 style="margin:6px 0 2px">' + esc(m.name) + '</h2><div class="row" style="align-items:baseline;gap:10px"><span class="big-n">' + m.sessions + '</span><span class="m">sessions</span></div>' +
-      '<p class="m">' + esc(club(m.sessions)) + '</p>' +
-      (rd ? '<div class="good">🎉 She reached the <b>' + esc(nextGift(m)) + '</b>. Give her the handwritten card and her surprise gift, then tap <b>Milestone gift given</b> on her profile.</div>' : '') +
-      (freeLeft(m) ? '<div class="good">She has ' + freeLeft(m) + ' free session' + (freeLeft(m) > 1 ? 's' : '') + ' available.</div>' : '') +
-      (r.push && r.push.sent ? '<p class="m">Her Wallet card is updating now.</p>' : '<p class="m">Her card will update the next time she opens it.</p>') +
+      '<p class="m">' + esc(milestone(m.sessions)) + ' · ' + esc(club(m.sessions)) + '</p>' +
+      (rd ? '<div class="good">🎉 She just reached the <b>' + esc(nextGift(m)) + '</b>. Her card has moved on. Leave a handwritten note on her Reformer for her next visit (and a small gift if you like), then tap <b>Note left</b> on her profile.</div>' : '') +
+      (freeLeft(m) ? '<div class="good">She has ' + freeLeft(m) + ' complimentary session' + (freeLeft(m) > 1 ? 's' : '') + ' from referrals.</div>' : '') +
+      (r.also_push ? '<div class="good">This was her first paid session as a referred friend: her referrer just earned a complimentary session.</div>' : '') +
       '<div class="grid2" style="margin-top:14px"><button class="btn ghost" id="undo">Undo</button><button class="btn" id="prof">Open profile</button></div>');
     $('undo').onclick = async function () { this.disabled = true; var u = await api('undo', { id: m.id }); if (u.member) upsert(u.member); d.close(); toast(u.error ? errText(u.error) : 'Undone'); };
     $('prof').onclick = function () { d.close(); openMember(m.id); };
@@ -235,25 +237,38 @@ code{background:var(--cream);border:1px solid var(--sand);border-radius:6px;padd
     var m = r.member; upsert(Object.assign({}, m, { card_url: (S.members.find(function (x) { return x.id === id; }) || {}).card_url || m.card_url }));
     var url = location.origin + '/pilates-room/card/' + m.share_code, rd = ready(m), fl = freeLeft(m);
     var phone = String(m.phone || '').replace(/[^\d]/g, '');
-    var msg = 'Hi ' + String(m.name).split(' ')[0] + '! Welcome to The Inner Circle 🤍 Here is your The Pilates Room card. Tap to add it to your Apple Wallet: ' + url + '\nEvery session you complete is added to it, and every 10 sessions you rise to a new title, from Princess to Goddess, with a little surprise waiting for you.';
-    var labels = { session: '+1 session', created: 'Card created', set: 'Count changed', free_add: 'Successful referral (+1 free session)', free_gift: '+1 free session (gift)', free_use: 'Free session used', reward: 'Milestone gift given' };
+    var msg = 'Hi ' + String(m.name).split(' ')[0] + '! Here is your The Pilates Room by Chloe card 🤍 Tap to add it to your Apple Wallet: ' + url + '\nYou only add it once. Every 10 completed sessions you move to the next chapter of The Chloe Method, and your card updates by itself.';
+    var labels = { session: '+1 session', created: 'Card created', set: 'Count changed', free_add: 'Referral reward added by hand', referral: 'Referral reward earned', free_gift: '+1 complimentary session (gift)', free_use: 'Complimentary session used', reward: 'Note left' };
+    var rb = r.referred_by, refs = r.referrals || [];
+    var others = S.members.filter(function (x) { return x.id !== m.id; }).sort(function (a, b) { return a.name.localeCompare(b.name); });
+    var refHtml = '<div class="card"><h2>Referrals</h2>' +
+      '<p class="m">' + fl + ' complimentary session' + (fl === 1 ? '' : 's') + ' available · ' + (m.free_used || 0) + ' used · ' + (m.referrals || 0) + ' earned from referrals</p>' +
+      (refs.length ? '<div class="log" style="margin-top:8px">' + refs.map(function (x) { return '<div>' + esc(x.name) + ' · ' + (x.earned ? '✓ reward earned' : (x.package_bought ? 'package bought' : 'package not yet') + ' · ' + (x.attended ? 'attended' : 'first session not yet')) + '</div>'; }).join('') + '</div>' : '<p class="m" style="font-size:12px">She hasn\'t referred anyone yet. When you add a new client, choose her under "Referred by".</p>') +
+      '<button class="btn ghost" id="mFreeUse" style="margin-top:10px"' + (fl ? '' : ' disabled') + '>Use a complimentary session</button>' +
+      '<div class="grid2" style="margin-top:8px"><button class="btn ghost" id="mFreeAdd">+1 reward by hand</button><button class="btn ghost" id="mFreeGift">+1 complimentary (gift)</button></div>' +
+      '<label for="eRef" style="margin-top:14px">Referred by</label><select id="eRef"' + (rb && rb.earned ? ' disabled' : '') + '><option value="">Nobody</option>' + others.map(function (x) { return '<option value="' + x.id + '"' + (rb && rb.id === x.id ? ' selected' : '') + '>' + esc(x.name) + '</option>'; }).join('') + '</select>' +
+      (rb ? (rb.earned ? '<p class="m" style="font-size:12px">✓ ' + esc(rb.name) + ' already received her reward for this referral.</p>' :
+        '<label class="row" style="gap:8px;margin-top:10px;align-items:center"><input type="checkbox" id="ePkg"' + (rb.package_bought ? ' checked' : '') + ' style="width:auto"> She bought her first package</label><p class="m" style="font-size:12px">' + esc(rb.name) + ' earns one complimentary private session once this is ticked and her first paid session is added.</p>') : '') +
+      '</div>';
     var s = sheet('<div class="sh-h"><h2 style="margin:0">' + esc(m.name) + '</h2><button class="x" data-close aria-label="Close">×</button></div>' +
       '<p class="m">' + esc(m.serial) + (m.phone ? ' · ' + esc(m.phone) : '') + '</p>' +
-      '<div class="row" style="align-items:baseline;gap:10px;margin-top:10px"><span class="big-n">' + m.sessions + '</span><span class="m">sessions · ' + esc(club(m.sessions)) + '</span></div>' +
+      '<div class="row" style="align-items:baseline;gap:10px;margin-top:10px"><span class="big-n">' + m.sessions + '</span><span class="m">sessions</span></div><p class="m">Her card: <b>' + esc(milestone(m.sessions)) + '</b> · ' + esc(club(m.sessions)) + '</p>' +
       '<button class="btn" id="mPlus" style="margin-top:12px">+1 session</button>' +
-      (rd ? '<div class="good">🎉 ' + esc(nextGift(m)) + ' reached: handwritten card and surprise gift.</div><button class="btn gold" id="mReward" style="margin-top:8px">Milestone gift given</button>' : '') +
-      '<div class="card"><h2>Referrals and free sessions</h2><p class="m">' + (m.referrals || 0) + ' successful referral' + ((m.referrals || 0) === 1 ? '' : 's') + ' · ' + fl + ' free available · ' + (m.free_used || 0) + ' used</p><p class="m" style="font-size:12px">A referral counts when the friend buys her first package and names her.</p><div class="grid2" style="margin-top:10px"><button class="btn ghost" id="mFreeAdd">+1 referral</button><button class="btn ghost" id="mFreeGift">+1 free (gift)</button></div><button class="btn ghost" id="mFreeUse" style="margin-top:8px"' + (fl ? '' : ' disabled') + '>Use a free session</button></div>' +
-      '<div class="card"><h2>Rewards card</h2><div class="grid2"><a class="btn" id="mWa" href="https://wa.me/' + phone + '?text=' + encodeURIComponent(msg) + '" target="_blank" rel="noopener">Send on WhatsApp</a><button class="btn ghost" id="mCopy">Copy link</button></div></div>' +
+      (rd ? '<div class="good">🎉 ' + esc(nextGift(m)) + ' reached. Leave her handwritten note on the Reformer for her next visit.</div><button class="btn gold" id="mReward" style="margin-top:8px">Note left</button>' : '') +
+      refHtml +
+      '<div class="card"><h2>Wallet card</h2><div class="grid2"><a class="btn" id="mWa" href="https://wa.me/' + phone + '?text=' + encodeURIComponent(msg) + '" target="_blank" rel="noopener">Send on WhatsApp</a><button class="btn ghost" id="mCopy">Copy link</button></div></div>' +
       '<div class="card"><h2>Details</h2><label for="eN">Name</label><input id="eN" value="' + esc(m.name) + '"><label for="eP">Phone</label><input id="eP" inputmode="tel" value="' + esc(m.phone || '') + '"><label for="eE">Email</label><input id="eE" type="email" value="' + esc(m.email || '') + '">' +
       '<label for="eS">Sessions (correct the count)</label><input id="eS" inputmode="numeric" value="' + m.sessions + '">' +
       '<button class="btn ghost" id="mSave" style="margin-top:12px">Save changes</button></div>' +
       '<div class="card"><h2>History</h2><div class="log">' + (r.log || []).map(function (l) { return '<div>' + new Date(l.at).toLocaleString('en-GB', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }) + ' · ' + esc(labels[l.action] || l.action) + (l.note ? ' · ' + esc(l.note) : '') + '</div>'; }).join('') + '</div></div>' +
       '<button class="btn ghost" id="mDel" style="margin-top:14px;color:var(--warn)">Remove client</button>');
     $('mPlus').onclick = function () { s.close(); addSession({ id: m.id }); };
-    if ($('mReward')) $('mReward').onclick = async function () { var x = await api('reward_given', { id: m.id }); if (x.error) return toast(errText(x.error)); upsert(x.member); s.close(); toast('Milestone gift marked as given'); };
-    $('mFreeGift').onclick = async function () { var x = await api('free_gift', { id: m.id, note: 'milestone gift' }); if (x.error) return toast(errText(x.error)); upsert(x.member); s.close(); openMember(m.id); toast('Free session added'); };
-    $('mFreeAdd').onclick = async function () { var who = prompt('Who did she refer? (optional)') ; if (who === null) return; var x = await api('free_add', { id: m.id, note: who ? 'referred ' + who : '' }); if (x.error) return toast(errText(x.error)); upsert(x.member); s.close(); openMember(m.id); toast('Referral added: +1 free session'); };
-    $('mFreeUse').onclick = async function () { var x = await api('free_use', { id: m.id }); if (x.error) return toast(errText(x.error)); upsert(x.member); s.close(); openMember(m.id); toast('Free session used'); };
+    if ($('mReward')) $('mReward').onclick = async function () { var x = await api('reward_given', { id: m.id }); if (x.error) return toast(errText(x.error)); upsert(x.member); s.close(); toast('Note marked as left'); };
+    $('mFreeGift').onclick = async function () { var x = await api('free_gift', { id: m.id, note: 'gift' }); if (x.error) return toast(errText(x.error)); upsert(x.member); s.close(); openMember(m.id); toast('Complimentary session added'); };
+    $('mFreeAdd').onclick = async function () { var who = prompt('Reward for referring who? (for referrals before the card existed)'); if (who === null) return; var x = await api('free_add', { id: m.id, note: who ? 'referred ' + who : '' }); if (x.error) return toast(errText(x.error)); upsert(x.member); s.close(); openMember(m.id); toast('Referral reward added'); };
+    $('mFreeUse').onclick = async function () { var x = await api('free_use', { id: m.id }); if (x.error) return toast(errText(x.error)); upsert(x.member); s.close(); openMember(m.id); toast('Complimentary session used'); };
+    $('eRef').onchange = async function () { var x = await api('set_referrer', { id: m.id, referrer_id: this.value }); if (x.error) return toast(errText(x.error)); s.close(); openMember(m.id); toast(this.value ? 'Referral linked' : 'Referral removed'); };
+    if ($('ePkg')) $('ePkg').onchange = async function () { var x = await api('referral_package', { id: m.id, value: this.checked }); if (x.error) return toast(errText(x.error)); s.close(); openMember(m.id); toast(x.earned ? rb.name + ' earned a complimentary session' : 'Saved'); };
     $('mCopy').onclick = function () { (navigator.clipboard ? navigator.clipboard.writeText(url) : Promise.reject()).then(function () { toast('Link copied'); }, function () { prompt('Copy this link', url); }); };
     $('mSave').onclick = async function () {
       var btn = this, n = parseInt(String($('eS').value).replace(/[^\d]/g, ''), 10);
@@ -273,12 +288,14 @@ code{background:var(--cream);border:1px solid var(--sand);border-radius:6px;padd
   $('addBtn').onclick = function () {
     var s = sheet('<div class="sh-h"><h2 style="margin:0">New client</h2><button class="x" data-close aria-label="Close">×</button></div>' +
       '<label for="nN">Name</label><input id="nN" autocomplete="off"><label for="nP">WhatsApp number</label><input id="nP" inputmode="tel" placeholder="+971 50 123 4567">' +
-      '<label for="nE">Email (optional)</label><input id="nE" type="email"><div class="grid2"><div><label for="nS">Sessions done so far</label><input id="nS" inputmode="numeric" value="0"></div><div><label for="nF">Free sessions available</label><input id="nF" inputmode="numeric" value="0"></div></div><label for="nR">Successful referrals so far</label><input id="nR" inputmode="numeric" value="0">' +
+      '<label for="nE">Email (optional)</label><input id="nE" type="email"><div class="grid2"><div><label for="nS">Sessions done so far</label><input id="nS" inputmode="numeric" value="0"></div><div><label for="nF">Complimentary sessions she has</label><input id="nF" inputmode="numeric" value="0"></div></div>' +
+      '<label for="nRef">Referred by (optional)</label><select id="nRef"><option value="">Nobody</option>' + S.members.slice().sort(function (a, b) { return a.name.localeCompare(b.name); }).map(function (x) { return '<option value="' + x.id + '">' + esc(x.name) + '</option>'; }).join('') + '</select>' +
+      '<label class="row" style="gap:8px;margin-top:10px;align-items:center"><input type="checkbox" id="nPkg" style="width:auto"> She bought her first package</label>' +
       '<button class="btn" id="nGo" style="margin-top:16px">Create card</button>');
     $('nN').focus();
     $('nGo').onclick = async function () {
       this.disabled = true;
-      var x = await api('add', { name: $('nN').value, phone: $('nP').value, email: $('nE').value, sessions: parseInt($('nS').value, 10) || 0, free: parseInt($('nF').value, 10) || 0, referrals: parseInt($('nR').value, 10) || 0 });
+      var x = await api('add', { name: $('nN').value, phone: $('nP').value, email: $('nE').value, sessions: parseInt($('nS').value, 10) || 0, free: parseInt($('nF').value, 10) || 0, referred_by: $('nRef').value, package_bought: $('nPkg').checked });
       this.disabled = false; if (x.error) return toast(errText(x.error));
       upsert(x.member); s.close(); openMember(x.member.id); toast('Card created. Send it to her on WhatsApp.');
     };

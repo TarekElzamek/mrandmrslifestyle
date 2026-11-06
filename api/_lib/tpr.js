@@ -51,24 +51,29 @@ async function wwdr() {
 
 // ---------- what the card says ----------
 const MONTHS_LONG = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-// The Inner Circle: a new title every 10 sessions (Princess, Queen, Empress, Goddess) and a gift every 10 sessions.
-const TITLES = ['Princess', 'Queen', 'Empress', 'Goddess'];
-function titleFor(n) { return TITLES[Math.min(TITLES.length - 1, Math.floor(n / 10))]; }
+// The Chloe Method: a chapter for every 10 completed sessions, then TPR Inner Circle from 70.
+// The card only shows the latest milestone (10, 20, 30 Session Club…), never the running count,
+// so what she sees changes only at a new milestone or when a referral reward changes.
+const CHAPTERS = ['Foundation', 'Control', 'Strength', 'Confidence', 'Refinement', 'Resilience', 'Lifestyle'];
+function chapterFor(n) {
+  const i = Math.floor((n || 0) / 10);
+  return i >= 7 ? { inner: true, label: 'TPR INNER CIRCLE', name: 'TPR Inner Circle' } : { inner: false, num: i + 1, name: CHAPTERS[i], label: `CHAPTER ${i + 1} · ${CHAPTERS[i].toUpperCase()}` };
+}
+function milestoneFor(n) { const m = Math.floor((n || 0) / 10) * 10; return m ? `${m} Session Club` : 'Welcome'; }
+function rewardText(n) { return n > 0 ? `${n} complimentary session${n === 1 ? '' : 's'}` : 'Refer a friend'; }
 function cardState(m) {
   const s = m.sessions || 0;
-  const ready = Math.floor(s / 10) > (m.rewards_given || 0);
-  const toGo = 10 - (s % 10);
-  const title = titleFor(s), nextTitle = titleFor(s + toGo);
-  const target = nextTitle !== title ? nextTitle.toUpperCase() : 'YOUR NEXT GIFT';
+  const ch = chapterFor(s);
   return {
-    ready, title, toGo, filled: s % 10,
-    label: ready ? 'NEW MILESTONE · YOUR GIFT IS WAITING' : `INNER CIRCLE · ${toGo} TO ${target}`,
-    next: nextTitle !== title ? `${toGo} more session${toGo === 1 ? '' : 's'} to become ${nextTitle}.` : `${toGo} more session${toGo === 1 ? '' : 's'} to your next gift.`
+    milestone: milestoneFor(s), chapter: ch,
+    noteDue: Math.floor(s / 10) > (m.rewards_given || 0),
+    rewards: Math.max(0, (m.free_earned || 0) - (m.free_used || 0))
   };
 }
 function passJson(m, k) {
   const st = cardState(m);
   const since = new Date(m.created_at);
+  const chapterList = CHAPTERS.map((c, i) => `Chapter ${i + 1} · ${c}: ${i * 10}–${i * 10 + 9} sessions`).join('\n') + '\nTPR Inner Circle: 70 sessions and beyond';
   return {
     formatVersion: 1,
     passTypeIdentifier: k.passTypeId,
@@ -77,26 +82,28 @@ function passJson(m, k) {
     authenticationToken: m.auth_token,
     webServiceURL: WALLET_URL,
     organizationName: 'The Pilates Room by Chloe',
-    description: 'The Pilates Room · The Inner Circle',
-    logoText: 'THE PILATES ROOM',
+    description: 'The Pilates Room by Chloe · The Chloe Method',
+    logoText: 'THE PILATES ROOM BY CHLOE',
     foregroundColor: 'rgb(246, 241, 234)',
     backgroundColor: 'rgb(58, 38, 23)',
     labelColor: 'rgb(205, 185, 166)',
     sharingProhibited: true,
     storeCard: {
-      headerFields: [{ key: 'sessions', label: 'SESSIONS', value: m.sessions || 0 }],
-      primaryFields: [{ key: 'title', label: st.label, value: st.title, changeMessage: 'You are now a %@! A handwritten card and a surprise gift are waiting for you at the studio.' }],
+      primaryFields: [{ key: 'milestone', label: st.chapter.label, value: st.milestone, changeMessage: 'Welcome to the %@ · ' + (st.chapter.inner ? 'TPR Inner Circle' : `Chapter ${st.chapter.num}: ${st.chapter.name}`) }],
       secondaryFields: [
         { key: 'member', label: 'MEMBER', value: m.name },
-        { key: 'since', label: 'MEMBER SINCE', value: `${MONTHS_LONG[since.getUTCMonth()]} ${since.getUTCFullYear()}`, textAlignment: 'PKTextAlignmentRight' }
+        { key: 'rewards', label: 'REFERRAL REWARDS', value: rewardText(st.rewards), textAlignment: 'PKTextAlignmentRight', changeMessage: 'Referral reward: %@ available' }
       ],
       backFields: [
-        { key: 'circle', label: 'The Inner Circle', value: 'Every 10 sessions you rise to a new title: Princess, Queen, Empress and Goddess. Each pink segment on your card is one session. At every 10 sessions you receive a handwritten card celebrating your progress and a surprise gift.' },
-        { key: 'next', label: 'Your next step', value: st.ready ? 'You have reached a new milestone. Your gift is waiting at the studio.' : st.next },
-        { key: 'how', label: 'How it works', value: 'Every session you complete at The Pilates Room is added to this card by Chloe. It updates by itself, so there is nothing for you to do.' },
+        { key: 'method', label: 'The Chloe Method', value: 'Each chapter covers 10 completed sessions. The chapters recognise your consistency and commitment, while your training stays personal to you.\n\n' + chapterList },
+        { key: 'now', label: 'Where you are', value: `${st.chapter.inner ? 'TPR Inner Circle' : `Chapter ${st.chapter.num} · ${st.chapter.name}`}${st.milestone !== 'Welcome' ? ' · ' + st.milestone : ''}` },
+        { key: 'notes', label: 'Every 10 sessions', value: 'Chloe celebrates every 10 completed sessions with a handwritten note waiting on your Reformer at your next visit.' },
+        { key: 'referral', label: 'Refer a friend', value: 'When a friend you refer buys her first package and attends her first paid session, you receive one complimentary private session.' },
+        { key: 'since', label: 'Member since', value: `${MONTHS_LONG[since.getUTCMonth()]} ${since.getUTCFullYear()}` },
+        { key: 'how', label: 'How it works', value: 'Chloe records your completed sessions. Your card updates by itself when you reach a new milestone, so there is nothing for you to do.' },
         { key: 'contact', label: 'Book or ask', value: 'WhatsApp +971 54 701 1995\ninfo@thepilatesroombychloe.com\nMeydan Avenue, Block A, Shop 3, Dubai' },
         { key: 'number', label: 'Card number', value: m.serial },
-        { key: 'terms', label: 'Terms', value: 'Rewards are personal and not exchangeable for cash. One session counts per visit. The Pilates Room may update the rewards programme at any time.' }
+        { key: 'terms', label: 'Terms', value: 'Rewards are personal and not exchangeable for cash. Complimentary sessions are private sessions at The Pilates Room by Chloe. The Pilates Room may update the programme at any time.' }
       ]
     },
     barcodes: [{ format: 'PKBarcodeFormatQR', message: m.serial, messageEncoding: 'iso-8859-1', altText: m.serial }],
@@ -139,9 +146,7 @@ async function buildPass(m, opts) {
   const k = (opts && opts.keys) || await keys();
   const w = (opts && opts.wwdr) || await wwdr();
   const files = [['pass.json', Buffer.from(JSON.stringify(passJson(m, k)))]];
-  for (const [n, b64] of Object.entries(IMAGES.files)) files.push([n, Buffer.from(b64, 'base64')]);
-  const filled = cardState(m).filled;
-  for (const [n, b64] of Object.entries(IMAGES.stamps)) { const [c, name] = n.split(':'); if (+c === filled) files.push([name, Buffer.from(b64, 'base64')]); }
+  for (const [n, b64] of Object.entries(IMAGES)) files.push([n, Buffer.from(b64, 'base64')]);
   const manifest = {};
   for (const [n, d] of files) manifest[n] = crypto.createHash('sha1').update(d).digest('hex');
   const mbuf = Buffer.from(JSON.stringify(manifest));
@@ -170,4 +175,4 @@ async function pushUpdate(serial) {
   });
 }
 
-module.exports = { titleFor, rpc, server, staff, keys, wwdr, buildPass, passJson, cardState, pushUpdate, SITE, WALLET_URL, forge };
+module.exports = { chapterFor, milestoneFor, rpc, server, staff, keys, wwdr, buildPass, passJson, cardState, pushUpdate, SITE, WALLET_URL, forge };

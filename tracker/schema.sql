@@ -605,10 +605,41 @@ end $$;
 revoke all on function public.tpr_server(text, text, jsonb) from public;
 grant execute on function public.tpr_server(text, text, jsonb) to anon, authenticated;
 
+-- v21 The Chloe Method referrals: who referred whom. The referrer earns one complimentary private session
+-- once the friend has bought her first package (Chloe ticks it) and attended her first paid session.
+create table if not exists public.tpr_referrals (
+  id bigint generated always as identity primary key,
+  referrer_id bigint not null references public.tpr_members(id) on delete cascade,
+  referred_id bigint not null unique references public.tpr_members(id) on delete cascade,
+  package_bought boolean not null default false,
+  earned_at timestamptz,
+  created_at timestamptz not null default now(),
+  check (referrer_id <> referred_id)
+);
+alter table public.tpr_referrals enable row level security;
+revoke all on public.tpr_referrals from anon, authenticated;
+
+-- give the referrer her reward if the friend now qualifies; returns the referrer's card number when it changed
+create or replace function public.tpr_check_referral(p_referred bigint) returns text
+language plpgsql security definer set search_path = public as $$
+declare r public.tpr_referrals; ref public.tpr_members; f public.tpr_members;
+begin
+  select * into r from public.tpr_referrals where referred_id = p_referred and earned_at is null;
+  if r.id is null or not r.package_bought then return null; end if;
+  select * into f from public.tpr_members where id = p_referred;
+  if coalesce(f.sessions, 0) < 1 then return null; end if;
+  update public.tpr_referrals set earned_at = now() where id = r.id;
+  update public.tpr_members set free_earned = least(500, free_earned + 1), referrals = least(500, referrals + 1), updated_at = now()
+    where id = r.referrer_id returning * into ref;
+  insert into public.tpr_log (member_id, action, delta, note) values (ref.id, 'referral', 1, 'referral reward: ' || f.name);
+  return ref.serial;
+end $$;
+revoke all on function public.tpr_check_referral(bigint) from public, anon, authenticated;
+
 -- Chloe's check-in page (through the website server, with the staff PIN)
 create or replace function public.tpr_staff(p_secret text, p_pin text, p_action text, p_args jsonb default '{}'::jsonb) returns jsonb
 language plpgsql security definer set search_path = public, extensions as $$
-declare m public.tpr_members; today date := (now() at time zone 'Asia/Dubai')::date; v int; lid bigint; la text; ld int;
+declare m public.tpr_members; today date := (now() at time zone 'Asia/Dubai')::date; v int; lid bigint; la text; ld int; ps text; rb bigint;
 begin
   if p_secret is null or p_secret <> public.tpr_cfg('tpr_secret') then raise exception 'forbidden'; end if;
   if public.tpr_cfg('tpr_pin_hash') is null then return jsonb_build_object('error', 'no_pin'); end if;
@@ -635,6 +666,10 @@ begin
               least(500, greatest(0, coalesce((p_args->>'referrals')::int, 0))), v / 10)
       returning * into m;
     insert into public.tpr_log (member_id, action, delta, note) values (m.id, 'created', m.sessions, 'starting count');
+    rb := nullif(p_args->>'referred_by', '')::bigint;
+    if rb is not null and exists (select 1 from public.tpr_members where id = rb and not archived) then
+      insert into public.tpr_referrals (referrer_id, referred_id, package_bought) values (rb, m.id, coalesce((p_args->>'package_bought')::boolean, false));
+    end if;
     return jsonb_build_object('member', public.tpr_member_json(m));
   end if;
 
@@ -646,6 +681,10 @@ begin
 
   if p_action = 'get' then
     return jsonb_build_object('member', public.tpr_member_json(m),
+      'referred_by', (select jsonb_build_object('id', x.id, 'name', x.name, 'package_bought', r.package_bought, 'earned', r.earned_at is not null)
+                      from public.tpr_referrals r join public.tpr_members x on x.id = r.referrer_id where r.referred_id = m.id),
+      'referrals', (select coalesce(jsonb_agg(jsonb_build_object('id', x.id, 'name', x.name, 'package_bought', r.package_bought, 'attended', x.sessions > 0, 'earned', r.earned_at is not null) order by r.created_at desc), '[]'::jsonb)
+                    from public.tpr_referrals r join public.tpr_members x on x.id = r.referred_id where r.referrer_id = m.id),
       'log', (select coalesce(jsonb_agg(jsonb_build_object('action', l.action, 'delta', l.delta, 'note', l.note, 'at', l.at) order by l.at desc), '[]'::jsonb)
               from (select * from public.tpr_log where member_id = m.id order by at desc limit 20) l));
   elsif p_action = 'session' then
@@ -654,7 +693,8 @@ begin
     end if;
     update public.tpr_members set sessions = sessions + 1, last_session = today, updated_at = now() where id = m.id returning * into m;
     insert into public.tpr_log (member_id, action, delta) values (m.id, 'session', 1) returning id into lid;
-    return jsonb_build_object('member', public.tpr_member_json(m), 'log_id', lid, 'changed', true);
+    ps := public.tpr_check_referral(m.id);
+    return jsonb_build_object('member', public.tpr_member_json(m), 'log_id', lid, 'changed', true, 'also_push', ps);
   elsif p_action = 'undo' then
     select id, action, delta into lid, la, ld from public.tpr_log where member_id = m.id and action in ('session', 'free_add', 'free_gift', 'free_use') and note is distinct from 'undone' order by at desc limit 1;
     if lid is null then return jsonb_build_object('error', 'nothing_to_undo'); end if;
@@ -676,7 +716,24 @@ begin
     if v is null or v < 0 or v > 5000 then return jsonb_build_object('error', 'bad_number'); end if;
     insert into public.tpr_log (member_id, action, delta, note) values (m.id, 'set', v - m.sessions, 'count set to ' || v);
     update public.tpr_members set sessions = v, rewards_given = least(rewards_given, v / 10), updated_at = now() where id = m.id returning * into m;
-    return jsonb_build_object('member', public.tpr_member_json(m), 'changed', true);
+    ps := public.tpr_check_referral(m.id);
+    return jsonb_build_object('member', public.tpr_member_json(m), 'changed', true, 'also_push', ps);
+  elsif p_action = 'referral_package' then
+    -- on the friend's profile: she bought her first package (true) or not (false)
+    update public.tpr_referrals set package_bought = coalesce((p_args->>'value')::boolean, true) where referred_id = m.id and earned_at is null;
+    if not found then return jsonb_build_object('error', 'no_referral'); end if;
+    ps := public.tpr_check_referral(m.id);
+    return jsonb_build_object('member', public.tpr_member_json(m), 'also_push', ps, 'earned', ps is not null);
+  elsif p_action = 'set_referrer' then
+    -- link (or unlink, with referrer_id empty) who referred this client, if it was missed when adding her
+    rb := nullif(p_args->>'referrer_id', '')::bigint;
+    if exists (select 1 from public.tpr_referrals where referred_id = m.id and earned_at is not null) then return jsonb_build_object('error', 'already_earned'); end if;
+    delete from public.tpr_referrals where referred_id = m.id;
+    if rb is not null then
+      if rb = m.id or not exists (select 1 from public.tpr_members where id = rb) then return jsonb_build_object('error', 'not_found'); end if;
+      insert into public.tpr_referrals (referrer_id, referred_id) values (rb, m.id);
+    end if;
+    return jsonb_build_object('member', public.tpr_member_json(m));
   elsif p_action = 'free_add' then
     -- successful referral: the friend bought her first package and named this client
     if m.free_earned >= 500 or m.referrals >= 500 then return jsonb_build_object('error', 'limit'); end if;
@@ -695,10 +752,10 @@ begin
     insert into public.tpr_log (member_id, action, delta) values (m.id, 'free_use', 1);
     return jsonb_build_object('member', public.tpr_member_json(m), 'changed', true);
   elsif p_action = 'reward_given' then
-    -- one milestone gift every 10 sessions (10 Session Club, 20 Session Club, ...)
+    -- Chloe's handwritten note for every 10 completed sessions (10 Session Club, 20 Session Club, ...)
     if m.sessions / 10 <= m.rewards_given then return jsonb_build_object('error', 'not_reached'); end if;
     update public.tpr_members set rewards_given = rewards_given + 1, updated_at = now() where id = m.id returning * into m;
-    insert into public.tpr_log (member_id, action, delta, note) values (m.id, 'reward', 0, m.rewards_given * 10 || ' Session Club gift given');
+    insert into public.tpr_log (member_id, action, delta, note) values (m.id, 'reward', 0, m.rewards_given * 10 || ' Session Club note left');
     return jsonb_build_object('member', public.tpr_member_json(m), 'changed', true);
   elsif p_action = 'edit' then
     if coalesce(trim(p_args->>'name'), '') = '' then return jsonb_build_object('error', 'name_required'); end if;

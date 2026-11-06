@@ -15,7 +15,7 @@ async function readJson(req) {
   const chunks = []; for await (const c of req) chunks.push(c);
   try { return JSON.parse(Buffer.concat(chunks).toString('utf8') || '{}'); } catch (e) { return {}; }
 }
-const ACTIONS = ['check', 'list', 'get', 'add', 'session', 'undo', 'set_sessions', 'free_add', 'free_gift', 'free_use', 'reward_given', 'edit', 'archive'];
+const ACTIONS = ['check', 'list', 'get', 'add', 'session', 'undo', 'set_sessions', 'free_add', 'free_gift', 'free_use', 'reward_given', 'edit', 'archive', 'referral_package', 'set_referrer'];
 
 module.exports = async (req, res) => {
   if (req.method !== 'POST') return send(res, 405, { error: 'method_not_allowed' });
@@ -32,6 +32,8 @@ module.exports = async (req, res) => {
     if (r.error) return send(res, r.error === 'wrong_pin' || r.error === 'locked' ? 401 : 400, r);
     if (r.member && r.member.share_code) r.member.card_url = tpr.SITE + '/pilates-room/card/' + r.member.share_code;
     if (r.members) r.members.forEach((m) => { m.card_url = tpr.SITE + '/pilates-room/card/' + m.share_code; });
+    // a friend's first paid session or package can earn the referrer her reward: refresh her card too
+    if (r.also_push) { try { await tpr.pushUpdate(r.also_push); } catch (e) {} }
     if (r.changed && r.member) {
       try { r.push = await tpr.pushUpdate(r.member.serial); } catch (e) { r.push = { sent: 0, error: e.code || 'push_failed' }; }
     }
