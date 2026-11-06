@@ -84,13 +84,14 @@ function passJson(m, k) {
     webServiceURL: WALLET_URL,
     organizationName: 'The Pilates Room by Chloe',
     description: 'The Pilates Room by Chloe · The Chloe Method',
+    logoText: 'THE PILATES ROOM',
     foregroundColor: 'rgb(246, 241, 234)',
     backgroundColor: 'rgb(58, 38, 23)',
     labelColor: 'rgb(205, 185, 166)',
     sharingProhibited: true,
     storeCard: {
       // The Chloe Method wording: CHAPTER 3 (top right), Strength, 20–29 sessions (the pink bar on the photo shows the sessions)
-      headerFields: [{ key: 'chapter_no', label: '', value: st.chapter.inner ? 'TPR' : `Chapter ${st.chapter.num}`, textAlignment: 'PKTextAlignmentRight' }],
+      headerFields: [{ key: 'chapter_no', label: st.chapter.inner ? 'TPR' : 'CHAPTER', value: st.chapter.inner ? '70+' : String(st.chapter.num), textAlignment: 'PKTextAlignmentRight' }],
       primaryFields: [{ key: 'chapter', label: st.range, value: st.chapter.inner ? 'Inner Circle' : st.chapter.name }],
       secondaryFields: [
         { key: 'member', label: 'MEMBER', value: String(m.name || '').trim().split(/\s+/)[0] },
