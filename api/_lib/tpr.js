@@ -65,7 +65,7 @@ function cardState(m) {
   const s = m.sessions || 0;
   const ch = chapterFor(s);
   return {
-    milestone: milestoneFor(s), chapter: ch,
+    milestone: milestoneFor(s), chapter: ch, filled: s % 10,
     noteDue: Math.floor(s / 10) > (m.rewards_given || 0),
     rewards: Math.max(0, (m.free_earned || 0) - (m.free_used || 0))
   };
@@ -100,7 +100,7 @@ function passJson(m, k) {
         { key: 'notes', label: 'Every 10 sessions', value: 'Chloe celebrates every 10 completed sessions with a handwritten note waiting on your Reformer at your next visit.' },
         { key: 'referral', label: 'Refer a friend', value: 'When a friend you refer buys her first package and attends her first paid session, you receive one complimentary private session.' },
         { key: 'since', label: 'Member since', value: `${MONTHS_LONG[since.getUTCMonth()]} ${since.getUTCFullYear()}` },
-        { key: 'how', label: 'How it works', value: 'Chloe records your completed sessions. Your card updates by itself when you reach a new milestone, so there is nothing for you to do.' },
+        { key: 'how', label: 'How it works', value: 'Chloe records your completed sessions. Each pink segment on your card is one session towards your next milestone, and the card updates by itself, so there is nothing for you to do.' },
         { key: 'contact', label: 'Book or ask', value: 'WhatsApp +971 54 701 1995\ninfo@thepilatesroombychloe.com\nMeydan Avenue, Block A, Shop 3, Dubai' },
         { key: 'number', label: 'Card number', value: m.serial },
         { key: 'terms', label: 'Terms', value: 'Rewards are personal and not exchangeable for cash. Complimentary sessions are private sessions at The Pilates Room by Chloe. The Pilates Room may update the programme at any time.' }
@@ -146,7 +146,10 @@ async function buildPass(m, opts) {
   const k = (opts && opts.keys) || await keys();
   const w = (opts && opts.wwdr) || await wwdr();
   const files = [['pass.json', Buffer.from(JSON.stringify(passJson(m, k)))]];
-  for (const [n, b64] of Object.entries(IMAGES)) files.push([n, Buffer.from(b64, 'base64')]);
+  for (const [n, b64] of Object.entries(IMAGES.files)) files.push([n, Buffer.from(b64, 'base64')]);
+  // the pink bar on the photo: one segment per completed session towards the next milestone
+  const filled = cardState(m).filled;
+  for (const [n, b64] of Object.entries(IMAGES.stamps)) { const [c, name] = n.split(':'); if (+c === filled) files.push([name, Buffer.from(b64, 'base64')]); }
   const manifest = {};
   for (const [n, d] of files) manifest[n] = crypto.createHash('sha1').update(d).digest('hex');
   const mbuf = Buffer.from(JSON.stringify(manifest));
