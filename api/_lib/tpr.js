@@ -60,7 +60,7 @@ function chapterFor(n) {
   return i >= 7 ? { inner: true, label: 'TPR INNER CIRCLE', name: 'TPR Inner Circle' } : { inner: false, num: i + 1, name: CHAPTERS[i], label: `CHAPTER ${i + 1} · ${CHAPTERS[i].toUpperCase()}` };
 }
 function milestoneFor(n) { const m = Math.floor((n || 0) / 10) * 10; return m ? `${m} Session Club` : 'Welcome'; }
-function rewardText(n) { return n > 0 ? `${n} complimentary session${n === 1 ? '' : 's'}` : 'Refer a friend'; }
+function rewardText(n) { return n > 0 ? `${n} free session${n === 1 ? '' : 's'}` : 'Refer a friend'; } // short: Apple cuts long values
 function cardState(m) {
   const s = m.sessions || 0;
   const ch = chapterFor(s);
@@ -92,7 +92,7 @@ function passJson(m, k) {
       primaryFields: [{ key: 'milestone', label: st.chapter.label, value: st.milestone, changeMessage: 'Welcome to the %@ · ' + (st.chapter.inner ? 'TPR Inner Circle' : `Chapter ${st.chapter.num}: ${st.chapter.name}`) }],
       secondaryFields: [
         { key: 'member', label: 'MEMBER', value: m.name },
-        { key: 'rewards', label: 'REFERRAL REWARDS', value: rewardText(st.rewards), textAlignment: 'PKTextAlignmentRight', changeMessage: 'Referral reward: %@ available' }
+        { key: 'rewards', label: 'REFERRAL REWARDS', value: rewardText(st.rewards), textAlignment: 'PKTextAlignmentRight', changeMessage: 'Referral rewards: %@ (complimentary private sessions)' }
       ],
       backFields: [
         { key: 'method', label: 'The Chloe Method', value: 'Each chapter covers 10 completed sessions. The chapters recognise your consistency and commitment, while your training stays personal to you.\n\n' + chapterList },
