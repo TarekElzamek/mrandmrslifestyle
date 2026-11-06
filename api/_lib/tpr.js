@@ -84,17 +84,16 @@ function passJson(m, k) {
     webServiceURL: WALLET_URL,
     organizationName: 'The Pilates Room by Chloe',
     description: 'The Pilates Room by Chloe · The Chloe Method',
-    logoText: 'THE PILATES ROOM',
     foregroundColor: 'rgb(246, 241, 234)',
     backgroundColor: 'rgb(58, 38, 23)',
     labelColor: 'rgb(205, 185, 166)',
     sharingProhibited: true,
     storeCard: {
-      // the range she is in, not the running count (the pink bar on the photo shows the sessions)
-      headerFields: [{ key: 'range', label: 'SESSIONS', value: st.range.replace(' sessions', '') }],
-      primaryFields: [{ key: 'chapter', label: st.chapter.inner ? `TPR · ${st.milestone.toUpperCase()}` : `CHAPTER ${st.chapter.num} · ${st.milestone === 'Welcome' ? 'THE CHLOE METHOD' : st.milestone.toUpperCase()}`, value: st.chapter.inner ? 'Inner Circle' : st.chapter.name }],
+      // The Chloe Method wording: CHAPTER 3 (top right), Strength, 20–29 sessions (the pink bar on the photo shows the sessions)
+      headerFields: [{ key: 'chapter_no', label: '', value: st.chapter.inner ? 'TPR' : `Chapter ${st.chapter.num}`, textAlignment: 'PKTextAlignmentRight' }],
+      primaryFields: [{ key: 'chapter', label: st.range, value: st.chapter.inner ? 'Inner Circle' : st.chapter.name }],
       secondaryFields: [
-        { key: 'member', label: 'MEMBER', value: m.name },
+        { key: 'member', label: 'MEMBER', value: String(m.name || '').trim().split(/\s+/)[0] },
         { key: 'since', label: 'MEMBER SINCE', value: `${MONTHS_LONG[since.getUTCMonth()]} ${since.getUTCFullYear()}`, textAlignment: 'PKTextAlignmentRight' }
       ],
       // the referral reward balance only appears when she has one
