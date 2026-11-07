@@ -540,11 +540,15 @@ create or replace function public.tpr_cfg(k text) returns text
 language sql stable security definer set search_path = public as $$ select value from public.private_config where key = k $$;
 revoke all on function public.tpr_cfg(text) from public, anon, authenticated;
 
+-- v22 card notifications: the latest message from Chloe (complimentary session added/used, gift, referral reward)
+alter table public.tpr_members add column if not exists notice text, add column if not exists notice_at timestamptz;
+
 create or replace function public.tpr_member_json(m public.tpr_members, with_secret boolean default false) returns jsonb
 language sql stable set search_path = public as $$
   select jsonb_build_object('id', m.id, 'serial', m.serial, 'name', m.name, 'phone', m.phone, 'email', m.email,
     'sessions', m.sessions, 'reward10_at', m.reward10_at, 'reward20_at', m.reward20_at,
     'free_earned', m.free_earned, 'free_used', m.free_used, 'referrals', m.referrals, 'rewards_given', m.rewards_given, 'last_session', m.last_session,
+    'notice', m.notice, 'notice_at', m.notice_at,
     'archived', m.archived, 'created_at', m.created_at, 'updated_at', m.updated_at,
     'updated_epoch', floor(extract(epoch from m.updated_at))::bigint, 'share_code', m.share_code)
     || case when with_secret then jsonb_build_object('auth_token', m.auth_token) else '{}'::jsonb end
@@ -629,7 +633,8 @@ begin
   select * into f from public.tpr_members where id = p_referred;
   if coalesce(f.sessions, 0) < 1 then return null; end if;
   update public.tpr_referrals set earned_at = now() where id = r.id;
-  update public.tpr_members set free_earned = least(500, free_earned + 1), referrals = least(500, referrals + 1), updated_at = now()
+  update public.tpr_members set free_earned = least(500, free_earned + 1), referrals = least(500, referrals + 1),
+    notice = 'Thank you for your referral! You have received a complimentary private session 🤍', notice_at = now(), updated_at = now()
     where id = r.referrer_id returning * into ref;
   insert into public.tpr_log (member_id, action, delta, note) values (ref.id, 'referral', 1, 'referral reward: ' || f.name);
   return ref.serial;
@@ -703,9 +708,9 @@ begin
         last_session = (select max((l2.at at time zone 'Asia/Dubai')::date) from public.tpr_log l2 where l2.member_id = m.id and l2.action = 'session' and l2.id <> lid and l2.note is distinct from 'undone'),
         updated_at = now() where id = m.id returning * into m;
     elsif la = 'free_add' then
-      update public.tpr_members set free_earned = greatest(0, free_earned - 1), referrals = greatest(0, referrals - 1), updated_at = now() where id = m.id returning * into m;
+      update public.tpr_members set free_earned = greatest(free_used, free_earned - 1), updated_at = now() where id = m.id returning * into m;
     elsif la = 'free_gift' then
-      update public.tpr_members set free_earned = greatest(0, free_earned - 1), updated_at = now() where id = m.id returning * into m;
+      null; -- a gift is a physical present: nothing to take back from the balance
     else
       update public.tpr_members set free_used = greatest(0, free_used - 1), updated_at = now() where id = m.id returning * into m;
     end if;
@@ -735,20 +740,21 @@ begin
     end if;
     return jsonb_build_object('member', public.tpr_member_json(m));
   elsif p_action = 'free_add' then
-    -- successful referral: the friend bought her first package and named this client
-    if m.free_earned >= 500 or m.referrals >= 500 then return jsonb_build_object('error', 'limit'); end if;
-    update public.tpr_members set free_earned = free_earned + 1, referrals = referrals + 1, updated_at = now() where id = m.id returning * into m;
+    -- +1 complimentary session given by hand (referrals are counted automatically by tpr_check_referral)
+    if m.free_earned >= 500 then return jsonb_build_object('error', 'limit'); end if;
+    update public.tpr_members set free_earned = free_earned + 1,
+      notice = 'You have been rewarded with a complimentary session 🤍', notice_at = now(), updated_at = now() where id = m.id returning * into m;
     insert into public.tpr_log (member_id, action, delta, note) values (m.id, 'free_add', 1, nullif(trim(p_args->>'note'), ''));
     return jsonb_build_object('member', public.tpr_member_json(m), 'changed', true);
   elsif p_action = 'free_gift' then
-    -- a free session given as a milestone gift (no referral)
-    if m.free_earned >= 500 then return jsonb_build_object('error', 'limit'); end if;
-    update public.tpr_members set free_earned = free_earned + 1, updated_at = now() where id = m.id returning * into m;
-    insert into public.tpr_log (member_id, action, delta, note) values (m.id, 'free_gift', 1, nullif(trim(p_args->>'note'), ''));
+    -- a complimentary gift (a present from Chloe, not a session): only a notification on her card
+    update public.tpr_members set notice = 'You have received a complimentary gift from Chloe 🎁', notice_at = now(), updated_at = now() where id = m.id returning * into m;
+    insert into public.tpr_log (member_id, action, delta, note) values (m.id, 'free_gift', 0, nullif(trim(p_args->>'note'), ''));
     return jsonb_build_object('member', public.tpr_member_json(m), 'changed', true);
   elsif p_action = 'free_use' then
     if m.free_used >= m.free_earned then return jsonb_build_object('error', 'no_free_sessions'); end if;
-    update public.tpr_members set free_used = free_used + 1, updated_at = now() where id = m.id returning * into m;
+    update public.tpr_members set free_used = free_used + 1,
+      notice = 'Your complimentary session has just been used. Enjoy it 🤍', notice_at = now(), updated_at = now() where id = m.id returning * into m;
     insert into public.tpr_log (member_id, action, delta) values (m.id, 'free_use', 1);
     return jsonb_build_object('member', public.tpr_member_json(m), 'changed', true);
   elsif p_action = 'reward_given' then

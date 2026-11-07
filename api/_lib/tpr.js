@@ -60,6 +60,7 @@ function chapterFor(n) {
   return i >= 7 ? { inner: true, label: 'TPR INNER CIRCLE', name: 'TPR Inner Circle' } : { inner: false, num: i + 1, name: CHAPTERS[i], label: `CHAPTER ${i + 1} · ${CHAPTERS[i].toUpperCase()}` };
 }
 function milestoneFor(n) { const m = Math.floor((n || 0) / 10) * 10; return m ? `${m} Session Club` : 'Welcome'; }
+function noticeTime(t) { try { return new Date(t).toLocaleString('en-GB', { timeZone: 'Asia/Dubai', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }); } catch (e) { return ''; } }
 function rewardText(n) { return n > 0 ? `${n} free session${n === 1 ? '' : 's'}` : 'Refer a friend'; } // short: Apple cuts long values
 function cardState(m) {
   const s = m.sessions || 0;
@@ -98,11 +99,13 @@ function passJson(m, k) {
         { key: 'since', label: 'MEMBER SINCE', value: `${MONTHS_LONG[since.getUTCMonth()]} ${since.getUTCFullYear()}`, textAlignment: 'PKTextAlignmentRight' }
       ],
       // the referral reward balance only appears when she has one
-      auxiliaryFields: st.rewards > 0 ? [{ key: 'rewards', label: 'REFERRAL REWARDS', value: rewardText(st.rewards), changeMessage: 'Referral rewards: %@ (complimentary private sessions)' }] : [],
+      auxiliaryFields: st.rewards > 0 ? [{ key: 'rewards', label: 'COMPLIMENTARY SESSIONS', value: rewardText(st.rewards) }] : [],
       backFields: [
         { key: 'method', label: 'The Chloe Method', value: 'Each chapter covers 10 completed sessions. The chapters recognise your consistency and commitment, while your training stays personal to you.\n\n' + chapterList },
         { key: 'chapter', label: 'Your chapter', value: `${st.chapter.inner ? 'TPR Inner Circle' : `Chapter ${st.chapter.num} · ${st.chapter.name}`} (${st.range})` },
-        { key: 'rewards_back', label: 'Referral rewards', value: st.rewards > 0 ? `${rewardText(st.rewards)} available (complimentary private sessions)` : 'None yet. Refer a friend to earn a complimentary private session.' },
+        // the latest message from Chloe: changing it shows a notification on her iPhone (time added so the same message twice still notifies)
+        ...(m.notice ? [{ key: 'news', label: 'Latest from Chloe', value: `${m.notice}\n${noticeTime(m.notice_at)}`, changeMessage: '%@' }] : []),
+        { key: 'rewards_back', label: 'Complimentary sessions', value: st.rewards > 0 ? `${rewardText(st.rewards)} available (complimentary private sessions)` : 'None yet. Refer a friend to earn a complimentary private session.' },
         { key: 'now', label: 'Latest milestone', value: `${st.milestone === 'Welcome' ? 'Welcome' : st.milestone} · ${st.chapter.inner ? 'TPR Inner Circle' : `Chapter ${st.chapter.num}: ${st.chapter.name}`}`, changeMessage: '%@ 🤍' },
         { key: 'notes', label: 'Every 10 sessions', value: 'Chloe celebrates every 10 completed sessions with a handwritten note waiting on your Reformer at your next visit.' },
         { key: 'referral', label: 'Refer a friend', value: 'When a friend you refer buys her first package and attends her first paid session, you receive one complimentary private session.' },
