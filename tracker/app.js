@@ -118,6 +118,11 @@
     info: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 7.5v.5"/></svg>',
     up: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6-6 6 6"/></svg>',
     down: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>',
+    search: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4-4"/></svg>',
+    pen: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13 7l4 4"/></svg>',
+    image: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-5-8 9"/></svg>',
+    plus: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>',
+    play: '<svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4l13 8-13 8z"/></svg>',
     camera: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>',
     trash: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg>'
   };
@@ -310,23 +315,25 @@
     var lastW = S.workouts[0], lastB = S.body[S.body.length - 1];
     var h = '';
     if (S.draft) { var stale = (Date.now() - S.draft.started) > 12 * 3600e3; h += '<div class="tk-card gold resume"><div class="li"><div class="grow"><b>' + (stale ? 'Unfinished workout: ' : 'Workout in progress: ') + esc(S.draft.title || 'Workout') + '</b><span class="tk-small">' + S.draft.exercises.length + (S.draft.exercises.length === 1 ? ' exercise · ' : ' exercises · ') + (stale ? 'started ' + fmtDay(iso(new Date(S.draft.started)), { weekday: 'short', day: 'numeric', month: 'short' }) + '. Finish or discard it.' : 'started ' + elapsedLabel(S.draft.started) + ' ago. Nothing is lost.') + '</span></div><button type="button" class="tk-btn sm" id="resumeW">Resume</button></div>' + (stale ? '<button type="button" class="tk-link" id="discardW" style="margin-top:8px">Discard this workout</button>' : '') + '</div>'; }
-    h += '<h1 class="tk-h1">' + (viewingOther() ? esc(S.target.name || 'Client') + '\'s <em>training</em>' : 'Hi ' + esc(name || 'there') + ', ready to <em>train?</em>') + '</h1>';
-    h += '<div class="tk-grid3" style="margin-top:14px"><div class="tk-stat"><b>' + thisWeekCount() + '</b><span>This week</span></div><div class="tk-stat"><b>' + weekStreak() + '</b><span>Week streak</span></div><div class="tk-stat"><b>' + S.workouts.length + '</b><span>Workouts</span></div></div>';
-    h += todayHabitsCard();
-    h += watchCard();
+    var hr = new Date().getHours(), hello = hr < 12 ? 'Good morning' : hr < 18 ? 'Good afternoon' : 'Good evening';
+    h += '<div class="td-date">' + new Date().toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' }) + '</div>';
+    h += '<h1 class="td-hello">' + (viewingOther() ? esc(S.target.name || 'Client') + '\'s <em>training</em>' : hello + ', <em>' + esc(name || 'there') + '</em>') + '</h1>';
     h += todayFoodCard();
     if (prog && (prog.days || []).length) {
       h += '<div class="tk-card gold"><span class="tk-tag">Your programme</span><h2 class="tk-h2" style="margin:4px 0 6px">' + esc(prog.name) + '</h2>' + (prog.notes ? '<p class="tk-muted">' + esc(prog.notes) + '</p>' : '');
       prog.days.forEach(function (d, i) {
-        h += '<div class="li"><div class="grow"><b>' + esc(d.name || 'Day ' + (i + 1)) + '</b><span class="tk-small">' + (d.exercises || []).length + ' exercises · ' + esc((d.exercises || []).slice(0, 3).map(function (e) { return e.name; }).join(', ')) + ((d.exercises || []).length > 3 ? '…' : '') + '</span></div><button type="button" class="tk-btn sm" data-startday="' + i + '">Start</button></div>';
+        h += '<div class="li"><div class="grow"><b>' + esc(d.name || 'Day ' + (i + 1)) + '</b><span class="tk-small">' + (d.exercises || []).length + ' exercises · ' + esc((d.exercises || []).slice(0, 3).map(function (e) { return e.name; }).join(', ')) + ((d.exercises || []).length > 3 ? '…' : '') + '</span></div><button type="button" class="tk-btn sm" data-startday="' + i + '">' + ICON.play + 'Start</button></div>';
       });
       h += '</div>';
     } else if (!viewingOther()) {
       h += '<div class="tk-card"><b>No programme yet</b><p class="tk-muted" style="margin-top:4px">Training on your own? Start a workout below and add any of 200+ exercises. Training with Tarek or Chloe? Your coach will add your programme here.</p></div>';
     }
     h += '<div class="tk-row" style="margin-top:14px"><button type="button" class="tk-btn ' + (prog && !viewingOther() ? 'ghost ' : '') + 'block" id="startEmpty">' + (isCoach() ? 'Start an empty workout' : 'Start a workout') + '</button></div>';
-    if (lastW) h += '<div class="tk-card"><span class="tk-tag">Last workout</span><button type="button" class="li li-btn" id="lastW" aria-label="See the details of ' + esc(lastW.title || 'Workout') + ', ' + fmtDay(lastW.date) + '"><div class="grow"><b>' + esc(lastW.title || 'Workout') + '</b><span class="tk-small">' + fmtDay(lastW.date) + ' · ' + (lastW.exercises || []).length + ((lastW.exercises || []).length === 1 ? ' exercise' : ' exercises') + (lastW.duration_min ? ' · ' + lastW.duration_min + ' min' : '') + (kcalOf(lastW) ? ' · ' + kcalLabel(lastW) : '') + '</span></div><span class="li-more" aria-hidden="true">View ›</span></button></div>';
-    h += '<div class="tk-card"><span class="tk-tag">Body weight</span><div class="li"><div class="grow"><b>' + (lastB && lastB.weight ? lastB.weight + ' kg' : 'Not logged yet') + '</b><span class="tk-small">' + (lastB ? 'Last logged ' + daysAgo(lastB.date) : 'Track your weight weekly for the clearest trend') + '</span></div><button type="button" class="tk-btn sm plain" id="goBody">Log</button></div></div>';
+    h += watchCard();
+    h += todayHabitsCard();
+    h += '<div class="tk-grid3 td-stats" style="margin-top:14px"><div class="tk-stat"><b>' + thisWeekCount() + '</b><span>This week</span></div><div class="tk-stat"><b>' + weekStreak() + '</b><span>Week streak</span></div><div class="tk-stat"><b>' + S.workouts.length + '</b><span>Workouts</span></div></div>';
+    h += '<div class="td-tiles">' + (lastW ? '<button type="button" class="td-tile" id="lastW" aria-label="See the details of ' + esc(lastW.title || 'Workout') + ', ' + fmtDay(lastW.date) + '"><span class="td-tl">Last workout</span><span class="td-tv">' + esc(lastW.title || 'Workout') + '</span><span class="td-ts">' + fmtDay(lastW.date, { weekday: 'short', day: 'numeric', month: 'short' }) + (lastW.duration_min ? ' · ' + lastW.duration_min + ' min' : '') + (kcalOf(lastW) ? ' · ' + kcalLabel(lastW) : '') + '</span><span class="td-go">View ›</span></button>' : '<div class="td-tile"><span class="td-tl">Last workout</span><span class="td-tv">None yet</span><span class="td-ts">Your first one starts above</span></div>') +
+      '<button type="button" class="td-tile" id="goBody"><span class="td-tl">Body weight</span><span class="td-tv td-big">' + (lastB && lastB.weight ? lastB.weight + ' <small>kg</small>' : '–') + '</span><span class="td-ts">' + (lastB ? 'Logged ' + daysAgo(lastB.date) : 'Not logged yet') + '</span><span class="td-go">Log ›</span></button></div>';
     v.innerHTML = h;
     if ($('lastW')) $('lastW').onclick = function () { workoutModal(lastW); };
     v.querySelectorAll('[data-startday]').forEach(function (b) { b.onclick = function () { if (S.draft && !confirmBox('You have a workout in progress (' + (S.draft.title || 'Workout') + '). Discard it and start ' + (prog.days[+b.dataset.startday].name || 'this day') + '?')) return; startDraft(prog, +b.dataset.startday); }; });
@@ -335,7 +342,7 @@
     if ($('discardW')) $('discardW').onclick = function () { if (!confirmBox('Discard this unfinished workout?')) return; stopRest(); S.draft = null; saveDraft(); toast('Workout discarded'); render(); };
     $('goBody').onclick = function () { S.tab = 'body'; render(); };
     wireHabitCard(v); $('goHabits').onclick = function () { go('habits'); }; wireWatchCard(v);
-    $('goFood').onclick = function () { go('food'); }; $('addFoodT').onclick = function () { openAddFood(); };
+    $('goFood').onclick = function () { go('food'); }; $('addFoodT').onclick = function () { openAddFood(); }; if ($('snapFoodT')) $('snapFoodT').onclick = function () { openAddFood(null, null, 'photo'); };
   }
 
   function startDraft(prog, dayIdx) {
@@ -1733,7 +1740,15 @@
   }
   function todayFoodCard() {
     var who = viewingOther() ? esc((S.target.name || 'Client').split(' ')[0]) + '\'s food today' : 'Food today';
-    return '<div class="tk-card fd-card"><div class="hb-head"><span class="tk-tag">' + who + '</span><button type="button" class="tk-btn sm plain" id="goFood">Food log</button></div>' + foodSummary(today(), false) + '<button type="button" class="tk-btn block" id="addFoodT" style="margin-top:12px">+ Add food</button></div>';
+    var t = fTot(today()), plan = nutPlan(), goal = plan.missing ? null : plan;
+    var left = goal ? goal.kcal - Math.round(t.kcal) : null, frac = goal ? Math.min(1, t.kcal / goal.kcal) : 0, C = 339.3;
+    function mini(label, v, g, cls) { var p = g ? Math.min(100, Math.round(v / g * 100)) : 0; return '<div><div class="fd-mini-top"><span>' + label + '</span><span><b>' + Math.round(v) + '</b>' + (g ? ' / ' + Math.round(g) + ' g' : ' g') + '</span></div><div class="fd-mini ' + cls + (g && v > g * 1.1 ? ' over' : '') + '"><i style="width:' + p + '%"></i></div></div>'; }
+    var ring = '<div class="fd-ring"><svg width="128" height="128" viewBox="0 0 128 128" role="img" aria-label="' + nf(t.kcal) + (goal ? ' of ' + nf(goal.kcal) : '') + ' kcal eaten"><defs><linearGradient id="fdg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#F0D78C"></stop><stop offset="1" stop-color="#B8923A"></stop></linearGradient></defs><circle cx="64" cy="64" r="54" fill="none" stroke="rgba(255,255,255,.07)" stroke-width="10"></circle>' +
+      (frac > 0 ? '<circle cx="64" cy="64" r="54" fill="none" stroke="' + (left != null && left < 0 ? '#e06c5f' : 'url(#fdg)') + '" stroke-width="10" stroke-linecap="round" stroke-dasharray="' + Math.max(1, Math.round(frac * C)) + ' ' + C + '" transform="rotate(-90 64 64)"></circle>' : '') + '</svg>' +
+      '<div class="fd-ring-mid' + (left != null && left < 0 ? ' over' : '') + '"><b>' + (goal ? nf(Math.abs(left)) : nf(t.kcal)) + '</b><span>' + (goal ? (left >= 0 ? 'kcal left' : 'kcal over') : 'kcal eaten') + '</span></div></div>';
+    var side = '<div class="fd-ring-side"><div class="fd-eaten">' + (goal ? nf(t.kcal) + ' eaten · goal ' + nf(goal.kcal) : 'Log a body scan to get your daily target') + '</div>' + mini('Protein', t.p, goal && goal.protein, 'p') + mini('Carbs', t.c, goal && goal.carbs, 'c') + mini('Fat', t.f, goal && goal.fat, 'f') + '</div>';
+    return '<div class="tk-card fd-card fd-ring-card"><div class="hb-head"><span class="tk-tag">' + who + '</span><button type="button" class="tk-btn sm plain" id="goFood">Food log</button></div><div class="fd-ring-row">' + ring + side + '</div>' +
+      '<div class="fd-acts"><button type="button" class="tk-btn" id="addFoodT">' + ICON.plus + 'Add food</button><button type="button" class="tk-btn ghost" id="snapFoodT">' + ICON.camera + 'Snap a meal</button></div></div>';
   }
   function renderFood() {
     var v = $('view'); if (!S.fDay || S.fDay > today()) S.fDay = today();
@@ -1744,7 +1759,7 @@
     MEALS.forEach(function (m) {
       var it = fDay(d).filter(function (x) { return x.meal === m[0]; }), k = it.reduce(function (a, x) { return a + (x.kcal || 0); }, 0);
       h += '<div class="tk-card fd-meal"><div class="hb-head"><h2 class="tk-h2" style="margin:0">' + m[1] + '</h2><span class="tk-small">' + (k ? nf(k) + ' kcal' : '') + '</span></div>';
-      it.forEach(function (x) { h += '<div class="li"><div class="grow"><b>' + esc(x.name) + (x.photo_path ? ' <button type="button" class="pill fd-ph" data-fphoto="' + esc(x.photo_path) + '" aria-label="See the photo of ' + esc(x.name) + '">📷 Photo</button>' : x.source === 'ai' ? ' <span class="pill" title="Estimated from a photo">📷</span>' : '') + '</b><span class="tk-small">' + (x.amount ? esc(x.amount) + ' · ' : '') + nf(x.kcal) + ' kcal' + (x.protein != null ? ' · ' + r1(+x.protein) + ' g protein' : '') + '</span></div><button type="button" class="tk-icon-btn" data-delf="' + x.id + '" aria-label="Remove ' + esc(x.name) + '">' + ICON.trash + '</button></div>'; });
+      it.forEach(function (x) { h += '<div class="li"><div class="grow"><b>' + esc(x.name) + (x.photo_path ? ' <button type="button" class="pill fd-ph" data-fphoto="' + esc(x.photo_path) + '" aria-label="See the photo of ' + esc(x.name) + '">' + ICON.camera + ' Photo</button>' : x.source === 'ai' ? ' <span class="pill" title="Estimated from a photo">📷</span>' : '') + '</b><span class="tk-small">' + (x.amount ? esc(x.amount) + ' · ' : '') + nf(x.kcal) + ' kcal' + (x.protein != null ? ' · ' + r1(+x.protein) + ' g protein' : '') + '</span></div><button type="button" class="tk-icon-btn" data-delf="' + x.id + '" aria-label="Remove ' + esc(x.name) + '">' + ICON.trash + '</button></div>'; });
       h += '<button type="button" class="tk-btn sm ghost fd-add" data-addmeal="' + m[0] + '">+ Add to ' + m[1].toLowerCase() + '</button></div>';
     });
     var wk = days.map(function (x) { return fTot(x); }).filter(function (t) { return t.n; });
@@ -1773,9 +1788,9 @@
     S.food = (S.food || []).concat(r.data || []); ev('tracker_food_added', { n: rows.length, source: rows[0].source });
     return true;
   }
-  function openAddFood(meal, date) {
+  function openAddFood(meal, date, startTab) {
     meal = meal || mealNow(); date = date || today();
-    var m = modal('Add food', '<div class="chips fd-tabs" role="tablist"><button type="button" role="tab" data-ftab="search" aria-pressed="true">🔍 Search</button><button type="button" role="tab" data-ftab="photo" aria-pressed="false">📷 Photo</button><button type="button" role="tab" data-ftab="custom" aria-pressed="false">✏️ My own</button></div>' +
+    var m = modal('Add food', '<div class="chips fd-tabs" role="tablist"><button type="button" role="tab" data-ftab="search" aria-pressed="true">' + ICON.search + 'Search</button><button type="button" role="tab" data-ftab="photo" aria-pressed="false">' + ICON.camera + 'Photo</button><button type="button" role="tab" data-ftab="custom" aria-pressed="false">' + ICON.pen + 'My own</button></div>' +
       '<div class="tk-field" style="margin-top:6px"><label for="fMeal">Meal</label><select class="tk-select" id="fMeal">' + MEALS.map(function (x) { return '<option value="' + x[0] + '"' + (x[0] === meal ? ' selected' : '') + '>' + x[1] + (date !== today() ? ' · ' + fmtDay(date, { weekday: 'short', day: 'numeric' }) : '') + '</option>'; }).join('') + '</select></div><div id="fPane"></div>');
     function meal_() { return $('fMeal').value; }
     function base(o) { return { user_id: S.target.id, date: date, meal: meal_(), source: 'db' }; }
@@ -1842,7 +1857,7 @@
     }
     var mealFile = null; // the meal photo, kept with the food so the coach can see it
     function panePhoto() {
-      $('fPane').innerHTML = '<p class="tk-small" style="margin-top:8px">Take a clear photo from above with the whole plate in view. We\'ll list each food with an estimated portion; check and adjust before adding.</p><div class="tk-grid2 fd-cams"><label class="tk-btn fd-cam" for="fCam">📷 Take a photo</label><label class="tk-btn ghost fd-cam" for="fGal">🖼️ From gallery</label></div><input type="file" id="fCam" accept="image/*" capture="environment" class="sr"><input type="file" id="fGal" accept="image/*" class="sr"><div id="fPrev" class="b-prev" hidden></div><div id="fAi" class="ai-status" role="status" hidden></div><div id="fItems"></div>';
+      $('fPane').innerHTML = '<p class="tk-small" style="margin-top:8px">Take a clear photo from above with the whole plate in view. We\'ll list each food with an estimated portion; check and adjust before adding.</p><div class="tk-grid2 fd-cams"><label class="tk-btn fd-cam" for="fCam">' + ICON.camera + 'Take a photo</label><label class="tk-btn ghost fd-cam" for="fGal">' + ICON.image + 'From gallery</label></div><input type="file" id="fCam" accept="image/*" capture="environment" class="sr"><input type="file" id="fGal" accept="image/*" class="sr"><div id="fPrev" class="b-prev" hidden></div><div id="fAi" class="ai-status" role="status" hidden></div><div id="fItems"></div>';
       $('fCam').onchange = $('fGal').onchange = async function () {
         var file = this.files[0]; if (!file) return; mealFile = file;
         var u = URL.createObjectURL(file), pv = $('fPrev'); pv.innerHTML = '<img src="' + u + '" alt="Your meal">'; pv.hidden = false;
@@ -1932,7 +1947,7 @@
         this.disabled = true; if (await addFoodRows([o])) { toast('Added ' + n); done(); } else this.disabled = false;
       };
     }
-    paneSearch();
+    if (startTab) tab(startTab); else paneSearch();
   }
 
   // ---------- PROGRESS ----------

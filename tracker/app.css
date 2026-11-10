@@ -1,7 +1,7 @@
 :root{--gold:#C9A84C;--gold-2:#E8D08A;--bg:#0a0a0a;--card:#151515;--card-2:#1d1d1d;--line:rgba(255,255,255,.09);--text:#f2ede3;--muted:rgba(242,237,227,.66);--ok:#4caf7d;--bad:#e06c5f;--radius:14px}
 *{box-sizing:border-box;margin:0;padding:0}
 html{-webkit-text-size-adjust:100%}
-body{background:var(--bg);color:var(--text);font-family:'DM Sans',system-ui,sans-serif;font-size:16px;line-height:1.5;min-height:100vh}
+body{background:var(--bg);color:var(--text);font-family:'Inter',system-ui,sans-serif;font-size:16px;line-height:1.5;min-height:100vh}
 a{color:var(--gold)}
 button,input,select,textarea{font:inherit;color:inherit}
 button{cursor:pointer}
@@ -19,9 +19,9 @@ button{cursor:pointer}
 
 /* layout */
 .tk-app{max-width:760px;margin:0 auto;padding:16px 16px 120px}
-.tk-h1{font-family:'DM Serif Display',Georgia,serif;font-weight:400;font-size:1.9rem;line-height:1.15;margin:6px 0 4px}
+.tk-h1{font-family:'Fraunces',Georgia,serif;font-weight:400;font-size:1.9rem;line-height:1.15;margin:6px 0 4px}
 .tk-h1 em{color:var(--gold)}
-.tk-h2{font-family:'DM Serif Display',Georgia,serif;font-weight:400;font-size:1.35rem;margin:22px 0 10px}
+.tk-h2{font-family:'Fraunces',Georgia,serif;font-weight:400;font-size:1.35rem;margin:22px 0 10px}
 .tk-sub{color:var(--muted);font-size:.95rem}
 .tk-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:16px;margin-top:12px}
 .tk-card.gold{border-color:rgba(201,168,76,.5);background:linear-gradient(135deg,rgba(201,168,76,.12),rgba(201,168,76,.02))}
@@ -29,7 +29,7 @@ button{cursor:pointer}
 .tk-grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .tk-grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
 .tk-stat{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px}
-.tk-stat b{display:block;font-family:'DM Serif Display',Georgia,serif;font-weight:400;font-size:1.6rem;color:var(--gold);line-height:1.1}
+.tk-stat b{display:block;font-family:'Fraunces',Georgia,serif;font-weight:400;font-size:1.6rem;color:var(--gold);line-height:1.1}
 .tk-stat span{font-size:.78rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
 .tk-muted{color:var(--muted);font-size:.88rem}
 .tk-small{font-size:.8rem;color:var(--muted)}
@@ -91,7 +91,7 @@ button{cursor:pointer}
 
 /* rest timer */
 .rest{position:fixed;left:50%;transform:translateX(-50%);bottom:84px;z-index:70;background:#111;border:1px solid var(--gold);border-radius:16px;padding:10px 12px;display:flex;align-items:center;gap:10px;box-shadow:0 10px 30px rgba(0,0,0,.6);width:min(520px,calc(100% - 24px))}
-.rest b{font-family:'DM Serif Display',Georgia,serif;font-weight:400;font-size:1.9rem;color:var(--gold);min-width:84px;text-align:center}
+.rest b{font-family:'Fraunces',Georgia,serif;font-weight:400;font-size:1.9rem;color:var(--gold);min-width:84px;text-align:center}
 .rest .bar{flex:1;height:6px;background:rgba(255,255,255,.1);border-radius:3px;overflow:hidden}
 .rest .bar i{display:block;height:100%;background:var(--gold);width:100%;transition:width 1s linear}
 .rest button{background:var(--card-2);border:1px solid var(--line);border-radius:8px;min-width:44px;min-height:40px;font-weight:700}
@@ -163,7 +163,7 @@ details.wk .wk-body b{color:var(--text);font-weight:600}
 /* landing */
 .land{max-width:960px;margin:0 auto;padding:28px 16px 60px}
 .land-hero{text-align:center;padding:28px 0 10px}
-.land-hero h1{font-family:'DM Serif Display',Georgia,serif;font-weight:400;font-size:clamp(2rem,6vw,3.2rem);line-height:1.1}
+.land-hero h1{font-family:'Fraunces',Georgia,serif;font-weight:400;font-size:clamp(2rem,6vw,3.2rem);line-height:1.1}
 .land-hero h1 em{color:var(--gold)}
 .land-hero p{color:var(--muted);max-width:620px;margin:14px auto 0;font-size:1.05rem}
 .signin{max-width:420px;margin:26px auto 0;background:var(--card);border:1px solid rgba(201,168,76,.4);border-radius:16px;padding:20px;text-align:center}
@@ -174,7 +174,7 @@ details.wk .wk-body b{color:var(--text);font-weight:600}
 .feat h3{font-size:1rem;margin-bottom:4px}
 .feat p{font-size:.88rem;color:var(--muted)}
 .land-copy{max-width:760px;margin:40px auto 0}
-.land-copy h2{font-family:'DM Serif Display',Georgia,serif;font-weight:400;font-size:1.6rem;margin:26px 0 8px}
+.land-copy h2{font-family:'Fraunces',Georgia,serif;font-weight:400;font-size:1.6rem;margin:26px 0 8px}
 .land-copy p,.land-copy li{color:var(--muted);margin-bottom:10px}
 .land-copy ul{padding-left:20px}
 .land-copy details{border-bottom:1px solid var(--line);padding:12px 0}
@@ -204,7 +204,7 @@ details.wk .wk-body b{color:var(--text);font-weight:600}
 .tk-who-btn > span:first-child{display:flex;flex-direction:column;line-height:1.25}
 .tk-who-btn:hover{background:var(--card)}
 .tk-ava{display:inline-flex;align-items:center;justify-content:center;border-radius:50%;object-fit:cover;flex:none;border:1px solid rgba(201,168,76,.45);background:var(--card-2)}
-.tk-ava-i{color:var(--gold);font-weight:700;font-family:'DM Serif Display',Georgia,serif}
+.tk-ava-i{color:var(--gold);font-weight:700;font-family:'Fraunces',Georgia,serif}
 .hub-tiles{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}
 .hub-tile{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;min-height:96px;padding:16px;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);color:var(--text);font:inherit;font-weight:700;font-size:1rem;text-align:left;cursor:pointer;transition:border-color .15s,transform .15s}
 .hub-tile:hover{border-color:rgba(201,168,76,.55);transform:translateY(-1px)}
@@ -266,7 +266,7 @@ details.wk .wk-body b{color:var(--text);font-weight:600}
 .b-prev img{width:96px;height:128px;object-fit:cover;border-radius:8px;border:1px solid rgba(201,168,76,.4);display:block}
 /* ---------- habits ---------- */
 .hb-card .hb-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
-.hb-streak{display:block;font-family:'DM Serif Display',Georgia,serif;font-weight:400;font-size:1.25rem;color:var(--gold);margin-top:2px}
+.hb-streak{display:block;font-family:'Fraunces',Georgia,serif;font-weight:400;font-size:1.25rem;color:var(--gold);margin-top:2px}
 .hb{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
 .hb-item{background:var(--card-2);border:1px solid var(--line);border-radius:12px;padding:10px 12px;display:flex;flex-direction:column;gap:6px;min-width:0}
 .hb-item .tk-input{min-height:44px}
@@ -278,7 +278,7 @@ details.wk .wk-body b{color:var(--text);font-weight:600}
 .hb-bar.done i{background:var(--ok)}
 .hb-step{display:flex;align-items:center;justify-content:space-between;gap:8px}
 .hb-step .tk-icon-btn{font-size:1.3rem;font-weight:600;color:var(--gold)}
-.hb-step b{font-size:1.4rem;font-family:'DM Serif Display',Georgia,serif;font-weight:400}
+.hb-step b{font-size:1.4rem;font-family:'Fraunces',Georgia,serif;font-weight:400}
 .hb-step b small{font-size:.8rem;color:var(--muted);font-family:inherit}
 .hb-scale{display:grid;grid-template-columns:repeat(5,1fr);gap:4px}
 .hb-scale button{min-height:44px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--text);font-weight:600;font-size:1rem;padding:0}
@@ -310,7 +310,7 @@ details.wk .wk-body b{color:var(--text);font-weight:600}
 .bd.on .bd-ic{filter:none}
 .bd.on small{color:var(--gold)}
 .bd-pop{text-align:center;position:relative;padding:8px 0 4px;overflow:hidden}
-.bd-pop h3{font-family:'DM Serif Display',Georgia,serif;font-weight:400;font-size:1.6rem;color:var(--gold);margin:6px 0 4px}
+.bd-pop h3{font-family:'Fraunces',Georgia,serif;font-weight:400;font-size:1.6rem;color:var(--gold);margin:6px 0 4px}
 .bd-big{font-size:4rem;display:inline-block;animation:bdPop .6s cubic-bezier(.2,1.6,.4,1) both}
 .bd-burst{position:absolute;left:50%;top:48px;width:0;height:0}
 .bd-burst i{position:absolute;width:8px;height:8px;border-radius:2px;background:var(--gold);opacity:0;animation:bdFly 1s ease-out .15s both}
@@ -332,7 +332,7 @@ details.wk .wk-body b{color:var(--text);font-weight:600}
 /* ---------- daily calorie target ---------- */
 .nut .chips{margin-top:2px}
 .nut-big{display:flex;align-items:baseline;gap:8px;margin-top:10px}
-.nut-big b{font-family:'DM Serif Display',Georgia,serif;font-weight:400;font-size:2.6rem;color:var(--gold);line-height:1}
+.nut-big b{font-family:'Fraunces',Georgia,serif;font-weight:400;font-size:2.6rem;color:var(--gold);line-height:1}
 .nut-big span{color:var(--muted)}
 .nut-macros{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
 .nut-macros div{background:var(--card-2);border:1px solid var(--line);border-radius:10px;padding:10px;text-align:center}
@@ -345,7 +345,7 @@ details.wk .wk-body b{color:var(--text);font-weight:600}
 /* ---------- food log ---------- */
 .fd-sum{margin-top:8px}
 .fd-kcal{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
-.fd-kcal b{font-family:'DM Serif Display',Georgia,serif;font-weight:400;font-size:2rem;color:var(--gold);line-height:1}
+.fd-kcal b{font-family:'Fraunces',Georgia,serif;font-weight:400;font-size:2rem;color:var(--gold);line-height:1}
 .fd-sum.big .fd-kcal b{font-size:2.6rem}
 .fd-kcal span{color:var(--muted)}
 .fd-kcal em{font-style:normal;margin-left:auto;font-weight:700;color:var(--ok)}
@@ -393,7 +393,7 @@ details.wk .wk-body b{color:var(--text);font-weight:600}
 .wt-stat{background:var(--card-2);border:1px solid var(--line);border-radius:12px;padding:10px 12px;display:flex;flex-direction:column;gap:3px;min-width:0}
 .wt-stat span{display:inline-flex;align-items:center;gap:6px;font-size:.74rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
 .wt-stat span svg{color:var(--gold);flex:none}
-.wt-stat b{font-family:'DM Serif Display',Georgia,serif;font-weight:400;font-size:1.45rem;color:var(--text);line-height:1.15}
+.wt-stat b{font-family:'Fraunces',Georgia,serif;font-weight:400;font-size:1.45rem;color:var(--text);line-height:1.15}
 .wt-stat b small{font-family:inherit;font-size:.8rem;color:var(--muted)}
 .wt-stat em{font-style:normal;font-size:.74rem;color:var(--muted)}
 .wt-stat i{font-style:normal}
@@ -427,3 +427,84 @@ details.wk .wk-body b{color:var(--text);font-weight:600}
 /* food log: meal photo */
 button.fd-ph{border:1px solid rgba(201,168,76,.5);background:rgba(201,168,76,.12);color:var(--gold-2);cursor:pointer;font-weight:600;min-height:28px}
 .fd-photo{display:block;width:100%;height:auto;border-radius:12px}
+
+/* ===================== Noir & Gold (v2 look) ===================== */
+:root{--gold:#D9B95E;--gold-2:#F0D78C;--gold-3:#B8923A;--bg:#0A0A0B;--card:#131313;--card-2:#1B1B1B;--line:rgba(255,255,255,.07);--line-gold:rgba(201,168,76,.22);--text:#F3EEE4;--muted:#A79F92;--radius:20px}
+body{font-feature-settings:"cv11","ss01";letter-spacing:-.005em;background:radial-gradient(420px 320px at 15% -60px,rgba(201,168,76,.13),transparent 70%) no-repeat,var(--bg)}
+.tk-top{background:rgba(10,10,11,.78);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid rgba(255,255,255,.04)}
+.tk-icon-btn{border-radius:50%;border-color:var(--line-gold);background:rgba(255,255,255,.03)}
+.tk-h1{font-weight:400;font-size:2rem;letter-spacing:-.01em;line-height:1.12}
+.tk-h1 em{font-style:italic;color:var(--gold)}
+.tk-h2{font-weight:500;letter-spacing:-.005em}
+.tk-card{border-radius:var(--radius);padding:18px;margin-top:12px;background:var(--card);border-color:var(--line)}
+.tk-card.gold{border-color:var(--line-gold);background:linear-gradient(160deg,#17150F 0%,#121212 65%)}
+.tk-stat{border-radius:16px;background:var(--card-2);border-color:var(--line)}
+.tk-stat b{color:var(--text);font-weight:400}
+.tk-tag{font-size:.7rem;letter-spacing:.14em;font-weight:600;color:var(--gold)}
+.tk-btn{border-radius:14px;min-height:50px;font-weight:600;letter-spacing:.01em;background:linear-gradient(135deg,#E3C673,var(--gold-3));color:#17120A;box-shadow:0 6px 20px rgba(201,168,76,.18)}
+.tk-btn:hover{background:linear-gradient(135deg,#ECD48A,#C39C42)}
+.tk-btn.ghost{background:rgba(255,255,255,.03);border:1px solid rgba(201,168,76,.35);color:var(--text);box-shadow:none}
+.tk-btn.ghost:hover{background:rgba(201,168,76,.08)}
+.tk-btn.plain{background:var(--card-2);border:1px solid var(--line);color:var(--text);box-shadow:none}
+.tk-btn.danger{box-shadow:none;background:transparent}
+.tk-btn.sm{min-height:40px;border-radius:12px}
+.tk-input,.tk-select,.tk-textarea{border-radius:12px;background:#0E0E0F;border-color:rgba(255,255,255,.12)}
+.chips button{border-color:rgba(201,168,76,.28);background:rgba(255,255,255,.02)}
+.chips button[aria-pressed="true"]{background:linear-gradient(135deg,#E3C673,var(--gold-3));border-color:transparent;color:#17120A}
+.li{border-bottom-color:var(--line)}
+.pill.gold{background:rgba(201,168,76,.14)}
+.ex{border-radius:var(--radius)}
+.sets input{border-radius:10px;background:#0E0E0F}
+.chk{border-radius:12px}
+.modal{background:rgba(0,0,0,.72);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}
+.modal-box{background:#121212;border-color:rgba(255,255,255,.08);border-radius:24px 24px 0 0}
+@media(min-width:700px){.modal-box{border-radius:24px}}
+.modal-head h2{font-family:'Fraunces',Georgia,serif;font-weight:500;font-size:1.2rem}
+.rest{border-radius:20px;background:rgba(18,18,18,.96);border-color:var(--line-gold);box-shadow:0 10px 30px rgba(0,0,0,.5)}
+/* floating bottom menu */
+.tk-nav{left:12px;right:12px;bottom:max(12px,env(safe-area-inset-bottom));border:1px solid rgba(255,255,255,.08);border-radius:24px;background:rgba(22,22,22,.92);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);padding:6px 4px;box-shadow:0 10px 30px rgba(0,0,0,.45)}
+.tk-nav button{color:#8E877B;font-weight:500;font-size:.68rem}
+.tk-nav button[aria-current="page"]{color:var(--gold);font-weight:600}
+.tk-app{padding-bottom:130px}
+@media(min-width:900px){.tk-nav{left:50%;right:auto;width:640px}}
+/* Today: greeting */
+.td-date{font-size:.75rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-top:6px}
+.td-hello{font-family:'Fraunces',Georgia,serif;font-weight:400;font-size:2rem;line-height:1.1;margin:6px 0 2px;letter-spacing:-.01em}
+.td-hello em{color:var(--gold);font-style:italic}
+/* Today: food ring card */
+.fd-ring-card{border-color:var(--line-gold);background:linear-gradient(160deg,#17150F 0%,#121212 62%)}
+.fd-ring-row{display:flex;gap:18px;align-items:center;margin-top:12px}
+.fd-ring{position:relative;width:128px;height:128px;flex:none}
+.fd-ring svg{display:block}
+.fd-ring-mid{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.fd-ring-mid b{font-family:'Fraunces',Georgia,serif;font-weight:400;font-size:1.85rem;line-height:1}
+.fd-ring-mid span{font-size:.7rem;color:var(--muted);margin-top:4px}
+.fd-ring-mid.over b{color:var(--bad)}
+.fd-ring-side{flex:1;min-width:0;display:flex;flex-direction:column;gap:10px}
+.fd-ring-side .fd-eaten{font-size:.78rem;color:var(--muted)}
+.fd-mini-top{display:flex;justify-content:space-between;font-size:.8rem}
+.fd-mini-top span:last-child{color:var(--muted)}
+.fd-mini-top b{color:var(--text);font-weight:600}
+.fd-mini{height:5px;border-radius:3px;background:rgba(255,255,255,.07);margin-top:5px;overflow:hidden}
+.fd-mini i{display:block;height:100%;border-radius:3px;background:var(--gold)}
+.fd-mini.c i{background:#B08D45}.fd-mini.f i{background:#8C7238}
+.fd-mini.over i{background:var(--bad)}
+.fd-acts{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}
+.fd-acts .tk-btn{min-height:50px}
+.fd-acts svg{flex:none}
+/* stats strip */
+.td-stats .tk-stat{text-align:left}
+.td-stats .tk-stat b{font-size:1.5rem}
+/* food tabs and photo buttons with icons */
+.fd-tabs button svg,.fd-cam svg{vertical-align:-3px;margin-right:6px}
+/* Today: last workout + weight tiles */
+.td-tiles{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.td-tile{text-align:left;padding:16px;border-radius:var(--radius);background:var(--card);border:1px solid var(--line);color:var(--text);display:flex;flex-direction:column;gap:4px;min-width:0}
+button.td-tile:hover{border-color:var(--line-gold)}
+.td-tl{font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.td-tv{font-family:'Fraunces',Georgia,serif;font-size:1.15rem;line-height:1.2;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.td-tv.td-big{font-size:1.7rem}
+.td-tv small{font-family:'Inter',sans-serif;font-size:.85rem;color:var(--muted)}
+.td-ts{font-size:.76rem;color:var(--muted)}
+.td-go{font-size:.78rem;color:var(--gold);font-weight:600;margin-top:4px}
+.hb-step{gap:4px}.hb-step .tk-icon-btn{min-width:40px;min-height:40px;width:40px;height:40px;flex:none}.hb-step b{font-size:1.25rem}
