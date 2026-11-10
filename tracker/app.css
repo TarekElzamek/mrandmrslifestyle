@@ -579,9 +579,3 @@ button.pc-media{cursor:pointer}
 .pl-start{position:sticky;bottom:calc(max(12px,env(safe-area-inset-bottom)) + 84px);z-index:5;margin-top:16px;padding-top:6px}
 .pl-start .tk-btn{min-height:56px;font-size:1rem;letter-spacing:.04em;text-transform:uppercase;box-shadow:0 10px 30px rgba(0,0,0,.55),0 6px 20px rgba(201,168,76,.25)}
 .pc-media:has(.pc-none){aspect-ratio:auto;height:120px}
-/* own-video cards: three frames of the coach's video take turns, so the card moves */
-.pc-3 img{opacity:0;animation:pc3 3s steps(1,end) infinite}
-.pc-3 img:nth-child(1){animation-delay:0s}.pc-3 img:nth-child(2){animation-delay:-2s}.pc-3 img:nth-child(3){animation-delay:-1s}
-.pc-3 img+img{animation-name:pc3}
-@keyframes pc3{0%{opacity:1}33.333%{opacity:0}100%{opacity:0}}
-@media (prefers-reduced-motion:reduce){.pc-3 img{animation:none}.pc-3 img:first-child{opacity:1}}
