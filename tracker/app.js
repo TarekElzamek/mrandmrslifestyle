@@ -123,6 +123,9 @@
     image: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-5-8 9"/></svg>',
     plus: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>',
     play: '<svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4l13 8-13 8z"/></svg>',
+    dumbbell: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" aria-hidden="true"><path d="M3 12h2M19 12h2M6 8v8M18 8v8M9 10v4M15 10v4M9 12h6"/></svg>',
+    clock: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg>',
+    moon: '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4 8 8 0 1 0 20 14.5z"/></svg>',
     camera: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>',
     trash: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg>'
   };
@@ -867,13 +870,58 @@
 
   // ---------- PLAN ----------
   function canEditProgram(p) { return isCoach(); }
+  // ---------- PLAN: week strip, the day's exercises as picture cards, Start ----------
+  var WD = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'], WDN = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+  function dayWeekday(d) { var m = /^\s*(mon|tue|wed|thu|fri|sat|sun)/i.exec((d && d.name) || ''); return m ? WD.indexOf(m[1].toLowerCase()) : -1; }
+  function exPics(name) { var id = (window.MM_EXIMG || {})[name]; return id ? ['/tracker/ex-img/' + id + '-0.webp', '/tracker/ex-img/' + id + '-1.webp'] : null; }
+  function planMinutes(day) { var sec = 0; (day.exercises || []).forEach(function (e) { var n = parseInt(e.sets, 10) || 3, rest = parseInt(e.rest, 10) || 75; sec += typeOf(e.name) === 'c' ? (parseInt(e.reps, 10) || 15) * 60 : n * (40 + rest); }); return Math.max(10, Math.round(sec / 300) * 5); }
+  function planCard(e, key) {
+    var meta = EXMAP[e.name] || {}, pics = exPics(e.name), vids = vidsFor(e.name), t = e.type || typeOf(e.name);
+    var last = lastPerformance(e.name), lastW = null;
+    if (last && t === 'w') last.sets.forEach(function (st) { var w = num(st.w); if (w != null && (lastW == null || w > lastW)) lastW = w; });
+    var target = t === 'c' ? (e.reps ? esc(e.reps) + ' min' : 'Cardio') : (e.sets ? esc(e.sets) + ' sets' : '') + (e.reps ? ' × ' + esc(e.reps) + (t === 't' ? ' sec' : ' reps') : '') + (lastW ? ' · last ' + nf(lastW) + ' kg' : '');
+    var media = pics ? '<span class="pc-anim"><img src="' + pics[0] + '" alt="" loading="lazy" decoding="async"><img src="' + pics[1] + '" alt="" loading="lazy" decoding="async"></span>' : '<span class="pc-none" aria-hidden="true">' + ICON.dumbbell + '</span>';
+    return '<article class="pc"><' + (vids.length ? 'button type="button" data-pvid="' + esc(e.name) + '" aria-label="Play the ' + esc(e.name) + ' demo video"' : 'div') + ' class="pc-media">' + media + (vids.length ? '<span class="pc-play">' + ICON.play + 'Video</span>' : '') + (target ? '<span class="pc-target">' + target + '</span>' : '') + '</' + (vids.length ? 'button' : 'div') + '>' +
+      '<div class="pc-info"><b>' + esc(e.name) + '</b>' + (meta.m ? '<span class="pc-m">' + esc(meta.m) + '</span>' : '') + ((e.rest || e.notes) ? '<span class="pc-n">' + (e.rest ? 'Rest ' + esc(e.rest) + 's' : '') + (e.rest && e.notes ? ' · ' : '') + (e.notes ? esc(e.notes) : '') + '</span>' : '') + '</div></article>';
+  }
   function renderPlan() {
     var v = $('view');
     var h = '<h1 class="tk-h1">' + (viewingOther() ? esc(S.target.name || 'Client') + '\'s <em>programmes</em>' : 'Your <em>programme</em>') + '</h1>';
-    h += '<p class="tk-sub">' + (isCoach() ? 'Build a programme with training days, sets, reps and rest. The client sees it straight away and taps Start at the gym.' : 'Follow the plan your coach builds for you, or create your own routine.') + '</p>';
-    if (isCoach()) h += '<div class="tk-grid2" style="margin-top:14px"><button type="button" class="tk-btn" id="newProg">+ New programme</button><button type="button" class="tk-btn ghost" id="useTpl">Use a template</button></div>';
-    if (!S.programs.length) h += '<div class="tk-empty">No programmes yet.</div>';
-    S.programs.forEach(function (p) {
+    if (isCoach()) h += '<div class="tk-grid2" style="margin-top:14px"><button type="button" class="tk-btn" id="newProg">' + ICON.plus + 'New programme</button><button type="button" class="tk-btn ghost" id="useTpl">Use a template</button></div>';
+    var prog = S.programs.filter(function (p) { return p.active && (p.days || []).length; })[0];
+    if (!S.programs.length) h += '<div class="tk-empty">No programmes yet.' + (isCoach() ? '' : ' Your coach will add one here.') + '</div>';
+    var startIdx = null;
+    if (prog) {
+      var days = prog.days, byWd = days.map(dayWeekday), weekly = byWd.some(function (x) { return x >= 0; });
+      var now = new Date(), wdToday = (now.getDay() + 6) % 7, mon = new Date(now); mon.setDate(now.getDate() - wdToday);
+      var done = {}; S.workouts.forEach(function (w) { done[w.date] = true; });
+      if (S.planSel == null || S.planProg !== prog.id) { S.planProg = prog.id; S.planSel = weekly ? 'w' + wdToday : 'd' + Math.max(0, days.findIndex(function (d, i) { return !S.workouts.some(function (w) { return w.date === today() && w.title === d.name; }); })); }
+      h += '<div class="pl-head"><div><span class="tk-tag">Active programme</span><h2 class="tk-h2">' + esc(prog.name) + '</h2></div>' + (canEditProgram(prog) ? '<div class="pl-acts"><button type="button" class="tk-btn sm plain" data-tpl="' + prog.id + '">Save as template</button><button type="button" class="tk-btn sm plain" data-edit="' + prog.id + '">Edit</button></div>' : '') + '</div>';
+      if (prog.notes) h += '<details class="pl-notes"><summary>About this plan</summary><p>' + esc(prog.notes) + '</p></details>';
+      h += '<div class="pl-strip" role="tablist" aria-label="Choose a day">';
+      if (weekly) {
+        for (var k = 0; k < 7; k++) {
+          var dt = new Date(mon); dt.setDate(mon.getDate() + k); var dIso = iso(dt), di = byWd.indexOf(k), sel = S.planSel === 'w' + k;
+          h += '<button type="button" role="tab" aria-selected="' + sel + '" class="pl-day' + (sel ? ' on' : '') + (k === wdToday ? ' today' : '') + '" data-psel="w' + k + '"><span>' + WDN[k] + '</span><b>' + dt.getDate() + '</b><i class="' + (done[dIso] ? 'done' : di >= 0 ? 'has' : '') + '" aria-hidden="true"></i><span class="sr">' + (di >= 0 ? esc(days[di].name) : 'Rest day') + (done[dIso] ? ', trained' : '') + '</span></button>';
+        }
+      } else days.forEach(function (d, i) { var sel = S.planSel === 'd' + i; h += '<button type="button" role="tab" aria-selected="' + sel + '" class="pl-day' + (sel ? ' on' : '') + '" data-psel="d' + i + '"><span>Day</span><b>' + (i + 1) + '</b><i class="has" aria-hidden="true"></i></button>'; });
+      h += '</div>';
+      var idx = S.planSel[0] === 'w' ? byWd.indexOf(+S.planSel.slice(1)) : +S.planSel.slice(1);
+      var day = days[idx];
+      if (!day) {
+        h += '<div class="tk-card pl-rest"><div class="pl-rest-ic" aria-hidden="true">' + ICON.moon + '</div><h3>Rest day</h3><p class="tk-muted">Recover well: walk, stretch, sleep. Your next session is ready when you are.</p></div>';
+      } else {
+        startIdx = idx;
+        var exs = day.exercises || [];
+        h += '<div class="pl-dayhead"><h3>' + esc(day.name || 'Day ' + (idx + 1)) + '</h3><div class="pl-sum"><span>' + ICON.dumbbell + exs.length + (exs.length === 1 ? ' exercise' : ' exercises') + '</span><span>' + ICON.clock + '~' + planMinutes(day) + ' min</span></div></div>';
+        exs.forEach(function (e, i) { h += planCard(e, idx + '_' + i); });
+        if (!exs.length) h += '<p class="tk-empty">No exercises on this day yet.</p>';
+      }
+      if (startIdx != null && !viewingOther()) h += '<div class="pl-start"><button type="button" class="tk-btn block" data-start="' + prog.id + ':' + startIdx + '">' + ICON.play + 'Start workout</button></div>';
+      else if (startIdx != null) h += '<div style="margin-top:14px"><button type="button" class="tk-btn ghost block" data-start="' + prog.id + ':' + startIdx + '">' + ICON.play + 'Start this workout for ' + esc((S.target.name || 'client').split(' ')[0]) + '</button></div>';
+    }
+    // other programmes (and an active one with no days) stay as compact cards
+    S.programs.filter(function (p) { return p !== prog; }).forEach(function (p) {
       h += '<div class="tk-card' + (p.active ? ' gold' : '') + '"><div class="tk-row"><div style="flex:1"><span class="tk-tag">' + (p.active ? 'Active' : 'Archived') + '</span><h2 class="tk-h2" style="margin:2px 0 4px">' + esc(p.name) + '</h2></div>' +
         (canEditProgram(p) ? '<button type="button" class="tk-btn sm plain" data-tpl="' + p.id + '">Save as template</button><button type="button" class="tk-btn sm plain" data-edit="' + p.id + '">Edit</button>' : '') + '</div>' + (p.notes ? '<p class="tk-muted">' + esc(p.notes) + '</p>' : '');
       (p.days || []).forEach(function (d, i) {
@@ -886,6 +934,11 @@
     v.innerHTML = h;
     if ($('newProg')) $('newProg').onclick = function () { openBuilder(null); };
     if ($('useTpl')) $('useTpl').onclick = openTemplates;
+    v.querySelectorAll('[data-psel]').forEach(function (b) { b.onclick = function () { S.planSel = b.dataset.psel; render(); }; });
+    v.querySelectorAll('[data-pvid]').forEach(function (b) { b.onclick = function () {
+      var name = b.dataset.pvid, m = modal(name, videoBox(name, 'pv') + ((EXMAP[name] || {}).how ? '<p class="tk-muted" style="margin-top:12px">' + esc(EXMAP[name].how) + '</p>' : ''));
+      wireVideos(m); var box = m.querySelector('[data-vbox]'), first = vidsFor(name)[0]; if (box && first) playVideo(box, first[0]);
+    }; });
     v.querySelectorAll('[data-tpl]').forEach(function (b) { b.onclick = function () { saveAsTemplate(S.programs.filter(function (p) { return p.id === b.dataset.tpl; })[0]); }; });
     v.querySelectorAll('[data-edit]').forEach(function (b) { b.onclick = function () { openBuilder(S.programs.filter(function (p) { return p.id === b.dataset.edit; })[0]); }; });
     v.querySelectorAll('[data-start]').forEach(function (b) { b.onclick = function (e) { e.preventDefault(); var p = b.dataset.start.split(':'); if (S.draft && !confirmBox('You have a workout in progress. Replace it?')) return; startDraft(S.programs.filter(function (x) { return x.id === p[0]; })[0], +p[1]); }; });
