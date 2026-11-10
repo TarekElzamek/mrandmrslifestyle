@@ -205,8 +205,10 @@ module.exports = async (req, res) => {
     }
 
     // default: the iPhone Shortcut sending today's Apple Health totals
-    const code = String(b.code || b.token || url.searchParams.get('code') || '').trim();
-    if (!code) return send(res, 400, { error: 'missing_code' });
+    // the code is 24 hex characters; pasting can add spaces, quotes, line breaks or invisible characters, so pick it out
+    const raw = String(b.code || b.token || url.searchParams.get('code') || '');
+    const code = ((raw.match(/[0-9a-f]{24}/i) || [])[0] || raw.trim()).toLowerCase();
+    if (!code) { console.warn('apple sync: missing code', JSON.stringify({ keys: Object.keys(b || {}), types: Object.fromEntries(Object.entries(b || {}).map(([k, v]) => [k, typeof v])) })); return send(res, 400, { error: 'missing_code', message: 'The sync code is missing. Open the shortcut and paste your sync code from the tracker.' }); }
     const steps = num(b.steps), kcal = num(b.active_kcal != null ? b.active_kcal : b.calories), hr = num(b.avg_hr != null ? b.avg_hr : b.heart_rate);
     const r = await server('apple', {
       token: code, date: dayOf(b.date),
@@ -214,6 +216,7 @@ module.exports = async (req, res) => {
       active_kcal: kcal != null && kcal >= 0 && kcal <= 20000 ? Math.round(kcal) : null,
       avg_hr: hr != null && hr >= 20 && hr <= 250 ? Math.round(hr) : null
     });
+    if (r && r.error) console.warn('apple sync:', r.error, JSON.stringify({ len: raw.length, start: raw.slice(0, 4), keys: Object.keys(b || {}) }));
     if (r && r.error) return send(res, 400, { error: r.error, message: r.error === 'bad_code' ? 'This sync code is not valid. Copy it again from your tracker.' : 'Could not save.' });
     return send(res, 200, { ok: true, message: 'Synced to your Mr & Mrs Lifestyle tracker' });
   } catch (e) {
