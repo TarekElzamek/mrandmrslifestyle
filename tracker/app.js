@@ -874,14 +874,15 @@
   var WD = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'], WDN = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
   function dayWeekday(d) { var m = /^\s*(mon|tue|wed|thu|fri|sat|sun)/i.exec((d && d.name) || ''); return m ? WD.indexOf(m[1].toLowerCase()) : -1; }
   // card picture = a frame from your own demo video of the exercise (none: a clean icon)
-  function exThumb(name) { var v = vidsFor(name)[0]; return v ? 'https://i.ytimg.com/vi/' + encodeURIComponent(v[0]) + '/hqdefault.jpg' : null; }
+  // YouTube keeps three frames of every video (at about 25%, 50% and 75%): cycling them makes the card move
+  function exThumb(name) { var v = vidsFor(name)[0]; if (!v) return null; var b = 'https://i.ytimg.com/vi/' + encodeURIComponent(v[0]) + '/'; return [b + 'hq1.jpg', b + 'hq2.jpg', b + 'hq3.jpg']; }
   function planMinutes(day) { var sec = 0; (day.exercises || []).forEach(function (e) { var n = parseInt(e.sets, 10) || 3, rest = parseInt(e.rest, 10) || 75; sec += typeOf(e.name) === 'c' ? (parseInt(e.reps, 10) || 15) * 60 : n * (40 + rest); }); return Math.max(10, Math.round(sec / 300) * 5); }
   function planCard(e, key) {
     var meta = EXMAP[e.name] || {}, thumb = exThumb(e.name), vids = vidsFor(e.name), t = e.type || typeOf(e.name);
     var last = lastPerformance(e.name), lastW = null;
     if (last && t === 'w') last.sets.forEach(function (st) { var w = num(st.w); if (w != null && (lastW == null || w > lastW)) lastW = w; });
     var target = t === 'c' ? (e.reps ? esc(e.reps) + ' min' : 'Cardio') : (e.sets ? esc(e.sets) + ' sets' : '') + (e.reps ? ' × ' + esc(e.reps) + (t === 't' ? ' sec' : ' reps') : '') + (lastW ? ' · last ' + nf(lastW) + ' kg' : '');
-    var media = thumb ? '<span class="pc-anim"><img src="' + thumb + '" alt="" loading="lazy" decoding="async"></span>' : '<span class="pc-none" aria-hidden="true">' + ICON.dumbbell + '</span>';
+    var media = thumb ? '<span class="pc-anim pc-3">' + thumb.map(function (u) { return '<img src="' + u + '" alt="" loading="lazy" decoding="async">'; }).join('') + '</span>' : '<span class="pc-none" aria-hidden="true">' + ICON.dumbbell + '</span>';
     return '<article class="pc"><' + (vids.length ? 'button type="button" data-pvid="' + esc(e.name) + '" aria-label="Play the ' + esc(e.name) + ' demo video"' : 'div') + ' class="pc-media">' + media + (vids.length ? '<span class="pc-play">' + ICON.play + 'Video</span>' : '') + (target ? '<span class="pc-target">' + target + '</span>' : '') + '</' + (vids.length ? 'button' : 'div') + '>' +
       '<div class="pc-info"><b>' + esc(e.name) + '</b>' + (meta.m ? '<span class="pc-m">' + esc(meta.m) + '</span>' : '') + ((e.rest || e.notes) ? '<span class="pc-n">' + (e.rest ? 'Rest ' + esc(e.rest) + 's' : '') + (e.rest && e.notes ? ' · ' : '') + (e.notes ? esc(e.notes) : '') + '</span>' : '') + '</div></article>';
   }
