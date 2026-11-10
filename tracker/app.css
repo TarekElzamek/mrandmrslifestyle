@@ -509,3 +509,31 @@ button.td-tile:hover{border-color:var(--line-gold)}
 .td-go{font-size:.78rem;color:var(--gold);font-weight:600;margin-top:4px}
 .hb-step{gap:4px}.hb-step .tk-icon-btn{min-width:40px;min-height:40px;width:40px;height:40px;flex:none}.hb-step b{font-size:1.25rem}
 .hb-head .tk-btn{white-space:nowrap;flex:none}
+/* first-open welcome: connect Apple Watch */
+.ob{position:fixed;inset:0;z-index:120;background:radial-gradient(480px 380px at 50% -80px,rgba(201,168,76,.22),transparent 70%) no-repeat,#0A0A0B;display:flex;justify-content:center;overflow-y:auto}
+.ob-box{position:relative;width:100%;max-width:520px;min-height:100%;display:flex;flex-direction:column;padding:max(64px,calc(env(safe-area-inset-top) + 56px)) 24px max(24px,env(safe-area-inset-bottom))}
+.ob-x{position:absolute;right:16px;top:max(14px,calc(env(safe-area-inset-top) + 8px))}
+.ob-back{position:absolute;left:16px;top:max(14px,calc(env(safe-area-inset-top) + 8px));font-size:1.5rem}
+.ob-hero,.ob-body{flex:1;display:flex;flex-direction:column;gap:12px}
+.ob-hero{align-items:center;justify-content:center;text-align:center}
+.ob-ic{width:104px;height:104px;border-radius:30px;display:flex;align-items:center;justify-content:center;color:var(--gold);background:linear-gradient(160deg,#211C10,#141414);border:1px solid var(--line-gold);box-shadow:0 14px 40px rgba(201,168,76,.18);margin-bottom:8px}
+.ob-ic.ok{color:#0A0A0B;background:linear-gradient(135deg,#E3C673,#B8923A)}
+.ob-ic.ok svg{width:44px;height:44px}
+.ob-k{font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);font-weight:600}
+.ob h2{font-family:'DM Serif Display',Georgia,serif;font-weight:400;font-size:2.1rem;line-height:1.1;outline:none}
+.ob h2 em{color:var(--gold);font-style:italic}
+.ob p{color:var(--muted);line-height:1.6;font-size:.98rem}
+.ob p b,.ob-steps b,.ob-tip b{color:var(--text)}
+.ob-list{list-style:none;display:flex;flex-direction:column;gap:10px;margin-top:10px;align-items:flex-start}
+.ob-list li{display:flex;align-items:center;gap:10px;font-weight:500}
+.ob-list svg{width:20px;height:20px;color:#0A0A0B;background:var(--gold);border-radius:50%;padding:3px}
+.ob-steps{padding-left:22px;display:flex;flex-direction:column;gap:10px;color:var(--muted);line-height:1.55;margin-top:4px}
+.ob-steps li::marker{color:var(--gold);font-weight:700}
+.ob-tip{margin-top:6px;padding:14px 16px;border-radius:16px;background:var(--card);border:1px solid var(--line-gold);display:flex;flex-direction:column;gap:6px;font-size:.88rem;color:var(--muted);line-height:1.55}
+.ob-msg{min-height:1.4em;font-size:.88rem;color:var(--gold-2)}
+.ob-foot{display:flex;flex-direction:column;align-items:stretch;padding-top:20px}
+.ob-later{align-self:center;margin-top:8px;color:var(--muted)}
+.ob-dots{display:flex;justify-content:center;gap:6px;margin-top:16px}
+.ob-dots i{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.15)}
+.ob-dots i.on{width:22px;border-radius:4px;background:var(--gold)}
+.ob-dots i.done{background:rgba(201,168,76,.5)}

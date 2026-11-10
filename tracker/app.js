@@ -240,6 +240,7 @@
     S.progEx = null; S.calDay = null;
     if (S.draft && COACH_TABS.indexOf(S.tab) < 0) S.tab = 'today';
     render();
+    if (!viewingOther() && !isCoach()) setTimeout(maybeOnboardWatch, 700);
     // back from Whoop sign-in
     var wq = new URLSearchParams(location.search).get('whoop');
     if (wq) {
@@ -1415,8 +1416,59 @@
       m.close(); await watchReload(); toast('Whoop disconnected');
     };
   }
+  // ---------- first-open welcome: connect Apple Watch (guided, full screen) ----------
+  // Shown to clients on an iPhone until their watch has synced once. "Later" hides it for 3 days.
+  function maybeOnboardWatch() {
+    var L = S.hlink || {}, key = 'mm_ob_watch_' + (S.me && S.me.id);
+    if (!L.shortcut_url || !L.apple_token || viewingOther() || isCoach()) return;
+    if (!/iPhone/.test(navigator.userAgent)) return;
+    if ((S.health || []).some(function (r) { return r.source === 'apple'; })) return;
+    var st = lsGet(key, null); if (st && (st.done || (st.later && Date.now() - st.later < 3 * 864e5))) return;
+    if (document.querySelector('.modal') || document.querySelector('.ob')) return;
+    onboardWatch();
+  }
+  function onboardWatch() {
+    var L = S.hlink || {}, code = L.apple_token || '', key = 'mm_ob_watch_' + (S.me && S.me.id), step = 0;
+    var first = ((S.me && S.me.name) || '').split(' ')[0];
+    var el = document.createElement('div'); el.className = 'ob'; el.setAttribute('role', 'dialog'); el.setAttribute('aria-modal', 'true'); el.setAttribute('aria-label', 'Connect your Apple Watch');
+    document.body.appendChild(el); document.body.style.overflow = 'hidden';
+    function close(later) { if (later) lsSet(key, { later: Date.now() }); el.remove(); document.body.style.overflow = ''; }
+    var watchIcon = '<svg width="54" height="54" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="3.5"/><path d="M9 6l1-3h4l1 3M9 18l1 3h4l1-3M12 10v2l1.5 1.5"/></svg>';
+    var dots = function (i) { return '<div class="ob-dots" aria-hidden="true">' + [1, 2, 3].map(function (k) { return '<i class="' + (k === i ? 'on' : k < i ? 'done' : '') + '"></i>'; }).join('') + '</div>'; };
+    function paint() {
+      var h = '';
+      if (step === 0) h = '<div class="ob-hero"><div class="ob-ic">' + watchIcon + '</div><div class="ob-k">Welcome' + (first ? ', ' + esc(first) : '') + '</div><h2>Connect your <em>Apple Watch</em></h2><p>Your daily steps, active calories and heart rate will fill in here by themselves, and your coach will see your progress too.</p>' +
+        '<ul class="ob-list"><li>' + ICON.check + 'Steps</li><li>' + ICON.check + 'Active calories</li><li>' + ICON.check + 'Average heart rate</li></ul></div>' +
+        '<div class="ob-foot"><button type="button" class="tk-btn block" data-ob="next">Connect now · 2 minutes</button><button type="button" class="tk-link ob-later" data-ob="later">Later</button></div>';
+      if (step === 1) h = '<div class="ob-body"><div class="ob-k">Step 1 of 3</div><h2>Install the <em>sync shortcut</em></h2><p>Tap the button: we copy your personal sync code and open the shortcut.</p><ol class="ob-steps"><li>Tap <b>Add Shortcut</b>.</li><li>When it asks for your sync code, <b>paste</b> it (it\'s already copied).</li><li>Come back here.</li></ol>' +
+        '<div class="wt-code"><code>' + esc(code) + '</code></div></div>' +
+        '<div class="ob-foot"><a class="tk-btn block" id="obGet" href="' + esc(L.shortcut_url) + '" target="_blank" rel="noopener">Copy code &amp; get the shortcut</a><button type="button" class="tk-btn ghost block" data-ob="next" style="margin-top:10px">I added it, next</button>' + dots(1) + '</div>';
+      if (step === 2) h = '<div class="ob-body"><div class="ob-k">Step 2 of 3</div><h2>Allow <em>heart rate</em></h2><p>Heart rate is recorded many times a day, so iPhone needs one switch turned on to send your daily average.</p><ol class="ob-steps"><li>Open iPhone <b>Settings</b>.</li><li>Tap <b>Apps</b> → <b>Shortcuts</b> → <b>Advanced</b>.</li><li>Switch on <b>Allow Sharing Large Amounts of Data</b>.</li></ol></div>' +
+        '<div class="ob-foot"><button type="button" class="tk-btn block" data-ob="next">Done, next</button>' + dots(2) + '</div>';
+      if (step === 3) h = '<div class="ob-body"><div class="ob-k">Step 3 of 3</div><h2>Run it <em>once</em></h2><p>Open the <b>Shortcuts</b> app and tap <b>M&amp;M Watch Sync</b>. iPhone shows the <b>Health Access</b> screen: tap <b>Turn On All</b>, then <b>Allow</b>.</p>' +
+        '<div class="ob-tip"><b>Make it automatic (recommended)</b><span>Shortcuts → <b>Automation</b> → <b>+</b> → <b>App</b> → choose <b>WhatsApp</b> → <b>Is Opened</b> → <b>Run Immediately</b> → choose <b>M&amp;M Watch Sync</b>. Your watch then syncs every time you open WhatsApp.</span></div>' +
+        '<div id="obMsg" class="ob-msg" role="status"></div></div>' +
+        '<div class="ob-foot"><button type="button" class="tk-btn block" id="obCheck">I ran it, check now</button><button type="button" class="tk-link ob-later" data-ob="later">Finish later</button>' + dots(3) + '</div>';
+      if (step === 4) h = '<div class="ob-hero"><div class="ob-ic ok">' + ICON.check + '</div><h2>You\'re <em>connected</em></h2><p>Your Apple Watch data is now in your tracker. It updates every time the shortcut runs.</p></div><div class="ob-foot"><button type="button" class="tk-btn block" data-ob="close">Go to my tracker</button></div>';
+      el.innerHTML = '<div class="ob-box">' + (step > 0 && step < 4 ? '<button type="button" class="tk-icon-btn ob-back" data-ob="back" aria-label="Back">‹</button>' : '') + '<button type="button" class="tk-icon-btn ob-x" data-ob="later" aria-label="Close">' + ICON.x + '</button>' + h + '</div>';
+      el.querySelectorAll('[data-ob]').forEach(function (b) { b.onclick = function () {
+        var a = b.dataset.ob;
+        if (a === 'next') { step++; paint(); } else if (a === 'back') { step--; paint(); } else if (a === 'later') close(true); else if (a === 'close') { lsSet(key, { done: true }); close(false); render(); }
+      }; });
+      if ($('obGet')) $('obGet').onclick = function () { try { navigator.clipboard.writeText(code); } catch (e) {} ev('tracker_ob_watch_get'); };
+      if ($('obCheck')) $('obCheck').onclick = async function () {
+        var btn = this; btn.disabled = true; $('obMsg').textContent = 'Checking…';
+        await watchReload(); btn.disabled = false;
+        if ((S.health || []).some(function (r) { return r.source === 'apple'; })) { lsSet(key, { done: true }); ev('tracker_ob_watch_done'); step = 4; paint(); }
+        else $('obMsg').textContent = 'Nothing received yet. Run M&M Watch Sync in the Shortcuts app, tap Allow if asked, then check again.';
+      };
+      var f = el.querySelector('h2'); if (f) { f.setAttribute('tabindex', '-1'); f.focus(); }
+    }
+    paint();
+  }
   function openAppleSetup() {
     var L = S.hlink || {}, code = L.apple_token || '';
+    if (L.shortcut_url && code && !viewingOther()) return onboardWatch();
     if (!L.shortcut_url) { modal('Connect Apple Watch', '<p class="tk-muted">Apple Watch syncing is being set up by your coach. Check back soon: the button will work as soon as it\'s ready.</p>'); return; }
     var m = modal('Connect Apple Watch', '<p class="tk-muted">Takes 2 minutes on your iPhone, once. Do it on the iPhone paired with your Apple Watch.</p>' +
       '<ol class="wt-steps">' +
