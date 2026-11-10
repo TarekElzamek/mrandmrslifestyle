@@ -424,3 +424,6 @@ details.wk .wk-body b{color:var(--text);font-weight:600}
 .wd-sets td:first-child,.wd-sets th:first-child{width:52px;color:var(--muted)}
 .wd-notes{margin-top:14px}
 .wd-notes p{margin-top:6px;color:var(--muted)}
+/* food log: meal photo */
+button.fd-ph{border:1px solid rgba(201,168,76,.5);background:rgba(201,168,76,.12);color:var(--gold-2);cursor:pointer;font-weight:600;min-height:28px}
+.fd-photo{display:block;width:100%;height:auto;border-radius:12px}

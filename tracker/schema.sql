@@ -1020,3 +1020,6 @@ select cron.schedule('whoop-sync', '20 */3 * * *', $cron$
     headers := jsonb_build_object('Content-Type', 'application/json', 'x-cron-secret', (select value from public.private_config where key = 'cron_secret')),
     body := '{}'::jsonb, timeout_milliseconds := 60000);
 $cron$);
+
+-- ---------- v23: meal photos — a food added from a photo keeps the photo (progress-photos bucket, <user>/meals/…) so the coach can see it ----------
+alter table public.food_logs add column if not exists photo_path text check (char_length(photo_path) <= 200);

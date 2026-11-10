@@ -1744,7 +1744,7 @@
     MEALS.forEach(function (m) {
       var it = fDay(d).filter(function (x) { return x.meal === m[0]; }), k = it.reduce(function (a, x) { return a + (x.kcal || 0); }, 0);
       h += '<div class="tk-card fd-meal"><div class="hb-head"><h2 class="tk-h2" style="margin:0">' + m[1] + '</h2><span class="tk-small">' + (k ? nf(k) + ' kcal' : '') + '</span></div>';
-      it.forEach(function (x) { h += '<div class="li"><div class="grow"><b>' + esc(x.name) + (x.source === 'ai' ? ' <span class="pill" title="Estimated from a photo">📷</span>' : '') + '</b><span class="tk-small">' + (x.amount ? esc(x.amount) + ' · ' : '') + nf(x.kcal) + ' kcal' + (x.protein != null ? ' · ' + r1(+x.protein) + ' g protein' : '') + '</span></div><button type="button" class="tk-icon-btn" data-delf="' + x.id + '" aria-label="Remove ' + esc(x.name) + '">' + ICON.trash + '</button></div>'; });
+      it.forEach(function (x) { h += '<div class="li"><div class="grow"><b>' + esc(x.name) + (x.photo_path ? ' <button type="button" class="pill fd-ph" data-fphoto="' + esc(x.photo_path) + '" aria-label="See the photo of ' + esc(x.name) + '">📷 Photo</button>' : x.source === 'ai' ? ' <span class="pill" title="Estimated from a photo">📷</span>' : '') + '</b><span class="tk-small">' + (x.amount ? esc(x.amount) + ' · ' : '') + nf(x.kcal) + ' kcal' + (x.protein != null ? ' · ' + r1(+x.protein) + ' g protein' : '') + '</span></div><button type="button" class="tk-icon-btn" data-delf="' + x.id + '" aria-label="Remove ' + esc(x.name) + '">' + ICON.trash + '</button></div>'; });
       h += '<button type="button" class="tk-btn sm ghost fd-add" data-addmeal="' + m[0] + '">+ Add to ' + m[1].toLowerCase() + '</button></div>';
     });
     var wk = days.map(function (x) { return fTot(x); }).filter(function (t) { return t.n; });
@@ -1754,10 +1754,18 @@
     $('fBack').onclick = function () { go('today'); };
     v.querySelectorAll('[data-fd]').forEach(function (b) { b.onclick = function () { S.fDay = b.dataset.fd; render(); }; });
     v.querySelectorAll('[data-addmeal]').forEach(function (b) { b.onclick = function () { openAddFood(b.dataset.addmeal, d); }; });
+    v.querySelectorAll('[data-fphoto]').forEach(function (b) { b.onclick = function () { showMealPhoto(b.dataset.fphoto); }; });
     v.querySelectorAll('[data-delf]').forEach(function (b) { b.onclick = async function () {
       var r = await sb.from('food_logs').delete().eq('id', b.dataset.delf); if (r.error) return toast(r.error.message);
       S.food = S.food.filter(function (x) { return x.id !== b.dataset.delf; }); toast('Removed'); render();
     }; });
+  }
+  async function showMealPhoto(path) {
+    var m = modal('Meal photo', '<div class="ai-status" role="status"><span class="ai-spin" aria-hidden="true"></span> Loading the photo…</div>');
+    var r = await sb.storage.from('progress-photos').createSignedUrl(path, 3600);
+    var body = m.querySelector('.modal-body');
+    if (r.error || !r.data) { body.innerHTML = '<p class="tk-muted">This photo isn\'t available any more.</p>'; return; }
+    body.innerHTML = '<img src="' + esc(r.data.signedUrl) + '" alt="Photo of the meal" class="fd-photo">';
   }
   async function addFoodRows(rows) {
     var r = await sb.from('food_logs').insert(rows).select();
@@ -1832,10 +1840,11 @@
         if (await addFoodRows([o])) { toast('Added ' + f.name); done(); } else this.disabled = false;
       };
     }
+    var mealFile = null; // the meal photo, kept with the food so the coach can see it
     function panePhoto() {
       $('fPane').innerHTML = '<p class="tk-small" style="margin-top:8px">Take a clear photo from above with the whole plate in view. We\'ll list each food with an estimated portion; check and adjust before adding.</p><div class="tk-grid2 fd-cams"><label class="tk-btn fd-cam" for="fCam">📷 Take a photo</label><label class="tk-btn ghost fd-cam" for="fGal">🖼️ From gallery</label></div><input type="file" id="fCam" accept="image/*" capture="environment" class="sr"><input type="file" id="fGal" accept="image/*" class="sr"><div id="fPrev" class="b-prev" hidden></div><div id="fAi" class="ai-status" role="status" hidden></div><div id="fItems"></div>';
       $('fCam').onchange = $('fGal').onchange = async function () {
-        var file = this.files[0]; if (!file) return;
+        var file = this.files[0]; if (!file) return; mealFile = file;
         var u = URL.createObjectURL(file), pv = $('fPrev'); pv.innerHTML = '<img src="' + u + '" alt="Your meal">'; pv.hidden = false;
         var st = $('fAi'); st.className = 'ai-status'; st.hidden = false; st.innerHTML = '<span class="ai-spin" aria-hidden="true"></span> Looking at your meal… this usually takes 5 to 20 seconds.'; $('fItems').innerHTML = '';
         try {
@@ -1898,7 +1907,16 @@
         $('fAiAdd').onclick = async function () {
           var rows = []; items.forEach(function (it, i) { var c = cur(i); if (!c.on) return; var o = base(); o.source = 'ai'; o.name = c.name.slice(0, 80); o.amount = c.amount ? c.amount + ' (photo)' : c.g ? c.g + ' g (photo estimate)' : 'photo estimate'; o.kcal = c.kcal; o.protein = c.p; o.carbs = c.c; o.fat = c.f; rows.push(o); });
           if (!rows.length) return toast('Tick at least one item');
-          this.disabled = true; if (await addFoodRows(rows)) { toast('Meal added'); done(); } else this.disabled = false;
+          this.disabled = true;
+          if (mealFile) {
+            try {
+              var blob = await compress(mealFile), path = S.target.id + '/meals/' + date + '-' + Date.now() + '.jpg';
+              var up = await sb.storage.from('progress-photos').upload(path, blob, { contentType: 'image/jpeg' });
+              if (up.error) throw up.error;
+              rows.forEach(function (o) { o.photo_path = path; });
+            } catch (e) { toast('The photo couldn\'t be saved, but your food will be.'); }
+          }
+          if (await addFoodRows(rows)) { toast('Meal added'); done(); } else this.disabled = false;
         };
       }
     }
