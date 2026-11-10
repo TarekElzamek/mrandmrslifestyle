@@ -579,3 +579,4 @@ button.pc-media{cursor:pointer}
 .pl-start{position:sticky;bottom:calc(max(12px,env(safe-area-inset-bottom)) + 84px);z-index:5;margin-top:16px;padding-top:6px}
 .pl-start .tk-btn{min-height:56px;font-size:1rem;letter-spacing:.04em;text-transform:uppercase;box-shadow:0 10px 30px rgba(0,0,0,.55),0 6px 20px rgba(201,168,76,.25)}
 .pc-media:has(.pc-none){aspect-ratio:auto;height:120px}
+.pl-sec{margin:24px 0 2px;font-size:.8rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:600}.pl-sec .tk-small{text-transform:none;letter-spacing:0}.pl-off{opacity:.85}

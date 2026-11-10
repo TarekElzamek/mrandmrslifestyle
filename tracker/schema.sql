@@ -1023,3 +1023,7 @@ $cron$);
 
 -- ---------- v23: meal photos — a food added from a photo keeps the photo (progress-photos bucket, <user>/meals/…) so the coach can see it ----------
 alter table public.food_logs add column if not exists photo_path text check (char_length(photo_path) <= 200);
+
+-- ---------- v24: clients only see programmes their coach has assigned (active); unassigned ones stay with the coach ----------
+drop policy if exists "programs read" on public.programs;
+create policy "programs read" on public.programs for select using ((client_id = auth.uid() and public.is_approved() and active) or public.is_coach());

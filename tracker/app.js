@@ -890,15 +890,16 @@
     var v = $('view');
     var h = '<h1 class="tk-h1">' + (viewingOther() ? esc(S.target.name || 'Client') + '\'s <em>programmes</em>' : 'Your <em>programme</em>') + '</h1>';
     if (isCoach()) h += '<div class="tk-grid2" style="margin-top:14px"><button type="button" class="tk-btn" id="newProg">' + ICON.plus + 'New programme</button><button type="button" class="tk-btn ghost" id="useTpl">Use a template</button></div>';
-    var prog = S.programs.filter(function (p) { return p.active && (p.days || []).length; })[0];
-    if (!S.programs.length) h += '<div class="tk-empty">No programmes yet.' + (isCoach() ? '' : ' Your coach will add one here.') + '</div>';
+    var PROGS = isCoach() ? S.programs : S.programs.filter(function (p) { return p.active; }); // unassigned programmes are hidden from clients
+    var prog = PROGS.filter(function (p) { return p.active && (p.days || []).length; })[0];
+    if (!PROGS.length) h += '<div class="tk-empty">' + (isCoach() ? 'No programme assigned yet. Tap New programme or Use a template to assign one.' : 'No programme yet. Your coach will add one here.') + '</div>';
     var startIdx = null;
     if (prog) {
       var days = prog.days, byWd = days.map(dayWeekday), weekly = byWd.some(function (x) { return x >= 0; });
       var now = new Date(), wdToday = (now.getDay() + 6) % 7, mon = new Date(now); mon.setDate(now.getDate() - wdToday);
       var done = {}; S.workouts.forEach(function (w) { done[w.date] = true; });
       if (S.planSel == null || S.planProg !== prog.id) { S.planProg = prog.id; S.planSel = weekly ? 'w' + wdToday : 'd' + Math.max(0, days.findIndex(function (d, i) { return !S.workouts.some(function (w) { return w.date === today() && w.title === d.name; }); })); }
-      h += '<div class="pl-head"><div><span class="tk-tag">Active programme</span><h2 class="tk-h2">' + esc(prog.name) + '</h2></div>' + (canEditProgram(prog) ? '<div class="pl-acts"><button type="button" class="tk-btn sm plain" data-tpl="' + prog.id + '">Save as template</button><button type="button" class="tk-btn sm plain" data-edit="' + prog.id + '">Edit</button></div>' : '') + '</div>';
+      h += '<div class="pl-head"><div><span class="tk-tag">Active programme</span><h2 class="tk-h2">' + esc(prog.name) + '</h2></div>' + (canEditProgram(prog) ? '<div class="pl-acts"><button type="button" class="tk-btn sm plain" data-tpl="' + prog.id + '">Save as template</button><button type="button" class="tk-btn sm plain" data-edit="' + prog.id + '">Edit</button><button type="button" class="tk-btn sm danger" data-unassign="' + prog.id + '">Unassign</button></div>' : '') + '</div>';
       if (prog.notes) h += '<details class="pl-notes"><summary>About this plan</summary><p>' + esc(prog.notes) + '</p></details>';
       h += '<div class="pl-strip" role="tablist" aria-label="Choose a day">';
       if (weekly) {
@@ -923,9 +924,11 @@
       else if (startIdx != null) h += '<div style="margin-top:14px"><button type="button" class="tk-btn ghost block" data-start="' + prog.id + ':' + startIdx + '">' + ICON.play + 'Start this workout for ' + esc((S.target.name || 'client').split(' ')[0]) + '</button></div>';
     }
     // other programmes (and an active one with no days) stay as compact cards
-    S.programs.filter(function (p) { return p !== prog; }).forEach(function (p) {
-      h += '<div class="tk-card' + (p.active ? ' gold' : '') + '"><div class="tk-row"><div style="flex:1"><span class="tk-tag">' + (p.active ? 'Active' : 'Archived') + '</span><h2 class="tk-h2" style="margin:2px 0 4px">' + esc(p.name) + '</h2></div>' +
-        (canEditProgram(p) ? '<button type="button" class="tk-btn sm plain" data-tpl="' + p.id + '">Save as template</button><button type="button" class="tk-btn sm plain" data-edit="' + p.id + '">Edit</button>' : '') + '</div>' + (p.notes ? '<p class="tk-muted">' + esc(p.notes) + '</p>' : '');
+    var others = PROGS.filter(function (p) { return p !== prog; });
+    if (isCoach() && others.some(function (p) { return !p.active; })) h += '<h3 class="pl-sec">Unassigned programmes <span class="tk-small">(the client can\'t see these)</span></h3>';
+    others.sort(function (a, b) { return (b.active ? 1 : 0) - (a.active ? 1 : 0); }).forEach(function (p) {
+      h += '<div class="tk-card' + (p.active ? ' gold' : ' pl-off') + '"><div class="tk-row"><div style="flex:1"><span class="tk-tag">' + (p.active ? 'Assigned' : 'Unassigned') + '</span><h2 class="tk-h2" style="margin:2px 0 4px">' + esc(p.name) + '</h2></div>' +
+        (canEditProgram(p) ? '<div class="pl-acts">' + (p.active ? '<button type="button" class="tk-btn sm danger" data-unassign="' + p.id + '">Unassign</button>' : '<button type="button" class="tk-btn sm" data-assign="' + p.id + '">Assign</button>') + '<button type="button" class="tk-btn sm plain" data-edit="' + p.id + '">Edit</button></div>' : '') + '</div>' + (p.notes ? '<p class="tk-muted">' + esc(p.notes) + '</p>' : '');
       (p.days || []).forEach(function (d, i) {
         h += '<details class="wk"><summary><div style="flex:1"><b>' + esc(d.name || 'Day ' + (i + 1)) + '</b><span class="tk-small"> · ' + (d.exercises || []).length + ' exercises</span></div><button type="button" class="tk-btn sm" data-start="' + p.id + ':' + i + '">Start</button></summary><div class="wk-body">';
         (d.exercises || []).forEach(function (e) { h += '<p><b>' + esc(e.name) + '</b> · ' + esc(e.sets || '') + ' × ' + esc(e.reps || '') + (e.rest ? ' · rest ' + esc(e.rest) + 's' : '') + (e.notes ? ' · ' + esc(e.notes) : '') + '</p>'; });
@@ -937,6 +940,24 @@
     if ($('newProg')) $('newProg').onclick = function () { openBuilder(null); };
     if ($('useTpl')) $('useTpl').onclick = openTemplates;
     v.querySelectorAll('[data-psel]').forEach(function (b) { b.onclick = function () { S.planSel = b.dataset.psel; render(); }; });
+    var who = esc((S.target.name || 'this client').split(' ')[0]);
+    v.querySelectorAll('[data-unassign]').forEach(function (b) { b.onclick = async function () {
+      var p = S.programs.filter(function (x) { return x.id === b.dataset.unassign; })[0]; if (!p) return;
+      if (!confirmBox('Unassign "' + p.name + '"? ' + (S.target.name || 'The client') + ' won\'t see it any more. It is kept here (not deleted), with their workout history, so you can assign it again later.')) return;
+      b.disabled = true; var r = await sb.from('programs').update({ active: false, updated_at: new Date().toISOString() }).eq('id', p.id);
+      if (r.error) { b.disabled = false; return toast(r.error.message); }
+      p.active = false; S.planSel = null; toast('Unassigned. ' + who + ' no longer sees it'); render();
+    }; });
+    v.querySelectorAll('[data-assign]').forEach(function (b) { b.onclick = async function () {
+      var p = S.programs.filter(function (x) { return x.id === b.dataset.assign; })[0]; if (!p) return;
+      var cur = S.programs.filter(function (x) { return x.active && x.id !== p.id; });
+      if (cur.length && !confirmBox('Assign "' + p.name + '"? It replaces "' + cur[0].name + '", which becomes unassigned (kept, not deleted).')) return;
+      b.disabled = true; var now = new Date().toISOString();
+      if (cur.length) { var rc = await sb.from('programs').update({ active: false, updated_at: now }).in('id', cur.map(function (x) { return x.id; })); if (rc.error) { b.disabled = false; return toast(rc.error.message); } cur.forEach(function (x) { x.active = false; }); }
+      var r = await sb.from('programs').update({ active: true, updated_at: now }).eq('id', p.id);
+      if (r.error) { b.disabled = false; return toast(r.error.message); }
+      p.active = true; S.planSel = null; toast('Assigned. ' + who + ' sees it on their Plan now'); render();
+    }; });
     v.querySelectorAll('[data-pvid]').forEach(function (b) { b.onclick = function () {
       var name = b.dataset.pvid, m = modal(name, videoBox(name, 'pv') + ((EXMAP[name] || {}).how ? '<p class="tk-muted" style="margin-top:12px">' + esc(EXMAP[name].how) + '</p>' : ''));
       wireVideos(m); var box = m.querySelector('[data-vbox]'), first = vidsFor(name)[0]; if (box && first) playVideo(box, first[0]);
