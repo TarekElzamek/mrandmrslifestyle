@@ -413,3 +413,14 @@ details.wk .wk-body b{color:var(--text);font-weight:600}
 .ex-kc{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:6px 0;font-size:.88rem;color:var(--muted)}
 .ex-kc span{display:flex;align-items:center;gap:6px;color:var(--text)}
 .ex-kc input{width:84px;text-align:center;background:#0f0f0f;border:1px solid rgba(201,168,76,.5);border-radius:8px;min-height:42px;padding:6px;color:var(--text)}
+/* last workout: tap to see the details */
+.li-btn{width:100%;background:none;border:0;border-bottom:1px solid var(--line);text-align:left;color:var(--text);min-height:44px}
+.li-btn:hover .li-more,.li-btn:focus-visible .li-more{text-decoration:underline}
+.li-more{flex:none;color:var(--gold);font-weight:600;font-size:.9rem}
+.wd-ex{margin-top:14px;padding:12px 14px;background:var(--card-2);border:1px solid var(--line);border-radius:12px}
+.wd-sets{width:100%;border-collapse:collapse;margin-top:8px;font-size:.92rem}
+.wd-sets th{text-align:left;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600;padding:4px 0}
+.wd-sets td{padding:6px 0;border-top:1px solid var(--line)}
+.wd-sets td:first-child,.wd-sets th:first-child{width:52px;color:var(--muted)}
+.wd-notes{margin-top:14px}
+.wd-notes p{margin-top:6px;color:var(--muted)}

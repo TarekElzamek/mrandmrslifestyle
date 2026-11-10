@@ -325,9 +325,10 @@
       h += '<div class="tk-card"><b>No programme yet</b><p class="tk-muted" style="margin-top:4px">Training on your own? Start a workout below and add any of 200+ exercises. Training with Tarek or Chloe? Your coach will add your programme here.</p></div>';
     }
     h += '<div class="tk-row" style="margin-top:14px"><button type="button" class="tk-btn ' + (prog && !viewingOther() ? 'ghost ' : '') + 'block" id="startEmpty">' + (isCoach() ? 'Start an empty workout' : 'Start a workout') + '</button></div>';
-    if (lastW) h += '<div class="tk-card"><span class="tk-tag">Last workout</span><div class="li"><div class="grow"><b>' + esc(lastW.title || 'Workout') + '</b><span class="tk-small">' + fmtDay(lastW.date) + ' · ' + (lastW.exercises || []).length + ' exercises' + (lastW.duration_min ? ' · ' + lastW.duration_min + ' min' : '') + (kcalOf(lastW) ? ' · ' + kcalLabel(lastW) : '') + '</span></div></div></div>';
+    if (lastW) h += '<div class="tk-card"><span class="tk-tag">Last workout</span><button type="button" class="li li-btn" id="lastW" aria-label="See the details of ' + esc(lastW.title || 'Workout') + ', ' + fmtDay(lastW.date) + '"><div class="grow"><b>' + esc(lastW.title || 'Workout') + '</b><span class="tk-small">' + fmtDay(lastW.date) + ' · ' + (lastW.exercises || []).length + ((lastW.exercises || []).length === 1 ? ' exercise' : ' exercises') + (lastW.duration_min ? ' · ' + lastW.duration_min + ' min' : '') + (kcalOf(lastW) ? ' · ' + kcalLabel(lastW) : '') + '</span></div><span class="li-more" aria-hidden="true">View ›</span></button></div>';
     h += '<div class="tk-card"><span class="tk-tag">Body weight</span><div class="li"><div class="grow"><b>' + (lastB && lastB.weight ? lastB.weight + ' kg' : 'Not logged yet') + '</b><span class="tk-small">' + (lastB ? 'Last logged ' + daysAgo(lastB.date) : 'Track your weight weekly for the clearest trend') + '</span></div><button type="button" class="tk-btn sm plain" id="goBody">Log</button></div></div>';
     v.innerHTML = h;
+    if ($('lastW')) $('lastW').onclick = function () { workoutModal(lastW); };
     v.querySelectorAll('[data-startday]').forEach(function (b) { b.onclick = function () { if (S.draft && !confirmBox('You have a workout in progress (' + (S.draft.title || 'Workout') + '). Discard it and start ' + (prog.days[+b.dataset.startday].name || 'this day') + '?')) return; startDraft(prog, +b.dataset.startday); }; });
     if ($('startEmpty')) $('startEmpty').onclick = function () { if (S.draft && !confirmBox('You have a workout in progress. Discard it and start an empty one?')) return; startDraft(null); };
     if ($('resumeW')) $('resumeW').onclick = function () { S.overview = false; render(); window.scrollTo(0, 0); };
@@ -618,6 +619,25 @@
     render();
   }
 
+  // Full details of one saved workout: every exercise with its sets, weights, reps, cardio and calories.
+  function workoutModal(w) {
+    var sets = 0, prs = 0; (w.exercises || []).forEach(function (e) { (e.sets || []).forEach(function (s) { sets++; if (s.pr) prs++; }); });
+    var vol = workoutVolume(w);
+    var b = '<p class="tk-muted" style="margin-bottom:12px">' + fmtDay(w.date) + (viewingOther() ? ' · ' + esc(S.target.name || 'Client') : '') + '</p>';
+    b += '<div class="tk-grid2"><div class="tk-stat"><b>' + (w.duration_min || '–') + '</b><span>Minutes</span></div><div class="tk-stat"><b>' + sets + '</b><span>Sets</span></div><div class="tk-stat"><b>' + (vol ? nf(vol) : '–') + '</b><span>Kg lifted</span></div><div class="tk-stat"><b>' + (kcalOf(w) ? kcalLabel(w).replace(' kcal', '') : '–') + '</b><span>Kcal</span></div></div>';
+    (w.exercises || []).forEach(function (e) {
+      var t = e.type || typeOf(e.name);
+      b += '<div class="wd-ex"><b>' + esc(e.name) + '</b><table class="wd-sets"><thead><tr><th scope="col">Set</th><th scope="col">' + (t === 'c' ? 'Cardio' : t === 't' ? 'Time' : 'Weight × reps') + '</th></tr></thead><tbody>' +
+        (e.sets || []).map(function (s, i) { return '<tr><td>' + (i + 1) + '</td><td>' + esc(setLabel(s, t)) + (s.pr ? ' <span class="pr-badge">PR</span>' : '') + '</td></tr>'; }).join('') + '</tbody></table></div>';
+    });
+    if (!(w.exercises || []).length) b += '<p class="tk-empty">No exercises recorded.</p>';
+    if (w.notes) b += '<div class="wd-notes"><span class="tk-tag">Notes</span><p>' + esc(w.notes) + '</p></div>';
+    b += kcalBox(w) + '<div class="tk-grid2" style="margin-top:16px"><button type="button" class="tk-btn ghost" id="wdHist">All workouts</button><button type="button" class="tk-btn" data-close>Done</button></div>';
+    var m = modal(w.title || 'Workout', b);
+    wireKcal(m, function () { var bx = m.querySelector('.kc-box'); if (bx) bx.outerHTML = kcalBox(w); wireKcal(m); render(); });
+    $('wdHist').onclick = function () { m.close(); S.tab = 'history'; S.calDay = null; render(); window.scrollTo(0, 0); };
+    return m;
+  }
   function summaryModal(w, prs) {
     var sets = 0; (w.exercises || []).forEach(function (e) { sets += e.sets.length; });
     var vol = workoutVolume(w);
@@ -652,7 +672,8 @@
     var rest = Math.max(0, mins - machineMin - cardio);
     return Math.round(machine + kg * (5 * rest + 8 * cardio) / 60);
   }
-  function kcalOf(w) { return w.kcal != null ? w.kcal : kcalEstimate(w); }
+  // estimates are worked out again on show, so improvements to the estimate also fix older workouts
+  function kcalOf(w) { if (w.kcal != null && w.kcal_source !== 'est') return w.kcal; var e = kcalEstimate(w); return e != null ? e : w.kcal; }
   function kcalLabel(w) { var k = kcalOf(w); return k == null ? '' : (w.kcal_source === 'watch' ? '' : '~') + nf(k) + ' kcal'; }
   async function saveKcal(w, val) {
     var k = parseInt(String(val).replace(/[^\d]/g, ''), 10);
