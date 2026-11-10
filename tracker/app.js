@@ -1743,12 +1743,16 @@
     }
     function paneAmount(f) {
       if (/^(whey protein powder|protein shake)/i.test(f.name)) return paneShake(f);
-      var byW = !!f.g, def = byW ? (f.unit === 'g' && f.g === 100 ? 100 : f.g) : 1;
-      $('fPane').innerHTML = '<div class="fd-pick"><b>' + esc(f.name) + '</b><span class="tk-small">' + esc(f.portion) + ' = ' + nf(f.kcal) + ' kcal</span></div>' +
-        '<div class="tk-field"><label for="fAmt">' + (byW ? 'How much? (' + (f.unit === 'ml' ? 'ml' : 'grams') + ')' : 'How many portions?') + '</label><input class="tk-input" id="fAmt" inputmode="decimal" value="' + def + '"></div>' +
-        (byW ? '' : '<div class="chips" role="group" aria-label="Quick amounts">' + [0.5, 1, 1.5, 2].map(function (x) { return '<button type="button" data-q="' + x + '">' + x + '</button>'; }).join('') + '</div>') +
+      // eggs are counted, not weighed: a large egg is about 50 g, a large egg white about 33 g
+      var egg = /^(whole egg|boiled egg|fried egg|egg)$/i.test(f.name) ? { g: 50, one: 'egg', many: 'eggs' } : /^egg whites?$/i.test(f.name) ? { g: 33, one: 'egg white', many: 'egg whites' } : null;
+      if (egg && !f.g) egg = null;
+      var byW = !!f.g && !egg, def = egg ? 1 : byW ? (f.unit === 'g' && f.g === 100 ? 100 : f.g) : 1;
+      var pickLine = egg ? '1 ' + egg.one + ' = ' + nf(Math.round(f.kcal * egg.g / f.g)) + ' kcal' : esc(f.portion) + ' = ' + nf(f.kcal) + ' kcal';
+      $('fPane').innerHTML = '<div class="fd-pick"><b>' + esc(f.name) + '</b><span class="tk-small">' + pickLine + '</span></div>' +
+        '<div class="tk-field"><label for="fAmt">' + (egg ? 'How many ' + egg.many + '?' : byW ? 'How much? (' + (f.unit === 'ml' ? 'ml' : 'grams') + ')' : 'How many portions?') + '</label><input class="tk-input" id="fAmt" inputmode="' + (egg ? 'numeric' : 'decimal') + '" value="' + def + '"></div>' +
+        (byW ? '' : '<div class="chips" role="group" aria-label="Quick amounts">' + (egg ? [1, 2, 3, 4, 5, 6] : [0.5, 1, 1.5, 2]).map(function (x) { return '<button type="button" data-q="' + x + '">' + x + '</button>'; }).join('') + '</div>') +
         '<div class="fd-calc" id="fCalc" aria-live="polite"></div><div class="tk-grid2" style="margin-top:12px"><button type="button" class="tk-btn ghost" id="fBackS">Back</button><button type="button" class="tk-btn" id="fAdd">Add</button></div>';
-      function calc() { var a = num($('fAmt').value) || 0, k = byW ? a / f.g : a; return { a: a, kcal: Math.round(f.kcal * k), p: r1(f.p * k), c: r1(f.c * k), f: r1(f.f * k) }; }
+      function calc() { var a = num($('fAmt').value) || 0, k = egg ? a * egg.g / f.g : byW ? a / f.g : a; return { a: a, kcal: Math.round(f.kcal * k), p: r1(f.p * k), c: r1(f.c * k), f: r1(f.f * k) }; }
       function paint() { var c = calc(); $('fCalc').innerHTML = '<b>' + nf(c.kcal) + ' kcal</b><span>' + c.p + ' g protein · ' + c.c + ' g carbs · ' + c.f + ' g fat</span>'; }
       $('fAmt').oninput = paint; paint(); $('fAmt').select();
       m.querySelectorAll('[data-q]').forEach(function (b) { b.onclick = function () { $('fAmt').value = b.dataset.q; paint(); }; });
@@ -1756,8 +1760,9 @@
       $('fAdd').onclick = async function () {
         var c = calc(); if (!(c.a > 0)) return toast('Enter an amount');
         if (byW && c.a > 3000) return toast('That looks like a lot. Check the amount.');
+        if (egg && c.a > 20) return toast('That looks like a lot of ' + egg.many + '. Check the number.');
         this.disabled = true;
-        var o = base(); o.name = f.name; o.amount = byW ? c.a + ' ' + (f.unit === 'ml' ? 'ml' : 'g') : (c.a === 1 ? '' : c.a + ' × ') + f.portion.slice(0, 50); o.kcal = c.kcal; o.protein = c.p; o.carbs = c.c; o.fat = c.f;
+        var o = base(); o.name = f.name; o.amount = egg ? c.a + ' ' + (c.a === 1 ? egg.one : egg.many) : byW ? c.a + ' ' + (f.unit === 'ml' ? 'ml' : 'g') : (c.a === 1 ? '' : c.a + ' × ') + f.portion.slice(0, 50); o.kcal = c.kcal; o.protein = c.p; o.carbs = c.c; o.fat = c.f;
         if (await addFoodRows([o])) { toast('Added ' + f.name); done(); } else this.disabled = false;
       };
     }
