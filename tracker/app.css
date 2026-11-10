@@ -406,3 +406,10 @@ details.wk .wk-body b{color:var(--text);font-weight:600}
 .wt-code{display:flex;align-items:center;gap:10px;background:var(--card-2);border:1px solid var(--line);border-radius:10px;padding:8px 10px;margin-top:6px}
 .wt-code code{flex:1;font-size:1rem;letter-spacing:.04em;word-break:break-all;color:var(--gold)}
 @media(max-width:520px){.wt-grid{grid-template-columns:repeat(2,1fr)}}
+/* cardio: photo of the machine screen */
+.ex-cardio{padding:4px 14px 0}
+.ex-cbtn{display:flex;gap:10px;align-items:center;width:100%;text-align:left;background:rgba(201,168,76,.08);border:1px dashed rgba(201,168,76,.45);border-radius:10px;padding:10px 12px;color:var(--text);font-size:.88rem;line-height:1.4;min-height:44px}
+.ex-cbtn svg{flex:none;color:var(--gold)}
+.ex-kc{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:6px 0;font-size:.88rem;color:var(--muted)}
+.ex-kc span{display:flex;align-items:center;gap:6px;color:var(--text)}
+.ex-kc input{width:84px;text-align:center;background:#0f0f0f;border:1px solid rgba(201,168,76,.5);border-radius:8px;min-height:42px;padding:6px;color:var(--text)}

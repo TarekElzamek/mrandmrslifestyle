@@ -22,6 +22,17 @@ Eggs: for any egg dish (fried, boiled, poached, scrambled, omelette, frittata) a
 Protein shakes: for a whey or protein shake (often in a shaker bottle), add "scoops": your best guess of the scoops of powder (usually 1), and "mixed_with": "milk" only if you can clearly see it is milky, otherwise "water".
 Numbers only, no units. If the photo does not show food or drink, return {"is_food": false, "items": []}.`;
 
+// A photo of a cardio machine's end-of-workout screen (treadmill, bike, cross trainer, rower, stairs).
+const CARDIO_PROMPT = `This is a photo of a gym cardio machine screen (treadmill, bike, cross trainer, rower, stair climber, ski erg) or a watch/app summary after a cardio workout.
+Read the WORKOUT TOTALS (not live speed, incline or level). Reply with ONLY this JSON object:
+{"is_cardio": true or false,
+ "machine": one of "treadmill", "bike", "cross trainer", "rower", "stairs", "other",
+ "minutes": total duration in minutes as a decimal number (for example 24:46 is 24.77, 1:05:30 is 65.5),
+ "km": total distance in kilometres (convert miles x 1.609 and metres / 1000), or null if not shown,
+ "kcal": total calories, or null if not shown,
+ "avg_hr": average heart rate, or null if not shown or 0}
+Numbers only, no units. If the photo does not show a cardio workout summary, return {"is_cardio": false}.`;
+
 function send(res, code, obj) {
   res.statusCode = code;
   res.setHeader('Content-Type', 'application/json');
@@ -37,7 +48,7 @@ async function readBody(req) {
 }
 
 // One call to Gemini with "thinking" switched off (reading numbers off a sheet doesn't need it) and a time limit.
-async function gemini(model, key, img, ms) {
+async function gemini(model, key, img, ms, prompt) {
   const thinking = /gemini-2\.5/.test(model) ? { thinkingBudget: 0 } : /gemini-[3-9]/.test(model) ? { thinkingLevel: 'low' } : null;
   const call = (cfg) => {
     const ctl = new AbortController(), t = setTimeout(() => ctl.abort(), ms);
@@ -45,7 +56,7 @@ async function gemini(model, key, img, ms) {
       method: 'POST', signal: ctl.signal,
       headers: { 'Content-Type': 'application/json', 'x-goog-api-key': key },
       body: JSON.stringify({
-        contents: [{ parts: [{ inline_data: { mime_type: 'image/jpeg', data: img } }, { text: PROMPT }] }],
+        contents: [{ parts: [{ inline_data: { mime_type: 'image/jpeg', data: img } }, { text: prompt || PROMPT }] }],
         generationConfig: Object.assign({ temperature: 0, responseMimeType: 'application/json', maxOutputTokens: 1200 }, cfg ? { thinkingConfig: cfg } : {})
       })
     }).finally(() => clearTimeout(t));
@@ -104,7 +115,8 @@ module.exports = async (req, res) => {
   try {
     const first = process.env.GEMINI_MODEL || 'gemini-flash-lite-latest';
     const tried = [first];
-    let { status, ok, j } = await gemini(first, key, img, Math.min(20000, left())); used = first;
+    const prompt = body.kind === 'cardio' ? CARDIO_PROMPT : PROMPT;
+    let { status, ok, j } = await gemini(first, key, img, Math.min(20000, left()), prompt); used = first;
     const r = () => ({ status, ok });
     // Model retired (404), no free allowance (429), busy (500/503) or too slow (504): try other free Flash models,
     // the main Flash model first.
@@ -115,7 +127,7 @@ module.exports = async (req, res) => {
       for (const m of others) {
         if (left() < 6000) break;
         detail = (j && j.error && j.error.message || '').slice(0, 300);
-        tried.push(m); ({ status, ok, j } = await gemini(m, key, img, Math.min(20000, left() - 2000))); used = m;
+        tried.push(m); ({ status, ok, j } = await gemini(m, key, img, Math.min(20000, left() - 2000), prompt)); used = m;
         if (ok) break;
       }
     }
@@ -131,8 +143,17 @@ module.exports = async (req, res) => {
   // 4) Clean up the answer: sensible items only
   let data;
   try { data = JSON.parse((text.match(/\{[\s\S]*\}/) || ['{}'])[0]); } catch (e) { data = {}; }
-  if (!data.is_food) return send(res, 200, { is_food: false, model: used });
   const n = (v, max) => { v = typeof v === 'string' ? parseFloat(v.replace(',', '.')) : v; return typeof v === 'number' && isFinite(v) && v >= 0 && v <= max ? v : null; };
+  if (body.kind === 'cardio') {
+    const c = { is_cardio: !!data.is_cardio, machine: String(data.machine || '').slice(0, 20), minutes: n(data.minutes, 300), km: n(data.km, 100), kcal: n(data.kcal, 3000), avg_hr: n(data.avg_hr, 230), model: used };
+    if (c.minutes != null) c.minutes = Math.round(c.minutes * 10) / 10;
+    if (c.km != null) c.km = Math.round(c.km * 100) / 100;
+    if (c.kcal != null) c.kcal = Math.round(c.kcal);
+    c.avg_hr = c.avg_hr ? Math.round(c.avg_hr) : null;
+    if (c.minutes == null && c.kcal == null && c.km == null) c.is_cardio = false;
+    return send(res, 200, c);
+  }
+  if (!data.is_food) return send(res, 200, { is_food: false, model: used });
   const items = (Array.isArray(data.items) ? data.items : []).slice(0, 12).map(it => {
     const o = { name: String(it && it.name || '').slice(0, 60).trim(), grams: n(it.grams, 3000), kcal: n(it.kcal, 4000), protein: n(it.protein, 300), carbs: n(it.carbs, 600), fat: n(it.fat, 300) };
     if (o.grams != null) o.grams = Math.round(o.grams);

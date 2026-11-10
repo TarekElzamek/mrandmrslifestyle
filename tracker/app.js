@@ -118,6 +118,7 @@
     info: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 7.5v.5"/></svg>',
     up: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6-6 6 6"/></svg>',
     down: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>',
+    camera: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>',
     trash: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg>'
   };
 
@@ -268,7 +269,7 @@
   function setLabel(s, type) {
     var w = num(s.w), r = num(s.r);
     if (type === 't') return (r || 0) + 's';
-    if (type === 'c') return (r || 0) + ' min' + (w ? ' · ' + w + ' km' : '');
+    if (type === 'c') return (r || 0) + ' min' + (w ? ' · ' + w + ' km' : '') + (num(s.k) > 0 ? ' · ' + num(s.k) + ' kcal' : '');
     if (type === 'b') return (w > 0 ? '+' + w + 'kg × ' : w < 0 ? Math.abs(w) + 'kg assist × ' : '') + (r || 0) + (w ? '' : ' reps');
     return (w || 0) + 'kg × ' + (r || 0);
   }
@@ -441,6 +442,7 @@
       var info = EXMAP[ex.name] || {}, last = lastPerformance(ex.name), mode = ex.type === 'b' ? modeOf(ex) : null, f = fieldsFor(ex.type, mode);
       h += '<section class="ex" aria-label="' + esc(ex.name) + '"><div class="ex-head"><div><h3>' + esc(ex.name) + '</h3><div class="tk-small">' + esc(info.m || ex.cat || '') + (last ? ' · last ' + daysAgo(last.date) : '') + '</div></div><div class="ex-act">' +
         (info.how || vidsFor(ex.name).length ? '<button type="button" class="tk-icon-btn' + (vidsFor(ex.name).length ? ' has-vid' : '') + '" data-how="' + xi + '" aria-label="' + (vidsFor(ex.name).length ? 'Watch demo of ' : 'How to do ') + esc(ex.name) + '">' + (vidsFor(ex.name).length ? ICON_PLAY : ICON.info) + '</button>' : '') +
+        (ex.type === 'c' ? '<button type="button" class="tk-icon-btn" data-cphoto="' + xi + '" aria-label="Add a photo of the ' + esc(ex.name) + ' machine screen">' + ICON.camera + '</button>' : '') +
         (ed && xi > 0 ? '<button type="button" class="tk-icon-btn" data-mvex="' + xi + ':-1" aria-label="Move ' + esc(ex.name) + ' up">' + ICON.up + '</button>' : '') +
         (ed && xi < d.exercises.length - 1 ? '<button type="button" class="tk-icon-btn" data-mvex="' + xi + ':1" aria-label="Move ' + esc(ex.name) + ' down">' + ICON.down + '</button>' : '') +
         (ed ? '<button type="button" class="tk-icon-btn" data-rmex="' + xi + '" aria-label="Remove ' + esc(ex.name) + '">' + ICON.trash + '</button>' : '') + '</div></div>';
@@ -459,7 +461,13 @@
         });
         h += '<td><button type="button" class="chk" data-done="' + xi + ',' + si + '" aria-pressed="' + (s.done ? 'true' : 'false') + '" aria-label="Mark set ' + (si + 1) + ' done">' + ICON.check + '</button></td></tr>';
       });
-      h += '</tbody></table><div class="ex-foot"><button type="button" class="tk-btn sm plain" data-addset="' + xi + '">+ Add set</button>' + (ex.sets.length > 1 ? '<button type="button" class="tk-btn sm plain" data-rmset="' + xi + '">Remove last set</button>' : '') + '</div></section>';
+      h += '</tbody></table>';
+      if (ex.type === 'c') {
+        var withK = ex.sets.map(function (s, si) { return { s: s, si: si }; }).filter(function (o) { return o.s.k != null && o.s.k !== ''; });
+        h += '<div class="ex-cardio" id="cst' + xi + '">' + (withK.length ? withK.map(function (o) { return '<div class="ex-kc"><label for="ck' + xi + '_' + o.si + '">' + (ex.sets.length > 1 ? 'Set ' + (o.si + 1) + ' · ' : '') + 'Calories from the machine</label><span><input id="ck' + xi + '_' + o.si + '" inputmode="numeric" data-x="' + xi + '" data-s="' + o.si + '" data-f="k" value="' + esc(o.s.k) + '"> kcal</span></div>'; }).join('') :
+          '<button type="button" class="ex-cbtn" data-cphoto="' + xi + '">' + ICON.camera + '<span>Finished? Add a photo of the machine screen and we\'ll fill in the minutes, km and calories.</span></button>') + '</div>';
+      }
+      h += '<div class="ex-foot"><button type="button" class="tk-btn sm plain" data-addset="' + xi + '">+ Add set</button>' + (ex.sets.length > 1 ? '<button type="button" class="tk-btn sm plain" data-rmset="' + xi + '">Remove last set</button>' : '') + '</div></section>';
     });
     if (ed) h += '<button type="button" class="tk-btn ghost block" id="addEx" style="margin-top:14px">+ Add exercise</button>';
     h += '<div class="tk-field"><label for="wNotes">Notes (how it felt, energy, anything for your coach)</label><textarea class="tk-textarea" id="wNotes">' + esc(d.notes) + '</textarea></div>';
@@ -474,6 +482,7 @@
     });
     v.querySelectorAll('[data-done]').forEach(function (b) { b.onclick = function () { var p = b.dataset.done.split(','); toggleSet(+p[0], +p[1]); }; });
     v.querySelectorAll('[data-how]').forEach(function (b) { b.onclick = function () { openHow($('how' + b.dataset.how)); }; });
+    v.querySelectorAll('[data-cphoto]').forEach(function (b) { b.onclick = function () { cardioPhoto(+b.dataset.cphoto); }; });
     wireVideos(v);
     v.querySelectorAll('[data-mode]').forEach(function (sel) { sel.onchange = function () { var ex = d.exercises[+sel.dataset.mode]; ex.mode = sel.value; if (sel.value === 'bw') ex.sets.forEach(function (s) { s.w = ''; }); saveDraft(); render(); }; });
     v.querySelectorAll('[data-mvex]').forEach(function (b) { b.onclick = function () {
@@ -555,17 +564,49 @@
   }
   function stopRest() { if (S.rest) clearInterval(S.rest); S.rest = null; var el = $('rest'); if (el) el.remove(); }
 
+  function cardioMinutes(exs) { var t = 0; (exs || []).forEach(function (e) { if ((e.type || typeOf(e.name)) === 'c') (e.sets || []).forEach(function (st) { t += num(st.r) || 0; }); }); return t; }
+  // Photo of the cardio machine's end screen: the free photo reader fills in minutes, km and the machine's calories.
+  function cardioPhoto(xi) {
+    var d = S.draft, ex = d && d.exercises[xi]; if (!ex) return;
+    var inp = document.createElement('input'); inp.type = 'file'; inp.accept = 'image/*'; inp.className = 'sr'; document.body.appendChild(inp);
+    inp.onchange = async function () {
+      var file = inp.files[0]; inp.remove(); if (!file) return;
+      var box = $('cst' + xi); if (box) box.innerHTML = '<div class="ai-status" role="status"><span class="ai-spin" aria-hidden="true"></span> Reading the machine screen… this usually takes 5 to 20 seconds.</div>';
+      try {
+        var data = await photoData(file, 1280, 0.82);
+        var ses = await sb.auth.getSession(), tok = ses.data && ses.data.session && ses.data.session.access_token;
+        var r = await fetch('/api/read-meal', { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + tok }, body: JSON.stringify({ image: data, kind: 'cardio' }) });
+        var j = await r.json().catch(function () { return {}; });
+        if (S.draft !== d) return;
+        if (r.status === 429) { toast('The photo reader is busy right now. Try again in a minute, or type the numbers in.'); render(); return; }
+        if (!r.ok) throw new Error(j.error || 'failed');
+        if (!j.is_cardio) { toast('We couldn\'t read a workout summary in this photo. Try a clearer photo of the final screen.'); render(); return; }
+        // the first set with nothing typed yet, else a new set
+        var si = -1; ex.sets.forEach(function (s, i) { if (si < 0 && num(s.r) == null && num(s.w) == null && !(num(s.k) > 0)) si = i; });
+        if (si < 0) { ex.sets.push({ w: '', r: '', done: false }); si = ex.sets.length - 1; }
+        var s = ex.sets[si];
+        if (j.minutes != null) s.r = String(j.minutes);
+        if (j.km != null) s.w = String(j.km);
+        if (j.kcal != null) s.k = String(j.kcal);
+        s.done = num(s.r) > 0;
+        saveDraft(); render();
+        ev('tracker_cardio_photo', { kcal: j.kcal || 0 });
+        toast('Added from the machine: ' + [j.minutes != null ? j.minutes + ' min' : '', j.km != null ? j.km + ' km' : '', j.kcal != null ? j.kcal + ' kcal' : ''].filter(Boolean).join(' · ') + '. Check the numbers.');
+      } catch (e) { if (S.draft === d) { toast('Couldn\'t read the photo. Please try again, or type the numbers in.'); render(); } }
+    };
+    inp.click();
+  }
   async function finishWorkout() {
     var d = S.draft;
     var exs = d.exercises.map(function (e) {
-      var o2 = { name: e.name, cat: e.cat, type: e.type, sets: e.sets.filter(function (s) { return s.done || num(s.r) != null; }).map(function (s) { var o = { w: signedW(e, s), r: num(s.r) }; if (s.pr) o.pr = true; return o; }) };
+      var o2 = { name: e.name, cat: e.cat, type: e.type, sets: e.sets.filter(function (s) { return s.done || num(s.r) != null; }).map(function (s) { var o = { w: signedW(e, s), r: num(s.r) }; if (s.pr) o.pr = true; if (e.type === 'c' && num(s.k) > 0) o.k = Math.round(num(s.k)); return o; }) };
       if (e.type === 'b') o2.mode = modeOf(e);
       return o2;
     }).filter(function (e) { return e.sets.length; });
     if (!exs.length) { toast('Log at least one set before finishing'); return; }
     $('finish').disabled = true;
     var prs = 0; exs.forEach(function (e) { e.sets.forEach(function (s) { if (s.pr) prs++; }); });
-    var row = { user_id: S.target.id, date: d.date, title: d.title || 'Workout', program_id: d.programId, exercises: exs, duration_min: Math.min(180, Math.max(1, Math.round((Date.now() - d.started) / 60000))), notes: d.notes || null };
+    var row = { user_id: S.target.id, date: d.date, title: d.title || 'Workout', program_id: d.programId, exercises: exs, duration_min: Math.min(180, Math.max(1, Math.round((Date.now() - d.started) / 60000), Math.round(cardioMinutes(exs)))), notes: d.notes || null };
     var est = kcalEstimate(row); if (est != null) { row.kcal = est; row.kcal_source = 'est'; }
     var r = await sb.from('workouts').insert(row).select().single();
     if (r.error) { $('finish').disabled = false; toast('Could not save: ' + r.error.message); return; }
@@ -601,11 +642,15 @@
     return +(before.length ? before[before.length - 1] : ws[0]).weight;
   }
   function kcalEstimate(w) {
-    var kg = weightOn(w.date || today()); if (!kg || !w.duration_min) return null;
-    var mins = Math.min(w.duration_min, 150), cardio = 0;
-    (w.exercises || []).forEach(function (e) { if ((e.type || typeOf(e.name)) === 'c') (e.sets || []).forEach(function (st) { cardio += num(st.r) || 0; }); });
-    cardio = Math.min(cardio, mins);
-    return Math.round(kg * (5 * (mins - cardio) + 8 * cardio) / 60);
+    // Cardio with calories read from the machine counts those exactly; other cardio and the rest of the session are estimated.
+    var machine = 0, machineMin = 0, cardio = 0;
+    (w.exercises || []).forEach(function (e) { if ((e.type || typeOf(e.name)) === 'c') (e.sets || []).forEach(function (st) { var m = num(st.r) || 0; if (num(st.k) > 0) { machine += num(st.k); machineMin += m; } else cardio += m; }); });
+    var kg = weightOn(w.date || today());
+    if (!kg || !w.duration_min) return machine > 0 ? Math.round(machine) : null;
+    var mins = Math.min(Math.max(w.duration_min, cardio + machineMin), 180);
+    cardio = Math.min(cardio, Math.max(0, mins - machineMin));
+    var rest = Math.max(0, mins - machineMin - cardio);
+    return Math.round(machine + kg * (5 * rest + 8 * cardio) / 60);
   }
   function kcalOf(w) { return w.kcal != null ? w.kcal : kcalEstimate(w); }
   function kcalLabel(w) { var k = kcalOf(w); return k == null ? '' : (w.kcal_source === 'watch' ? '' : '~') + nf(k) + ' kcal'; }
