@@ -326,6 +326,7 @@
     h += '<div class="td-date">' + new Date().toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' }) + '</div>';
     h += '<h1 class="td-hello">' + (viewingOther() ? esc(S.target.name || 'Client') + '\'s <em>training</em>' : hello + ', <em>' + esc(name || 'there') + '</em>') + '</h1>';
     h += '<button type="button" class="td-cardio" id="logCardio">' + ICON.camera + '<span><b>Log cardio</b><small>Done cardio? Snap the machine screen and save it in seconds</small></span><i aria-hidden="true">›</i></button>';
+    h += balanceCard();
     h += todayFoodCard();
     if (prog && (prog.days || []).length) {
       h += '<div class="tk-card gold"><span class="tk-tag">Your programme</span><h2 class="tk-h2" style="margin:4px 0 6px">' + esc(prog.name) + '</h2>' + (prog.notes ? '<p class="tk-muted">' + esc(prog.notes) + '</p>' : '');
@@ -347,6 +348,8 @@
     v.querySelectorAll('[data-startday]').forEach(function (b) { b.onclick = function () { if (S.draft && !confirmBox('You have a workout in progress (' + (S.draft.title || 'Workout') + '). Discard it and start ' + (prog.days[+b.dataset.startday].name || 'this day') + '?')) return; startDraft(prog, +b.dataset.startday); }; });
     if ($('startEmpty')) $('startEmpty').onclick = function () { if (S.draft && !confirmBox('You have a workout in progress. Discard it and start an empty one?')) return; startDraft(null); };
     $('logCardio').onclick = openQuickCardio;
+    if ($('balHow')) $('balHow').onclick = balanceHelp;
+    if ($('balFood')) $('balFood').onclick = function () { go('food'); };
     if ($('resumeW')) $('resumeW').onclick = function () { S.overview = false; render(); window.scrollTo(0, 0); };
     if ($('discardW')) $('discardW').onclick = function () { if (!confirmBox('Discard this unfinished workout?')) return; stopRest(); S.draft = null; saveDraft(); toast('Workout discarded'); render(); };
     $('goBody').onclick = function () { S.tab = 'body'; render(); };
@@ -1928,6 +1931,63 @@
   var MEALS = [['breakfast', 'Breakfast'], ['lunch', 'Lunch'], ['dinner', 'Dinner'], ['snack', 'Snacks']];
   function mealNow() { var h = new Date().getHours(); return h < 11 ? 'breakfast' : h < 16 ? 'lunch' : h < 18 ? 'snack' : 'dinner'; }
   function fDay(d) { return (S.food || []).filter(function (x) { return x.date === d; }); }
+  // ---------- CALORIES IN vs OUT ----------
+  // Burned = resting burn (body scan BMR) + movement. Movement = workouts logged in the app + steps,
+  // or the Apple Watch's active calories when they're higher (the watch already includes workouts it recorded).
+  // Whoop's total calories (resting + activity) are used as the whole day when there is no Apple data.
+  function burnOn(d) {
+    var plan = nutPlan(), kg = weightOn(d), rest = plan.bmr || (kg ? Math.round(kg * 22) : null), restFrom = plan.bmr ? (plan.bmrFrom === 'scan' ? 'scan' : 'calc') : 'weight';
+    var wk = 0, wn = 0; (S.workouts || []).forEach(function (w) { if (w.date === d) { var k = kcalOf(w); if (k) { wk += k; wn++; } } });
+    var a = hd(d, 'apple'), wh = hd(d, 'whoop'), hab = hRow(d);
+    var steps = a && a.steps != null ? a.steps : hab && hab.steps != null ? hab.steps : null;
+    var stepK = steps && kg ? Math.round(steps * 0.0005 * kg) : 0;
+    // no steps that day: allow for everyday movement (standing, walking around, digesting food) like a normal low-activity day
+    var daily = steps == null && rest ? Math.round(rest * 0.15) : 0;
+    var app = wk + stepK + daily, out = { rest: rest, restFrom: restFrom, workouts: wk, wn: wn, steps: steps, stepK: stepK, daily: daily, watch: null, src: 'app' };
+    if (a && a.active_kcal != null && a.active_kcal > app) { out.watch = a.active_kcal; out.move = a.active_kcal; out.src = 'apple'; }
+    else out.move = app;
+    if (!a && wh && wh.total_kcal) { out.total = wh.total_kcal; out.src = 'whoop'; out.move = Math.max(0, wh.total_kcal - (rest || 0)); return out; }
+    out.total = rest != null ? rest + out.move : null;
+    return out;
+  }
+  function balanceCard() {
+    var d = today(), b = burnOn(d), eat = Math.round(fTot(d).kcal), other = viewingOther(), fn = esc((S.target.name || 'Client').split(' ')[0]);
+    var goal = ((S.target && S.target.nutrition) || {}).goal || 'maintain';
+    var h = '<div class="tk-card bal-card"><div class="hb-head"><span class="tk-tag">' + (other ? fn + '\'s calories in vs out' : 'Calories in vs out') + ' · today</span><button type="button" class="tk-link" id="balHow">How it works</button></div>';
+    if (b.total == null) return h + '<p class="tk-muted" style="margin-top:6px">' + (other ? 'Add ' + fn + '\'s weight or InBody scan in the Body tab to see calories burned.' : 'Add your weight or body scan in the Body tab to see the calories you burn each day.') + '</p></div>';
+    var mx = Math.max(b.total, eat, 1), bal = b.total - eat;
+    var parts = b.src === 'whoop' ? ['From Whoop: resting + activity'] : ['Resting ' + nf(b.rest)].concat(b.src === 'apple' ? ['Watch activity ' + nf(b.watch)] : [b.workouts ? (b.wn > 1 ? b.wn + ' workouts ' : 'Workout ') + nf(b.workouts) : '', b.stepK ? nf(b.steps) + ' steps ' + nf(b.stepK) : '', b.daily ? 'Everyday movement ~' + nf(b.daily) : '']).filter(Boolean);
+    h += '<div class="bal-row"><div class="bal-top"><span>' + ICON.bolt + 'Burned</span><b>' + nf(b.total) + ' <small>kcal</small></b></div><div class="bal-bar burn"><i style="width:' + Math.round(b.total / mx * 100) + '%"></i></div><div class="bal-parts">' + parts.join(' · ') + (b.src === 'app' && b.daily ? ' · <i>' + (other ? 'no steps logged' : 'add your steps for a more accurate number') + '</i>' : '') + '</div></div>';
+    h += '<div class="bal-row"><div class="bal-top"><span>' + ICON.food + 'Eaten</span><b>' + nf(eat) + ' <small>kcal</small></b></div><div class="bal-bar eat"><i style="width:' + Math.round(eat / mx * 100) + '%"></i></div>' + (eat ? '' : '<div class="bal-parts"><button type="button" class="tk-link" id="balFood">' + (other ? 'No food logged yet today' : 'Log your food to see your balance') + '</button></div>') + '</div>';
+    if (eat) {
+      var good = goal === 'gain' ? bal < 0 : goal === 'maintain' ? Math.abs(bal) <= 250 : bal > 0;
+      var msg = bal > 0 ? nf(bal) + ' kcal more burned than eaten' : bal < 0 ? nf(-bal) + ' kcal more eaten than burned' : 'Burned and eaten are equal';
+      var sub = bal > 0 ? 'Calorie deficit · this is what makes you lose weight' : bal < 0 ? 'Calorie surplus · this leads to weight gain' : 'Weight stays the same';
+      if (goal === 'gain' && bal < 0) sub = 'Calorie surplus · this is what builds weight and muscle';
+      h += '<div class="bal-res ' + (good ? 'good' : 'warn') + '"><b>' + msg + '</b><span>' + sub + '. The day isn\'t over: keep logging.</span></div>';
+    }
+    // recent days with food logged: the real progress signal
+    var days = hLastDays(8).slice(0, 7), past = days.map(function (x) { var t = fTot(x).kcal, bb = burnOn(x); return t > 0 && bb.total ? { d: x, bal: bb.total - Math.round(t) } : null; }).filter(Boolean);
+    if (past.length) {
+      var y = past.filter(function (x) { return x.d === days[6]; })[0], av = Math.round(past.reduce(function (a, x) { return a + x.bal; }, 0) / past.length), kgw = r1(av * 7 / 7700);
+      h += '<div class="bal-past">' + (y ? '<div><span>Yesterday</span><b class="' + (y.bal >= 0 ? 'dn' : 'up') + '">' + nf(Math.abs(y.bal)) + ' kcal <small>' + (y.bal >= 0 ? 'deficit' : 'surplus') + '</small></b></div>' : '') +
+        '<div><span>7-day average</span><b class="' + (av >= 0 ? 'dn' : 'up') + '">' + nf(Math.abs(av)) + ' kcal <small>' + (av >= 0 ? 'deficit' : 'surplus') + ' a day</small></b></div>' +
+        '<div><span>Weight pace</span><b class="' + (av >= 0 ? 'dn' : 'up') + '">' + (Math.abs(kgw) < 0.05 ? 'steady' : (av >= 0 ? '−' : '+') + Math.abs(kgw) + ' kg/week') + '</b></div></div>' +
+        '<p class="tk-small bal-note">Based on ' + past.length + (past.length === 1 ? ' day' : ' days') + ' with food logged. Weight also moves with water, so look at the trend over a few weeks.</p>';
+    }
+    return h + '</div>';
+  }
+  function balanceHelp() {
+    var b = burnOn(today()), plan = nutPlan();
+    modal('How calories in vs out works', '<p class="tk-muted">Your body burns calories all day, even at rest. <b>Burned</b> adds up:</p><ul class="bal-help">' +
+      '<li><b>Resting burn' + (b.rest ? ' · ' + nf(b.rest) + ' kcal' : '') + '</b> what your body uses just to keep you alive (breathing, heart, brain). ' + (b.restFrom === 'scan' ? 'Taken from your latest InBody scan.' : b.restFrom === 'calc' ? 'Worked out from your body scan\'s muscle and fat.' : 'Estimated from your weight. Add an InBody scan in the Body tab for an accurate number.') + '</li>' +
+      '<li><b>Workouts and cardio</b> every session you log in the app, including Log cardio.</li>' +
+      '<li><b>Steps</b> from your Apple Watch, or the steps you enter in Daily habits. On a day with no steps logged, a small allowance for everyday movement is added instead (15% of your resting burn).</li>' +
+      '<li><b>Apple Watch</b> if your watch\'s active calories are higher than the app\'s workouts and steps, the watch number is used instead (it already includes the workouts it recorded), so nothing is counted twice.</li></ul>' +
+      '<p class="tk-muted"><b>Eaten</b> is everything in your food log.</p>' +
+      '<p class="tk-muted">If <b>burned is more than eaten</b>, you are in a calorie deficit and you lose weight. About 7,700 kcal of deficit is roughly 1 kg of body fat. If <b>eaten is more than burned</b>, you are in a surplus and gain weight' + (plan.goal === 'gain' ? ', which is what you want while building muscle' : '') + '.</p>' +
+      '<p class="tk-small">These are good estimates, not lab measurements. Food logged accurately makes the biggest difference.</p>');
+  }
   function fTot(d) { var t = { kcal: 0, p: 0, c: 0, f: 0, n: 0 }; fDay(d).forEach(function (x) { t.kcal += x.kcal || 0; t.p += +x.protein || 0; t.c += +x.carbs || 0; t.f += +x.fat || 0; t.n++; }); return t; }
   function normQ(s) { return String(s || '').toLowerCase().replace(/[^\w؀-ۿ\s]/g, ' ').split(/\s+/).filter(Boolean).map(function (w) { return w.length > 3 ? w.replace(/(es|s)$/, '') : w; }); }
   function searchFoods(q) {
