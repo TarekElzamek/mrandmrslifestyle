@@ -1,6 +1,6 @@
 /* Online coaching availability — change SPOTS here (one place) when a client signs up. */
 (function () {
-  var SPOTS = 2;
+  var SPOTS = 5;
   var AR = document.documentElement.lang === 'ar';
   var LOC = AR ? 'ar-AE' : 'en-GB';
   var month = new Date().toLocaleString(LOC, { month: 'long', year: 'numeric', timeZone: 'Asia/Dubai' });
