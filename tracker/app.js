@@ -215,12 +215,17 @@
     var wa = 'https://wa.me/971507871515?text=' + encodeURIComponent('Hi Tarek, I signed in to the Mr & Mrs Lifestyle tracker as ' + me.email + '. Can you approve my access?');
     $('view').innerHTML = '<div class="tk-card gold" style="margin-top:24px"><span class="tk-tag">' + (declined ? 'Access not approved' : 'Request sent') + '</span>' +
       '<h1 class="tk-h1" style="margin:6px 0 10px">' + (declined ? 'Your access <em>wasn\'t approved</em>' : 'Thanks' + (first ? ', ' + esc(first) : '') + '. <em>Almost there.</em>') + '</h1>' +
-      '<p class="tk-muted">' + (declined ? 'The tracker is for Mr &amp; Mrs Lifestyle coaching clients. If you think this is a mistake, or you\'d like to start coaching with us, message us on WhatsApp.' : 'The tracker is for Mr &amp; Mrs Lifestyle coaching clients. Your coach has been notified and will approve your access shortly. You\'ll get in as soon as it\'s approved.') + '</p>' +
+      '<p class="tk-muted">' + (declined ? 'The tracker is for Mr &amp; Mrs Lifestyle coaching clients. If you think this is a mistake, or you\'d like to start coaching with us, message us on WhatsApp.' : 'The tracker is free for Mr &amp; Mrs Lifestyle coaching clients. If you already train with us, your coach has been notified and will approve your access shortly.') + '</p>' +
       '<p class="tk-small" style="margin-top:8px">Signed in as ' + esc(me.email) + '</p>' +
-      '<div class="tk-grid2" style="margin-top:16px">' + (declined ? '' : '<button type="button" class="tk-btn" id="wCheck">Check again</button>') + '<a class="tk-btn ghost" href="' + wa + '" target="_blank" rel="noopener">Message us on WhatsApp</a></div>' +
-      '<button type="button" class="tk-link" id="sOut" style="margin-top:14px">Sign out</button></div>';
+      '<div class="tk-grid2" style="margin-top:16px">' + (declined ? '' : '<button type="button" class="tk-btn ghost" id="wCheck">Check again</button>') + '<a class="tk-btn ghost" href="' + wa + '" target="_blank" rel="noopener">Message us on WhatsApp</a></div>' +
+      '<button type="button" class="tk-link" id="sOut" style="margin-top:14px">Sign out</button></div>' +
+      // not a client yet: turn the visit into a lead
+      '<div class="tk-card" style="margin-top:14px"><span class="tk-tag">Not a client yet?</span><h2 class="tk-h2" style="margin:6px 0 8px">Get the app with a coach behind it</h2>' +
+      '<p class="tk-muted">Book a free 15-minute strategy call with Tarek or Chloe. We\'ll look at your goal, recommend the right plan (1-to-1 in Dubai or online coaching) and set up your programme in this app.</p>' +
+      '<div class="tk-grid2" style="margin-top:14px"><a class="tk-btn" id="wApply" href="/apply.html?source=tracker_waiting">Book a free strategy call</a><a class="tk-btn ghost" href="/packages.html?source=tracker_waiting">See packages</a></div></div>';
     if ($('wCheck')) $('wCheck').onclick = function () { location.reload(); };
     $('sOut').onclick = signOut;
+    $('wApply').onclick = function () { ev('tracker_waiting_apply', {}); };
     ev('tracker_waiting', { access: me.access });
   }
 
