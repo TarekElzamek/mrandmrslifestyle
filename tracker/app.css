@@ -607,7 +607,7 @@ button.pc-media{cursor:pointer}
 .fd-date input{position:absolute;inset:0;opacity:0;width:100%;height:100%;cursor:pointer}
 .fd-h30{margin-top:10px;gap:8px}.fd-h30 small{font-size:.7em;color:var(--muted);font-weight:400}
 .fd-hlist{margin-top:10px;display:flex;flex-direction:column;gap:6px}
-.fd-hrow{display:flex;align-items:center;gap:10px;width:100%;padding:11px 12px;border-radius:12px;border:1px solid var(--line);background:rgba(255,255,255,.02);color:var(--text);text-align:left;cursor:pointer}
+.fd-hrow{display:flex;flex-wrap:wrap;align-items:center;gap:10px;width:100%;padding:11px 12px;border-radius:12px;border:1px solid var(--line);background:rgba(255,255,255,.02);color:var(--text);text-align:left;cursor:pointer}
 .fd-hrow.sel{border-color:rgba(201,168,76,.7);background:rgba(201,168,76,.08)}
 .fd-hd{flex:1;min-width:0}.fd-hd b,.fd-hk b{display:block;font-size:.95rem}
 .fd-hd small,.fd-hk small{display:block;color:var(--muted);font-size:.78rem;margin-top:2px}
@@ -616,3 +616,9 @@ button.pc-media{cursor:pointer}
 .cl-row{display:flex;flex-wrap:wrap;align-items:center}.cl-row .pick-item{flex:1 1 100%;min-width:0}
 .cl-row .pick-item{border-bottom:0}.cl-row{border-bottom:1px solid var(--line)}.cl-row:last-child{border-bottom:0}
 .cl-row .cl-food{flex:0 0 auto;gap:6px;margin:-2px 0 12px 56px;min-height:36px}.cl-food svg{width:16px;height:16px}
+
+.fd-th{flex:0 0 auto;width:56px;height:56px;padding:0;border-radius:10px;overflow:hidden;border:1px solid var(--line);background:rgba(255,255,255,.04);cursor:pointer;margin-right:10px}
+.fd-th img{width:100%;height:100%;object-fit:cover;display:block}
+.fd-hph{flex:1 1 100%;display:flex;gap:6px;align-items:center}
+.fd-hph img{width:64px;height:64px;object-fit:cover;border-radius:10px;border:1px solid var(--line);background:rgba(255,255,255,.04)}
+.fd-hph em{font-style:normal;color:var(--muted);font-size:.85rem;margin-left:2px}

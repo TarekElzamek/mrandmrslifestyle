@@ -1980,7 +1980,7 @@
     MEALS.forEach(function (m) {
       var it = fDay(d).filter(function (x) { return x.meal === m[0]; }), k = it.reduce(function (a, x) { return a + (x.kcal || 0); }, 0);
       h += '<div class="tk-card fd-meal"><div class="hb-head"><h2 class="tk-h2" style="margin:0">' + m[1] + '</h2><span class="tk-small">' + (k ? nf(k) + ' kcal' : '') + '</span></div>';
-      it.forEach(function (x) { h += '<div class="li"><div class="grow"><b>' + esc(x.name) + (x.photo_path ? ' <button type="button" class="pill fd-ph" data-fphoto="' + esc(x.photo_path) + '" aria-label="See the photo of ' + esc(x.name) + '">' + ICON.camera + ' Photo</button>' : x.source === 'ai' ? ' <span class="pill" title="Estimated from a photo">📷</span>' : '') + '</b><span class="tk-small">' + (x.amount ? esc(x.amount) + ' · ' : '') + nf(x.kcal) + ' kcal' + (x.protein != null ? ' · ' + r1(+x.protein) + ' g protein' : '') + '</span></div><button type="button" class="tk-icon-btn" data-delf="' + x.id + '" aria-label="Remove ' + esc(x.name) + '">' + ICON.trash + '</button></div>'; });
+      it.forEach(function (x) { h += '<div class="li">' + (x.photo_path ? '<button type="button" class="fd-th" data-fphoto="' + esc(x.photo_path) + '" aria-label="See the photo of ' + esc(x.name) + '"><img data-fthumb="' + esc(x.photo_path) + '" alt=""></button>' : '') + '<div class="grow"><b>' + esc(x.name) + (!x.photo_path && x.source === 'ai' ? ' <span class="pill" title="Estimated from a photo">📷</span>' : '') + '</b><span class="tk-small">' + (x.amount ? esc(x.amount) + ' · ' : '') + nf(x.kcal) + ' kcal' + (x.protein != null ? ' · ' + r1(+x.protein) + ' g protein' : '') + '</span></div><button type="button" class="tk-icon-btn" data-delf="' + x.id + '" aria-label="Remove ' + esc(x.name) + '">' + ICON.trash + '</button></div>'; });
       h += '<button type="button" class="tk-btn sm ghost fd-add" data-addmeal="' + m[0] + '">+ Add to ' + m[1].toLowerCase() + '</button></div>';
     });
     var wk = days.map(function (x) { return fTot(x); }).filter(function (t) { return t.n; });
@@ -1990,6 +1990,7 @@
     v.innerHTML = h;
     $('fBack').onclick = function () { go('today'); };
     v.querySelectorAll('[data-fd]').forEach(function (b) { b.onclick = function () { S.fDay = b.dataset.fd; render(); }; });
+    fillFoodThumbs(v);
     if ($('fToday')) $('fToday').onclick = function () { S.fDay = today(); render(); };
     $('fDate').onchange = async function () { var x = this.value; if (!x || x > today()) return; await loadFoodBack(x); S.fDay = x; render(); window.scrollTo(0, 0); };
     v.querySelectorAll('[data-fhday]').forEach(function (b) { b.onclick = function () { S.fDay = b.dataset.fhday; render(); window.scrollTo(0, 0); }; });
@@ -2035,11 +2036,23 @@
       if (goal && x === today()) { cls = ''; diff = 'so far'; }
       else if (goal) { var dd = Math.round(t.kcal - goal.kcal); cls = Math.abs(dd) <= goal.kcal * 0.1 ? 'ok' : dd > 0 ? 'over' : 'under'; diff = Math.abs(dd) <= goal.kcal * 0.1 ? 'on target' : (dd > 0 ? '+' : '−') + nf(Math.abs(dd)) + ' kcal'; }
       return '<button type="button" class="fd-hrow' + (x === sel ? ' sel' : '') + '" data-fhday="' + x + '"' + (x === sel ? ' aria-current="date"' : '') + '><span class="fd-hd"><b>' + (x === today() ? 'Today' : fmtDay(x, { weekday: 'short', day: 'numeric', month: 'short' })) + '</b><small>' + it.length + (it.length === 1 ? ' item' : ' items') + ' · ' + Object.keys(meals).length + (Object.keys(meals).length === 1 ? ' meal' : ' meals') + (ph ? ' · ' + ph + (ph === 1 ? ' photo' : ' photos') : '') + '</small></span>' +
-        '<span class="fd-hk"><b>' + nf(t.kcal) + ' kcal</b><small>' + Math.round(t.p) + ' g protein' + (diff ? ' · <i class="' + cls + '">' + diff + '</i>' : '') + '</small></span><span aria-hidden="true" class="fd-hgo">›</span></button>';
+        '<span class="fd-hk"><b>' + nf(t.kcal) + ' kcal</b><small>' + Math.round(t.p) + ' g protein' + (diff ? ' · <i class="' + cls + '">' + diff + '</i>' : '') + '</small></span><span aria-hidden="true" class="fd-hgo">›</span>' +
+        (ph ? '<span class="fd-hph">' + it.filter(function (y) { return y.photo_path; }).slice(0, 4).map(function (y) { return '<img data-fthumb="' + esc(y.photo_path) + '" alt="' + esc(y.name) + '">'; }).join('') + (ph > 4 ? '<em>+' + (ph - 4) + '</em>' : '') + '</span>' : '') + '</button>';
     }).join('') + '</div>';
     if (dates.length > show) h += '<button type="button" class="tk-btn sm ghost block" id="fhMore" style="margin-top:10px">Show more days</button>';
     else if (!S.foodAll) h += '<button type="button" class="tk-btn sm ghost block" id="fhOlder" style="margin-top:10px">Load older days</button>';
     return h + '</div>';
+  }
+  // Meal photos live in the private bucket: get short-lived links in one batch and keep them for this visit.
+  var FTHUMB = {};
+  async function fillFoodThumbs(root) {
+    var imgs = Array.prototype.slice.call(root.querySelectorAll('img[data-fthumb]')); if (!imgs.length) return;
+    var need = imgs.map(function (i) { return i.dataset.fthumb; }).filter(function (x, i, a) { return !FTHUMB[x] && a.indexOf(x) === i; });
+    if (need.length) {
+      var r = await sb.storage.from('progress-photos').createSignedUrls(need, 3600);
+      (r.data || []).forEach(function (x, i) { if (x.signedUrl) FTHUMB[need[i]] = x.signedUrl; });
+    }
+    imgs.forEach(function (i) { var u = FTHUMB[i.dataset.fthumb]; if (u) i.src = u; });
   }
   async function showMealPhoto(path) {
     var m = modal('Meal photo', '<div class="ai-status" role="status"><span class="ai-spin" aria-hidden="true"></span> Loading the photo…</div>');
