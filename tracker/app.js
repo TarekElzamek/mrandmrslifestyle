@@ -236,12 +236,13 @@
       sb.rpc('health_my_link', viewingOther() ? { p_user: id } : {})
     ]);
     S.health = q[5].data || []; S.hlink = q[6].data || null; watchRefresh(id);
-    S.programs = q[0].data || []; S.workouts = q[1].data || []; S.body = q[2].data || []; S.habits = q[3].data || []; S.hDay = null; S.food = q[4].data || []; S.fDay = null; if (!viewingOther() && S.me && lsGet('mm_badges_' + S.me.id, null) == null) lsSet('mm_badges_' + S.me.id, Object.keys(badgeDates()));
+    S.programs = q[0].data || []; S.workouts = q[1].data || []; S.body = q[2].data || []; S.habits = q[3].data || []; S.hDay = null; S.food = q[4].data || []; S.fDay = null; S.foodFrom = iso(new Date(Date.now() - 60 * 864e5)); S.foodAll = false; S.fhShow = null; if (!viewingOther() && S.me && lsGet('mm_badges_' + S.me.id, null) == null) lsSet('mm_badges_' + S.me.id, Object.keys(badgeDates()));
     S.draft = lsGet('mm_draft_' + id, null); S.overview = true; // always open on the home page; the workout is one tap away (Resume) LIVE.lastRev = (S.draft && S.draft.rev) || 0;
     try { var lv = await sb.from('live_workouts').select('*').eq('user_id', id).maybeSingle(); if (lv && lv.data && (+lv.data.rev || 0) > LIVE.lastRev) { LIVE.lastRev = +lv.data.rev; S.draft = lv.data.data || null; lsSet('mm_draft_' + id, S.draft); } else if (S.draft) pushLive(); } catch (e) {}
     startLive();
     S.progEx = null; S.calDay = null;
     if (S.draft && COACH_TABS.indexOf(S.tab) < 0) S.tab = 'today';
+    if (S.openTab) { S.tab = S.openTab; S.openTab = null; }
     render();
     if (!viewingOther() && !isCoach()) setTimeout(maybeOnboardWatch, 700);
     // home-screen shortcut: open "Log cardio" straight away
@@ -1966,14 +1967,15 @@
       (frac > 0 ? '<circle cx="64" cy="64" r="54" fill="none" stroke="' + (left != null && left < 0 ? '#e06c5f' : 'url(#fdg)') + '" stroke-width="10" stroke-linecap="round" stroke-dasharray="' + Math.max(1, Math.round(frac * C)) + ' ' + C + '" transform="rotate(-90 64 64)"></circle>' : '') + '</svg>' +
       '<div class="fd-ring-mid' + (left != null && left < 0 ? ' over' : '') + '"><b>' + (goal ? nf(Math.abs(left)) : nf(t.kcal)) + '</b><span>' + (goal ? (left >= 0 ? 'kcal left' : 'kcal over') : 'kcal eaten') + '</span></div></div>';
     var side = '<div class="fd-ring-side"><div class="fd-eaten">' + (goal ? nf(t.kcal) + ' eaten · goal ' + nf(goal.kcal) : 'Log a body scan to get your daily target') + '</div>' + mini('Protein', t.p, goal && goal.protein, 'p') + mini('Carbs', t.c, goal && goal.carbs, 'c') + mini('Fat', t.f, goal && goal.fat, 'f') + '</div>';
-    return '<div class="tk-card fd-card fd-ring-card"><div class="hb-head"><span class="tk-tag">' + who + '</span><button type="button" class="tk-btn sm plain" id="goFood">Food log</button></div><div class="fd-ring-row">' + ring + side + '</div>' +
+    return '<div class="tk-card fd-card fd-ring-card"><div class="hb-head"><span class="tk-tag">' + who + '</span><button type="button" class="tk-btn sm plain" id="goFood">' + (viewingOther() ? 'Food history' : 'Food log') + '</button></div><div class="fd-ring-row">' + ring + side + '</div>' +
       '<div class="fd-acts"><button type="button" class="tk-btn" id="addFoodT">' + ICON.plus + 'Add food</button><button type="button" class="tk-btn ghost" id="snapFoodT">' + ICON.camera + 'Snap a meal</button></div></div>';
   }
   function renderFood() {
     var v = $('view'); if (!S.fDay || S.fDay > today()) S.fDay = today();
-    var d = S.fDay, days = hLastDays(7);
-    var h = '<button type="button" class="tk-link hb-back" id="fBack">← Today</button><h1 class="tk-h1">Food <em>log</em></h1><p class="tk-sub">Search 200+ foods, snap a photo of your meal, or add your own. Everything adds up against your daily target.</p>';
-    h += '<div class="chips hb-days" role="group" aria-label="Choose a day">' + days.slice().reverse().map(function (x) { var n = fDay(x).length; return '<button type="button" data-fd="' + x + '" aria-pressed="' + (x === d) + '">' + (x === today() ? 'Today' : fmtDay(x, { weekday: 'short', day: 'numeric' })) + (n ? ' <span class="hb-dot" aria-label="logged">•</span>' : '') + '</button>'; }).join('') + '</div>';
+    var d = S.fDay, days = hLastDays(7), other = viewingOther(), fn = esc((S.target.name || 'Client').split(' ')[0]);
+    var h = '<button type="button" class="tk-link hb-back" id="fBack">← Today</button>' + (other ? '<h1 class="tk-h1">' + fn + '\'s <em>food log</em></h1><p class="tk-sub">Everything ' + fn + ' has logged, with photos. Pick a day, or scroll down to the history to see how every day went.</p>' : '<h1 class="tk-h1">Food <em>log</em></h1><p class="tk-sub">Search 200+ foods, snap a photo of your meal, or add your own. Everything adds up against your daily target.</p>');
+    if (days.indexOf(d) < 0) h += '<div class="tk-card gold fd-pickday"><div class="li"><div class="grow"><b>' + fmtDay(d, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }) + '</b><span class="tk-small">Showing an earlier day</span></div><button type="button" class="tk-btn sm ghost" id="fToday">Back to this week</button></div></div>';
+    h += '<div class="fd-dayrow"><div class="chips hb-days" role="group" aria-label="Choose a day">' + days.slice().reverse().map(function (x) { var n = fDay(x).length; return '<button type="button" data-fd="' + x + '" aria-pressed="' + (x === d) + '">' + (x === today() ? 'Today' : fmtDay(x, { weekday: 'short', day: 'numeric' })) + (n ? ' <span class="hb-dot" aria-label="logged">•</span>' : '') + '</button>'; }).join('') + '</div><label class="fd-date"><span class="sr">Go to any date</span>' + ICON.history + '<input type="date" id="fDate" value="' + d + '" max="' + today() + '" aria-label="Go to any date"></label></div>';
     h += '<div class="tk-card">' + foodSummary(d, true) + '</div>';
     MEALS.forEach(function (m) {
       var it = fDay(d).filter(function (x) { return x.meal === m[0]; }), k = it.reduce(function (a, x) { return a + (x.kcal || 0); }, 0);
@@ -1982,17 +1984,62 @@
       h += '<button type="button" class="tk-btn sm ghost fd-add" data-addmeal="' + m[0] + '">+ Add to ' + m[1].toLowerCase() + '</button></div>';
     });
     var wk = days.map(function (x) { return fTot(x); }).filter(function (t) { return t.n; });
+    h += foodHistoryCard(d);
     if (wk.length > 1) { var av = function (k) { return wk.reduce(function (a, t) { return a + t[k]; }, 0) / wk.length; }; h += '<div class="tk-card"><span class="tk-tag">7-day average (days logged)</span><div class="tk-grid2" style="margin-top:8px"><div class="tk-stat"><b>' + nf(av('kcal')) + '</b><span>Kcal a day</span></div><div class="tk-stat"><b>' + Math.round(av('p')) + ' g</b><span>Protein a day</span></div></div></div>'; }
     h += '<p class="tk-small" style="margin-top:12px">Food values are typical estimates. Photo estimates are a guide: check the portions before adding.</p>';
     v.innerHTML = h;
     $('fBack').onclick = function () { go('today'); };
     v.querySelectorAll('[data-fd]').forEach(function (b) { b.onclick = function () { S.fDay = b.dataset.fd; render(); }; });
+    if ($('fToday')) $('fToday').onclick = function () { S.fDay = today(); render(); };
+    $('fDate').onchange = async function () { var x = this.value; if (!x || x > today()) return; await loadFoodBack(x); S.fDay = x; render(); window.scrollTo(0, 0); };
+    v.querySelectorAll('[data-fhday]').forEach(function (b) { b.onclick = function () { S.fDay = b.dataset.fhday; render(); window.scrollTo(0, 0); }; });
+    if ($('fhMore')) $('fhMore').onclick = function () { S.fhShow = (S.fhShow || 14) + 30; render(); };
+    if ($('fhOlder')) $('fhOlder').onclick = async function () { this.disabled = true; this.textContent = 'Loading…'; var from = parseDay(S.foodFrom); from.setDate(from.getDate() - 90); await loadFoodBack(iso(from)); S.fhShow = 9999; render(); };
     v.querySelectorAll('[data-addmeal]').forEach(function (b) { b.onclick = function () { openAddFood(b.dataset.addmeal, d); }; });
     v.querySelectorAll('[data-fphoto]').forEach(function (b) { b.onclick = function () { showMealPhoto(b.dataset.fphoto); }; });
     v.querySelectorAll('[data-delf]').forEach(function (b) { b.onclick = async function () {
       var r = await sb.from('food_logs').delete().eq('id', b.dataset.delf); if (r.error) return toast(r.error.message);
       S.food = S.food.filter(function (x) { return x.id !== b.dataset.delf; }); toast('Removed'); render();
     }; });
+  }
+  // Load food logged before what's already in memory (the app loads the last 60 days at first).
+  async function loadFoodBack(date) {
+    if (S.foodAll || !S.foodFrom || date >= S.foodFrom) return;
+    var who = S.target.id, r = await sb.from('food_logs').select('*').eq('user_id', who).gte('date', date).lt('date', S.foodFrom).order('created_at', { ascending: true }).limit(5000);
+    if (r.error) { toast('Could not load older food: ' + r.error.message); return; }
+    if (S.target.id !== who) return;
+    var have = {}; (S.food || []).forEach(function (x) { have[x.id] = 1; });
+    S.food = (r.data || []).filter(function (x) { return !have[x.id]; }).concat(S.food || []); S.foodFrom = date;
+    var c = await sb.from('food_logs').select('id', { count: 'exact', head: true }).eq('user_id', who).lt('date', date);
+    if (!c.error && !c.count) S.foodAll = true;
+  }
+  // Every logged day, newest first: calories and protein against the target, items, photos. Tap a day to open it.
+  function foodHistoryCard(sel) {
+    var by = {}; (S.food || []).forEach(function (x) { (by[x.date] = by[x.date] || []).push(x); });
+    var dates = Object.keys(by).sort().reverse(), plan = nutPlan(), goal = plan.missing ? null : plan;
+    var other = viewingOther(), fn = esc((S.target.name || 'Client').split(' ')[0]);
+    var h = '<div class="tk-card fd-hist"><div class="hb-head"><h2 class="tk-h2" style="margin:0">History</h2><span class="tk-small">' + dates.length + (dates.length === 1 ? ' day' : ' days') + ' logged</span></div>';
+    if (!dates.length) return h + '<p class="tk-muted" style="margin-top:8px">' + (other ? fn + ' hasn\'t logged any food yet.' : 'Nothing logged yet. Your days will appear here.') + '</p></div>';
+    var c30 = iso(new Date(Date.now() - 29 * 864e5)), d30 = dates.filter(function (x) { return x >= c30; });
+    if (d30.length) {
+      var t30 = d30.map(fTot), avg = function (k) { return t30.reduce(function (a, t) { return a + t[k]; }, 0) / t30.length; };
+      var onT = goal ? t30.filter(function (t) { return Math.abs(t.kcal - goal.kcal) <= goal.kcal * 0.1; }).length : null;
+      h += '<div class="tk-grid3 fd-h30"><div class="tk-stat"><b>' + d30.length + '<small>/30</small></b><span>Days logged</span></div><div class="tk-stat"><b>' + nf(avg('kcal')) + '</b><span>Avg kcal' + (goal ? ' · goal ' + nf(goal.kcal) : '') + '</span></div><div class="tk-stat"><b>' + Math.round(avg('p')) + ' g</b><span>Avg protein' + (goal ? ' · goal ' + Math.round(goal.protein) : '') + '</span></div></div>';
+      if (goal) h += '<p class="tk-small" style="margin:6px 0 2px">Within 10% of the calorie goal on <b>' + onT + '</b> of ' + d30.length + ' logged days (last 30 days).</p>';
+    }
+    var show = S.fhShow || 14;
+    h += '<div class="fd-hlist">' + dates.slice(0, show).map(function (x) {
+      var t = fTot(x), it = by[x], ph = it.filter(function (y) { return y.photo_path; }).length, meals = {};
+      it.forEach(function (y) { meals[y.meal] = 1; });
+      var cls = '', diff = '';
+      if (goal && x === today()) { cls = ''; diff = 'so far'; }
+      else if (goal) { var dd = Math.round(t.kcal - goal.kcal); cls = Math.abs(dd) <= goal.kcal * 0.1 ? 'ok' : dd > 0 ? 'over' : 'under'; diff = Math.abs(dd) <= goal.kcal * 0.1 ? 'on target' : (dd > 0 ? '+' : '−') + nf(Math.abs(dd)) + ' kcal'; }
+      return '<button type="button" class="fd-hrow' + (x === sel ? ' sel' : '') + '" data-fhday="' + x + '"' + (x === sel ? ' aria-current="date"' : '') + '><span class="fd-hd"><b>' + (x === today() ? 'Today' : fmtDay(x, { weekday: 'short', day: 'numeric', month: 'short' })) + '</b><small>' + it.length + (it.length === 1 ? ' item' : ' items') + ' · ' + Object.keys(meals).length + (Object.keys(meals).length === 1 ? ' meal' : ' meals') + (ph ? ' · ' + ph + (ph === 1 ? ' photo' : ' photos') : '') + '</small></span>' +
+        '<span class="fd-hk"><b>' + nf(t.kcal) + ' kcal</b><small>' + Math.round(t.p) + ' g protein' + (diff ? ' · <i class="' + cls + '">' + diff + '</i>' : '') + '</small></span><span aria-hidden="true" class="fd-hgo">›</span></button>';
+    }).join('') + '</div>';
+    if (dates.length > show) h += '<button type="button" class="tk-btn sm ghost block" id="fhMore" style="margin-top:10px">Show more days</button>';
+    else if (!S.foodAll) h += '<button type="button" class="tk-btn sm ghost block" id="fhOlder" style="margin-top:10px">Load older days</button>';
+    return h + '</div>';
   }
   async function showMealPhoto(path) {
     var m = modal('Meal photo', '<div class="ai-status" role="status"><span class="ai-spin" aria-hidden="true"></span> Loading the photo…</div>');
@@ -2262,15 +2309,17 @@
       sb.from('profiles').select('*').neq('id', S.me.id).order('created_at', { ascending: false }),
       sb.from('workouts').select('user_id,date').gte('date', iso(since)).order('date', { ascending: false }).limit(5000),
       sb.from('body_logs').select('user_id,date,weight').not('weight', 'is', null).order('date', { ascending: true }).limit(5000),
-      sb.from('programs').select('client_id,active')
+      sb.from('programs').select('client_id,active'),
+      sb.from('food_logs').select('user_id,date').gte('date', iso(since)).order('date', { ascending: false }).limit(10000)
     ]);
     if (S.tab !== 'clients') return;
+    var FD = q[4].data || [];
     var REQ = (q[0].data || []).filter(function (p) { return p.access === 'pending'; }), NO = (q[0].data || []).filter(function (p) { return p.access === 'declined'; });
     var ALL = (q[0].data || []).filter(function (p) { return p.access === 'approved' || p.role === 'coach'; }), P = ALL.filter(function (p) { return !p.archived; }), GONE = ALL.filter(function (p) { return p.archived; }), W = q[1].data || [], B = q[2].data || [], PR = q[3].data || [], edit = false;
     var m30 = new Date(); m30.setDate(m30.getDate() - 30); var c30 = iso(m30);
     var rows = P.map(function (p) {
       var w = W.filter(function (x) { return x.user_id === p.id; }), b = B.filter(function (x) { return x.user_id === p.id; });
-      return { p: p, last: w[0] ? w[0].date : null, n30: w.filter(function (x) { return x.date >= c30; }).length, w0: b[0], w1: b[b.length - 1], prog: PR.some(function (x) { return x.client_id === p.id && x.active; }) };
+      return { p: p, last: w[0] ? w[0].date : null, n30: w.filter(function (x) { return x.date >= c30; }).length, w0: b[0], w1: b[b.length - 1], prog: PR.some(function (x) { return x.client_id === p.id && x.active; }), food: (FD.filter(function (x) { return x.user_id === p.id; })[0] || {}).date || null };
     });
     var h = '<h1 class="tk-h1">Your <em>clients</em></h1><p class="tk-sub">Everyone who signed in to the tracker. Tap a client to see their workouts, weight and programme, or to log today\'s session for them.</p>';
     h += '<div class="tk-grid3" style="margin-top:14px"><div class="tk-stat"><b>' + P.length + '</b><span>Clients</span></div><div class="tk-stat"><b>' + rows.filter(function (r) { return r.last && r.last >= iso(new Date(Date.now() - 7 * 864e5)); }).length + '</b><span>Trained 7 days</span></div><div class="tk-stat"><b>' + rows.filter(function (r) { return !r.prog; }).length + '</b><span>Need a plan</span></div></div>';
@@ -2292,10 +2341,11 @@
         var pill = r.last == null ? '<span class="pill">No workouts</span>' : '<span class="pill ' + (age <= 7 ? 'ok' : age <= 14 ? 'gold' : 'warn') + '">' + daysAgo(r.last) + '</span>';
         var wt = r.w1 ? r.w1.weight + 'kg' + (r.w0 && r.w0 !== r.w1 ? ' (' + (r1(r.w1.weight - r.w0.weight) > 0 ? '+' : '') + r1(r.w1.weight - r.w0.weight) + ')' : '') : 'no weight yet';
         if (edit) return '<div class="pick-item" style="cursor:default">' + avatarHtml(r.p, 36) + '<div style="min-width:0;margin-left:10px"><b>' + esc(r.p.name || r.p.email) + '</b><span>' + esc(r.p.email) + '</span></div><button type="button" class="tk-btn sm ghost" data-remove="' + r.p.id + '" style="margin-left:auto">Remove</button></div>';
-        return '<button type="button" class="pick-item" data-client="' + r.p.id + '">' + avatarHtml(r.p, 36) + '<div style="min-width:0;margin-left:10px"><b>' + esc(r.p.name || r.p.email) + (r.p.role === 'coach' ? ' <span class="pill gold">Coach</span>' : '') + '</b><span>' + esc(r.p.email) + ' · ' + r.n30 + ' workouts in 30 days · ' + wt + (r.prog ? '' : ' · no programme') + '</span></div><span style="margin-left:auto">' + pill + '</span></button>';
+        return '<div class="cl-row"><button type="button" class="pick-item" data-client="' + r.p.id + '">' + avatarHtml(r.p, 36) + '<div style="min-width:0;margin-left:10px"><b>' + esc(r.p.name || r.p.email) + (r.p.role === 'coach' ? ' <span class="pill gold">Coach</span>' : '') + '</b><span>' + esc(r.p.email) + ' · ' + r.n30 + ' workouts in 30 days · ' + wt + (r.prog ? '' : ' · no programme') + ' · ' + (r.food ? 'food logged ' + daysAgo(r.food).toLowerCase() : 'no food logged') + '</span></div><span style="margin-left:auto">' + pill + '</span></button><button type="button" class="tk-btn sm ghost cl-food" data-cfood="' + r.p.id + '" aria-label="See ' + esc(r.p.name || r.p.email) + '\'s food history">' + ICON.history + 'Food history</button></div>';
       }).join('');
       $('cList').innerHTML = html || '<div class="tk-empty">' + (P.length ? 'No match.' : 'No clients yet. Send them the tracker link and ask them to sign in with Google: mrandmrslifestyle.com/workout-tracker.html') + '</div>';
       $('cList').querySelectorAll('[data-client]').forEach(function (b) { b.onclick = function () { openClient(P.filter(function (p) { return p.id === b.dataset.client; })[0]); }; });
+      $('cList').querySelectorAll('[data-cfood]').forEach(function (b) { b.onclick = function () { openClient(P.filter(function (p) { return p.id === b.dataset.cfood; })[0], 'food'); }; });
       $('cList').querySelectorAll('[data-remove]').forEach(function (b) { b.onclick = async function () {
         var c = P.filter(function (p) { return p.id === b.dataset.remove; })[0]; if (!c) return;
         if (!confirmBox('Remove ' + (c.name || c.email) + '? Their history is kept and you can restore them.')) return;
@@ -2318,7 +2368,7 @@
     $('cQ').oninput = function () { draw(this.value.toLowerCase().trim()); };
     draw('');
   }
-  async function openClient(p) { S.target = p; lsSet('mm_target', p.id); S.tab = 'today'; ev('tracker_coach_open_client'); $('view').innerHTML = '<div class="tk-empty">Loading…</div>'; await loadTarget(); window.scrollTo(0, 0); }
+  async function openClient(p, tab) { S.target = p; lsSet('mm_target', p.id); S.tab = 'today'; S.openTab = tab || null; ev('tracker_coach_open_client'); $('view').innerHTML = '<div class="tk-empty">Loading…</div>'; await loadTarget(); window.scrollTo(0, 0); }
 
   // ---------- COACH HUB (home, workouts library, exercise library, menu, profile, invites) ----------
   var SITE = 'https://www.mrandmrslifestyle.com/workout-tracker.html';

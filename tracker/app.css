@@ -599,3 +599,20 @@ button.pc-media{cursor:pointer}
 .td-cardio span{flex:1}.td-cardio b{display:block;font-size:1.05rem;color:var(--gold)}
 .td-cardio small{display:block;color:var(--muted);font-size:.82rem;margin-top:2px}
 .td-cardio i{font-style:normal;font-size:1.6rem;color:var(--gold)}
+
+/* food history */
+.fd-dayrow{display:flex;align-items:center;gap:8px}.fd-dayrow .hb-days{flex:1;min-width:0}
+.fd-date{position:relative;flex:0 0 auto;display:grid;place-items:center;width:44px;height:44px;border-radius:12px;border:1px solid var(--line);color:var(--gold);cursor:pointer}
+.fd-date svg{width:22px;height:22px}
+.fd-date input{position:absolute;inset:0;opacity:0;width:100%;height:100%;cursor:pointer}
+.fd-h30{margin-top:10px;gap:8px}.fd-h30 small{font-size:.7em;color:var(--muted);font-weight:400}
+.fd-hlist{margin-top:10px;display:flex;flex-direction:column;gap:6px}
+.fd-hrow{display:flex;align-items:center;gap:10px;width:100%;padding:11px 12px;border-radius:12px;border:1px solid var(--line);background:rgba(255,255,255,.02);color:var(--text);text-align:left;cursor:pointer}
+.fd-hrow.sel{border-color:rgba(201,168,76,.7);background:rgba(201,168,76,.08)}
+.fd-hd{flex:1;min-width:0}.fd-hd b,.fd-hk b{display:block;font-size:.95rem}
+.fd-hd small,.fd-hk small{display:block;color:var(--muted);font-size:.78rem;margin-top:2px}
+.fd-hk{text-align:right}.fd-hk i{font-style:normal}.fd-hk i.ok{color:#7bc47f}.fd-hk i.over{color:#e06c5f}.fd-hk i.under{color:#e0b25f}
+.fd-hgo{color:var(--gold);font-size:1.3rem}
+.cl-row{display:flex;flex-wrap:wrap;align-items:center}.cl-row .pick-item{flex:1 1 100%;min-width:0}
+.cl-row .pick-item{border-bottom:0}.cl-row{border-bottom:1px solid var(--line)}.cl-row:last-child{border-bottom:0}
+.cl-row .cl-food{flex:0 0 auto;gap:6px;margin:-2px 0 12px 56px;min-height:36px}.cl-food svg{width:16px;height:16px}
