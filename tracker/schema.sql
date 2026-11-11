@@ -1027,3 +1027,6 @@ alter table public.food_logs add column if not exists photo_path text check (cha
 -- ---------- v24: clients only see programmes their coach has assigned (active); unassigned ones stay with the coach ----------
 drop policy if exists "programs read" on public.programs;
 create policy "programs read" on public.programs for select using ((client_id = auth.uid() and public.is_approved() and active) or public.is_coach());
+
+-- ---------- v25: calories burned entered by the client (for clients without an Apple Watch or Whoop connected) ----------
+alter table public.habit_logs add column if not exists burned_kcal int check (burned_kcal between 0 and 10000);

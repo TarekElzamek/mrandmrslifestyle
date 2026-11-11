@@ -349,6 +349,7 @@
     if ($('startEmpty')) $('startEmpty').onclick = function () { if (S.draft && !confirmBox('You have a workout in progress. Discard it and start an empty one?')) return; startDraft(null); };
     $('logCardio').onclick = openQuickCardio;
     if ($('balHow')) $('balHow').onclick = balanceHelp;
+    if ($('balAdd')) $('balAdd').onclick = function () { openBurnEntry(today()); };
     if ($('balFood')) $('balFood').onclick = function () { go('food'); };
     if ($('resumeW')) $('resumeW').onclick = function () { S.overview = false; render(); window.scrollTo(0, 0); };
     if ($('discardW')) $('discardW').onclick = function () { if (!confirmBox('Discard this unfinished workout?')) return; stopRest(); S.draft = null; saveDraft(); toast('Workout discarded'); render(); };
@@ -1491,8 +1492,10 @@
     HSAVE[d] = setTimeout(async function () {
       var p = { user_id: uid, date: d, updated_at: new Date().toISOString() };
       ['steps', 'water', 'sleep', 'energy', 'mood', 'note'].forEach(function (f) { p[f] = row[f] == null || row[f] === '' ? null : row[f]; });
+      if ('burned_kcal' in row) p.burned_kcal = row.burned_kcal == null || row.burned_kcal === '' ? null : row.burned_kcal;
       var r = await sb.from('habit_logs').upsert(p, { onConflict: 'user_id,date' });
-      if (r.error) toast('Could not save: ' + r.error.message);
+      if (r.error && /burned_kcal/.test(r.error.message)) toast('Calories burned can\'t be saved yet: the app\'s database needs a quick update from your coach.');
+      else if (r.error) toast('Could not save: ' + r.error.message);
       else { ev('tracker_habit_saved', { field: k }); var st = document.querySelector('[data-hsaved="' + d + '"]'); if (st) { st.textContent = 'Saved'; setTimeout(function () { if (st) st.textContent = ''; }, 1500); } }
     }, 600);
   }
@@ -1944,9 +1947,13 @@
     // no steps that day: allow for everyday movement (standing, walking around, digesting food) like a normal low-activity day
     var daily = steps == null && rest ? Math.round(rest * 0.15) : 0;
     var app = wk + stepK + daily, out = { rest: rest, restFrom: restFrom, workouts: wk, wn: wn, steps: steps, stepK: stepK, daily: daily, watch: null, src: 'app' };
-    if (a && a.active_kcal != null && a.active_kcal > app) { out.watch = a.active_kcal; out.move = a.active_kcal; out.src = 'apple'; }
+    var man = hab && hab.burned_kcal != null ? +hab.burned_kcal : null; out.manual = man;
+    // a number the client entered covers the whole day, so the everyday-movement guess is dropped
+    if (man != null) { out.daily = 0; app = wk + stepK; }
+    if (man != null && man >= app && !(a && a.active_kcal != null && a.active_kcal >= man)) { out.watch = man; out.move = man; out.src = 'manual'; }
+    else if (a && a.active_kcal != null && a.active_kcal > app) { out.watch = a.active_kcal; out.move = a.active_kcal; out.src = 'apple'; }
     else out.move = app;
-    if (!a && wh && wh.total_kcal) { out.total = wh.total_kcal; out.src = 'whoop'; out.move = Math.max(0, wh.total_kcal - (rest || 0)); return out; }
+    if (!a && man == null && wh && wh.total_kcal) { out.total = wh.total_kcal; out.src = 'whoop'; out.move = Math.max(0, wh.total_kcal - (rest || 0)); return out; }
     out.total = rest != null ? rest + out.move : null;
     return out;
   }
@@ -1956,8 +1963,9 @@
     var h = '<div class="tk-card bal-card"><div class="hb-head"><span class="tk-tag">' + (other ? fn + '\'s calories in vs out' : 'Calories in vs out') + ' · today</span><button type="button" class="tk-link" id="balHow">How it works</button></div>';
     if (b.total == null) return h + '<p class="tk-muted" style="margin-top:6px">' + (other ? 'Add ' + fn + '\'s weight or InBody scan in the Body tab to see calories burned.' : 'Add your weight or body scan in the Body tab to see the calories you burn each day.') + '</p></div>';
     var mx = Math.max(b.total, eat, 1), bal = b.total - eat;
-    var parts = b.src === 'whoop' ? ['From Whoop: resting + activity'] : ['Resting ' + nf(b.rest)].concat(b.src === 'apple' ? ['Watch activity ' + nf(b.watch)] : [b.workouts ? (b.wn > 1 ? b.wn + ' workouts ' : 'Workout ') + nf(b.workouts) : '', b.stepK ? nf(b.steps) + ' steps ' + nf(b.stepK) : '', b.daily ? 'Everyday movement ~' + nf(b.daily) : '']).filter(Boolean);
-    h += '<div class="bal-row"><div class="bal-top"><span>' + ICON.bolt + 'Burned</span><b>' + nf(b.total) + ' <small>kcal</small></b></div><div class="bal-bar burn"><i style="width:' + Math.round(b.total / mx * 100) + '%"></i></div><div class="bal-parts">' + parts.join(' · ') + (b.src === 'app' && b.daily ? ' · <i>' + (other ? 'no steps logged' : 'add your steps for a more accurate number') + '</i>' : '') + '</div></div>';
+    var parts = b.src === 'whoop' ? ['From Whoop: resting + activity'] : ['Resting ' + nf(b.rest)].concat(b.src === 'apple' ? ['Watch activity ' + nf(b.watch)] : b.src === 'manual' ? ['Activity you entered ' + nf(b.watch)] : [b.workouts ? (b.wn > 1 ? b.wn + ' workouts ' : 'Workout ') + nf(b.workouts) : '', b.stepK ? nf(b.steps) + ' steps ' + nf(b.stepK) : '', b.daily ? 'Everyday movement ~' + nf(b.daily) : '']).filter(Boolean);
+    h += '<div class="bal-row"><div class="bal-top"><span>' + ICON.bolt + 'Burned</span><b>' + nf(b.total) + ' <small>kcal</small></b></div><div class="bal-bar burn"><i style="width:' + Math.round(b.total / mx * 100) + '%"></i></div><div class="bal-parts">' + parts.join(' · ') + (b.src === 'app' && b.daily ? ' · <i>' + (other ? 'no steps logged' : 'add your steps for a more accurate number') + '</i>' : '') + '</div>' +
+      (b.src !== 'apple' && b.src !== 'whoop' ? '<button type="button" class="tk-btn sm ghost bal-add" id="balAdd">' + (b.manual != null ? ICON.pen + 'Edit calories burned (' + nf(b.manual) + ')' : ICON.plus + 'Add calories burned') + '</button>' : '') + '</div>';
     h += '<div class="bal-row"><div class="bal-top"><span>' + ICON.food + 'Eaten</span><b>' + nf(eat) + ' <small>kcal</small></b></div><div class="bal-bar eat"><i style="width:' + Math.round(eat / mx * 100) + '%"></i></div>' + (eat ? '' : '<div class="bal-parts"><button type="button" class="tk-link" id="balFood">' + (other ? 'No food logged yet today' : 'Log your food to see your balance') + '</button></div>') + '</div>';
     if (eat) {
       var good = goal === 'gain' ? bal < 0 : goal === 'maintain' ? Math.abs(bal) <= 250 : bal > 0;
@@ -1977,12 +1985,31 @@
     }
     return h + '</div>';
   }
+  // Manual active calories for a day: for clients without an Apple Watch or Whoop connected
+  // (another watch or fitness app). Counted like the watch: never added on top of workouts and steps.
+  function openBurnEntry(d0) {
+    var d = d0, days = hLastDays(3).slice().reverse();
+    function cur() { var x = hRow(d); return x && x.burned_kcal != null ? x.burned_kcal : ''; }
+    var m = modal('Add calories burned', '<p class="tk-muted">Type the <b>active calories</b> from your watch or fitness app (Garmin, Samsung, Fitbit, Polar…) for the whole day. Don\'t include resting calories, the app adds those for you.</p>' +
+      '<div class="chips" role="group" aria-label="Which day" style="margin:12px 0">' + days.map(function (x, i) { return '<button type="button" data-bd="' + x + '" aria-pressed="' + (x === d) + '">' + (i === 0 ? 'Today' : i === 1 ? 'Yesterday' : fmtDay(x, { weekday: 'short', day: 'numeric' })) + '</button>'; }).join('') + '</div>' +
+      '<div class="tk-field"><label for="bkIn">Active calories burned</label><input class="tk-input bk-in" id="bkIn" inputmode="numeric" placeholder="e.g. 650" value="' + cur() + '" aria-describedby="bkHelp"><span class="tk-small" id="bkHelp">Often called Active, Move or Activity calories. To add a single gym session instead, use Log cardio.</span></div>' +
+      '<div class="tk-row" style="gap:8px;margin-top:10px"><button type="button" class="tk-btn ghost" id="bkClear"' + (cur() === '' ? ' hidden' : '') + '>Remove</button><button type="button" class="tk-btn" id="bkSave" style="flex:1">Save</button></div>');
+    m.querySelectorAll('[data-bd]').forEach(function (b) { b.onclick = function () { d = b.dataset.bd; m.querySelectorAll('[data-bd]').forEach(function (y) { y.setAttribute('aria-pressed', String(y === b)); }); $('bkIn').value = cur(); $('bkClear').hidden = cur() === ''; }; });
+    $('bkIn').focus();
+    $('bkSave').onclick = function () {
+      var v = parseInt(String($('bkIn').value).replace(/[^\d]/g, ''), 10);
+      if (!(v >= 1 && v <= 6000)) { toast('Enter the calories between 1 and 6,000'); return; }
+      hSet(d, 'burned_kcal', v); ev('tracker_burn_manual', { kcal: v }); m.close(); toast('Saved', true); render();
+    };
+    $('bkClear').onclick = function () { hSet(d, 'burned_kcal', null); m.close(); toast('Removed'); render(); };
+  }
   function balanceHelp() {
     var b = burnOn(today()), plan = nutPlan();
     modal('How calories in vs out works', '<p class="tk-muted">Your body burns calories all day, even at rest. <b>Burned</b> adds up:</p><ul class="bal-help">' +
       '<li><b>Resting burn' + (b.rest ? ' · ' + nf(b.rest) + ' kcal' : '') + '</b> what your body uses just to keep you alive (breathing, heart, brain). ' + (b.restFrom === 'scan' ? 'Taken from your latest InBody scan.' : b.restFrom === 'calc' ? 'Worked out from your body scan\'s muscle and fat.' : 'Estimated from your weight. Add an InBody scan in the Body tab for an accurate number.') + '</li>' +
       '<li><b>Workouts and cardio</b> every session you log in the app, including Log cardio.</li>' +
       '<li><b>Steps</b> from your Apple Watch, or the steps you enter in Daily habits. On a day with no steps logged, a small allowance for everyday movement is added instead (15% of your resting burn).</li>' +
+      '<li><b>Calories you enter</b> no Apple Watch or Whoop? Tap <b>Add calories burned</b> and type the active calories from your own watch or fitness app. Like the Apple Watch, it is used instead of the app\'s workouts and steps when it is higher, never added on top.</li>' +
       '<li><b>Apple Watch</b> if your watch\'s active calories are higher than the app\'s workouts and steps, the watch number is used instead (it already includes the workouts it recorded), so nothing is counted twice.</li></ul>' +
       '<p class="tk-muted"><b>Eaten</b> is everything in your food log.</p>' +
       '<p class="tk-muted">If <b>burned is more than eaten</b>, you are in a calorie deficit and you lose weight. About 7,700 kcal of deficit is roughly 1 kg of body fat. If <b>eaten is more than burned</b>, you are in a surplus and gain weight' + (plan.goal === 'gain' ? ', which is what you want while building muscle' : '') + '.</p>' +
