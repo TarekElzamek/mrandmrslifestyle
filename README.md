@@ -10,5 +10,6 @@
 - Sign-in: Google (Supabase Auth). Each user gets a row in `profiles` automatically.
 - Security: row-level security on every table. Clients see only their own data; `profiles.role = 'coach'` sees and manages all clients. Full setup in `tracker/schema.sql`.
 - Make someone a coach (Supabase SQL editor): `update public.profiles set role = 'coach' where email = 'their@gmail.com';`
-- Progress photos are in the private `progress-photos` storage bucket, one folder per user.
+- Progress photos are in the private `progress-photos` storage bucket, one folder per user. Cardio machine-screen photos go in `<user id>/cardio/` and are linked from the workout (`exercises[].photo`).
+- Quick cardio: "Log cardio" on Today (or the home-screen shortcut `?log=cardio`) saves a cardio session with a photo in one screen, no workout needed.
 - Free Supabase projects pause after 7 days with no activity; resume from the Supabase dashboard if the tracker stops loading.

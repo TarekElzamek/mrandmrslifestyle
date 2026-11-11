@@ -8,7 +8,31 @@
   "background_color": "#0a0a0a",
   "theme_color": "#0a0a0a",
   "icons": [
-    { "src": "/tracker/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
-    { "src": "/tracker/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }
+    {
+      "src": "/tracker/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/tracker/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Log cardio",
+      "short_name": "Cardio",
+      "description": "Log a cardio session with a photo of the machine screen",
+      "url": "/workout-tracker.html?log=cardio&source=app",
+      "icons": [
+        {
+          "src": "/tracker/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
   ]
 }

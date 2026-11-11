@@ -580,3 +580,22 @@ button.pc-media{cursor:pointer}
 .pl-start .tk-btn{min-height:56px;font-size:1rem;letter-spacing:.04em;text-transform:uppercase;box-shadow:0 10px 30px rgba(0,0,0,.55),0 6px 20px rgba(201,168,76,.25)}
 .pc-media:has(.pc-none){aspect-ratio:auto;height:120px}
 .pl-sec{margin:24px 0 2px;font-size:.8rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:600}.pl-sec .tk-small{text-transform:none;letter-spacing:0}.pl-off{opacity:.85}
+
+/* quick cardio log */
+.qc-photo{display:flex;align-items:center;gap:14px;width:100%;min-height:84px;padding:14px 16px;border-radius:14px;border:1.5px dashed rgba(201,168,76,.65);background:rgba(201,168,76,.07);color:var(--text);text-align:left;cursor:pointer}
+.qc-photo svg{width:34px;height:34px;color:var(--gold);flex:0 0 auto}
+.qc-photo b{display:block;font-size:1.02rem;color:var(--gold)}
+.qc-photo small{display:block;color:var(--muted);font-size:.82rem;margin-top:2px}
+.qc-prev{display:flex;align-items:center;gap:12px}
+.qc-prev img{width:96px;height:96px;object-fit:cover;border-radius:12px;border:1px solid var(--line)}
+.qc-chips{flex-wrap:wrap;overflow:visible}
+.qc-nums{gap:8px}.qc-nums .tk-field{margin-bottom:0}
+.qc-nums .tk-input{text-align:center;font-size:1.05rem}
+.qc-shots{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.qc-shot{display:block;max-width:100%;max-height:340px;border-radius:12px;border:1px solid var(--line)}
+.qc-att{margin:6px 14px 0;display:flex;align-items:center;gap:6px;color:var(--gold-2)}
+.td-cardio{display:flex;align-items:center;gap:14px;width:100%;margin:4px 0 14px;padding:14px 16px;min-height:72px;border-radius:16px;border:1px solid rgba(201,168,76,.55);background:linear-gradient(135deg,rgba(201,168,76,.18),rgba(201,168,76,.05));color:var(--text);text-align:left;cursor:pointer}
+.td-cardio svg{width:30px;height:30px;color:var(--gold);flex:0 0 auto}
+.td-cardio span{flex:1}.td-cardio b{display:block;font-size:1.05rem;color:var(--gold)}
+.td-cardio small{display:block;color:var(--muted);font-size:.82rem;margin-top:2px}
+.td-cardio i{font-style:normal;font-size:1.6rem;color:var(--gold)}

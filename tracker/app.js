@@ -244,6 +244,8 @@
     if (S.draft && COACH_TABS.indexOf(S.tab) < 0) S.tab = 'today';
     render();
     if (!viewingOther() && !isCoach()) setTimeout(maybeOnboardWatch, 700);
+    // home-screen shortcut: open "Log cardio" straight away
+    if (new URLSearchParams(location.search).get('log') === 'cardio' && !viewingOther()) { history.replaceState(null, '', location.pathname + location.hash); S.tab = 'today'; render(); setTimeout(openQuickCardio, 200); }
     // back from Whoop sign-in
     var wq = new URLSearchParams(location.search).get('whoop');
     if (wq) {
@@ -278,7 +280,7 @@
   function setLabel(s, type) {
     var w = num(s.w), r = num(s.r);
     if (type === 't') return (r || 0) + 's';
-    if (type === 'c') return (r || 0) + ' min' + (w ? ' · ' + w + ' km' : '') + (num(s.k) > 0 ? ' · ' + num(s.k) + ' kcal' : '');
+    if (type === 'c') return (r == null && !w && !(num(s.k) > 0)) ? 'See photo' : (r || 0) + ' min' + (w ? ' · ' + w + ' km' : '') + (num(s.k) > 0 ? ' · ' + num(s.k) + ' kcal' : '');
     if (type === 'b') return (w > 0 ? '+' + w + 'kg × ' : w < 0 ? Math.abs(w) + 'kg assist × ' : '') + (r || 0) + (w ? '' : ' reps');
     return (w || 0) + 'kg × ' + (r || 0);
   }
@@ -322,6 +324,7 @@
     var hr = new Date().getHours(), hello = hr < 12 ? 'Good morning' : hr < 18 ? 'Good afternoon' : 'Good evening';
     h += '<div class="td-date">' + new Date().toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' }) + '</div>';
     h += '<h1 class="td-hello">' + (viewingOther() ? esc(S.target.name || 'Client') + '\'s <em>training</em>' : hello + ', <em>' + esc(name || 'there') + '</em>') + '</h1>';
+    h += '<button type="button" class="td-cardio" id="logCardio">' + ICON.camera + '<span><b>Log cardio</b><small>Done cardio? Snap the machine screen and save it in seconds</small></span><i aria-hidden="true">›</i></button>';
     h += todayFoodCard();
     if (prog && (prog.days || []).length) {
       h += '<div class="tk-card gold"><span class="tk-tag">Your programme</span><h2 class="tk-h2" style="margin:4px 0 6px">' + esc(prog.name) + '</h2>' + (prog.notes ? '<p class="tk-muted">' + esc(prog.notes) + '</p>' : '');
@@ -342,6 +345,7 @@
     if ($('lastW')) $('lastW').onclick = function () { workoutModal(lastW); };
     v.querySelectorAll('[data-startday]').forEach(function (b) { b.onclick = function () { if (S.draft && !confirmBox('You have a workout in progress (' + (S.draft.title || 'Workout') + '). Discard it and start ' + (prog.days[+b.dataset.startday].name || 'this day') + '?')) return; startDraft(prog, +b.dataset.startday); }; });
     if ($('startEmpty')) $('startEmpty').onclick = function () { if (S.draft && !confirmBox('You have a workout in progress. Discard it and start an empty one?')) return; startDraft(null); };
+    $('logCardio').onclick = openQuickCardio;
     if ($('resumeW')) $('resumeW').onclick = function () { S.overview = false; render(); window.scrollTo(0, 0); };
     if ($('discardW')) $('discardW').onclick = function () { if (!confirmBox('Discard this unfinished workout?')) return; stopRest(); S.draft = null; saveDraft(); toast('Workout discarded'); render(); };
     $('goBody').onclick = function () { S.tab = 'body'; render(); };
@@ -457,10 +461,10 @@
         (ex.type === 'c' ? '<button type="button" class="tk-icon-btn" data-cphoto="' + xi + '" aria-label="Add a photo of the ' + esc(ex.name) + ' machine screen">' + ICON.camera + '</button>' : '') +
         (ed && xi > 0 ? '<button type="button" class="tk-icon-btn" data-mvex="' + xi + ':-1" aria-label="Move ' + esc(ex.name) + ' up">' + ICON.up + '</button>' : '') +
         (ed && xi < d.exercises.length - 1 ? '<button type="button" class="tk-icon-btn" data-mvex="' + xi + ':1" aria-label="Move ' + esc(ex.name) + ' down">' + ICON.down + '</button>' : '') +
-        (ed ? '<button type="button" class="tk-icon-btn" data-rmex="' + xi + '" aria-label="Remove ' + esc(ex.name) + '">' + ICON.trash + '</button>' : '') + '</div></div>';
+        (ed || ex.added ? '<button type="button" class="tk-icon-btn" data-rmex="' + xi + '" aria-label="Remove ' + esc(ex.name) + '">' + ICON.trash + '</button>' : '') + '</div></div>';
       h += '<div class="ex-how" id="how' + xi + '" hidden>' + videoBox(ex.name, xi + '|' + ex.name) + (info.how ? '<p>' + esc(info.how) + '</p>' : '') + '</div>';
-      if (ex.type === 'b' && !ed) h += '<div class="ex-mode"><span class="tk-small">Load: <b>' + esc((MODES.filter(function (m) { return m[0] === mode; })[0] || MODES[0])[1]) + '</b> (set by your coach)</span></div>';
-      if (ex.type === 'b' && ed) h += '<div class="ex-mode"><label for="mode' + xi + '">Load</label><select class="tk-select" id="mode' + xi + '" data-mode="' + xi + '">' + MODES.map(function (m) { return '<option value="' + m[0] + '"' + (m[0] === mode ? ' selected' : '') + '>' + m[1] + '</option>'; }).join('') + '</select></div>';
+      if (ex.type === 'b' && !ed && !ex.added) h += '<div class="ex-mode"><span class="tk-small">Load: <b>' + esc((MODES.filter(function (m) { return m[0] === mode; })[0] || MODES[0])[1]) + '</b> (set by your coach)</span></div>';
+      if (ex.type === 'b' && (ed || ex.added)) h += '<div class="ex-mode"><label for="mode' + xi + '">Load</label><select class="tk-select" id="mode' + xi + '" data-mode="' + xi + '">' + MODES.map(function (m) { return '<option value="' + m[0] + '"' + (m[0] === mode ? ' selected' : '') + '>' + m[1] + '</option>'; }).join('') + '</select></div>';
       if (ex.target) h += '<div class="ex-target">Target: ' + esc(ex.target.sets || '') + ' × ' + esc(ex.target.reps || '') + (ex.target.rest ? ' · rest ' + esc(ex.target.rest) + 's' : '') + (ex.target.notes ? ' · ' + esc(ex.target.notes) : '') + '</div>';
       h += '<table class="sets"><thead><tr><th scope="col">Set</th><th scope="col">Last</th>' + (f[0] ? '<th scope="col">' + f[0][1] + '</th>' : '') + '<th scope="col">' + f[1][1] + '</th><th scope="col"><span class="sr">Done</span></th></tr></thead><tbody>';
       ex.sets.forEach(function (s, si) {
@@ -476,12 +480,12 @@
       h += '</tbody></table>';
       if (ex.type === 'c') {
         var withK = ex.sets.map(function (s, si) { return { s: s, si: si }; }).filter(function (o) { return o.s.k != null && o.s.k !== ''; });
-        h += '<div class="ex-cardio" id="cst' + xi + '">' + (withK.length ? withK.map(function (o) { return '<div class="ex-kc"><label for="ck' + xi + '_' + o.si + '">' + (ex.sets.length > 1 ? 'Set ' + (o.si + 1) + ' · ' : '') + 'Calories from the machine</label><span><input id="ck' + xi + '_' + o.si + '" inputmode="numeric" data-x="' + xi + '" data-s="' + o.si + '" data-f="k" value="' + esc(o.s.k) + '"> kcal</span></div>'; }).join('') :
-          '<button type="button" class="ex-cbtn" data-cphoto="' + xi + '">' + ICON.camera + '<span>Finished? Add a photo of the machine screen and we\'ll fill in the minutes, km and calories.</span></button>') + '</div>';
+        h += '<div class="ex-cardio" id="cst' + xi + '">' + (ex.photo && !withK.length ? '<p class="tk-small qc-att">' + ICON.camera + ' Photo of the screen attached. Type the minutes above and tick the set.</p>' : '') + (withK.length ? withK.map(function (o) { return '<div class="ex-kc"><label for="ck' + xi + '_' + o.si + '">' + (ex.sets.length > 1 ? 'Set ' + (o.si + 1) + ' · ' : '') + 'Calories from the machine</label><span><input id="ck' + xi + '_' + o.si + '" inputmode="numeric" data-x="' + xi + '" data-s="' + o.si + '" data-f="k" value="' + esc(o.s.k) + '"> kcal</span></div>'; }).join('') :
+          ex.photo ? '' : '<button type="button" class="ex-cbtn" data-cphoto="' + xi + '">' + ICON.camera + '<span>Finished? Add a photo of the machine screen and we\'ll fill in the minutes, km and calories.</span></button>') + '</div>';
       }
       h += '<div class="ex-foot"><button type="button" class="tk-btn sm plain" data-addset="' + xi + '">+ Add set</button>' + (ex.sets.length > 1 ? '<button type="button" class="tk-btn sm plain" data-rmset="' + xi + '">Remove last set</button>' : '') + '</div></section>';
     });
-    if (ed) h += '<button type="button" class="tk-btn ghost block" id="addEx" style="margin-top:14px">+ Add exercise</button>';
+    h += '<button type="button" class="tk-btn ghost block" id="addEx" style="margin-top:14px">+ Add exercise' + (ed ? '' : ' or cardio') + '</button>';
     h += '<div class="tk-field"><label for="wNotes">Notes (how it felt, energy, anything for your coach)</label><textarea class="tk-textarea" id="wNotes">' + esc(d.notes) + '</textarea></div>';
     var srcProg = d.programId && S.programs.filter(function (x) { return x.id === d.programId; })[0];
     if (srcProg && d.dayIdx != null && srcProg.days[d.dayIdx] && canEditProgram(srcProg)) h += '<button type="button" class="tk-btn ghost block" id="saveToProg" style="margin-top:16px">Save these exercises & order to the programme</button><p class="tk-small" style="margin-top:6px">Updates ' + esc(srcProg.days[d.dayIdx].name || 'this day') + ' in ' + esc(srcProg.name) + ' so next time starts the same way. Weights you logged are not affected.</p>';
@@ -505,7 +509,7 @@
     v.querySelectorAll('[data-rmex]').forEach(function (b) { b.onclick = function () { if (confirmBox('Remove ' + d.exercises[+b.dataset.rmex].name + ' from this workout?')) { d.exercises.splice(+b.dataset.rmex, 1); saveDraft(); render(); } }; });
     v.querySelectorAll('[data-addset]').forEach(function (b) { b.onclick = function () { var ex = d.exercises[+b.dataset.addset], l = ex.sets[ex.sets.length - 1] || {}; ex.sets.push({ w: l.w || '', r: '', done: false }); saveDraft(); render(); }; });
     v.querySelectorAll('[data-rmset]').forEach(function (b) { b.onclick = function () { d.exercises[+b.dataset.rmset].sets.pop(); saveDraft(); render(); }; });
-    if ($('addEx')) $('addEx').onclick = function () { openPicker(function (name) { d.exercises.push(newDraftEx(name, null)); saveDraft(); render(); setTimeout(function () { var all = document.querySelectorAll('.ex'); if (all.length) all[all.length - 1].scrollIntoView({ block: 'center' }); }, 30); }); };
+    if ($('addEx')) $('addEx').onclick = function () { openPicker(function (name) { var nx = newDraftEx(name, null); if (!ed) nx.added = true; d.exercises.push(nx); saveDraft(); render(); setTimeout(function () { var all = document.querySelectorAll('.ex'); if (all.length) all[all.length - 1].scrollIntoView({ block: 'center' }); }, 30); }); };
     $('allDays').onclick = function () { S.overview = true; render(); window.scrollTo(0, 0); };
     if ($('saveToProg')) $('saveToProg').onclick = async function () {
       var btn = this, pr = S.programs.filter(function (x) { return x.id === d.programId; })[0]; if (!pr) return;
@@ -576,6 +580,88 @@
   }
   function stopRest() { if (S.rest) clearInterval(S.rest); S.rest = null; var el = $('rest'); if (el) el.remove(); }
 
+  // ---------- QUICK CARDIO: log a cardio session with a photo of the machine screen in one simple screen ----------
+  // No workout needs to be open. Pick the machine, add the photo (it is read automatically), check the numbers, Save.
+  // The photo is always kept with the session, even if it can't be read, so the coach can see it.
+  var QC_MACHINES = [['Treadmill Run', 'Treadmill', 'treadmill'], ['Incline Treadmill Walk', 'Incline walk', ''], ['Stationary Bike', 'Bike', 'bike'], ['Elliptical', 'Cross trainer', 'cross trainer'], ['Rowing Machine', 'Rower', 'rower'], ['Stairmaster', 'Stairs', 'stairs'], ['Assault Bike', 'Assault bike', ''], ['Ski Erg', 'Ski erg', ''], ['Outdoor Run', 'Outdoor run', ''], ['Walk', 'Walk', '']];
+  function uploadPhoto(file, folder) {
+    return compress(file).then(function (blob) {
+      var path = S.target.id + '/' + folder + '/' + today() + '-' + Date.now() + '.jpg';
+      return sb.storage.from('progress-photos').upload(path, blob, { contentType: 'image/jpeg' }).then(function (up) { if (up.error) throw up.error; return path; });
+    });
+  }
+  function openQuickCardio() {
+    var lastC = null; S.workouts.some(function (w) { return (w.exercises || []).some(function (e) { if ((e.type || typeOf(e.name)) === 'c') { lastC = e.name; return true; } }); });
+    var st = { machine: QC_MACHINES.some(function (m) { return m[0] === lastC; }) ? lastC : 'Treadmill Run', file: null, upload: null, reading: false, closed: false };
+    var body = '<p class="tk-muted" style="margin-bottom:12px">Finished your cardio? Take a photo of the machine screen and we\'ll fill in the numbers for you.</p>' +
+      '<button type="button" class="qc-photo" id="qcPhoto">' + ICON.camera + '<span><b>Add photo of the screen</b><small>Take a photo or choose one from your phone</small></span></button>' +
+      '<div class="qc-prev" id="qcPrev" hidden><img id="qcImg" alt="Your photo of the machine screen"><button type="button" class="tk-link" id="qcChange">Change photo</button></div>' +
+      '<div id="qcAi" class="ai-status" role="status" hidden></div>' +
+      '<div class="tk-field" style="margin-top:14px"><span class="tk-small" id="qcMl">Machine</span><div class="chips qc-chips" role="group" aria-labelledby="qcMl">' + QC_MACHINES.map(function (m) { return '<button type="button" data-qm="' + esc(m[0]) + '" aria-pressed="' + (m[0] === st.machine) + '">' + esc(m[1]) + '</button>'; }).join('') + '</div></div>' +
+      '<div class="tk-grid3 qc-nums"><div class="tk-field"><label for="qcMin">Minutes</label><input class="tk-input" id="qcMin" inputmode="decimal" placeholder="min"></div><div class="tk-field"><label for="qcKm">Km</label><input class="tk-input" id="qcKm" inputmode="decimal" placeholder="optional"></div><div class="tk-field"><label for="qcKcal">Calories</label><input class="tk-input" id="qcKcal" inputmode="numeric" placeholder="optional"></div></div>' +
+      '<div class="tk-field"><label for="qcDate">Date</label><input class="tk-input" id="qcDate" type="date" value="' + today() + '" max="' + today() + '"></div>' +
+      '<div class="tk-field"><label for="qcNote">Note for your coach (optional)</label><input class="tk-input" id="qcNote" maxlength="200" placeholder="e.g. felt strong, incline 10"></div>' +
+      '<button type="button" class="tk-btn block" id="qcSave" style="margin-top:6px">Save cardio</button>';
+    var m = modal('Log cardio', body, function () { st.closed = true; });
+    function pickMachine(name) { st.machine = name; m.querySelectorAll('[data-qm]').forEach(function (b) { b.setAttribute('aria-pressed', b.dataset.qm === name ? 'true' : 'false'); }); }
+    m.querySelectorAll('[data-qm]').forEach(function (b) { b.onclick = function () { pickMachine(b.dataset.qm); }; });
+    function choose() {
+      var inp = document.createElement('input'); inp.type = 'file'; inp.accept = 'image/*'; inp.className = 'sr'; document.body.appendChild(inp);
+      inp.onchange = function () { var f = inp.files[0]; inp.remove(); if (f) gotPhoto(f); };
+      inp.click();
+    }
+    $('qcPhoto').onclick = choose; $('qcChange').onclick = choose;
+    async function gotPhoto(file) {
+      st.file = file;
+      $('qcImg').src = URL.createObjectURL(file); $('qcPrev').hidden = false; $('qcPhoto').hidden = true;
+      st.upload = uploadPhoto(file, 'cardio').catch(function () { return null; });
+      var ai = $('qcAi'); ai.className = 'ai-status'; ai.hidden = false; ai.innerHTML = '<span class="ai-spin" aria-hidden="true"></span> Reading the screen… you can tap Save at any time, the photo is kept either way.';
+      st.reading = true;
+      try {
+        var data = await photoData(file, 1280, 0.82);
+        var ses = await sb.auth.getSession(), tok = ses.data && ses.data.session && ses.data.session.access_token;
+        var r = await fetch('/api/read-meal', { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + tok }, body: JSON.stringify({ image: data, kind: 'cardio' }) });
+        var j = await r.json().catch(function () { return {}; });
+        if (st.closed || st.file !== file) return;
+        if (!r.ok || !j.is_cardio) { ai.innerHTML = 'We couldn\'t read the numbers from this photo, no problem. Type the minutes below and tap Save. Your photo will still be saved.'; return; }
+        var n = 0;
+        [['qcMin', j.minutes], ['qcKm', j.km], ['qcKcal', j.kcal != null ? Math.round(j.kcal) : null]].forEach(function (x) { if (x[1] != null && !$(x[0]).value) { $(x[0]).value = x[1]; $(x[0]).classList.add('ai-filled'); n++; } });
+        var hit = QC_MACHINES.filter(function (q) { return q[2] && q[2] === j.machine; })[0]; if (hit && !(j.machine === 'treadmill' && st.machine === 'Incline Treadmill Walk')) pickMachine(hit[0]);
+        ai.className = 'ai-status ok'; ai.innerHTML = n ? '✓ Numbers filled in from your photo. Check them, then tap <b>Save cardio</b>.' : 'Photo added. Type the minutes below and tap Save.';
+        ev('tracker_cardio_photo', { kcal: j.kcal || 0, quick: true });
+      } catch (e) { if (!st.closed && st.file === file) ai.innerHTML = 'Couldn\'t read the photo automatically. Type the minutes below and tap Save. Your photo will still be saved.'; }
+      finally { st.reading = false; }
+    }
+    $('qcSave').onclick = async function () {
+      var mins = num($('qcMin').value), km = num($('qcKm').value), kc = num($('qcKcal').value);
+      if (!(mins > 0) && !st.file) { toast('Add a photo of the screen, or type the minutes'); $('qcMin').focus(); return; }
+      if (mins != null && (mins <= 0 || mins > 300)) { toast('Check the minutes'); return; }
+      var btn = this; btn.disabled = true; btn.textContent = 'Saving…';
+      var path = st.upload ? await st.upload : null;
+      if (st.file && !path) toast('The photo couldn\'t be uploaded, but your cardio will be saved.');
+      var set = { w: km > 0 ? km : null, r: mins > 0 ? mins : null }; if (kc > 0 && kc <= 3000) set.k = Math.round(kc);
+      var info = EXMAP[st.machine] || {}, ex = { name: st.machine, cat: info.cat || 'Cardio', type: 'c', sets: [set] };
+      if (path) ex.photo = path;
+      var label = (QC_MACHINES.filter(function (q) { return q[0] === st.machine; })[0] || [0, st.machine])[1];
+      var row = { user_id: S.target.id, date: $('qcDate').value || today(), title: 'Cardio · ' + label, program_id: null, exercises: [ex], duration_min: mins > 0 ? Math.max(1, Math.round(mins)) : null, notes: $('qcNote').value.trim() || null };
+      var est = kcalEstimate(row); if (est != null) { row.kcal = est; row.kcal_source = 'est'; }
+      var r = await sb.from('workouts').insert(row).select().single();
+      if (r.error) { btn.disabled = false; btn.textContent = 'Save cardio'; toast('Could not save: ' + r.error.message); return; }
+      S.workouts.unshift(r.data); S.workouts.sort(function (a, b) { return a.date < b.date ? 1 : a.date > b.date ? -1 : 0; });
+      ev('tracker_cardio_quick', { photo: !!path, machine: st.machine });
+      notifyCoach('finished', row.title, [set.r ? set.r + ' min' : '', set.w ? set.w + ' km' : '', set.k ? set.k + ' kcal' : '', path ? 'photo attached' : ''].filter(Boolean).join(' · '));
+      m.close(); toast('Cardio saved. Great work!', true); render();
+    };
+  }
+  // Signed links for the photos attached to a workout's cardio (kept in the private progress-photos bucket).
+  async function cardioPhotosInto(el, w) {
+    var paths = (w.exercises || []).filter(function (e) { return e.photo; }).map(function (e) { return e.photo; });
+    if (!el || !paths.length) return;
+    var r = await sb.storage.from('progress-photos').createSignedUrls(paths, 3600);
+    if (!r.data) { el.innerHTML = '<p class="tk-small">The photo couldn\'t be loaded.</p>'; return; }
+    el.innerHTML = r.data.map(function (x) { return x.signedUrl ? '<a href="' + esc(x.signedUrl) + '" target="_blank" rel="noopener"><img src="' + esc(x.signedUrl) + '" alt="Photo of the cardio machine screen" class="qc-shot" loading="lazy"></a>' : ''; }).join('');
+  }
+
   function cardioMinutes(exs) { var t = 0; (exs || []).forEach(function (e) { if ((e.type || typeOf(e.name)) === 'c') (e.sets || []).forEach(function (st) { t += num(st.r) || 0; }); }); return t; }
   // Photo of the cardio machine's end screen: the free photo reader fills in minutes, km and the machine's calories.
   function cardioPhoto(xi) {
@@ -583,6 +669,7 @@
     var inp = document.createElement('input'); inp.type = 'file'; inp.accept = 'image/*'; inp.className = 'sr'; document.body.appendChild(inp);
     inp.onchange = async function () {
       var file = inp.files[0]; inp.remove(); if (!file) return;
+      uploadPhoto(file, 'cardio').then(function (path) { if (path && S.draft === d) { ex.photo = path; saveDraft(); } }, function () {});
       var box = $('cst' + xi); if (box) box.innerHTML = '<div class="ai-status" role="status"><span class="ai-spin" aria-hidden="true"></span> Reading the machine screen… this usually takes 5 to 20 seconds.</div>';
       try {
         var data = await photoData(file, 1280, 0.82);
@@ -590,9 +677,9 @@
         var r = await fetch('/api/read-meal', { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + tok }, body: JSON.stringify({ image: data, kind: 'cardio' }) });
         var j = await r.json().catch(function () { return {}; });
         if (S.draft !== d) return;
-        if (r.status === 429) { toast('The photo reader is busy right now. Try again in a minute, or type the numbers in.'); render(); return; }
+        if (r.status === 429) { toast('Photo saved. The reader is busy, so please type the minutes in.'); render(); return; }
         if (!r.ok) throw new Error(j.error || 'failed');
-        if (!j.is_cardio) { toast('We couldn\'t read a workout summary in this photo. Try a clearer photo of the final screen.'); render(); return; }
+        if (!j.is_cardio) { toast('Photo saved. We couldn\'t read the numbers, so please type the minutes in.'); render(); return; }
         // the first set with nothing typed yet, else a new set
         var si = -1; ex.sets.forEach(function (s, i) { if (si < 0 && num(s.r) == null && num(s.w) == null && !(num(s.k) > 0)) si = i; });
         if (si < 0) { ex.sets.push({ w: '', r: '', done: false }); si = ex.sets.length - 1; }
@@ -604,7 +691,7 @@
         saveDraft(); render();
         ev('tracker_cardio_photo', { kcal: j.kcal || 0 });
         toast('Added from the machine: ' + [j.minutes != null ? j.minutes + ' min' : '', j.km != null ? j.km + ' km' : '', j.kcal != null ? j.kcal + ' kcal' : ''].filter(Boolean).join(' · ') + '. Check the numbers.');
-      } catch (e) { if (S.draft === d) { toast('Couldn\'t read the photo. Please try again, or type the numbers in.'); render(); } }
+      } catch (e) { if (S.draft === d) { toast('Photo saved. We couldn\'t read the numbers, so please type the minutes in.'); render(); } }
     };
     inp.click();
   }
@@ -613,6 +700,7 @@
     var exs = d.exercises.map(function (e) {
       var o2 = { name: e.name, cat: e.cat, type: e.type, sets: e.sets.filter(function (s) { return s.done || num(s.r) != null; }).map(function (s) { var o = { w: signedW(e, s), r: num(s.r) }; if (s.pr) o.pr = true; if (e.type === 'c' && num(s.k) > 0) o.k = Math.round(num(s.k)); return o; }) };
       if (e.type === 'b') o2.mode = modeOf(e);
+      if (e.photo) { o2.photo = e.photo; if (!o2.sets.length) o2.sets = [{ w: null, r: null }]; }
       return o2;
     }).filter(function (e) { return e.sets.length; });
     if (!exs.length) { toast('Log at least one set before finishing'); return; }
@@ -633,18 +721,21 @@
   // Full details of one saved workout: every exercise with its sets, weights, reps, cardio and calories.
   function workoutModal(w) {
     var sets = 0, prs = 0; (w.exercises || []).forEach(function (e) { (e.sets || []).forEach(function (s) { sets++; if (s.pr) prs++; }); });
-    var vol = workoutVolume(w);
+    var vol = workoutVolume(w), onlyC = (w.exercises || []).length && (w.exercises || []).every(function (e) { return (e.type || typeOf(e.name)) === 'c'; }), km = 0;
+    if (onlyC) (w.exercises || []).forEach(function (e) { (e.sets || []).forEach(function (s) { km += num(s.w) || 0; }); });
     var b = '<p class="tk-muted" style="margin-bottom:12px">' + fmtDay(w.date) + (viewingOther() ? ' · ' + esc(S.target.name || 'Client') : '') + '</p>';
-    b += '<div class="tk-grid2"><div class="tk-stat"><b>' + (w.duration_min || '–') + '</b><span>Minutes</span></div><div class="tk-stat"><b>' + sets + '</b><span>Sets</span></div><div class="tk-stat"><b>' + (vol ? nf(vol) : '–') + '</b><span>Kg lifted</span></div><div class="tk-stat"><b>' + (kcalOf(w) ? kcalLabel(w).replace(' kcal', '') : '–') + '</b><span>Kcal</span></div></div>';
+    b += '<div class="tk-grid2"><div class="tk-stat"><b>' + (w.duration_min || '–') + '</b><span>Minutes</span></div>' + (onlyC ? '<div class="tk-stat"><b>' + (km ? r1(km) : '–') + '</b><span>Km</span></div>' : '<div class="tk-stat"><b>' + sets + '</b><span>Sets</span></div><div class="tk-stat"><b>' + (vol ? nf(vol) : '–') + '</b><span>Kg lifted</span></div>') + '<div class="tk-stat"><b>' + (kcalOf(w) ? kcalLabel(w).replace(' kcal', '') : '–') + '</b><span>Kcal</span></div></div>';
     (w.exercises || []).forEach(function (e) {
       var t = e.type || typeOf(e.name);
       b += '<div class="wd-ex"><b>' + esc(e.name) + '</b><table class="wd-sets"><thead><tr><th scope="col">Set</th><th scope="col">' + (t === 'c' ? 'Cardio' : t === 't' ? 'Time' : 'Weight × reps') + '</th></tr></thead><tbody>' +
         (e.sets || []).map(function (s, i) { return '<tr><td>' + (i + 1) + '</td><td>' + esc(setLabel(s, t)) + (s.pr ? ' <span class="pr-badge">PR</span>' : '') + '</td></tr>'; }).join('') + '</tbody></table></div>';
     });
     if (!(w.exercises || []).length) b += '<p class="tk-empty">No exercises recorded.</p>';
+    if ((w.exercises || []).some(function (e) { return e.photo; })) b += '<div class="wd-notes"><span class="tk-tag">Photo of the screen</span><div class="qc-shots" id="wdShots"><p class="tk-small">Loading photo…</p></div></div>';
     if (w.notes) b += '<div class="wd-notes"><span class="tk-tag">Notes</span><p>' + esc(w.notes) + '</p></div>';
     b += kcalBox(w) + '<div class="tk-grid2" style="margin-top:16px"><button type="button" class="tk-btn ghost" id="wdHist">All workouts</button><button type="button" class="tk-btn" data-close>Done</button></div>';
     var m = modal(w.title || 'Workout', b);
+    cardioPhotosInto(m.querySelector('#wdShots'), w);
     wireKcal(m, function () { var bx = m.querySelector('.kc-box'); if (bx) bx.outerHTML = kcalBox(w); wireKcal(m); render(); });
     $('wdHist').onclick = function () { m.close(); S.tab = 'history'; S.calDay = null; render(); window.scrollTo(0, 0); };
     return m;
