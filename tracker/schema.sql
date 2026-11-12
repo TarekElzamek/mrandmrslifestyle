@@ -1030,3 +1030,27 @@ create policy "programs read" on public.programs for select using ((client_id = 
 
 -- ---------- v25: calories burned entered by the client (for clients without an Apple Watch or Whoop connected) ----------
 alter table public.habit_logs add column if not exists burned_kcal int check (burned_kcal between 0 and 10000);
+
+-- ---------- v26: only real people in the leads list ----------
+-- every website form now goes through /api/lead (email checked: format, typos, no throwaway inboxes, real mail server; bots dropped)
+alter table public.leads drop constraint if exists leads_status_check;
+alter table public.leads add constraint leads_status_check check (status in ('new','contacted','won','lost','spam'));
+-- same email under a different name in the last day = a bot rotating fake identities (used by /api/lead)
+create or replace function public.lead_name_clash(p_email text, p_name text, p_since timestamptz) returns boolean
+language sql security definer set search_path = public stable as $$
+  select exists (select 1 from public.leads where lower(email) = lower(p_email) and created_at >= p_since and status <> 'spam'
+                 and lower(coalesce(name, '')) <> lower(coalesce(p_name, '')));
+$$;
+revoke all on function public.lead_name_clash(text, text, timestamptz) from public;
+grant execute on function public.lead_name_clash(text, text, timestamptz) to anon, authenticated;
+-- safety net for anything that skips /api/lead: refuse obvious bot submissions
+create or replace function public.leads_block_bots() returns trigger language plpgsql as $$
+begin
+  if lower(coalesce(new.email, '')) ~ '^[^@+]*\.[^@+]*\.[^@+]*\.[^@]*@(gmail|googlemail)\.com$' then raise exception 'lead rejected'; end if;
+  if regexp_replace(lower(coalesce(new.name, '')), 'sch|tch|ght|str|ngst', '', 'g') ~ '[bcdfghjklmnpqrstvwxz]{5,}' then raise exception 'lead rejected'; end if;
+  return new;
+end $$;
+drop trigger if exists leads_block_bots on public.leads;
+create trigger leads_block_bots before insert on public.leads for each row execute function public.leads_block_bots();
+-- the bot leads already received (Nov 2026)
+update public.leads set status = 'spam' where status = 'new' and lower(email) in ('g.e.x.o.ciq.i.b.8.4@gmail.com', 'y.uc.os.il.em.efi.8.5@gmail.com', 'richlein.e6@gmail.com');

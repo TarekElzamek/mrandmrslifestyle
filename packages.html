@@ -824,12 +824,12 @@ async function submitIntake() {
   }
   document.getElementById('im-consent-error').style.display = 'none';
 
-  var btn = document.getElementById('im-submit-btn');
+  var btn = document.getElementById('im-submit-btn'); var __btnText = btn.textContent; var __r;
   btn.textContent = 'Sending...';
   btn.disabled = true;
 
   try {
-    await fetch('https://formspree.io/f/mdayvono', {
+    __r = await fetch('https://formspree.io/f/mdayvono', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
       body: JSON.stringify({
@@ -850,6 +850,7 @@ async function submitIntake() {
   }
 
   // Always proceed to Stripe regardless of Formspree result
+  if (__r && __r.status === 422) { btn.disabled = false; btn.textContent = __btnText; return; }
   closeIntakeModal();
   window.location.href = _intakeStripeUrl + (_intakeStripeUrl.indexOf('?') === -1 ? '?' : '&') + 'prefilled_email=' + encodeURIComponent(email);
 }

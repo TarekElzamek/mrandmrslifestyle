@@ -37,6 +37,7 @@ async function submitToFormspree(formId, data) {
       headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
       body: JSON.stringify(data)
     });
+    if (res.status === 422) return 'invalid'; // the email was rejected; the message is already shown at the email box
     return res.ok;
   } catch(e) {
     console.error('Formspree error:', e);

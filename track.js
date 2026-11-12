@@ -111,16 +111,21 @@
       } catch (e) { data = null; }
     }
     if (!(isForm && data)) return _fetch.call(this, url, opts);
-    // 1) Save every lead in our own database first (Supabase), so no lead is lost even if Formspree is down or over its monthly limit.
-    var saved = saveLead(url, data);
-    // 2) Still send it to Formspree for the email alert.
-    var sent = _fetch.call(this, url, opts).catch(function () { return null; });
-    var p = Promise.all([sent, saved]).then(function (x) {
-      var r = x[0], ok = x[1];
-      if (r && r.ok) return r;
-      if (ok) return new Response('{"ok":true}', { status: 200, headers: { 'Content-Type': 'application/json' } });
-      if (r) return r;
-      throw new TypeError('Failed to fetch');
+    // Every form goes through /api/lead: it checks the email is real and drops bots, then saves the lead
+    // (our database) and sends the Formspree email alert. Only real people reach the leads list.
+    var formId = (String(url).match(/formspree\.io\/f\/([\w-]+)/) || [])[1] || '';
+    var p = _fetch.call(this, '/api/lead', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ form: formId, data: data, page: location.pathname, lang: document.documentElement.lang || 'en', ms: Math.round((window.performance && performance.now()) || -1) })
+    }).then(function (r) {
+      if (r.status !== 422) return r;
+      return r.json().catch(function () { return {}; }).then(function (j) {
+        emailProblem(data.email || data._replyto, j.error || 'Please check your email address.');
+        return new Response(JSON.stringify(j), { status: 422, headers: { 'Content-Type': 'application/json' } });
+      });
+    }).catch(function () {
+      // our check is unreachable: don't lose the lead, send it to Formspree directly
+      return _fetch.call(window, url, opts);
     });
     p.then(function (r) {
       if (!r.ok) return;
@@ -131,28 +136,16 @@
     return p;
   };
 
-  function saveLead(url, d) {
-    try {
-      var cut = function (v, n) { return v == null || v === '' ? null : String(v).slice(0, n); };
-      var formId = (String(url).match(/formspree\.io\/f\/([\w-]+)/) || [])[1] || '';
-      var row = {
-        form: formId === 'xvzdnogv' ? 'guide' : formId === 'mdayvono' ? 'enquiry' : formId,
-        subject: cut(d._subject, 300),
-        name: cut(d.name || d.firstName || d.first_name || d.full_name, 200),
-        email: cut(d.email || d._replyto, 320),
-        phone: cut(d.phone || d.whatsapp || d.mobile, 60),
-        source: cut(d.source, 300),
-        page: cut(location.pathname, 500),
-        language: cut(document.documentElement.lang || 'en', 10),
-        data: d
-      };
-      return _fetch('https://iwtkphupsobwiaiqvkok.supabase.co/rest/v1/leads', {
-        method: 'POST', keepalive: true,
-        headers: { 'Content-Type': 'application/json', 'apikey': 'sb_publishable_L1RcJTZ1UTT_XocBLPLSYg_tPpPFWbU',
-                   'Authorization': 'Bearer sb_publishable_L1RcJTZ1UTT_XocBLPLSYg_tPpPFWbU', 'Prefer': 'return=minimal' },
-        body: JSON.stringify(row)
-      }).then(function (r) { return r.ok; }).catch(function () { return false; });
-    } catch (e) { return Promise.resolve(false); }
+  // Show the problem right at the email box the visitor typed in (falls back to an alert).
+  function emailProblem(email, msg) {
+    var want = String(email || '').trim().toLowerCase(), box = null;
+    document.querySelectorAll('input[type="email"], input[id*="mail" i], input[name*="mail" i]').forEach(function (el) { if (!box && String(el.value || '').trim().toLowerCase() === want) box = el; });
+    if (!box || !box.setCustomValidity) { alert(msg); return; }
+    box.setCustomValidity(msg);
+    box.reportValidity();
+    try { box.focus(); box.scrollIntoView({ block: 'center', behavior: 'smooth' }); } catch (e) {}
+    var clear = function () { box.setCustomValidity(''); box.removeEventListener('input', clear); };
+    box.addEventListener('input', clear);
   }
 
   /* ---------- Stripe success page ---------- */

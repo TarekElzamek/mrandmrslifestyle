@@ -294,11 +294,11 @@ a{color:inherit}
 <script>
 function fcLead(e){e.preventDefault();var f=e.target,b=f.querySelector('button');
  var n=document.getElementById('fcName').value.trim(),m=document.getElementById('fcEmail').value.trim();
- b.disabled=true;b.style.display='none';
+ b.disabled=true;
  fetch('https://formspree.io/f/xvzdnogv',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},
-  body:JSON.stringify({_subject:'\ud83d\udccb New Eating-Out Guide Download \u2014 '+n,name:n,email:m,_replyto:m,goal:'Dubai Eating-Out Guide',daily_target:(function(){try{return localStorage.getItem('mmTarget')||''}catch(x){return ''}})(),language:document.documentElement.lang,landing_page:location.pathname,source:f.getAttribute('data-src')})}).catch(function(){});
- if(window.gtag)gtag('event','generate_lead',{lead_type:'eating_out_guide',source:f.getAttribute('data-src')});
- document.getElementById('fcDone').style.display='block';return false;}
+  body:JSON.stringify({_subject:'\ud83d\udccb New Eating-Out Guide Download \u2014 '+n,name:n,email:m,_replyto:m,goal:'Dubai Eating-Out Guide',daily_target:(function(){try{return localStorage.getItem('mmTarget')||''}catch(x){return ''}})(),language:document.documentElement.lang,landing_page:location.pathname,source:f.getAttribute('data-src')})}).then(function(r){if(r&&r.status===422){b.disabled=false;return;}fcOk();},fcOk);
+ function fcOk(){b.style.display='none';if(window.gtag)gtag('event','generate_lead',{lead_type:'eating_out_guide',source:f.getAttribute('data-src')});document.getElementById('fcDone').style.display='block';}
+ return false;}
 </script>
 <script src="/shared.js" defer></script>
 <script src="/chat-widget.js" defer></script>

@@ -2537,7 +2537,7 @@
   function greet() { var h = new Date().getHours(); return h < 12 ? 'Good morning' : h < 18 ? 'Good afternoon' : 'Good evening'; }
 
   // ---------- website leads (saved by track.js from every website form) ----------
-  var LEAD_ST = [['new', 'New'], ['contacted', 'Contacted'], ['won', 'Client'], ['lost', 'Not now']];
+  var LEAD_ST = [['new', 'New'], ['contacted', 'Contacted'], ['won', 'Client'], ['lost', 'Not now'], ['spam', 'Spam']];
   async function leadsBanner() {
     // watchBanner(); (Apple Watch / Whoop setup hidden for now)
     try {
@@ -2567,7 +2567,7 @@
     rows = r.data || [];
     function when(t) { var d = new Date(t); return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }) + ' · ' + d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }); }
     function draw() {
-      var list = rows.filter(function (x) { return filter === 'all' || x.status === filter; });
+      var list = rows.filter(function (x) { return filter === 'all' ? x.status !== 'spam' : x.status === filter; });
       if (!list.length) { $('ldList').innerHTML = '<div class="tk-empty">' + (filter === 'new' ? 'No new leads. New website enquiries and sign-ups appear here.' : 'Nothing here yet.') + '</div>'; return; }
       $('ldList').innerHTML = list.map(function (x) {
         var d = x.data || {}, ph = (x.phone || '').replace(/[^\d]/g, '');
