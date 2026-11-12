@@ -692,3 +692,58 @@ FOODS += [
 
 _order = [c for c, _ in CATS]
 FOODS.sort(key=lambda f: _order.index(f['cat']))
+
+# ---------------- Search Console top pages (Nov 2026) ----------------
+# Extra size/variant tables and FAQs matching what people actually search for these foods.
+# compare rows: (en, ar, kcal). faqs: (en_q, en_a, ar_q, ar_a). Added to the food's existing lists.
+TOP_EXTRAS = {
+ 'chicken-shawarma': dict(
+   compare=[('Beef shawarma wrap with tahini', 'ساندويش شاورما لحم مع طحينة', 600)],
+   faqs=[('How many calories in a shawarma with no fries?', 'About 480 kcal for a standard chicken wrap without fries, and about 400 kcal if the garlic sauce is on the side too.',
+          'كم سعرة في ساندويش الشاورما بدون بطاطا؟', 'حوالي 480 سعرة لساندويش الدجاج العادي بدون بطاطا، وحوالي 400 سعرة إذا طلبت الثومية على الجانب أيضًا.')]),
+ 'mutton-biryani': dict(
+   compare=[('1 cup (about 200 g)', 'كوب (حوالي 200 غ)', 350), ('Half a restaurant plate', 'نصف صحن مطعم', 425),
+            ('Chicken biryani, restaurant plate', 'برياني دجاج، صحن مطعم', 750), ('Mutton biryani, restaurant plate', 'برياني لحم، صحن مطعم', 850),
+            ('Plate + raita + papad', 'صحن + رايتا + بابادوم', 950)],
+   faqs=[('How many calories in 1 plate of mutton biryani?', 'A full restaurant plate of mutton biryani is about 850 kcal with 38 g protein. Most of it comes from the rice and the ghee it is cooked in.',
+          'كم سعرة في صحن برياني لحم؟', 'صحن البرياني اللحم في المطعم حوالي 850 سعرة مع 38 غ بروتين. معظمها من الرز والسمن الذي يُطبخ به.'),
+         ('Is mutton biryani higher in calories than chicken biryani?', 'Yes, by about 100 kcal a plate, because mutton is fattier. Chicken biryani is about 750 kcal for the same plate.',
+          'هل البرياني اللحم أعلى سعرات من برياني الدجاج؟', 'نعم، بحوالي 100 سعرة للصحن لأن لحم الضأن أعلى دهونًا. برياني الدجاج حوالي 750 سعرة لنفس الصحن.')]),
+ 'karak-chai': dict(
+   compare=[('Small cup (100 ml)', 'كوب صغير (100 مل)', 95), ('Regular cup (150 ml)', 'كوب عادي (150 مل)', 140),
+            ('Large cup (250 ml)', 'كوب كبير (250 مل)', 230), ('Regular cup, half sugar', 'كوب عادي بنصف سكر', 90), ('Regular cup, no sugar', 'كوب عادي بدون سكر', 80)],
+   faqs=[('Does karak chai make you gain weight?', 'Not on its own. One cup is about 140 kcal, but three or four cups a day add 400–550 kcal, which is a meal. Ask for half sugar or keep it to one cup.',
+          'هل شاي الكرك يزيد الوزن؟', 'ليس بحد ذاته. الكوب حوالي 140 سعرة، لكن 3 أو 4 أكواب في اليوم تضيف 400–550 سعرة، أي وجبة كاملة. اطلبه بنصف سكر أو اكتفِ بكوب واحد.')]),
+ 'baklava': dict(
+   compare=[('1 small piece (about 25 g)', 'قطعة صغيرة (حوالي 25 غ)', 110), ('1 large piece (about 40 g)', 'قطعة كبيرة (حوالي 40 غ)', 175),
+            ('3 small pieces', '3 قطع صغيرة', 330), ('100 g', '100 غ', 430)],
+   faqs=[('How many calories in one piece of baklava?', 'About 110 kcal for one small piece and about 175 kcal for a large pistachio piece. It is mostly sugar syrup, butter and nuts.',
+          'كم سعرة في قطعة بقلاوة واحدة؟', 'حوالي 110 سعرة للقطعة الصغيرة، وحوالي 175 سعرة للقطعة الكبيرة بالفستق. معظمها من القطر والزبدة والمكسرات.')]),
+ 'cornflakes': dict(
+   compare=[('30 g dry, no milk', '30 غ بدون حليب', 113), ('40 g dry, no milk', '40 غ بدون حليب', 150),
+            ('40 g + 200 ml low-fat milk', '40 غ + 200 مل حليب قليل الدسم', 250), ('40 g + 200 ml full-fat milk', '40 غ + 200 مل حليب كامل الدسم', 280),
+            ('Add 2 tsp sugar', 'إضافة ملعقتين صغيرتين سكر', 32)],
+   faqs=[('Does cornflakes with milk make you gain weight?', 'No. A bowl is about 250 kcal, which fits easily into a fat-loss day. The problem is that it is low in protein, so you get hungry fast. Add Greek yoghurt or eggs on the side.',
+          'هل الكورن فليكس مع الحليب يزيد الوزن؟', 'لا. الصحن حوالي 250 سعرة ويناسب يوم خسارة الدهون بسهولة. المشكلة أنه قليل البروتين فتجوع بسرعة. أضف لبن يوناني أو بيض بجانبه.')]),
+ 'snickers': dict(
+   compare=[('Fun size (about 17 g)', 'حجم صغير (حوالي 17 غ)', 80), ('Standard bar (50 g)', 'لوح عادي (50 غ)', 245),
+            ('Large / 2-piece bar (about 80 g)', 'لوح كبير / قطعتان (حوالي 80 غ)', 400), ('100 g', '100 غ', 490)],
+   faqs=[('How many calories in a large Snickers?', 'A large 2-piece Snickers (about 80 g) is about 400 kcal. The standard 50 g bar is about 245 kcal and the small fun size about 80 kcal.',
+          'كم سعرة حرارية في السنيكرز الكبير؟', 'السنيكرز الكبير (قطعتان، حوالي 80 غ) فيه حوالي 400 سعرة. اللوح العادي 50 غ حوالي 245 سعرة، والصغير حوالي 80 سعرة.')]),
+ 'kinder-bueno': dict(
+   compare=[('1 bar (21.5 g)', 'قطعة واحدة (21.5 غ)', 122), ('1 pack, 2 bars (43 g)', 'عبوة، قطعتان (43 غ)', 245),
+            ('Kinder Bueno White, 1 pack (39 g)', 'كيندر بوينو أبيض، عبوة (39 غ)', 225), ('Kinder Bueno Mini, 1 piece', 'كيندر بوينو ميني، قطعة', 31)],
+   faqs=[('How many calories in one Kinder Bueno bar?', 'One bar is about 122 kcal, so the usual pack of two is about 245 kcal.',
+          'كم سعرة في قطعة كيندر بوينو واحدة؟', 'القطعة الواحدة حوالي 122 سعرة، والعبوة العادية (قطعتان) حوالي 245 سعرة.')]),
+ 'tea-with-milk': dict(
+   compare=[('Tea with milk, no sugar', 'شاي بالحليب بدون سكر', 20), ('With 1 tsp sugar', 'مع ملعقة سكر صغيرة', 40),
+            ('With 2 tsp sugar', 'مع ملعقتين سكر', 60), ('With 3 tsp sugar', 'مع 3 ملاعق سكر', 80),
+            ('Black tea, 2 tsp sugar (no milk)', 'شاي بدون حليب، ملعقتين سكر', 32), ('Karak chai (150 ml)', 'شاي كرك (150 مل)', 140)],
+   faqs=[('How many calories in a cup of tea with sugar?', 'Black tea with 2 tsp sugar is about 32 kcal. Each teaspoon of sugar adds about 16 kcal, and a splash of milk adds about 20.',
+          'كم سعرة في كوب الشاي مع السكر؟', 'الشاي بدون حليب مع ملعقتين سكر حوالي 32 سعرة. كل ملعقة سكر صغيرة تضيف حوالي 16 سعرة، والقليل من الحليب يضيف حوالي 20.')]),
+}
+for _f in FOODS:
+    _x = TOP_EXTRAS.get(_f['slug'])
+    if _x:
+        _f['compare'] = list(_f.get('compare', [])) + _x.get('compare', [])
+        _f['faqs'] = list(_f.get('faqs', [])) + _x.get('faqs', [])

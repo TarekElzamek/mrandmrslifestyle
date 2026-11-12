@@ -443,6 +443,21 @@ def build_hub(lang):
 
 # Hand-tuned titles/descriptions (Search Console work) that the templates must not overwrite.
 META_OVERRIDES = {
+    # Nov 2026: top-impression pages, titles matched to their main Search Console queries
+    ('baklava', 'en'): dict(title='Baklava Calories: 1 Piece = 110 kcal (Small &amp; Large Compared)',
+        desc='How many calories in baklava? One small piece is about 110 kcal, a large pistachio piece about 175 kcal and 100 g about 430 kcal. Macros and a lighter way to enjoy it.'),
+    ('mutton-biryani', 'en'): dict(title='Mutton Biryani Calories: 1 Plate = 850 kcal (vs Chicken)',
+        desc='How many calories in mutton biryani? A restaurant plate is about 850 kcal with 38 g protein, 1 cup about 350 kcal. Compared with chicken biryani, plus a lighter swap.'),
+    ('snickers', 'ar'): dict(title='سعرات سنيكرز: 245 سعرة للوح 50 غ (الصغير والكبير)',
+        desc='كم سعرة حرارية في السنيكرز؟ اللوح العادي 50 غ حوالي 245 سعرة، والصغير حوالي 80، والكبير حوالي 400 سعرة. القيم الغذائية وبديل أخف.'),
+    ('kinder-bueno', 'ar'): dict(title='سعرات كيندر بوينو (كندر بوينو): 245 سعرة للعبوة',
+        desc='كم سعرة في كندر بوينو؟ العبوة (قطعتان) حوالي 245 سعرة، والقطعة الواحدة حوالي 122 سعرة. مقارنة مع بوينو الأبيض والميني.'),
+    ('tea-with-milk', 'ar'): dict(title='كم سعرة في الشاي بالحليب والسكر؟ 60 سعرة للكوب',
+        desc='كوب الشاي بالحليب مع ملعقتين سكر حوالي 60 سعرة، وبدون سكر حوالي 20. كل ملعقة سكر تضيف 16 سعرة. مقارنة مع الشاي بدون حليب والكرك.'),
+    ('cornflakes', 'ar'): dict(title='سعرات الكورن فليكس مع الحليب: 250 سعرة للصحن',
+        desc='كم سعرة في الكورن فليكس بالحليب؟ الصحن (40 غ مع حليب قليل الدسم) حوالي 250 سعرة، وبدون حليب 150. هل يزيد الوزن؟ الجواب وبديل أفضل.'),
+    ('karak-chai', 'ar'): dict(title='سعرات شاي الكرك: 140 سعرة للكوب (صغير وكبير)',
+        desc='كم سعرة في كوب شاي الكرك؟ الكوب العادي حوالي 140 سعرة، والصغير 95، والكبير 230. هل يزيد الوزن؟ وكيف تخففه بنصف سكر.'),
     ('boiled-egg', 'en'): dict(title='Egg Calories: 1 Egg = 78 kcal, 2 Eggs = 155 (Boiled &amp; Fried)',
         desc='How many calories in an egg? 1 large boiled egg is about 78 kcal with 6 g protein, 2 eggs about 155 kcal. Fried, omelette and egg white compared.'),
     ('boiled-egg', 'ar'): dict(title='كم سعرة في البيضة؟ بيضة مسلوقة 78 سعرة وبيضتان 155',
@@ -545,6 +560,7 @@ def build_page(f, lang):
       <div class="fc-small" style="margin-top:.3rem">{t['walk_note']}</div>
     </div>
   </div>
+  {'<div class="fp-main fp-sec">' + extra + '</div>' if extra else ''}
   {teaser(lang)}
   {pt_box(f, lang, name)}
   <div class="fp-main fp-sec">
@@ -557,7 +573,6 @@ def build_page(f, lang):
       <p class="fp-p">{coach_take(f, t)}</p>
     </div>
   </div>
-  {'<div class="fp-main fp-sec">' + extra + '</div>' if extra else ''}
   <div class="fp-box fp-sec fp-faq">
     <h2 class="fp-h">{t['faq_h']}</h2>
     {''.join(f'<details><summary>{esc(q)}</summary><p>{esc(a)}</p></details>' for q, a in faqs)}
