@@ -333,6 +333,7 @@
     h += '<div class="td-quick"><button type="button" class="td-cardio" id="logCardio">' + ICON.camera + '<span><b>Log cardio</b><small>Snap the machine screen</small></span></button>' +
       '<button type="button" class="td-cardio" id="logFood">' + ICON.food + '<span><b>Log food</b><small>Snap your meal or search</small></span></button></div>';
     h += balanceCard();
+    h += todayFoodCard();
     if (prog && (prog.days || []).length) {
       h += '<div class="tk-card gold"><span class="tk-tag">Your programme</span><h2 class="tk-h2" style="margin:4px 0 6px">' + esc(prog.name) + '</h2>' + (prog.notes ? '<p class="tk-muted">' + esc(prog.notes) + '</p>' : '');
       prog.days.forEach(function (d, i) {
@@ -343,7 +344,7 @@
       h += '<div class="tk-card"><b>No programme yet</b><p class="tk-muted" style="margin-top:4px">Training on your own? Start a workout below and add any of 200+ exercises. Training with Tarek or Chloe? Your coach will add your programme here.</p></div>';
     }
     h += '<div class="tk-row" style="margin-top:14px"><button type="button" class="tk-btn ' + (prog && !viewingOther() ? 'ghost ' : '') + 'block" id="startEmpty">' + (isCoach() ? 'Start an empty workout' : 'Start a workout') + '</button></div>';
-    h += watchCard();
+    // Apple Watch / Whoop connect card hidden for now (too complicated for clients); synced data still counts in Burned
     h += '<div class="tk-grid3 td-stats" style="margin-top:14px"><div class="tk-stat"><b>' + thisWeekCount() + '</b><span>This week</span></div><div class="tk-stat"><b>' + weekStreak() + '</b><span>Week streak</span></div><div class="tk-stat"><b>' + S.workouts.length + '</b><span>Workouts</span></div></div>';
     h += '<div class="td-tiles">' + (lastW ? '<button type="button" class="td-tile" id="lastW" aria-label="See the details of ' + esc(lastW.title || 'Workout') + ', ' + fmtDay(lastW.date) + '"><span class="td-tl">Last workout</span><span class="td-tv">' + esc(lastW.title || 'Workout') + '</span><span class="td-ts">' + fmtDay(lastW.date, { weekday: 'short', day: 'numeric', month: 'short' }) + (lastW.duration_min ? ' · ' + lastW.duration_min + ' min' : '') + (kcalOf(lastW) ? ' · ' + kcalLabel(lastW) : '') + '</span><span class="td-go">View ›</span></button>' : '<div class="td-tile"><span class="td-tl">Last workout</span><span class="td-tv">None yet</span><span class="td-ts">Your first one starts above</span></div>') +
       '<button type="button" class="td-tile" id="goBody"><span class="td-tl">Body weight</span><span class="td-tv td-big">' + (lastB && lastB.weight ? lastB.weight + ' <small>kg</small>' : '–') + '</span><span class="td-ts">' + (lastB ? 'Logged ' + daysAgo(lastB.date) : 'Not logged yet') + '</span><span class="td-go">Log ›</span></button></div>';
@@ -359,7 +360,7 @@
     if ($('resumeW')) $('resumeW').onclick = function () { S.overview = false; render(); window.scrollTo(0, 0); };
     if ($('discardW')) $('discardW').onclick = function () { if (!confirmBox('Discard this unfinished workout?')) return; stopRest(); S.draft = null; saveDraft(); toast('Workout discarded'); render(); };
     $('goBody').onclick = function () { S.tab = 'body'; render(); };
-    wireWatchCard(v);
+    $('goFood').onclick = function () { go('food'); }; $('addFoodT').onclick = function () { openAddFood(); }; if ($('snapFoodT')) $('snapFoodT').onclick = function () { openAddFood(null, null, 'photo'); };
   }
 
   function startDraft(prog, dayIdx) {
@@ -2029,7 +2030,6 @@
     if (!other) {
       body += '<div class="tk-grid2" style="margin-top:14px"><button type="button" class="tk-btn" id="bsCardio">' + ICON.camera + 'Log cardio</button>' +
         (b.src === 'apple' || b.src === 'whoop' ? '<button type="button" class="tk-btn ghost" id="bsHow">How it works</button>' : '<button type="button" class="tk-btn ghost" id="bsAdd">' + (b.manual != null ? 'Edit calories' : 'Add calories burned') + '</button>') + '</div>';
-      if (!hasWatch) body += '<p class="tk-small" style="margin-top:10px">Connect your Apple Watch or Whoop (on the Today page) and your steps and activity are added automatically.</p>';
     }
     var m = modal('What you burned', body);
     m.querySelectorAll('[data-bw]').forEach(function (x) { x.onclick = function () { var w = S.workouts.filter(function (y) { return y.id === x.dataset.bw; })[0]; if (w) { m.close(); workoutModal(w); } }; });
@@ -2062,9 +2062,8 @@
     modal('How calories in vs out works', '<p class="tk-muted">Your body burns calories all day, even at rest. <b>Burned</b> adds up:</p><ul class="bal-help">' +
       '<li><b>Resting burn' + (b.rest ? ' · ' + nf(b.rest) + ' kcal' : '') + '</b> what your body uses just to keep you alive (breathing, heart, brain). ' + (b.restFrom === 'scan' ? 'Taken from your latest InBody scan.' : b.restFrom === 'calc' ? 'Worked out from your body scan\'s muscle and fat.' : 'Estimated from your weight. Add an InBody scan in the Body tab for an accurate number.') + '</li>' +
       '<li><b>Workouts and cardio</b> every session you log in the app, including Log cardio.</li>' +
-      '<li><b>Steps</b> from your Apple Watch, or the steps you enter in Daily habits. On a day with no steps logged, a small allowance for everyday movement is added instead (15% of your resting burn).</li>' +
-      '<li><b>Calories you enter</b> no Apple Watch or Whoop? Tap <b>Add calories burned</b> and type the active calories from your own watch or fitness app. Like the Apple Watch, it is used instead of the app\'s workouts and steps when it is higher, never added on top.</li>' +
-      '<li><b>Apple Watch</b> if your watch\'s active calories are higher than the app\'s workouts and steps, the watch number is used instead (it already includes the workouts it recorded), so nothing is counted twice.</li></ul>' +
+      '<li><b>Everyday movement</b> a small allowance for walking around and daily life (15% of your resting burn).</li>' +
+      '<li><b>Calories you enter</b> wear a watch or use a fitness app? Tap <b>Burned</b>, then <b>Add calories burned</b>, and type your active calories for the day. When it is higher than the app\'s own count it is used instead, never added on top.</li></ul>' +
       '<p class="tk-muted"><b>Eaten</b> is everything in your food log.</p>' +
       '<p class="tk-muted">If <b>burned is more than eaten</b>, you are in a calorie deficit and you lose weight. About 7,700 kcal of deficit is roughly 1 kg of body fat. If <b>eaten is more than burned</b>, you are in a surplus and gain weight' + (plan.goal === 'gain' ? ', which is what you want while building muscle' : '') + '.</p>' +
       '<p class="tk-small">These are good estimates, not lab measurements. Food logged accurately makes the biggest difference.</p>');
@@ -2540,7 +2539,7 @@
   // ---------- website leads (saved by track.js from every website form) ----------
   var LEAD_ST = [['new', 'New'], ['contacted', 'Contacted'], ['won', 'Client'], ['lost', 'Not now']];
   async function leadsBanner() {
-    watchBanner();
+    // watchBanner(); (Apple Watch / Whoop setup hidden for now)
     try {
       var r = await sb.from('leads').select('id', { count: 'exact', head: true }).eq('status', 'new');
       var n = r && r.count; var el = $('leadsBanner'); if (!el || !n) return;
