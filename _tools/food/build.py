@@ -59,8 +59,8 @@ T = {
    cta_h_hub='Lose fat without giving up the food you love', cta_h_page='Lose fat without giving up {name}',
    cta_p='Our clients still eat shawarma and drink karak. We just build it into the plan.',
    cta1=('See Online Coaching', '/online-coaching.html'), cta2=('Train In Person', '/personal-trainer-dubai.html'),
-   page_title='{name} Calories: Real Dubai Portion + Lighter Swap', page_title_short='{name} Calories: Dubai Portion',
-   page_desc='How many calories in {name} in Dubai? See the real portion, protein, carbs and fat, how it fits your day, and a lighter swap.',
+   page_title='{name} Calories: {kcal} kcal + a Lighter Swap',
+   page_desc='{name}: about {kcal} kcal for {portion}, but portion sizes vary a lot. See full macros and a lighter swap.',
    page_h1='How Many Calories in {a}<em>{name}</em>?',
    page_sub='About <strong style="color:#fff">{kcal} kcal</strong> for {portion_l}. Here\'s how it fits into your day, and how to make it lighter without giving it up.',
    home='Home', per='kcal · {portion}', day_note='Uses your target from the calorie calculator if you\'ve used it.', find='Find your number',
@@ -103,8 +103,8 @@ T = {
    cta_h_hub='اخسر الدهون بدون أن تتخلى عن أكلك المفضل', cta_h_page='اخسر الدهون بدون أن تتخلى عن {name}',
    cta_p='عملاؤنا ما زالوا يأكلون الشاورما ويشربون الكرك. نحن فقط ندخلها في الخطة.',
    cta1=('التدريب أونلاين', '/ar/online-coaching.html'), cta2=('التدريب الشخصي في دبي', '/ar/personal-trainer-dubai.html'),
-   page_title='سعرات {name}: الحصة الحقيقية في دبي + بديل أخف', page_title_short='سعرات {name}: الحصة الحقيقية في دبي',
-   page_desc='كم سعرة في {name} من مطاعم ومقاهي دبي؟ اعرف الحصة الحقيقية والبروتين والكربوهيدرات والدهون، وكيف تناسب يومك، وبديلًا أخف من مدربينا.',
+   page_title='سعرات {name}: {kcal} سعرة + بديل أخف',
+   page_desc='{name}: حوالي {kcal} سعرة لـ {portion}، لكن حجم الحصة يختلف كثيرًا. اعرف القيم الغذائية وبديلًا أخف.',
    page_h1='كم سعرة في <em>{name}</em>؟',
    page_sub='حوالي <strong style="color:#fff">{kcal} سعرة</strong> لـ {portion_l}. إليك كيف تناسب يومك، وكيف تجعلها أخف بدون أن تتخلى عنها.',
    home='الرئيسية', per='سعرة · {portion}', day_note='نستخدم هدفك من حاسبة السعرات إذا استخدمتها.', find='اعرف رقمك',
@@ -442,8 +442,6 @@ def build_hub(lang):
     write(path.lstrip('/'), s)
 
 # Hand-tuned titles/descriptions (Search Console work) that the templates must not overwrite.
-# Nov 2026 test: all other food pages switched to titles without the calorie number (the number in the title
-# answered the search, so almost nobody clicked). These 4 keep the number as a comparison group.
 META_OVERRIDES = {
     ('boiled-egg', 'en'): dict(title='Egg Calories: 1 Egg = 78 kcal, 2 Eggs = 155 (Boiled &amp; Fried)',
         desc='How many calories in an egg? 1 large boiled egg is about 78 kcal with 6 g protein, 2 eggs about 155 kcal. Fried, omelette and egg white compared.'),
@@ -461,6 +459,11 @@ META_OVERRIDES = {
         desc='How many calories in a banana? A medium banana is about 105 kcal, small 90 and large 120. Carbs, protein and when to eat it for fat loss.'),
     ('banana', 'ar'): dict(title='كم سعرة في الموز؟ موزة متوسطة = 105 سعرات',
         desc='كم سعرة حرارية في الموز؟ الموزة المتوسطة حوالي 105 سعرات، والصغيرة 90 والكبيرة 120. الكربوهيدرات ومتى تأكلها أثناء خسارة الدهون.'),
+    ('chicken-shawarma', 'en'): dict(
+        title='Chicken Shawarma Wrap Calories: 550 kcal (With Garlic Sauce)',
+        desc='About 550 kcal with garlic sauce &amp; fries inside. Skip the fries and get the sauce on the side and it drops to 400 kcal. Every option compared + full macros.'),
+    ('chicken-shawarma', 'ar'): dict(
+        desc='شاورما دجاج: حوالي 550 سعرة لـ ساندويش عادي (مع الثوم والبطاطا داخله)، لكنها تتراوح من 400 إلى 950 سعرة حسب طريقة الطلب. قارن كل الخيارات واحصل على بديل أخف.'),
 }
 
 def pt_box(f, lang, name):
@@ -498,7 +501,6 @@ def build_page(f, lang):
            "mainEntity": [{"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in faqs]},
           crumbs_ld(lang, [(t['home'], '/ar/' if lang == 'ar' else '/'), (t['tag_page'], hub), (name, path)])]
     title = t['page_title'].format(name=esc(name), kcal=num(f['kcal']))
-    if len(t['page_title'].format(name=name, kcal='')) > 62: title = t['page_title_short'].format(name=esc(name))  # Google cuts titles at ~60 characters
     desc = t['page_desc'].format(name=esc(name), kcal=num(f['kcal']), p=f['p'], portion=esc(portion_l))
     ov = META_OVERRIDES.get((f['slug'], lang), {})
     title, desc = ov.get('title', title), ov.get('desc', desc)
