@@ -330,9 +330,9 @@
     var hr = new Date().getHours(), hello = hr < 12 ? 'Good morning' : hr < 18 ? 'Good afternoon' : 'Good evening';
     h += '<div class="td-date">' + new Date().toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' }) + '</div>';
     h += '<h1 class="td-hello">' + (viewingOther() ? esc(S.target.name || 'Client') + '\'s <em>training</em>' : hello + ', <em>' + esc(name || 'there') + '</em>') + '</h1>';
-    h += '<button type="button" class="td-cardio" id="logCardio">' + ICON.camera + '<span><b>Log cardio</b><small>Done cardio? Snap the machine screen and save it in seconds</small></span><i aria-hidden="true">›</i></button>';
+    h += '<div class="td-quick"><button type="button" class="td-cardio" id="logCardio">' + ICON.camera + '<span><b>Log cardio</b><small>Snap the machine screen</small></span></button>' +
+      '<button type="button" class="td-cardio" id="logFood">' + ICON.food + '<span><b>Log food</b><small>Snap your meal or search</small></span></button></div>';
     h += balanceCard();
-    h += todayFoodCard();
     if (prog && (prog.days || []).length) {
       h += '<div class="tk-card gold"><span class="tk-tag">Your programme</span><h2 class="tk-h2" style="margin:4px 0 6px">' + esc(prog.name) + '</h2>' + (prog.notes ? '<p class="tk-muted">' + esc(prog.notes) + '</p>' : '');
       prog.days.forEach(function (d, i) {
@@ -344,7 +344,6 @@
     }
     h += '<div class="tk-row" style="margin-top:14px"><button type="button" class="tk-btn ' + (prog && !viewingOther() ? 'ghost ' : '') + 'block" id="startEmpty">' + (isCoach() ? 'Start an empty workout' : 'Start a workout') + '</button></div>';
     h += watchCard();
-    h += todayHabitsCard();
     h += '<div class="tk-grid3 td-stats" style="margin-top:14px"><div class="tk-stat"><b>' + thisWeekCount() + '</b><span>This week</span></div><div class="tk-stat"><b>' + weekStreak() + '</b><span>Week streak</span></div><div class="tk-stat"><b>' + S.workouts.length + '</b><span>Workouts</span></div></div>';
     h += '<div class="td-tiles">' + (lastW ? '<button type="button" class="td-tile" id="lastW" aria-label="See the details of ' + esc(lastW.title || 'Workout') + ', ' + fmtDay(lastW.date) + '"><span class="td-tl">Last workout</span><span class="td-tv">' + esc(lastW.title || 'Workout') + '</span><span class="td-ts">' + fmtDay(lastW.date, { weekday: 'short', day: 'numeric', month: 'short' }) + (lastW.duration_min ? ' · ' + lastW.duration_min + ' min' : '') + (kcalOf(lastW) ? ' · ' + kcalLabel(lastW) : '') + '</span><span class="td-go">View ›</span></button>' : '<div class="td-tile"><span class="td-tl">Last workout</span><span class="td-tv">None yet</span><span class="td-ts">Your first one starts above</span></div>') +
       '<button type="button" class="td-tile" id="goBody"><span class="td-tl">Body weight</span><span class="td-tv td-big">' + (lastB && lastB.weight ? lastB.weight + ' <small>kg</small>' : '–') + '</span><span class="td-ts">' + (lastB ? 'Logged ' + daysAgo(lastB.date) : 'Not logged yet') + '</span><span class="td-go">Log ›</span></button></div>';
@@ -353,14 +352,14 @@
     v.querySelectorAll('[data-startday]').forEach(function (b) { b.onclick = function () { if (S.draft && !confirmBox('You have a workout in progress (' + (S.draft.title || 'Workout') + '). Discard it and start ' + (prog.days[+b.dataset.startday].name || 'this day') + '?')) return; startDraft(prog, +b.dataset.startday); }; });
     if ($('startEmpty')) $('startEmpty').onclick = function () { if (S.draft && !confirmBox('You have a workout in progress. Discard it and start an empty one?')) return; startDraft(null); };
     $('logCardio').onclick = openQuickCardio;
+    $('logFood').onclick = function () { openAddFood(); };
     if ($('balHow')) $('balHow').onclick = balanceHelp;
-    if ($('balAdd')) $('balAdd').onclick = function () { openBurnEntry(today()); };
-    if ($('balFood')) $('balFood').onclick = function () { go('food'); };
+    if ($('balBurn')) $('balBurn').onclick = function () { openBurnSheet(today()); };
+    if ($('balEat')) $('balEat').onclick = function () { openEatSheet(today()); };
     if ($('resumeW')) $('resumeW').onclick = function () { S.overview = false; render(); window.scrollTo(0, 0); };
     if ($('discardW')) $('discardW').onclick = function () { if (!confirmBox('Discard this unfinished workout?')) return; stopRest(); S.draft = null; saveDraft(); toast('Workout discarded'); render(); };
     $('goBody').onclick = function () { S.tab = 'body'; render(); };
-    wireHabitCard(v); $('goHabits').onclick = function () { go('habits'); }; wireWatchCard(v);
-    $('goFood').onclick = function () { go('food'); }; $('addFoodT').onclick = function () { openAddFood(); }; if ($('snapFoodT')) $('snapFoodT').onclick = function () { openAddFood(null, null, 'photo'); };
+    wireWatchCard(v);
   }
 
   function startDraft(prog, dayIdx) {
@@ -1967,11 +1966,9 @@
     var goal = ((S.target && S.target.nutrition) || {}).goal || 'maintain';
     var h = '<div class="tk-card bal-card"><div class="hb-head"><span class="tk-tag">' + (other ? fn + '\'s calories in vs out' : 'Calories in vs out') + ' · today</span><button type="button" class="tk-link" id="balHow">How it works</button></div>';
     if (b.total == null) return h + '<p class="tk-muted" style="margin-top:6px">' + (other ? 'Add ' + fn + '\'s weight or InBody scan in the Body tab to see calories burned.' : 'Add your weight or body scan in the Body tab to see the calories you burn each day.') + '</p></div>';
-    var mx = Math.max(b.total, eat, 1), bal = b.total - eat;
-    var parts = b.src === 'whoop' ? ['From Whoop: resting + activity'] : ['Resting ' + nf(b.rest)].concat(b.src === 'apple' ? ['Watch activity ' + nf(b.watch)] : b.src === 'manual' ? ['Activity you entered ' + nf(b.watch)] : [b.workouts ? (b.wn > 1 ? b.wn + ' workouts ' : 'Workout ') + nf(b.workouts) : '', b.stepK ? nf(b.steps) + ' steps ' + nf(b.stepK) : '', b.daily ? 'Everyday movement ~' + nf(b.daily) : '']).filter(Boolean);
-    h += '<div class="bal-row"><div class="bal-top"><span>' + ICON.bolt + 'Burned</span><b>' + nf(b.total) + ' <small>kcal</small></b></div><div class="bal-bar burn"><i style="width:' + Math.round(b.total / mx * 100) + '%"></i></div><div class="bal-parts">' + parts.join(' · ') + (b.src === 'app' && b.daily ? ' · <i>' + (other ? 'no steps logged' : 'add your steps for a more accurate number') + '</i>' : '') + '</div>' +
-      (b.src !== 'apple' && b.src !== 'whoop' ? '<button type="button" class="tk-btn sm ghost bal-add" id="balAdd">' + (b.manual != null ? ICON.pen + 'Edit calories burned (' + nf(b.manual) + ')' : ICON.plus + 'Add calories burned') + '</button>' : '') + '</div>';
-    h += '<div class="bal-row"><div class="bal-top"><span>' + ICON.food + 'Eaten</span><b>' + nf(eat) + ' <small>kcal</small></b></div><div class="bal-bar eat"><i style="width:' + Math.round(eat / mx * 100) + '%"></i></div>' + (eat ? '' : '<div class="bal-parts"><button type="button" class="tk-link" id="balFood">' + (other ? 'No food logged yet today' : 'Log your food to see your balance') + '</button></div>') + '</div>';
+    var mx = Math.max(b.total, eat, 1), bal = b.total - eat, nAct = burnItems(d, b).length - 1, nFood = (S.food || []).filter(function (x) { return x.date === d; }).length;
+    h += '<button type="button" class="bal-row bal-tap" id="balBurn" aria-label="Burned ' + nf(b.total) + ' kcal. See what is included"><span class="bal-top"><span>' + ICON.bolt + 'Burned</span><b>' + nf(b.total) + ' <small>kcal</small><i aria-hidden="true">›</i></b></span><span class="bal-bar burn"><i style="width:' + Math.round(b.total / mx * 100) + '%"></i></span><span class="bal-parts">Resting ' + nf(b.rest || 0) + ' + activity ' + nf(Math.max(0, b.total - (b.rest || 0))) + (nAct > 0 ? ' · ' + nAct + (nAct === 1 ? ' item' : ' items') : '') + '</span></button>';
+    h += '<button type="button" class="bal-row bal-tap" id="balEat" aria-label="Eaten ' + nf(eat) + ' kcal. See your food"><span class="bal-top"><span>' + ICON.food + 'Eaten</span><b>' + nf(eat) + ' <small>kcal</small><i aria-hidden="true">›</i></b></span><span class="bal-bar eat"><i style="width:' + Math.round(eat / mx * 100) + '%"></i></span><span class="bal-parts">' + (nFood ? nFood + (nFood === 1 ? ' food logged' : ' foods logged') : (other ? 'No food logged yet today' : 'Nothing logged yet · tap Log food above')) + '</span></button>';
     if (eat) {
       var good = goal === 'gain' ? bal < 0 : goal === 'maintain' ? Math.abs(bal) <= 250 : bal > 0;
       var msg = bal > 0 ? nf(bal) + ' kcal more burned than eaten' : bal < 0 ? nf(-bal) + ' kcal more eaten than burned' : 'Burned and eaten are equal';
@@ -2007,6 +2004,58 @@
       hSet(d, 'burned_kcal', v); ev('tracker_burn_manual', { kcal: v }); m.close(); toast('Saved', true); render();
     };
     $('bkClear').onclick = function () { hSet(d, 'burned_kcal', null); m.close(); toast('Removed'); render(); };
+  }
+  // Everything that makes up a day's Burned number, in order, for the breakdown sheet.
+  function burnItems(d, b) {
+    b = b || burnOn(d);
+    var out = [{ icon: 'heart', name: 'Resting burn', sub: b.restFrom === 'scan' ? 'From your InBody scan' : b.restFrom === 'calc' ? 'From your body scan' : 'Estimated from your weight', k: b.rest || 0 }];
+    if (b.src === 'whoop') { out.push({ icon: 'bolt', name: 'Activity from Whoop', sub: 'Whoop measures your whole day', k: b.move }); return out; }
+    var used = b.src === 'app';
+    (S.workouts || []).filter(function (w) { return w.date === d; }).forEach(function (w) {
+      var k = kcalOf(w); out.push({ icon: (w.exercises || []).every(function (e) { return (e.type || typeOf(e.name)) === 'c'; }) ? 'run' : 'dumbbell', name: w.title || 'Workout', sub: [w.duration_min ? w.duration_min + ' min' : '', (w.exercises || []).some(function (e) { return e.photo; }) ? 'photo' : ''].filter(Boolean).join(' · '), k: k || 0, wid: w.id, off: !used });
+    });
+    if (b.stepK) out.push({ icon: 'steps', name: nf(b.steps) + ' steps', sub: 'From your watch', k: b.stepK, off: !used });
+    if (b.daily) out.push({ icon: 'steps', name: 'Everyday movement', sub: 'Estimate: no steps today', k: b.daily, off: !used });
+    if (b.src === 'apple') out.push({ icon: 'bolt', name: 'Apple Watch activity', sub: 'Includes the workouts and steps above', k: b.watch });
+    if (b.src === 'manual') out.push({ icon: 'bolt', name: 'Calories you entered', sub: 'Covers your whole day', k: b.watch, manual: true });
+    return out;
+  }
+  function openBurnSheet(d) {
+    var b = burnOn(d), items = burnItems(d, b), other = viewingOther(), L = S.hlink || {}, hasWatch = !!(L.apple_last_at || L.whoop_connected);
+    var IC = { heart: ICON.heart, bolt: ICON.bolt, steps: ICON.steps, run: ICON.steps, dumbbell: ICON.dumbbell };
+    var body = '<div class="bs-total"><span>Burned today</span><b>' + nf(b.total || 0) + ' <small>kcal</small></b></div><div class="bs-list">' +
+      items.map(function (x, i) { return '<' + (x.wid ? 'button type="button" data-bw="' + x.wid + '"' : 'div') + ' class="bs-item' + (x.off ? ' off' : '') + '"><span class="bs-ic">' + (IC[x.icon] || ICON.bolt) + '</span><span class="bs-nm"><b>' + esc(x.name) + '</b>' + (x.sub ? '<small>' + esc(x.sub) + '</small>' : '') + '</span><span class="bs-k">' + (x.k ? nf(x.k) : '–') + '<small>kcal</small></span>' + (x.wid ? '<i aria-hidden="true">›</i>' : '') + '</' + (x.wid ? 'button' : 'div') + '>'; }).join('') + '</div>';
+    if (items.some(function (x) { return x.off; })) body += '<p class="tk-small bs-note">Faded items are already counted inside ' + (b.src === 'apple' ? 'your Apple Watch number' : b.src === 'manual' ? 'the calories you entered' : 'the total') + ', so they are not added twice.</p>';
+    if (!other) {
+      body += '<div class="tk-grid2" style="margin-top:14px"><button type="button" class="tk-btn" id="bsCardio">' + ICON.camera + 'Log cardio</button>' +
+        (b.src === 'apple' || b.src === 'whoop' ? '<button type="button" class="tk-btn ghost" id="bsHow">How it works</button>' : '<button type="button" class="tk-btn ghost" id="bsAdd">' + (b.manual != null ? 'Edit calories' : 'Add calories burned') + '</button>') + '</div>';
+      if (!hasWatch) body += '<p class="tk-small" style="margin-top:10px">Connect your Apple Watch or Whoop (on the Today page) and your steps and activity are added automatically.</p>';
+    }
+    var m = modal('What you burned', body);
+    m.querySelectorAll('[data-bw]').forEach(function (x) { x.onclick = function () { var w = S.workouts.filter(function (y) { return y.id === x.dataset.bw; })[0]; if (w) { m.close(); workoutModal(w); } }; });
+    if ($('bsCardio')) $('bsCardio').onclick = function () { m.close(); openQuickCardio(); };
+    if ($('bsAdd')) $('bsAdd').onclick = function () { m.close(); openBurnEntry(d); };
+    if ($('bsHow')) $('bsHow').onclick = function () { m.close(); balanceHelp(); };
+  }
+  function openEatSheet(d) {
+    var it = (S.food || []).filter(function (x) { return x.date === d; }), t = fTot(d), plan = nutPlan(), goal = plan.missing ? null : plan, other = viewingOther();
+    var ML = [['breakfast', 'Breakfast'], ['lunch', 'Lunch'], ['dinner', 'Dinner'], ['snack', 'Snacks']];
+    var body = '<div class="bs-total"><span>Eaten today</span><b>' + nf(t.kcal) + ' <small>kcal' + (goal ? ' of ' + nf(goal.kcal) : '') + '</small></b></div>' +
+      '<div class="bs-macros"><span><b>' + Math.round(t.p) + ' g</b>Protein' + (goal ? ' / ' + Math.round(goal.protein) : '') + '</span><span><b>' + Math.round(t.c) + ' g</b>Carbs</span><span><b>' + Math.round(t.f) + ' g</b>Fat</span></div>';
+    if (!it.length) body += '<p class="tk-muted" style="margin:12px 0">' + (other ? 'Nothing logged yet today.' : 'Nothing logged yet today. Snap a photo of your meal and the app works out the calories for you.') + '</p>';
+    ML.forEach(function (ml) {
+      var xs = it.filter(function (x) { return (x.meal || 'snack') === ml[0]; }); if (!xs.length) return;
+      var mk = xs.reduce(function (a, x) { return a + (+x.kcal || 0); }, 0);
+      body += '<div class="bs-meal"><div class="bs-mh"><b>' + ml[1] + '</b><span>' + nf(mk) + ' kcal</span></div>' + xs.map(function (x) {
+        return '<div class="bs-item">' + (x.photo_path ? '<button type="button" class="fd-th" data-fphoto="' + esc(x.photo_path) + '" aria-label="See the photo of ' + esc(x.name) + '"><img data-fthumb="' + esc(x.photo_path) + '" alt=""></button>' : '<span class="bs-ic">' + ICON.food + '</span>') + '<span class="bs-nm"><b>' + esc(x.name) + '</b><small>' + esc(x.amount || '') + (x.protein ? (x.amount ? ' · ' : '') + Math.round(x.protein) + ' g protein' : '') + '</small></span><span class="bs-k">' + nf(+x.kcal || 0) + '<small>kcal</small></span></div>';
+      }).join('') + '</div>';
+    });
+    body += '<div class="tk-grid2" style="margin-top:14px">' + (other ? '' : '<button type="button" class="tk-btn" id="esAdd">' + ICON.camera + 'Log food</button>') + '<button type="button" class="tk-btn ghost" id="esLog">' + (other ? 'Food history' : 'Open food log') + '</button></div>';
+    var m = modal('What you ate', body);
+    fillFoodThumbs(m);
+    m.querySelectorAll('[data-fphoto]').forEach(function (x) { x.onclick = function () { showMealPhoto(x.dataset.fphoto); }; });
+    if ($('esAdd')) $('esAdd').onclick = function () { m.close(); openAddFood(); };
+    $('esLog').onclick = function () { m.close(); go('food'); };
   }
   function balanceHelp() {
     var b = burnOn(today()), plan = nutPlan();
