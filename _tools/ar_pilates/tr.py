@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Arabic translations for female-personal-trainer-dubai.html -> ar/female-personal-trainer-dubai.html
+# Arabic translations for private-pilates-dubai.html -> ar/private-pilates-dubai.html
 # BLOCKS[i] matches the i-th unique block in the English page (see build.py). {a0},{a1}.. = the block's own <a ...> tags.
 # None = keep the English block as is.
 TPR = 'ذا بيلاتس روم'

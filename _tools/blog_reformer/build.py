@@ -94,7 +94,7 @@ C = {
       ('Is reformer Pilates the same as Lagree?', 'No. Lagree uses a different machine and a slower, high-intensity style, usually in group classes. Reformer Pilates focuses on control, alignment and core strength.'),
       ('Can I do reformer Pilates while pregnant?', 'Only with your doctor\'s approval and an instructor trained in pre and postnatal exercise, who will adapt the exercises for each stage.')],
  related_h='Keep reading',
- related=[('/female-personal-trainer-dubai.html', 'Private reformer Pilates in Meydan: sessions &amp; packages'), ('/blog-private-reformer-pilates-dubai.html', 'Private Reformer Pilates in Dubai: Why 1-to-1 Beats Group Classes'),
+ related=[('/private-pilates-dubai.html', 'Private reformer Pilates in Meydan: sessions &amp; packages'), ('/blog-private-reformer-pilates-dubai.html', 'Private Reformer Pilates in Dubai: Why 1-to-1 Beats Group Classes'),
           ('/blog-glutes-training-women.html', 'Glute Training for Women: What Actually Works'), ('/chloe-antoniazzi.html', 'Meet Chloe Antoniazzi')],
  cta_h='Try Reformer Pilates <em>With Chloe</em>', cta_p='Ladies only · Private 1-to-1 or with a friend · 50 minutes · Babies welcome · Free parking',
  cta_btn='Message Chloe on WhatsApp', wa='Hi Chloe, I read your guide to reformer Pilates and I\'d like to try a session at The Pilates Room.',
@@ -169,7 +169,7 @@ C = {
 <p>جلستان إلى ثلاث جلسات أسبوعيًا هدف جيد إذا أردتِ رؤية تغيير في القوة والوضعية. وجلسة واحدة أسبوعيًا مفيدة أيضًا، خاصة مع المشي أو تمارين أخرى. الاستمرار أهم من الشدة.</p>
 
 <h2>جلسات خاصة أم جماعية؟</h2>
-<p>كثير من الاستوديوهات في دبي تقدّم البيلاتس على الجهاز في حصص جماعية. أما الجلسة الخاصة فتعني أن كل تمرين وكل ضبط للنوابض يُختار لك أنتِ، وهذا يجعل الأسابيع الأولى أسهل بكثير. تعرّفي على <a href="/ar/female-personal-trainer-dubai.html">جلسات البيلاتس الخاصة للسيدات مع كلوي</a>.</p>
+<p>كثير من الاستوديوهات في دبي تقدّم البيلاتس على الجهاز في حصص جماعية. أما الجلسة الخاصة فتعني أن كل تمرين وكل ضبط للنوابض يُختار لك أنتِ، وهذا يجعل الأسابيع الأولى أسهل بكثير. تعرّفي على <a href="/ar/private-pilates-dubai.html">جلسات البيلاتس الخاصة للسيدات مع كلوي</a>.</p>
 
 <h2>أسئلة شائعة</h2>
 {faq}''',
@@ -180,7 +180,7 @@ C = {
       ('هل البيلاتس على الجهاز هو نفسه اللاغري؟', 'لا. اللاغري يستخدم جهازًا مختلفًا وأسلوبًا أبطأ وعالي الشدة، وغالبًا في حصص جماعية. أما البيلاتس على الجهاز فيركّز على التحكم والمحاذاة وقوة عضلات البطن والظهر.'),
       ('هل يمكنني ممارسة البيلاتس على الجهاز أثناء الحمل؟', 'فقط بموافقة طبيبتك ومع مدربة متخصصة في تمارين الحمل وما بعد الولادة، تكيّف التمارين حسب كل مرحلة.')],
  related_h='اقرئي أيضًا',
- related=[('/ar/female-personal-trainer-dubai.html', 'بيلاتس خاص للسيدات في ميدان: الجلسات والباقات'), ('/ar/calculator.html', 'حاسبة السعرات الحرارية والماكروز'),
+ related=[('/ar/private-pilates-dubai.html', 'بيلاتس خاص للسيدات في ميدان: الجلسات والباقات'), ('/ar/calculator.html', 'حاسبة السعرات الحرارية والماكروز'),
           ('/ar/dubai-food-calories.html', 'سعرات أكلات دبي'), ('/chloe-antoniazzi.html', 'تعرّفي على كلوي (بالإنجليزية)')],
  cta_h='جرّبي البيلاتس على الجهاز <em>مع كلوي</em>', cta_p='للسيدات فقط · جلسة خاصة فردية أو مع صديقة · 50 دقيقة · الأطفال مرحّب بهم · مواقف مجانية',
  cta_btn='راسلي كلوي على واتساب', wa='مرحبًا كلوي، قرأت دليل البيلاتس على الجهاز وأرغب في تجربة جلسة في ذا بيلاتس روم.',

@@ -1,18 +1,38 @@
 {
   "redirects": [
     {
+      "source": "/female-personal-trainer-dubai.html",
+      "destination": "/private-pilates-dubai.html",
+      "permanent": true
+    },
+    {
+      "source": "/female-personal-trainer-dubai",
+      "destination": "/private-pilates-dubai.html",
+      "permanent": true
+    },
+    {
+      "source": "/ar/female-personal-trainer-dubai.html",
+      "destination": "/ar/private-pilates-dubai.html",
+      "permanent": true
+    },
+    {
+      "source": "/ar/female-personal-trainer-dubai",
+      "destination": "/ar/private-pilates-dubai.html",
+      "permanent": true
+    },
+    {
       "source": "/dubai-transformation-blueprint.pdf",
       "destination": "/free-guide.html",
       "permanent": false
     },
     {
       "source": "/reformer-pilates-meydan.html",
-      "destination": "/female-personal-trainer-dubai.html",
+      "destination": "/private-pilates-dubai.html",
       "permanent": true
     },
     {
       "source": "/personal-trainer-meydan.html",
-      "destination": "/female-personal-trainer-dubai.html",
+      "destination": "/private-pilates-dubai.html",
       "permanent": true
     },
     {
@@ -74,11 +94,6 @@
     {
       "source": "/personal-trainer-dubai",
       "destination": "/personal-trainer-dubai.html",
-      "permanent": true
-    },
-    {
-      "source": "/female-personal-trainer-dubai",
-      "destination": "/female-personal-trainer-dubai.html",
       "permanent": true
     },
     {
@@ -173,12 +188,12 @@
     },
     {
       "source": "/personal-trainer-meydan",
-      "destination": "/female-personal-trainer-dubai.html",
+      "destination": "/private-pilates-dubai.html",
       "permanent": true
     },
     {
       "source": "/reformer-pilates-meydan",
-      "destination": "/female-personal-trainer-dubai.html",
+      "destination": "/private-pilates-dubai.html",
       "permanent": true
     },
     {
@@ -207,11 +222,6 @@
       "permanent": true
     },
     {
-      "source": "/ar/female-personal-trainer-dubai",
-      "destination": "/ar/female-personal-trainer-dubai.html",
-      "permanent": true
-    },
-    {
       "source": "/ar/online-coaching",
       "destination": "/ar/online-coaching.html",
       "permanent": true
@@ -228,7 +238,7 @@
     },
     {
       "source": "/pilates",
-      "destination": "/female-personal-trainer-dubai.html",
+      "destination": "/private-pilates-dubai.html",
       "permanent": true
     },
     {
@@ -714,6 +724,16 @@
     {
       "source": "/exercises/wide-grip-lat-pulldown.html",
       "destination": "/exercise-library.html",
+      "permanent": true
+    },
+    {
+      "source": "/private-pilates-dubai",
+      "destination": "/private-pilates-dubai.html",
+      "permanent": true
+    },
+    {
+      "source": "/ar/private-pilates-dubai",
+      "destination": "/ar/private-pilates-dubai.html",
       "permanent": true
     }
   ],
