@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
-# Arabic translations for private-pilates-dubai.html -> ar/private-pilates-dubai.html
+# Arabic translations for pilates-with-chloe.html -> ar/pilates-with-chloe.html
 # BLOCKS[i] matches the i-th unique block in the English page (see build.py). {a0},{a1}.. = the block's own <a ...> tags.
 # None = keep the English block as is.
 TPR = 'ذا بيلاتس روم'
 BLOCKS = [
  None,  # 0 &times;
- 'بيلاتس خاص على الجهاز (ريفورمر) للسيدات في دبي',
+ 'بيلاتس مع كلوي',
  'استوديو خاص تشعرين فيه وكأنك في بيتك.',
  'حمّلي تطبيقنا واحجزي جلستك',
  'حمّله من',

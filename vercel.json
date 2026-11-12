@@ -1,23 +1,53 @@
 {
   "redirects": [
     {
+      "source": "/private-pilates-dubai.html",
+      "destination": "/pilates-with-chloe.html",
+      "permanent": true
+    },
+    {
+      "source": "/private-pilates-dubai",
+      "destination": "/pilates-with-chloe.html",
+      "permanent": true
+    },
+    {
+      "source": "/pilates-with-chloe",
+      "destination": "/pilates-with-chloe.html",
+      "permanent": true
+    },
+    {
+      "source": "/ar/private-pilates-dubai.html",
+      "destination": "/ar/pilates-with-chloe.html",
+      "permanent": true
+    },
+    {
+      "source": "/ar/private-pilates-dubai",
+      "destination": "/ar/pilates-with-chloe.html",
+      "permanent": true
+    },
+    {
+      "source": "/ar/pilates-with-chloe",
+      "destination": "/ar/pilates-with-chloe.html",
+      "permanent": true
+    },
+    {
       "source": "/female-personal-trainer-dubai.html",
-      "destination": "/private-pilates-dubai.html",
+      "destination": "/pilates-with-chloe.html",
       "permanent": true
     },
     {
       "source": "/female-personal-trainer-dubai",
-      "destination": "/private-pilates-dubai.html",
+      "destination": "/pilates-with-chloe.html",
       "permanent": true
     },
     {
       "source": "/ar/female-personal-trainer-dubai.html",
-      "destination": "/ar/private-pilates-dubai.html",
+      "destination": "/ar/pilates-with-chloe.html",
       "permanent": true
     },
     {
       "source": "/ar/female-personal-trainer-dubai",
-      "destination": "/ar/private-pilates-dubai.html",
+      "destination": "/ar/pilates-with-chloe.html",
       "permanent": true
     },
     {
@@ -27,12 +57,12 @@
     },
     {
       "source": "/reformer-pilates-meydan.html",
-      "destination": "/private-pilates-dubai.html",
+      "destination": "/pilates-with-chloe.html",
       "permanent": true
     },
     {
       "source": "/personal-trainer-meydan.html",
-      "destination": "/private-pilates-dubai.html",
+      "destination": "/pilates-with-chloe.html",
       "permanent": true
     },
     {
@@ -188,12 +218,12 @@
     },
     {
       "source": "/personal-trainer-meydan",
-      "destination": "/private-pilates-dubai.html",
+      "destination": "/pilates-with-chloe.html",
       "permanent": true
     },
     {
       "source": "/reformer-pilates-meydan",
-      "destination": "/private-pilates-dubai.html",
+      "destination": "/pilates-with-chloe.html",
       "permanent": true
     },
     {
@@ -238,7 +268,7 @@
     },
     {
       "source": "/pilates",
-      "destination": "/private-pilates-dubai.html",
+      "destination": "/pilates-with-chloe.html",
       "permanent": true
     },
     {
@@ -724,16 +754,6 @@
     {
       "source": "/exercises/wide-grip-lat-pulldown.html",
       "destination": "/exercise-library.html",
-      "permanent": true
-    },
-    {
-      "source": "/private-pilates-dubai",
-      "destination": "/private-pilates-dubai.html",
-      "permanent": true
-    },
-    {
-      "source": "/ar/private-pilates-dubai",
-      "destination": "/ar/private-pilates-dubai.html",
       "permanent": true
     }
   ],

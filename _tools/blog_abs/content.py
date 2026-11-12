@@ -116,7 +116,7 @@ C = {
 </ul>
 
 <h2>When a coach helps</h2>
-<p>Most people who don't get abs know the theory. What's missing is a plan that fits their week, someone checking the numbers, and someone to keep them going when progress slows. That's what I do for my clients, 1-to-1 at <a href="/personal-trainer-al-quoz.html">Nogs Gym in Al Quoz</a> or through <a href="/online-coaching.html">online coaching</a>. For women who would prefer a female coach, Chloe coaches <a href="/private-pilates-dubai.html">ladies only in Meydan</a>.</p>
+<p>Most people who don't get abs know the theory. What's missing is a plan that fits their week, someone checking the numbers, and someone to keep them going when progress slows. That's what I do for my clients, 1-to-1 at <a href="/personal-trainer-al-quoz.html">Nogs Gym in Al Quoz</a> or through <a href="/online-coaching.html">online coaching</a>. For women who would prefer a female coach, Chloe coaches <a href="/pilates-with-chloe.html">ladies only in Meydan</a>.</p>
 
 <h2>Frequently Asked Questions</h2>
 {{faq}}''',
@@ -198,7 +198,7 @@ C = {
 </ul>
 
 <h2>متى يساعدك المدرب؟</h2>
-<p>معظم من لا يحصلون على عضلات البطن يعرفون النظرية. ما ينقصهم هو خطة تناسب أسبوعهم، وشخص يتابع الأرقام، وشخص يحفّزهم عندما يتباطأ التقدّم. وهذا ما أقدّمه لعملائي، تدريب شخصي في <a href="/ar/personal-trainer-dubai.html">نوقز جيم بالقوز</a> أو عبر <a href="/ar/online-coaching.html">التدريب أونلاين</a>. وللسيدات اللواتي يفضّلن مدربة، كلوي تدرّب <a href="/ar/private-pilates-dubai.html">السيدات فقط في ميدان</a>.</p>
+<p>معظم من لا يحصلون على عضلات البطن يعرفون النظرية. ما ينقصهم هو خطة تناسب أسبوعهم، وشخص يتابع الأرقام، وشخص يحفّزهم عندما يتباطأ التقدّم. وهذا ما أقدّمه لعملائي، تدريب شخصي في <a href="/ar/personal-trainer-dubai.html">نوقز جيم بالقوز</a> أو عبر <a href="/ar/online-coaching.html">التدريب أونلاين</a>. وللسيدات اللواتي يفضّلن مدربة، كلوي تدرّب <a href="/ar/pilates-with-chloe.html">السيدات فقط في ميدان</a>.</p>
 
 <h2>أسئلة شائعة</h2>
 {{faq}}''',

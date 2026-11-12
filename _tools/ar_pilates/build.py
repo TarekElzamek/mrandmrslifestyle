@@ -1,12 +1,12 @@
-# Builds ar/private-pilates-dubai.html from the English page + tr.py.  Run from repo root.
+# Builds ar/pilates-with-chloe.html from the English page + tr.py.  Run from repo root.
 import re, json, sys, urllib.parse
 sys.path.insert(0, '_tools/ar_pilates')
 from tr import BLOCKS, LEFT
 
-SRC = 'private-pilates-dubai.html'
-OUT = 'ar/private-pilates-dubai.html'
-EN_URL = 'https://www.mrandmrslifestyle.com/private-pilates-dubai.html'
-AR_URL = 'https://www.mrandmrslifestyle.com/ar/private-pilates-dubai.html'
+SRC = 'pilates-with-chloe.html'
+OUT = 'ar/pilates-with-chloe.html'
+EN_URL = 'https://www.mrandmrslifestyle.com/pilates-with-chloe.html'
+AR_URL = 'https://www.mrandmrslifestyle.com/ar/pilates-with-chloe.html'
 
 s = open(SRC, encoding='utf-8').read()
 i = s.index('<body')
@@ -53,15 +53,15 @@ def sub_attr(m):
 b = re.sub(r'\b(alt|aria-label|placeholder|title)="([^"]*)"', sub_attr, b)
 
 for k, v in enumerate(prot): b = b.replace('\x00%d\x00' % k, v, 1)
-b = b.replace('href="/ar/private-pilates-dubai.html" hreflang="ar" lang="ar">العربية</a>', 'href="/private-pilates-dubai.html" hreflang="en" lang="en">English</a>')
+b = b.replace('href="/ar/pilates-with-chloe.html" hreflang="ar" lang="ar">العربية</a>', 'href="/pilates-with-chloe.html" hreflang="en" lang="en">English</a>')
 b = b.replace(' Get Directions<', ' الاتجاهات<').replace('>Get Directions<', '>الاتجاهات<')
 
 # internal links -> Arabic versions where they exist
-for p in ['personal-trainer-dubai.html', 'online-coaching.html', 'personal-trainer-cost-calculator.html', 'dubai-food-calories.html', 'private-pilates-dubai.html', 'calculator.html', 'blog-what-is-reformer-pilates.html']:
+for p in ['personal-trainer-dubai.html', 'online-coaching.html', 'personal-trainer-cost-calculator.html', 'dubai-food-calories.html', 'pilates-with-chloe.html', 'calculator.html', 'blog-what-is-reformer-pilates.html']:
     b = b.replace('href="https://www.mrandmrslifestyle.com/%s' % p, 'href="/ar/%s' % p).replace('href="/%s' % p, 'href="/ar/%s' % p)
 b = b.replace('href="https://www.mrandmrslifestyle.com/"', 'href="/ar/"').replace('href="/"', 'href="/ar/"')
 
-b = b.replace('href="/ar/private-pilates-dubai.html" hreflang="en" lang="en">English</a>', 'href="/private-pilates-dubai.html" hreflang="en" lang="en">English</a>')
+b = b.replace('href="/ar/pilates-with-chloe.html" hreflang="en" lang="en">English</a>', 'href="/pilates-with-chloe.html" hreflang="en" lang="en">English</a>')
 # WhatsApp pre-filled messages in Arabic
 CH = urllib.parse.quote('مرحباً كلوي، أرغب بالاستفسار عن جلسات البيلاتس الخاصة في ذا بيلاتس روم.')
 TA = urllib.parse.quote('مرحباً طارق، أرغب بحجز تدريب شخصي معك في Nogs Gym.')
@@ -75,8 +75,8 @@ left = [t.strip() for t in re.findall(r'>([^<>]+)<', chk) if re.search('[A-Za-z]
 # ---------- head ----------
 h = head
 h = h.replace('<html lang="en"', '<html lang="ar" dir="rtl"', 1)
-TITLE = 'بيلاتس على الجهاز (ريفورمر) للسيدات في دبي | ذا بيلاتس روم ميدان'
-DESC = 'بيلاتس خاص على الجهاز (الريفورمر) للسيدات فقط في ميدان، دبي مع المدربة كلوي. جلسات فردية أو مع صديقة من 365 درهماً، بلا حصص جماعية، مواقف مجانية، والأطفال مرحّب بهم.'
+TITLE = 'بيلاتس مع كلوي | ذا بيلاتس روم باي كلوي، ميدان'
+DESC = 'كلوي، المدربة الرئيسية في مستر آند مسز لايف ستايل، تدرّب بيلاتس ريفورمر خاص للسيدات فقط في الاستوديو الخاص بها ذا بيلاتس روم باي كلوي في ميدان. احجزي عبر thepilatesroombychloe.com.'
 h = re.sub(r'<title>.*?</title>', '<title>%s</title>' % TITLE, h, flags=re.S)
 h = re.sub(r'(<meta name="description" content=")[^"]*', r'\g<1>' + DESC, h)
 h = re.sub(r'(<meta property="og:title" content=")[^"]*', r'\g<1>' + TITLE, h)
