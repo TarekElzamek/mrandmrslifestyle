@@ -360,7 +360,7 @@ def tail(lang):
 {footer}{LEAD_JS}
 <script src="/shared.js" defer></script>
 {'<script src="/chat-widget.js" defer></script>' if lang == 'en' else ''}
-<script src="/track.js" defer></script>
+<script src="/track.js?v=2" defer></script>
 </body>
 </html>
 '''
