@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Get The Pilates Room by Chloe app</title>
+<link rel="icon" href="/pilates-room/tpr-icon.png">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-1QXTWXK4LB"></script>
+<script>
+// QR-code link from printed flyers: sends phones straight to the right app store.
+window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-1QXTWXK4LB');
+(function(){
+  var IOS='https://apps.apple.com/ae/app/the-pilates-room-by-chloe/id6815196864';
+  var AND='https://play.google.com/store/apps/details?id=com.fitnessmobileapps.thepilatesroom46324';
+  var src=(new URLSearchParams(location.search).get('src')||'qr').slice(0,30);
+  var ua=navigator.userAgent||'';
+  var ios=/iPhone|iPad|iPod/i.test(ua)||(/Macintosh/.test(ua)&&'ontouchend' in document);
+  var and=/Android/i.test(ua);
+  var dest=ios?IOS:(and?AND:null);
+  gtag('event','tpr_app_qr',{source:src,platform:ios?'ios':(and?'android':'other')});
+  if(dest) setTimeout(function(){location.replace(dest);},350);
+})();
+</script>
+<style>
+body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;background:#F3E4DC;color:#3B2418;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;text-align:center}
+main{padding:32px 20px;max-width:420px}
+img{width:56px;height:auto}
+h1{font-weight:500;font-size:22px;letter-spacing:.06em;text-transform:uppercase;margin:18px 0 8px}
+p{margin:0 0 24px;color:#6B4A3A}
+a.b{display:block;margin:10px auto;max-width:260px;padding:14px 18px;border-radius:10px;background:#000;color:#fff;text-decoration:none;font-weight:600}
+</style>
+</head>
+<body>
+<main>
+  <img src="/pilates-room/tpr-icon.png" alt="The Pilates Room by Chloe" width="105" height="200">
+  <h1>The Pilates Room by Chloe</h1>
+  <p>Download our app to book your session.</p>
+  <a class="b" href="https://apps.apple.com/ae/app/the-pilates-room-by-chloe/id6815196864">Download on the App Store</a>
+  <a class="b" href="https://play.google.com/store/apps/details?id=com.fitnessmobileapps.thepilatesroom46324">Get it on Google Play</a>
+</main>
+</body>
+</html>
