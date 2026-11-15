@@ -26,16 +26,12 @@ KEY FACTS:
 - Based in Dubai: Tarek trains clients 1-to-1 at Nogs Gym, Al Quoz (he does not travel to clients). Chloe runs ladies-only private reformer Pilates at The Pilates Room by Chloe in Meydan.
 - Online coaching available worldwide
 
-PACKAGES (be exact; never say every package is personalised):
+PACKAGES (be exact; never say every package is personalised). There are only three online packages: Economy, Elite and Couples. VIP and the specialist programmes (Booty Builder, Muscle Gain, Fat Burn, Nutrition Plan) are no longer sold; point those goals to Elite:
 - Economy Pack: AED 299/month, monthly subscription. READY-MADE 4-week beginner programme (same for everyone) plus your calorie & macro targets. No coach check-ins (self-tracking sheets). Support by email within 24 hours.
-- Elite Coaching Experience: AED 899/month for 3 months (12-week programme, ends automatically). PERSONALISED training + nutrition by Tarek or Chloe. Weekly 1-to-1 check-in call, plan adjusted every 2 weeks, WhatsApp 24/7. MOST POPULAR.
-- VIP Online Coaching: AED 1,999/month for 3 months (12-week programme, ends automatically). Everything in Elite plus a video coaching session every 2 weeks, nutrition rebuilt each phase, supplement protocol, lifestyle coaching, priority WhatsApp replies within 2 hours.
+- Elite Coaching Experience: AED 899/month for 3 months (12-week programme, ends automatically). PERSONALISED training + nutrition by Tarek or Chloe. Weekly 1-to-1 check-in call, plan adjusted every 2 weeks, WhatsApp 24/7. Built around the client's goal (fat loss, muscle gain, recomposition or glute development). MOST POPULAR.
+- Elite paid upfront: AED 2,399 once for 3 months (saves AED 298) or AED 4,299 once for 6 months (two 12-week phases, saves AED 1,095, about AED 717/month). One payment, does not renew, nothing to cancel, non-refundable. BEST VALUE.
 - Couples Transformation: AED 1,499/month for both, for 3 months (12-week programme, ends automatically). Separate personalised plans for each partner, shared check-in call every 2 weeks, WhatsApp 24/7.
-- Booty Builder (women, Chloe): AED 649/month for 3 months (ends automatically), 12-week self-guided programme, exercise selection for your body and equipment, email support, no coach check-ins.
-- Ultimate Muscle Gain (Tarek): AED 480/month for 3 months (ends automatically), 12-week self-guided programme with calorie & protein targets, email support, no coach check-ins.
-- Ultimate Fat Burn: AED 480/month for 3 months (ends automatically), 12-week self-guided programme with calorie & macro targets, gym or home, email support, no coach check-ins.
-- Tailor-Made Nutrition Plan: AED 750/month for 3 months (ends automatically), personalised 12-week meal plan, self-guided, email support.
-- BILLING: all online packages are monthly subscriptions charged automatically on the same date each month. Cancel by email or WhatsApp at least 14 days before the next renewal date; coaching continues to the end of the paid month. Payments are non-refundable (except billing mistakes or where UAE law requires). Every package except the Economy Pack is a 12-week programme, billed monthly for 3 months, that ends automatically. The Economy Pack renews monthly until cancelled. Full policy: mrandmrslifestyle.com/terms.html#subscription-policy
+- BILLING: monthly packages are charged automatically on the same date each month. Cancel by email or WhatsApp at least 14 days before the next renewal date; coaching continues to the end of the paid month. Payments are non-refundable (except billing mistakes or where UAE law requires). Elite and Couples are 12-week programmes, billed monthly for 3 months, that end automatically (or Elite can be paid upfront, see above). The Economy Pack renews monthly until cancelled. Full policy: mrandmrslifestyle.com/terms.html#subscription-policy
 - No money-back guarantee. Satisfaction commitment: free strategy call before paying; if after onboarding and 7 days on the plan it isn't right, message us and we'll adjust the plan, switch coach or find another solution.
 - Free strategy call before any commitment
 

@@ -26,6 +26,10 @@ const WA_CHLOE = 'https://wa.me/971547011995';
 const PACKAGES = [
   { key: 'economy', match: /economy/i, name: 'Economy Pack', price: 'AED 299 per month', months: 0,
     coach: 'self', included: ['A ready-made 4-week beginner training programme', 'Your daily calorie and macro targets', 'Weekly self check-in sheets (no coach check-ins)', 'Email support, replies within 24 hours'] },
+  { key: 'elite6', match: /elite.*(\b6\b|six)|(\b6\b|six).*elite/i, upfront: true, name: 'Elite Coaching: 6 Months Upfront', price: 'AED 4,299, paid once upfront', months: 6, length: '6-month programme (two 12-week phases)',
+    coach: 'one', included: ['Two full 12-week phases of Elite coaching', 'A training plan, nutrition and meal timing built for you by your coach', 'A weekly 1-to-1 check-in call', 'Your plan updated every 2 weeks', 'WhatsApp access to your coach, 24/7'] },
+  { key: 'elite3', match: /elite.*(\b3\b|three|upfront)|(\b3\b|three).*elite/i, upfront: true, name: 'Elite Coaching: 3 Months Upfront', price: 'AED 2,399, paid once upfront', months: 3, length: '12-week programme',
+    coach: 'one', included: ['A training plan, nutrition and meal timing built for you by your coach', 'A weekly 1-to-1 check-in call', 'Your plan updated every 2 weeks', 'WhatsApp access to your coach, 24/7'] },
   { key: 'elite', match: /elite/i, name: 'Elite Coaching Experience', price: 'AED 899 per month for 3 months', months: 3, length: '12-week programme',
     coach: 'one', included: ['A training plan, nutrition and meal timing built for you by your coach', 'A weekly 1-to-1 check-in call', 'Your plan updated every 2 weeks', 'WhatsApp access to your coach, 24/7'] },
   { key: 'vip', match: /vip/i, name: 'VIP Online Coaching', price: 'AED 1,999 per month for 3 months', months: 3, length: '12-week programme',
@@ -112,7 +116,10 @@ function buildClientEmail(o) {
     row('Price', esc(p.price)),
     row('Start date', fmt(o.start)),
   ];
-  if (p.months) {
+  if (p.upfront) {
+    orderRows.push(row('Payments', 'Paid in full upfront (one payment, no further charges)'));
+    orderRows.push(row('Programme ends', `${fmt(o.end)} (nothing to cancel)`));
+  } else if (p.months) {
     orderRows.push(row('Payments', `${p.months} monthly payments, on the ${ordinal(Number(o.start.toLocaleDateString('en-GB', { day: 'numeric', timeZone: 'Asia/Dubai' })))} of each month`));
     orderRows.push(row('Programme ends', `${fmt(o.end)} (ends automatically, nothing to cancel)`));
   } else if (o.next) {
@@ -122,7 +129,9 @@ function buildClientEmail(o) {
   orderRows.push(row('Payment reference', esc(o.ref)));
 
   const policy = [
-    p.months
+    p.upfront
+      ? `<b style="color:#fff">Paid upfront.</b> You paid once for your ${esc(p.length)}. There are no further payments and nothing to cancel.`
+      : p.months
       ? `<b style="color:#fff">Monthly payments.</b> Your ${esc(p.length)} is billed monthly for ${p.months} months and ends automatically.`
       : `<b style="color:#fff">Monthly subscription.</b> You&rsquo;re charged automatically on the same date each month until you cancel.`,
     `<b style="color:#fff">No refunds.</b> Payments are non-refundable, including part-used months, unless UAE law requires a refund or we made a billing mistake (always refunded in full).`,

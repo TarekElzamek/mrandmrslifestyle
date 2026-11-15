@@ -61,8 +61,14 @@
   },
   {
    "@type": "Offer",
-   "name": "VIP Online Coaching",
-   "price": "1999",
+   "name": "Elite Coaching Experience: 3 months paid upfront",
+   "price": "2399",
+   "priceCurrency": "AED"
+  },
+  {
+   "@type": "Offer",
+   "name": "Elite Coaching Experience: 6 months paid upfront",
+   "price": "4299",
    "priceCurrency": "AED"
   },
   {
@@ -165,6 +171,17 @@ tbody tr:last-child td { border-bottom: none; }
 .pkg-features li::before { content: '→'; position: absolute; left: 0; color: var(--gold); font-size: .75rem; top: .65rem; }
 .pkg-features li strong { color: var(--white); font-weight: 600; }
 .pkg-bottom { padding: 1.5rem 2rem 2rem; }
+.upfront { border: 1px solid rgba(201,168,76,.35); border-radius: 8px; padding: 1rem; margin-bottom: 1rem; background: rgba(201,168,76,.05); }
+.upfront-label { font-size: .68rem; letter-spacing: .15em; text-transform: uppercase; color: var(--gold); font-weight: 700; margin-bottom: .7rem; text-align: center; }
+.upfront-opt { position: relative; display: grid; grid-template-columns: 1fr auto; align-items: center; gap: .1rem .75rem; width: 100%; text-align: left; background: var(--black); border: 1px solid rgba(255,255,255,.12); border-radius: 6px; padding: .8rem .9rem; margin-bottom: .55rem; color: #fff; font-family: inherit; cursor: pointer; transition: border-color .2s, transform .2s; }
+.upfront-opt:hover { border-color: var(--gold); transform: translateY(-1px); }
+.upfront-opt.best { border-color: var(--gold); margin-top: .5rem; }
+.uo-name { font-weight: 700; font-size: .9rem; }
+.uo-price { font-family: var(--font-d); font-size: 1.15rem; font-weight: 700; color: var(--gold); grid-row: span 2; align-self: center; }
+.uo-sub { font-size: .74rem; color: rgba(255,255,255,.62); }
+.uo-badge { position: absolute; top: -.6rem; right: .7rem; background: var(--gold); color: var(--black); font-size: .58rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; padding: .15rem .5rem; border-radius: 3px; }
+.upfront-note { font-size: .72rem; color: var(--muted); text-align: center; line-height: 1.5; }
+
 .pkg-wa-btn { display: flex; align-items: center; justify-content: center; gap: .6rem; background: #15803D; color: #fff; border: none; border-radius: 6px; padding: 1rem; font-family: var(--font-b); font-size: .85rem; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; text-decoration: none; transition: filter .2s; width: 100%; margin-bottom: .6rem; }
 .pkg-wa-btn:hover { filter: brightness(1.1); }
 .pkg-stripe-btn { display: block; text-align: center; border: 1px solid rgba(201,168,76,.35); color: var(--gold); border-radius: 6px; padding: .75rem; font-size: .8rem; font-weight: 600; letter-spacing: .05em; text-transform: uppercase; text-decoration: none; transition: background .2s; }
@@ -234,7 +251,7 @@ footer a { color: var(--gold); text-decoration: none; }
    "name": "Which package is right for me?",
    "acceptedAnswer": {
     "@type": "Answer",
-    "text": "The best way to find out is a free 20-minute strategy call — we'll ask about your goal, lifestyle, and budget and give you an honest recommendation. Most people who want real, fast results choose Elite. If you're on a tight budget, Economy is a great start. If you want the absolute best, VIP."
+    "text": "The best way to find out is a free 20-minute strategy call. We'll ask about your goal, lifestyle and budget and give you an honest recommendation. Most people who want real, fast results choose Elite. If you're on a tight budget, the Economy Pack is a great start. Training with your partner? Choose Couples."
    }
   },
   {
@@ -274,7 +291,7 @@ footer a { color: var(--gold); text-decoration: none; }
    "name": "Is there a minimum commitment period?",
    "acceptedAnswer": {
     "@type": "Answer",
-    "text": "Every online package except the Economy Pack is a 12-week programme, billed monthly for 3 months and ending automatically when it finishes. The Economy Pack is a monthly subscription that renews until you cancel with 14 days’ notice before your next renewal date. Payments are non-refundable; see our Subscription & Cancellation Policy ."
+    "text": "The Economy Pack is a monthly subscription that renews until you cancel with 14 days’ notice before your next renewal date. Elite and Couples are 12-week programmes, billed monthly for 3 months and ending automatically. You can also pay for Elite upfront: AED 2,399 for 3 months or AED 4,299 for 6 months, as a single payment with nothing to cancel. Payments are non-refundable; see our Subscription & Cancellation Policy."
    }
   },
   {
@@ -295,10 +312,18 @@ footer a { color: var(--gold); text-decoration: none; }
   },
   {
    "@type": "Question",
-   "name": "What's the difference between the specialist programmes and personalised coaching?",
+   "name": "Can I pay upfront and save?",
    "acceptedAnswer": {
     "@type": "Answer",
-    "text": "The specialist programmes (Booty Builder, Muscle Gain, Fat Burn and the Tailor-Made Nutrition Plan) give you a focused programme to follow on your own, with email support and no coach check-ins. The Economy Pack gives you a ready-made 4-week beginner programme with email support. Elite, VIP and Couples give you 12 weeks of personalised coaching, regular check-ins and plan adjustments as you progress. All of these are 12-week programmes billed monthly for 3 months that end automatically. Only the Economy Pack is a monthly subscription that renews until you cancel with 14 days’ notice."
+    "text": "Yes, on the Elite Coaching Experience. Pay AED 2,399 once for 3 months (you save AED 298 compared with paying monthly) or AED 4,299 once for 6 months (you save AED 1,095, about AED 717 a month). The 6-month plan covers two full 12-week phases, so your coach can take you from your first phase straight into the next, for example a fat-loss phase followed by a lean-bulk phase. Upfront payments are one-off, don't renew and are non-refundable."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "I want to lose fat, build muscle or grow my glutes. Which package should I choose?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Choose the Elite Coaching Experience. Every Elite plan is built around your goal, whether that's losing fat, building muscle, body recomposition or glute development. Men are coached by Tarek and women by Chloe, including glute-focused training. If you're a beginner who just wants a clear plan to follow, start with the Economy Pack."
    }
   }
  ]
@@ -363,7 +388,7 @@ footer a { color: var(--gold); text-decoration: none; }
 <div class="hero">
   <div class="hero-tag">Transparent Pricing · No Hidden Fees</div>
   <h1>Find the <em>Perfect</em> Coaching<br>Package for Your Goal</h1>
-  <p class="hero-sub">The Economy Pack is a ready-made beginner plan. Elite, VIP and Couples are fully personalised coaching, and the specialist programmes are self-guided. Each card below shows exactly what's tailored, how often we check in, how to reach us, the price and the duration. Not sure which is right? Book a free call and we'll tell you exactly.</p>
+  <p class="hero-sub">Three simple options. The Economy Pack is a ready-made beginner plan. Elite and Couples are fully personalised coaching from Tarek &amp; Chloe, and you can pay for Elite upfront for 3 or 6 months and save up to AED 1,095. Not sure which is right? Book a free call and we'll tell you exactly.</p>
   <div class="hero-ctas">
     <a href="https://wa.me/971507871515?text=Hi%20Tarek%20%26%20Chloe%2C%20I%27d%20love%20a%20free%20strategy%20call%20to%20find%20the%20right%20package%20for%20me%21" target="_blank" rel="noopener" class="btn-wa">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
@@ -376,7 +401,7 @@ footer a { color: var(--gold); text-decoration: none; }
 <div class="compare-section">
   <div class="section-label">Quick Comparison</div>
   <h2>Which Package Is <em>Right for You?</em></h2>
-  <p>Compare all three main packages side by side — then scroll down for full details.</p>
+  <p>Compare our three online packages side by side, then scroll down for full details.</p>
   <div class="compare-wrap">
     <table>
       <thead>
@@ -384,23 +409,23 @@ footer a { color: var(--gold); text-decoration: none; }
           <th>What's Included</th>
           <th>Economy<br><span style="color:var(--gold);font-size:.9em;">AED 299/mo</span></th>
           <th class="featured-col">Elite <span class="mm-i" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9L12 3z"/></svg></span><br><span style="color:var(--gold);font-size:.9em;">AED 899/mo</span></th>
-          <th>VIP<br><span style="color:var(--gold);font-size:.9em;">AED 1,999/mo</span></th>
+          <th>Couples<br><span style="color:var(--gold);font-size:.9em;">AED 1,499/mo</span></th>
         </tr>
       </thead>
       <tbody>
-        <tr><td>Training programme</td><td><span style="font-size:.8rem">Ready-made, 4 weeks</span></td><td class="featured-col"><span style="font-size:.8rem">Fully personalised</span></td><td><span style="font-size:.8rem">Fully personalised</span></td></tr>
-                <tr><td>Macro & calorie targets</td><td><span class="check">✓</span></td><td class="featured-col"><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
-        <tr><td>Custom nutrition plan</td><td><span class="cross">—</span></td><td class="featured-col"><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
-        <tr><td>Weekly check-in calls</td><td><span class="cross">—</span></td><td class="featured-col"><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
-        <tr><td>24/7 WhatsApp access (we always reply)</td><td><span class="cross">—</span></td><td class="featured-col"><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
-        <tr><td>Progress photo tracking</td><td><span class="cross">—</span></td><td class="featured-col"><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
-        <tr><td>Plan adjustments every 2 weeks</td><td><span class="cross">—</span></td><td class="featured-col"><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
-        <tr><td>Bi-weekly video coaching sessions</td><td><span class="cross">—</span></td><td class="featured-col"><span class="cross">—</span></td><td><span class="check">✓</span></td></tr>
-        <tr><td>Supplement protocol</td><td><span class="cross">—</span></td><td class="featured-col"><span class="cross">—</span></td><td><span class="check">✓</span></td></tr>
-        <tr><td>Priority response (under 2hrs)</td><td><span class="cross">—</span></td><td class="featured-col"><span class="cross">—</span></td><td><span class="check">✓</span></td></tr>
-        <tr><td>Lifestyle & mindset coaching</td><td><span class="cross">—</span></td><td class="featured-col"><span class="cross">—</span></td><td><span class="check">✓</span></td></tr>
-        <tr><td>Post-programme maintenance plan</td><td><span class="cross">—</span></td><td class="featured-col"><span class="cross">—</span></td><td><span class="check">✓</span></td></tr>
-        <tr><td>Support method</td><td>Email</td><td class="featured-col">WhatsApp + Calls</td><td>WhatsApp + Video</td></tr>
+        <tr><td>Best for</td><td><span style="font-size:.8rem">Beginners who want a clear plan to follow</span></td><td class="featured-col"><span style="font-size:.8rem">Anyone who wants real results, fast</span></td><td><span style="font-size:.8rem">Partners training together</span></td></tr>
+        <tr><td>Training programme</td><td><span style="font-size:.8rem">Ready-made, 4 weeks</span></td><td class="featured-col"><span style="font-size:.8rem">Fully personalised to your goal</span></td><td><span style="font-size:.8rem">Personalised for each partner</span></td></tr>
+        <tr><td>Calorie &amp; macro targets</td><td><span class="check">✓</span></td><td class="featured-col"><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
+        <tr><td>Custom nutrition &amp; meal timing</td><td><span class="cross">—</span></td><td class="featured-col"><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
+        <tr><td>Your coach</td><td><span style="font-size:.8rem">Self-guided</span></td><td class="featured-col"><span style="font-size:.8rem">Tarek (men) or Chloe (women)</span></td><td><span style="font-size:.8rem">Tarek and Chloe</span></td></tr>
+        <tr><td>Check-ins</td><td><span style="font-size:.8rem">Weekly self check-in sheets</span></td><td class="featured-col"><span style="font-size:.8rem">Weekly 1-to-1 call, plan updated every 2 weeks</span></td><td><span style="font-size:.8rem">Shared call every 2 weeks</span></td></tr>
+        <tr><td>WhatsApp 24/7 (we always reply)</td><td><span class="cross">—</span></td><td class="featured-col"><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
+        <tr><td>Progress &amp; body composition tracking</td><td><span style="font-size:.8rem">Self-tracking</span></td><td class="featured-col"><span class="check">✓</span></td><td><span style="font-size:.8rem">For both partners</span></td></tr>
+        <tr><td>Exercise video library</td><td><span class="check">✓</span></td><td class="featured-col"><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
+        <tr><td>Support</td><td>Email</td><td class="featured-col">WhatsApp + weekly call</td><td>WhatsApp + shared calls</td></tr>
+        <tr><td>Monthly price</td><td><span style="font-size:.8rem">AED 299 a month</span></td><td class="featured-col"><span style="font-size:.8rem">AED 899 a month for 3 months</span></td><td><span style="font-size:.8rem">AED 1,499 a month for both, for 3 months</span></td></tr>
+        <tr><td>Pay upfront &amp; save</td><td><span class="cross">—</span></td><td class="featured-col"><span style="font-size:.8rem"><strong>3 months: AED 2,399</strong> (save AED 298)<br><strong>6 months: AED 4,299</strong> (save AED 1,095)</span></td><td><span class="cross">—</span></td></tr>
+        <tr><td>Length</td><td><span style="font-size:.8rem">Monthly, cancel with 14 days&rsquo; notice</span></td><td class="featured-col"><span style="font-size:.8rem">12 weeks, or 24 weeks on the 6-month plan</span></td><td><span style="font-size:.8rem">12 weeks</span></td></tr>
         <tr><td>Satisfaction commitment</td><td><span class="check">✓</span></td><td class="featured-col"><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
       </tbody>
     </table>
@@ -416,7 +441,7 @@ footer a { color: var(--gold); text-decoration: none; }
 <div class="main-packages" id="online">
   <div class="section-label">Online Coaching · Available Worldwide</div>
   <h2>Our <em>Core</em> Coaching Packages</h2>
-  <p>Start with the ready-made Economy Pack, or choose personalised coaching from Tarek &amp; Chloe with Elite or VIP. Available in Dubai and worldwide.</p>
+  <p>Start with the ready-made Economy Pack, or choose personalised coaching from Tarek &amp; Chloe with Elite or Couples. Available in Dubai and worldwide.</p>
   <div class="pkg-grid">
     <div class="pkg">
       <div class="pkg-top">
@@ -448,8 +473,8 @@ footer a { color: var(--gold); text-decoration: none; }
         <div class="pkg-tag">Best Results · Men & Women</div>
         <div class="pkg-name">Elite Coaching Experience</div>
         <div class="pkg-tagline">Personalised coaching from Tarek &amp; Chloe: a plan built for you, weekly check-ins and WhatsApp access.</div>
-        <div class="pkg-price"><div class="price-main"><span class="price-currency">AED</span><span class="price-num">899</span></div><div class="price-period">per month · 12-week programme · 3 monthly payments, then ends automatically</div></div>
-        <dl class="pkg-facts"><div><dt>Type</dt><dd><span class="pf-badge pf-pers">Personalised coaching</span></dd></div><div><dt>Tailored to you</dt><dd>Training plan, nutrition and meal timing, built and updated by Tarek or Chloe</dd></div><div><dt>Check-ins</dt><dd>Weekly 1-to-1 check-in call, plan adjusted every 2 weeks</dd></div><div><dt>Support</dt><dd>WhatsApp 24/7 plus your weekly call</dd></div><div><dt>Price</dt><dd>AED 899 per month for 3 months, then ends automatically</dd></div><div><dt>Duration</dt><dd>12-week programme</dd></div></dl>
+        <div class="pkg-price"><div class="price-main"><span class="price-currency">AED</span><span class="price-num">899</span></div><div class="price-period">per month · 12-week programme · 3 monthly payments, then ends automatically. Or pay upfront and save up to AED 1,095.</div></div>
+        <dl class="pkg-facts"><div><dt>Type</dt><dd><span class="pf-badge pf-pers">Personalised coaching</span></dd></div><div><dt>Tailored to you</dt><dd>Training plan, nutrition and meal timing, built and updated by Tarek or Chloe</dd></div><div><dt>Check-ins</dt><dd>Weekly 1-to-1 check-in call, plan adjusted every 2 weeks</dd></div><div><dt>Support</dt><dd>WhatsApp 24/7 plus your weekly call</dd></div><div><dt>Price</dt><dd>AED 899 per month for 3 months, then ends automatically. Or pay upfront: AED 2,399 for 3 months, or AED 4,299 for 6 months</dd></div><div><dt>Duration</dt><dd>12-week programme, or 24 weeks (two phases) on the 6-month plan</dd></div></dl>
       </div>
       <div class="pkg-mid">
         <ul class="pkg-features">
@@ -464,35 +489,39 @@ footer a { color: var(--gold); text-decoration: none; }
         </ul>
       </div>
       <div class="pkg-bottom">
+        <div class="upfront" id="elite-upfront">
+          <div class="upfront-label">Pay upfront &amp; save</div>
+          <button type="button" class="upfront-opt" onclick="buyUpfront(3)"><span class="uo-name">3 months</span><span class="uo-price">AED 2,399</span><span class="uo-sub">About AED 800 a month · save AED 298</span></button>
+          <button type="button" class="upfront-opt best" onclick="buyUpfront(6)"><span class="uo-badge">Best value</span><span class="uo-name">6 months</span><span class="uo-price">AED 4,299</span><span class="uo-sub">About AED 717 a month · save AED 1,095</span></button>
+          <div class="upfront-note">One payment, no monthly charges. 6 months = two full 12-week phases.</div>
+        </div>
         <a href="https://wa.me/971507871515?text=Hi%20Tarek%20%26%20Chloe%2C%20I%27m%20interested%20in%20the%20Elite%20Coaching%20package%20%E2%80%94%20can%20we%20book%20a%20free%20strategy%20call%3F" target="_blank" rel="noopener" class="pkg-wa-btn"><svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>Book Free Strategy Call</a>
-        <button type="button" onclick="openIntakeModal('https://buy.stripe.com/7sYcN59mCgvAejP655dMI1c', 'Elite Coaching Experience', 'AED 899/month');" class="pkg-stripe-btn">Buy Now — AED 899/month</button>
+        <button type="button" onclick="openIntakeModal('https://buy.stripe.com/7sYcN59mCgvAejP655dMI1c', 'Elite Coaching Experience', 'AED 899/month');" class="pkg-stripe-btn">Pay Monthly — AED 899/month</button>
         <div class="pkg-note">Satisfaction commitment · Limited spots</div>
       </div>
     </div>
-    <div class="pkg">
+    <div class="pkg" id="couples-transformation">
       <div class="pkg-top">
-        <div class="pkg-tag">Maximum Results · Full VIP Access</div>
-        <div class="pkg-name">VIP Online Coaching</div>
-        <div class="pkg-tagline">The complete premium experience for those who want the absolute best — maximum support, maximum results.</div>
-        <div class="pkg-price"><div class="price-main"><span class="price-currency">AED</span><span class="price-num">1,999</span></div><div class="price-period">per month · 12-week programme · 3 monthly payments, then ends automatically</div></div>
-        <dl class="pkg-facts"><div><dt>Type</dt><dd><span class="pf-badge pf-pers">Personalised coaching</span></dd></div><div><dt>Tailored to you</dt><dd>Everything in Elite, plus nutrition rebuilt each phase, supplement protocol and lifestyle coaching</dd></div><div><dt>Check-ins</dt><dd>Weekly check-in plus a video coaching session every 2 weeks</dd></div><div><dt>Support</dt><dd>Priority WhatsApp, replies within 2 hours</dd></div><div><dt>Price</dt><dd>AED 1,999 per month for 3 months, then ends automatically</dd></div><div><dt>Duration</dt><dd>12-week programme</dd></div></dl>
+        <div class="pkg-tag">Couples · Dubai &amp; Worldwide</div>
+        <div class="pkg-name">Couples Transformation</div>
+        <div class="pkg-tagline">Coached by a real couple: Tarek coaches one partner, Chloe the other. Individual plans, shared accountability and a transformation you do together.</div>
+        <div class="pkg-price"><div class="price-main"><span class="price-currency">AED</span><span class="price-num">1,499</span></div><div class="price-period">per month for both · 12-week programme · 3 monthly payments, then ends automatically</div></div>
+        <dl class="pkg-facts"><div><dt>Type</dt><dd><span class="pf-badge pf-pers">Personalised coaching</span></dd></div><div><dt>Tailored to you</dt><dd>A separate training and nutrition plan for each partner</dd></div><div><dt>Check-ins</dt><dd>Shared check-in call every 2 weeks</dd></div><div><dt>Support</dt><dd>WhatsApp 24/7 with your coaches</dd></div><div><dt>Price</dt><dd>AED 1,499 per month for both, for 3 months, then ends automatically</dd></div><div><dt>Duration</dt><dd>12-week programme</dd></div></dl>
       </div>
       <div class="pkg-mid">
         <ul class="pkg-features">
-          <li><strong>Everything in Elite</strong> — all features included</li>
-          <li><strong>Bi-weekly video coaching sessions</strong> — deep dive calls with your coach twice a month</li>
-          <li><strong>Tailor-made nutrition plan</strong> — rebuilt from scratch each training phase</li>
-          <li><strong>Supplement protocol & guidance</strong> — exactly what to take and when</li>
-          <li><strong>Priority response — under 2 hours</strong> — your questions never wait</li>
-          <li><strong>Full lifestyle & mindset coaching</strong> — sleep, stress, habits and identity</li>
-          <li><strong>Post-programme maintenance plan</strong> — keep your results forever</li>
+          <li><strong>Individual plans for each partner</strong> — training and nutrition built for each of your goals</li>
+          <li><strong>Coached by both Tarek and Chloe</strong> — one coach each</li>
+          <li><strong>Shared check-in calls</strong> — every 2 weeks, together</li>
+          <li><strong>24/7 WhatsApp access</strong> — message your coaches any time; we always reply</li>
+          <li><strong>Progress tracking for both partners</strong> — see your results side by side</li>
           <li><strong>Satisfaction commitment</strong> — book a free call before you commit</li>
         </ul>
       </div>
       <div class="pkg-bottom">
-        <a href="https://wa.me/971507871515?text=Hi%20Tarek%20%26%20Chloe%2C%20I%27m%20interested%20in%20the%20VIP%20Coaching%20Programme%20%E2%80%94%20can%20we%20book%20a%20free%20strategy%20call%3F" target="_blank" rel="noopener" class="pkg-wa-btn"><svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>Book Free Strategy Call</a>
-        <button type="button" onclick="openIntakeModal('https://buy.stripe.com/dRm9AT8iy4MS6Rn3WXdMI1d', 'VIP Online Coaching', 'AED 1,999/month');" class="pkg-stripe-btn">Buy Now — AED 1,999/month</button>
-        <div class="pkg-note">Satisfaction commitment · No long-term contract</div>
+        <a href="https://wa.me/971507871515?text=Hi%20Tarek%20%26%20Chloe%2C%20my%20partner%20and%20I%20are%20interested%20in%20the%20Couples%20Transformation%20Programme%21%20Can%20we%20book%20a%20free%20call%3F" target="_blank" rel="noopener" class="pkg-wa-btn"><svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>Book Free Couples Call</a>
+        <button type="button" onclick="openIntakeModal('https://buy.stripe.com/cNidR956m2EK2B71OPdMI1e', 'Couples Transformation', 'AED 1,499/month');" class="pkg-stripe-btn">Buy Now — AED 1,499/month</button>
+        <div class="pkg-note">For two people · Ends automatically after 12 weeks</div>
       </div>
     </div>
   </div>
@@ -544,107 +573,6 @@ footer a { color: var(--gold); text-decoration: none; }
   <p style="text-align:center;margin-top:1rem;font-size:.9rem">Looking for a female coach? Chloe offers private, ladies-only reformer Pilates in Meydan from AED 365 per session (20-session package). <a href="/pilates-with-chloe.html" style="color:var(--gold)">See ladies-only training →</a></p>
 </div>
 
-<!-- SPECIALTY PACKAGES — each card has an id matching the links from index.html -->
-<div class="specialty-section" id="specialty">
-  <div class="section-label">Specialist Programmes</div>
-  <h2>Goal-Specific <em>Packages</em></h2>
-  <p>Targeted programmes for specific goals — each built and coached by the right specialist.</p>
-  <div class="specialty-grid">
-
-    <div class="spec-card highlight" id="couples-transformation">
-      <div class="spec-icon"><span class="mm-i" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="7" r="2.8"/><circle cx="16" cy="7" r="2.8"/><path d="M3 20v-1.5A4.5 4.5 0 0 1 7.5 14h1a4.5 4.5 0 0 1 4.5 4.5V20"/><path d="M13.6 14.6A4.5 4.5 0 0 1 15.5 14h1a4.5 4.5 0 0 1 4.5 4.5V20"/></svg></span></div>
-      <div class="spec-tag">Couples · Dubai & Worldwide</div>
-      <div class="spec-name">Couples Transformation</div>
-      <div class="spec-price">AED 1,499 <span>/month for both, for 3 months · ends automatically</span></div>
-      <div class="spec-desc">Coached by a real couple — Tarek coaches one partner, Chloe coaches the other. Individual plans, shared accountability, and a transformation you do together.</div>
-      <dl class="pkg-facts"><div><dt>Type</dt><dd><span class="pf-badge pf-pers">Personalised coaching</span></dd></div><div><dt>Tailored to you</dt><dd>A separate training and nutrition plan for each partner</dd></div><div><dt>Check-ins</dt><dd>Shared check-in call every 2 weeks</dd></div><div><dt>Support</dt><dd>WhatsApp 24/7 with your coach</dd></div><div><dt>Price</dt><dd>AED 1,499 per month for both, for 3 months, then ends automatically</dd></div><div><dt>Duration</dt><dd>12-week programme</dd></div></dl>
-      <ul class="spec-features">
-        <li>Individual personalised plans for each partner</li>
-        <li>Coached by both Tarek AND Chloe</li>
-        <li>Shared check-in calls & couples accountability</li>
-        <li>Custom nutrition for each individual goal</li>
-        <li>24/7 WhatsApp access to your coach — we always reply</li>
-        <li>Progress tracking for both partners</li>
-      </ul>
-      <a href="https://wa.me/971507871515?text=Hi%20Tarek%20%26%20Chloe%2C%20my%20partner%20and%20I%20are%20interested%20in%20the%20Couples%20Transformation%20Programme%21%20Can%20we%20book%20a%20free%20call%3F" target="_blank" rel="noopener" class="spec-wa"><svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>Book Free Couples Call</a>
-      <button type="button" onclick="openIntakeModal('https://buy.stripe.com/cNidR956m2EK2B71OPdMI1e', 'Couples Transformation', 'AED 1,499/month');" class="pkg-stripe-btn" style="display:block;text-align:center;border:1px solid rgba(201,168,76,.35);color:var(--gold);border-radius:6px;padding:.75rem;font-size:.8rem;font-weight:600;letter-spacing:.05em;text-transform:uppercase;text-decoration:none;margin-top:.6rem;">Buy Now — AED 1,499/month</button>
-    </div>
-
-    <div class="spec-card" id="booty-builder">
-      <div class="spec-icon"><span class="mm-i" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="9" r="5"/><path d="M12 14v7M9 18h6"/></svg></span></div>
-      <div class="spec-tag">Women Only · Coached by Chloe</div>
-      <div class="spec-name">Booty Builder Programme</div>
-      <div class="spec-price">AED 649 <span>/month for 3 months · ends automatically</span></div>
-      <div class="spec-desc">Chloe's signature glutes development programme — the most targeted, effective approach to building the glutes women actually want. Science-backed, no fluff.</div>
-      <dl class="pkg-facts"><div><dt>Type</dt><dd><span class="pf-badge pf-pers">Personalised, self-guided</span></dd></div><div><dt>Tailored to you</dt><dd>Exercise selection for your body and your equipment (gym or home)</dd></div><div><dt>Check-ins</dt><dd>No coach check-ins. Self-guided with weekly video demos.</dd></div><div><dt>Support</dt><dd>Email</dd></div><div><dt>Price</dt><dd>AED 649 per month for 3 months, then ends automatically</dd></div><div><dt>Duration</dt><dd>12-week programme</dd></div></dl>
-      <ul class="spec-features">
-        <li>12-week progressive glutes programme</li>
-        <li>Custom exercise selection for your body type</li>
-        <li>Nutrition guidance for muscle growth</li>
-        <li>Weekly video demonstrations</li>
-        <li>Gym or home equipment options</li>
-      </ul>
-      <a href="https://wa.me/971547011995?text=Hi%20Chloe%2C%20I%27m%20interested%20in%20the%20Booty%20Builder%20Programme%20%E2%80%94%20can%20we%20chat%3F" target="_blank" rel="noopener" class="spec-wa"><svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>Get Booty Builder</a>
-      <button type="button" onclick="openIntakeModal('https://buy.stripe.com/bJe8wP0Q64MSa3zcttdMI1f', 'Booty Builder Programme', 'AED 649');" class="pkg-stripe-btn" style="display:block;text-align:center;border:1px solid rgba(201,168,76,.35);color:var(--gold);border-radius:6px;padding:.75rem;font-size:.8rem;font-weight:600;letter-spacing:.05em;text-transform:uppercase;text-decoration:none;margin-top:.6rem;">Buy Now — AED 649</button>
-    </div>
-
-    <div class="spec-card" id="ultimate-muscle">
-      <div class="spec-icon"><span class="mm-i" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6.5 6.5v11M17.5 6.5v11M3.5 9v6M20.5 9v6M6.5 12h11"/></svg></span></div>
-      <div class="spec-tag">Men &amp; Women · Coached by Tarek</div>
-      <div class="spec-name">Ultimate Muscle Gain</div>
-      <div class="spec-price">AED 480 <span>/month for 3 months · ends automatically</span></div>
-      <div class="spec-desc">Tarek's proven muscle-building programme for men and women — progressive overload, smart nutrition, and the exact approach he's used with hundreds of clients to build real, lean muscle.</div>
-      <dl class="pkg-facts"><div><dt>Type</dt><dd><span class="pf-badge pf-self">Self-guided programme</span></dd></div><div><dt>Tailored to you</dt><dd>Calorie and protein targets for your goal</dd></div><div><dt>Check-ins</dt><dd>No coach check-ins. Self-guided.</dd></div><div><dt>Support</dt><dd>Email</dd></div><div><dt>Price</dt><dd>AED 480 per month for 3 months, then ends automatically</dd></div><div><dt>Duration</dt><dd>12-week programme</dd></div></dl>
-      <ul class="spec-features">
-        <li>12-week progressive muscle programme</li>
-        <li>Strength & hypertrophy periodisation</li>
-        <li>Calorie & protein targets for muscle growth</li>
-        <li>Exercise video library included</li>
-        <li>Gym-based programme</li>
-      </ul>
-      <a href="https://wa.me/971507871515?text=Hi%20Tarek%2C%20I%27m%20interested%20in%20the%20Ultimate%20Muscle%20Gain%20programme%20%E2%80%94%20can%20we%20chat%3F" target="_blank" rel="noopener" class="spec-wa"><svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>Get Muscle Gain Programme</a>
-      <button type="button" onclick="openIntakeModal('https://buy.stripe.com/14AfZheGW5QW5NjeBBdMI1h', 'Ultimate Muscle Gain', 'AED 480');" class="pkg-stripe-btn" style="display:block;text-align:center;border:1px solid rgba(201,168,76,.35);color:var(--gold);border-radius:6px;padding:.75rem;font-size:.8rem;font-weight:600;letter-spacing:.05em;text-transform:uppercase;text-decoration:none;margin-top:.6rem;">Buy Now — AED 480</button>
-    </div>
-
-    <div class="spec-card" id="ultimate-fat">
-      <div class="spec-icon"><span class="mm-i" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22c4 0 7-2.8 7-6.8 0-3-1.8-5.4-3.4-7.1-.5 1.9-1.6 3-2.8 3.4.6-3.2-.6-6.3-3.3-8.5.2 3.3-1.7 5.5-3.3 7.4C5 12.4 5 13.8 5 15.2 5 19.2 8 22 12 22z"/></svg></span></div>
-      <div class="spec-tag">Men & Women · Fat Loss Focus</div>
-      <div class="spec-name">Ultimate Fat Burn</div>
-      <div class="spec-price">AED 480 <span>/month for 3 months · ends automatically</span></div>
-      <div class="spec-desc">A targeted fat loss programme combining the right training stimulus with the nutrition approach that actually works — built around sustainability, not suffering.</div>
-      <dl class="pkg-facts"><div><dt>Type</dt><dd><span class="pf-badge pf-self">Self-guided programme</span></dd></div><div><dt>Tailored to you</dt><dd>Calorie deficit and macro targets for your goal, gym or home version</dd></div><div><dt>Check-ins</dt><dd>No coach check-ins. Self-guided.</dd></div><div><dt>Support</dt><dd>Email</dd></div><div><dt>Price</dt><dd>AED 480 per month for 3 months, then ends automatically</dd></div><div><dt>Duration</dt><dd>12-week programme</dd></div></dl>
-      <ul class="spec-features">
-        <li>12-week progressive fat loss programme</li>
-        <li>Calorie deficit strategy & macro targets</li>
-        <li>Cardio protocol built in</li>
-        <li>Gym or home equipment options</li>
-        <li>Plateau-busting adjustment weeks</li>
-      </ul>
-      <a href="https://wa.me/971507871515?text=Hi%20Tarek%20%26%20Chloe%2C%20I%27m%20interested%20in%20the%20Ultimate%20Fat%20Burn%20programme%20%E2%80%94%20can%20we%20chat%3F" target="_blank" rel="noopener" class="spec-wa"><svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>Get Fat Burn Programme</a>
-      <button type="button" onclick="openIntakeModal('https://buy.stripe.com/7sYaEXaqG0wCejP2STdMI1g', 'Ultimate Fat Burn', 'AED 480');" class="pkg-stripe-btn" style="display:block;text-align:center;border:1px solid rgba(201,168,76,.35);color:var(--gold);border-radius:6px;padding:.75rem;font-size:.8rem;font-weight:600;letter-spacing:.05em;text-transform:uppercase;text-decoration:none;margin-top:.6rem;">Buy Now — AED 480</button>
-    </div>
-
-    <div class="spec-card" id="tailor-nutrition" style="grid-column: 1 / -1; max-width: 440px; margin: 0 auto;">
-      <div class="spec-icon"><span class="mm-i" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 19c0-8 5-14 15-14 0 10-6 15-14 15"/><path d="M5 19l8-8"/></svg></span></div>
-      <div class="spec-tag">Add-On · Any Package</div>
-      <div class="spec-name">Tailor-Made Nutrition Plan</div>
-      <div class="spec-price">AED 750 <span>/month for 3 months · ends automatically</span></div>
-      <div class="spec-desc">A standalone, fully custom nutrition plan built specifically for you — your food preferences, lifestyle, schedule, and goal. Add this to any existing programme or use it on its own.</div>
-      <dl class="pkg-facts"><div><dt>Type</dt><dd><span class="pf-badge pf-pers">Personalised, self-guided</span></dd></div><div><dt>Tailored to you</dt><dd>Your full meal plan: food preferences, schedule, lifestyle and goal</dd></div><div><dt>Check-ins</dt><dd>No coach check-ins. Self-guided.</dd></div><div><dt>Support</dt><dd>Email</dd></div><div><dt>Price</dt><dd>AED 750 per month for 3 months, then ends automatically</dd></div><div><dt>Duration</dt><dd>12-week meal plan</dd></div></dl>
-      <ul class="spec-features">
-        <li>Full 12-week personalised meal plan</li>
-        <li>Macro & calorie targets for your goal</li>
-        <li>Built around your food preferences & lifestyle</li>
-        <li>Dubai restaurant guide included</li>
-        <li>Ramadan adaptation available</li>
-      </ul>
-      <a href="https://wa.me/971507871515?text=Hi%20Tarek%20%26%20Chloe%2C%20I%27m%20interested%20in%20the%20Tailor-Made%20Nutrition%20Plan%20%E2%80%94%20can%20we%20chat%3F" target="_blank" rel="noopener" class="spec-wa" style="margin-top:auto;"><svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>Get Nutrition Plan</a>
-      <button type="button" onclick="openIntakeModal('https://buy.stripe.com/5kQbJ1dCSens5Nj3WXdMI1i', 'Tailor-Made Nutrition Plan', 'AED 750');" class="pkg-stripe-btn" style="display:block;text-align:center;border:1px solid rgba(201,168,76,.35);color:var(--gold);border-radius:6px;padding:.75rem;font-size:.8rem;font-weight:600;letter-spacing:.05em;text-transform:uppercase;text-decoration:none;margin-top:.6rem;">Buy Now — AED 750</button>
-    </div>
-
-  </div>
-</div>
-
 <div class="guarantee">
   <div class="guarantee-box">
     <div class="guarantee-icon"><span class="mm-i" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 5 6v5c0 4.5 3 8.3 7 10 4-1.7 7-5.5 7-10V6l-7-3z"/><path d="m9 12 2 2 4-4"/></svg></span></div>
@@ -659,15 +587,16 @@ footer a { color: var(--gold); text-decoration: none; }
 <div class="faq-section">
   <h2>Packages <em>FAQ</em></h2>
   <div class="faq-wrap">
-    <div class="faq-item open"><div class="faq-q" onclick="toggleFaq(this)">Which package is right for me?<span class="faq-toggle">+</span></div><div class="faq-a">The best way to find out is a free 20-minute strategy call — we'll ask about your goal, lifestyle, and budget and give you an honest recommendation. Most people who want real, fast results choose Elite. If you're on a tight budget, Economy is a great start. If you want the absolute best, VIP.</div></div>
+    <div class="faq-item open"><div class="faq-q" onclick="toggleFaq(this)">Which package is right for me?<span class="faq-toggle">+</span></div><div class="faq-a">The best way to find out is a free 20-minute strategy call. We'll ask about your goal, lifestyle and budget and give you an honest recommendation. Most people who want real, fast results choose Elite. If you're on a tight budget, the Economy Pack is a great start. Training with your partner? Choose Couples.</div></div>
     <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">How much does a personal trainer cost in Dubai with you?<span class="faq-toggle">+</span></div><div class="faq-a">1-to-1 personal training with Tarek at Nogs Gym, Al Quoz, is AED 3,800 for 12 sessions (about AED 317 per session) or AED 5,500 for 20 sessions (AED 275 per session). A single session is AED 400. If you'd rather train on your own with a coach guiding you, online coaching starts from AED 299 per month.</div></div>
     <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">What's included in 1-to-1 personal training?<span class="faq-toggle">+</span></div><div class="faq-a">A free consultation and movement assessment, a personal training plan with calorie and macro targets, hands-on coaching every session, a progress review and plan update every 4 weeks, and WhatsApp support between sessions.</div></div>
     <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Do you offer personal training for women?<span class="faq-toggle">+</span></div><div class="faq-a">Yes. Tarek trains men and women at Nogs Gym. If you prefer a female coach and a private, ladies-only space, Chloe offers 1-to-1 reformer Pilates with strength work at The Pilates Room in Meydan.</div></div>
     <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Can I upgrade my package later?<span class="faq-toggle">+</span></div><div class="faq-a">Yes, absolutely. Many clients start on Economy or Elite and upgrade as they see results and want more support. Just message us and we'll sort it out — you only pay the difference.</div></div>
-    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Is there a minimum commitment period?<span class="faq-toggle">+</span></div><div class="faq-a">Every online package except the Economy Pack is a 12-week programme, billed monthly for 3 months and ending automatically when it finishes. The Economy Pack is a monthly subscription that renews until you cancel with 14 days&rsquo; notice before your next renewal date. Payments are non-refundable; see our <a href="/terms.html#subscription-policy">Subscription &amp; Cancellation Policy</a>.</div></div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Is there a minimum commitment period?<span class="faq-toggle">+</span></div><div class="faq-a">The Economy Pack is a monthly subscription that renews until you cancel with 14 days&rsquo; notice before your next renewal date. Elite and Couples are 12-week programmes, billed monthly for 3 months and ending automatically. You can also pay for Elite upfront: AED 2,399 for 3 months or AED 4,299 for 6 months, as a single payment with nothing to cancel. Payments are non-refundable; see our <a href="/terms.html#subscription-policy">Subscription &amp; Cancellation Policy</a>.</div></div>
     <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Do I need a gym membership?<span class="faq-toggle">+</span></div><div class="faq-a">No — we build your plan around what you have. Gym, home equipment, or no equipment. Just let us know during onboarding and we'll design accordingly.</div></div>
     <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">How quickly will I receive my plan?<span class="faq-toggle">+</span></div><div class="faq-a">Within 48 hours of signing up and completing your onboarding questionnaire, you will be set up in our own Mr & Mrs Lifestyle app, where your training programme, workout log and progress tracking all live.</div></div>
-    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">What's the difference between the specialist programmes and personalised coaching?<span class="faq-toggle">+</span></div><div class="faq-a">The specialist programmes (Booty Builder, Muscle Gain, Fat Burn and the Tailor-Made Nutrition Plan) give you a focused programme to follow on your own, with email support and no coach check-ins. The Economy Pack gives you a ready-made 4-week beginner programme with email support. Elite, VIP and Couples give you 12 weeks of personalised coaching, regular check-ins and plan adjustments as you progress. All of these are 12-week programmes billed monthly for 3 months that end automatically. Only the Economy Pack is a monthly subscription that renews until you cancel with 14 days&rsquo; notice.</div></div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Can I pay upfront and save?<span class="faq-toggle">+</span></div><div class="faq-a">Yes, on the Elite Coaching Experience. Pay AED 2,399 once for 3 months (you save AED 298 compared with paying monthly) or AED 4,299 once for 6 months (you save AED 1,095, about AED 717 a month). The 6-month plan covers two full 12-week phases, so your coach can take you from your first phase straight into the next, for example a fat-loss phase followed by a lean-bulk phase. Upfront payments are one-off, don't renew and are non-refundable.</div></div>
+    <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">I want to lose fat, build muscle or grow my glutes. Which package should I choose?<span class="faq-toggle">+</span></div><div class="faq-a">Choose the Elite Coaching Experience. Every Elite plan is built around your goal, whether that's losing fat, building muscle, body recomposition or glute development. Men are coached by Tarek and women by Chloe, including glute-focused training. If you're a beginner who just wants a clear plan to follow, start with the Economy Pack.</div></div>
   </div>
 </div>
 
@@ -772,6 +701,18 @@ function toggleFaq(el) { const item = el.closest('.faq-item'); const isOpen = it
 </div>
 
 <script>
+/* Elite pay-upfront plans. Paste each Stripe payment link into url when it's ready.
+   Until then, the button opens WhatsApp so the client can still buy. */
+var ELITE_UPFRONT = {
+  3: { url: '', name: 'Elite Coaching: 3 Months Upfront', price: 'AED 2,399 one-time payment', months: 3 },
+  6: { url: '', name: 'Elite Coaching: 6 Months Upfront', price: 'AED 4,299 one-time payment', months: 6 }
+};
+function buyUpfront(n) {
+  var o = ELITE_UPFRONT[n];
+  if (o.url) { openIntakeModal(o.url, o.name, o.price); return; }
+  var msg = 'Hi Tarek & Chloe, I\'d like the ' + o.name + ' (' + o.price.replace(' one-time payment', '') + '). Can you send me the payment link?';
+  window.open('https://wa.me/971507871515?text=' + encodeURIComponent(msg), '_blank', 'noopener');
+}
 var _intakeStripeUrl = '';
 var _intakePkg = '';
 var _intakePrice = '';
@@ -791,8 +732,11 @@ function openIntakeModal(stripeUrl, pkg, price) {
   document.getElementById('im-consent').checked = false;
   document.getElementById('im-consent-error').style.display = 'none';
   var fixed = pkg === 'Economy Pack' ? null : '3 months (12-week programme)';
+  var upMonths = /upfront/i.test(pkg) ? (pkg.match(/(\d+) Months/i) || [])[1] : null;
   var POL = '<a href="/terms.html#subscription-policy" target="_blank" rel="noopener" style="color:#C9A84C;text-decoration:underline;">Subscription &amp; Cancellation Policy</a>';
-  document.getElementById('im-consent-text').innerHTML = fixed
+  document.getElementById('im-consent-text').innerHTML = upMonths
+    ? 'I agree to the ' + POL + '. I&rsquo;ll pay ' + price.replace(' one-time payment', '') + ' once, upfront, for ' + upMonths + ' months of coaching. There are no further payments and nothing to cancel. Payments are non-refundable.'
+    : fixed
     ? 'I agree to the ' + POL + '. I&rsquo;ll be charged ' + price.replace(/\/month$/, '') + ' a month for ' + fixed + ', then it ends automatically. Payments are non-refundable.'
     : 'I agree to the ' + POL + '. This is a monthly subscription charged automatically each month until I cancel. Payments are non-refundable, and I must give 14 days&rsquo; notice before my renewal date to cancel.';
   document.getElementById('im-submit-btn').textContent = 'Continue to Payment →';
