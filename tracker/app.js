@@ -1025,6 +1025,41 @@
     return '<article class="pc' + (gp ? ' in-grp' + (gp.pos === gp.size - 1 ? ' grp-last' : '') : '') + '">' + (gp ? '<span class="grp-pos">' + gp.letter + (gp.pos + 1) + '</span>' : '') + '<' + (vids.length ? 'button type="button" data-pvid="' + esc(e.name) + '" aria-label="Play the ' + esc(e.name) + ' demo video"' : 'div') + ' class="pc-media">' + media + (vids.length ? '<span class="pc-play">' + ICON.play + 'Video</span>' : '') + (target ? '<span class="pc-target">' + target + '</span>' : '') + '</' + (vids.length ? 'button' : 'div') + '>' +
       '<div class="pc-info"><b>' + esc(e.name) + '</b>' + (meta.m ? '<span class="pc-m">' + esc(meta.m) + '</span>' : '') + (function () { var bits = []; if (e.tempo) bits.push('Tempo ' + esc(e.tempo)); if (gp && gp.pos < gp.size - 1) bits.push('No rest, straight into the next exercise'); else if (e.rest) bits.push('Rest ' + esc(e.rest) + 's'); if (e.notes) bits.push(esc(e.notes)); return bits.length ? '<span class="pc-n">' + bits.join(' · ') + '</span>' : ''; })() + '</div></article>';
   }
+  // ---------- plan day, set-by-set (My PT Hub style) ----------
+  function fmtTempo(t) { t = String(t || '').trim(); return /^\d{4}$/.test(t) ? t.split('').join('-') : t; }
+  function fmtRestS(r) { r = parseInt(r, 10); if (!r) return '–'; return Math.floor(r / 60) + ':' + ('0' + (r % 60)).slice(-2); }
+  function planItem(e, gp) {
+    var t = e.type || typeOf(e.name), vids = vidsFor(e.name), thumb = exThumb(e.name), meta = EXMAP[e.name] || {};
+    var mode = t === 'b' ? (e.mode || 'bw') : null;
+    var cols = t === 'c' ? ['Minutes'] : t === 't' ? ['Seconds', 'Rest'] : t === 'b' && mode === 'bw' ? ['Bodyweight', 'Reps', 'Rest'] : [t === 'b' ? (mode === 'assist' ? 'Assist kg' : 'Added kg') : 'Weight', 'Reps', 'Rest'];
+    var inGrpNotLast = gp && gp.pos < gp.size - 1, n = Math.max(1, parseInt(e.sets, 10) || 1);
+    var h = '<div class="pw-ex">';
+    h += '<div class="pw-top">' + (vids.length ? '<button type="button" class="pw-thumb" data-pvid="' + esc(e.name) + '" aria-label="Play the ' + esc(e.name) + ' demo video">' : '<div class="pw-thumb">') +
+      (thumb ? '<img src="' + thumb + '" alt="" loading="lazy" decoding="async">' : '<span class="pw-noimg" aria-hidden="true">' + ICON.dumbbell + '</span>') + (vids.length ? '<span class="pw-play" aria-hidden="true">' + ICON.play + '</span></button>' : '</div>') +
+      '<div class="pw-name"><b>' + esc(e.name) + '</b>' + (gp ? '<span class="pw-pos">' + gp.letter + (gp.pos + 1) + '</span>' : '') +
+      (e.tempo ? '<span class="pw-sub">Tempo · <b>' + esc(fmtTempo(e.tempo)) + '</b></span>' : meta.m ? '<span class="pw-sub">' + esc(meta.m) + '</span>' : '') + '</div></div>';
+    if (e.notes) h += '<p class="pw-note">' + esc(e.notes) + '</p>';
+    h += '<table class="pw-sets"><thead><tr><th scope="col">Set</th>' + cols.map(function (c) { return '<th scope="col">' + c + '</th>'; }).join('') + '</tr></thead><tbody>';
+    for (var i = 0; i < n; i++) {
+      var w = perSet(e.tw, i), r = perSet(e.reps, i) || e.reps || '', rest = inGrpNotLast ? '–' : fmtRestS(e.rest);
+      var cells = t === 'c' ? [esc(r || '–')] : t === 't' ? [esc(r || '–'), rest] : t === 'b' && mode === 'bw' ? ['', esc(r || '–'), rest] : [w !== '' ? esc(w) + ' kg' : '–', esc(r || '–'), rest];
+      h += '<tr><td>' + (i + 1) + '</td>' + cells.map(function (c) { return '<td>' + c + '</td>'; }).join('') + '</tr>';
+    }
+    h += '</tbody></table>';
+    if (inGrpNotLast) h += '<div class="pw-next">' + ICON.link + 'No rest, straight into the next exercise</div>';
+    return h + '</div>';
+  }
+  function planDayHtml(exs) {
+    var h = '';
+    groupRuns(exs).forEach(function (r) {
+      var g = r.size > 1;
+      h += '<section class="pw-grp' + (g ? ' is-grp' : '') + '">' + (g ? '<div class="pw-grp-h"><span>' + groupName(r.size) + ' ' + r.letter + '</span><span class="tk-small">' + r.size + ' exercises back to back, then rest</span></div>' : '');
+      for (var i = r.start; i <= r.end; i++) h += planItem(exs[i], g ? { pos: i - r.start, size: r.size, letter: r.letter } : null);
+      h += '</section>';
+    });
+    return h;
+  }
+
   function renderPlan() {
     var v = $('view');
     var h = '<h1 class="tk-h1">' + (viewingOther() ? esc(S.target.name || 'Client') + '\'s <em>programmes</em>' : 'Your <em>programme</em>') + '</h1>';
@@ -1057,7 +1092,7 @@
         var exs = day.exercises || [];
         h += '<div class="pl-dayhead"><h3>' + esc(day.name || 'Day ' + (idx + 1)) + '</h3><div class="pl-sum"><span>' + ICON.dumbbell + exs.length + (exs.length === 1 ? ' exercise' : ' exercises') + '</span><span>' + ICON.clock + '~' + planMinutes(day) + ' min</span></div></div>';
         if (day.notes) h += '<p class="pl-daynote">' + esc(day.notes) + '</p>';
-        exs.forEach(function (e, i) { var g = groupAt(exs, i); if (g && g.pos === 0) h += groupHead(g, exs.slice(g.start, g.end + 1).map(function (x) { return x.name; }).join(' → ')); h += planCard(e, { g: g }); });
+        h += planDayHtml(exs);
         if (!exs.length) h += '<p class="tk-empty">No exercises on this day yet.</p>';
       }
       if (startIdx != null && !viewingOther()) h += '<div class="pl-start"><button type="button" class="tk-btn block" data-start="' + prog.id + ':' + startIdx + '">' + ICON.play + 'Start workout</button></div>';

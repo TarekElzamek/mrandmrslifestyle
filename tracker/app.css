@@ -693,3 +693,29 @@ button.bs-item{cursor:pointer}
 .bex-link:hover{border-color:var(--gold);color:var(--text)}
 .bex-link.on{border-style:solid;border-color:var(--gold);color:var(--gold-2);background:rgba(201,168,76,.08)}
 .pc .grp-pos{left:10px;right:auto}
+/* plan day, set by set */
+.pw-grp{margin-top:14px;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
+.pw-grp.is-grp{border-left:4px solid var(--gold)}
+.pw-grp-h{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:4px 10px;padding:12px 14px 2px}
+.pw-grp-h span:first-child{font-weight:800;font-size:.8rem;letter-spacing:.08em;text-transform:uppercase;color:var(--gold-2)}
+.pw-ex{padding:12px 14px 10px}
+.pw-ex + .pw-ex{border-top:1px solid var(--line)}
+.pw-top{display:flex;align-items:center;gap:12px}
+.pw-thumb{position:relative;flex:0 0 72px;width:72px;height:72px;border-radius:10px;overflow:hidden;background:#222;border:0;padding:0;cursor:pointer;display:flex;align-items:center;justify-content:center}
+div.pw-thumb{cursor:default}
+.pw-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.pw-play{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.28);color:#fff}
+.pw-play svg{width:24px;height:24px}
+.pw-noimg{color:var(--muted)}
+.pw-name{display:flex;flex-direction:column;gap:3px;min-width:0;flex:1;position:relative}
+.pw-name b{font-size:1.05rem;line-height:1.25;padding-right:34px}
+.pw-sub{font-size:.85rem;color:var(--muted)}
+.pw-sub b{font-size:.85rem;color:var(--text);padding:0}
+.pw-pos{position:absolute;top:0;right:0;min-width:28px;height:22px;padding:0 7px;border-radius:999px;background:var(--gold);color:#111;font-weight:800;font-size:.72rem;display:inline-flex;align-items:center;justify-content:center}
+.pw-note{margin:8px 0 0;font-size:.82rem;color:var(--gold-2);line-height:1.4}
+.pw-sets{width:100%;border-collapse:collapse;margin-top:10px;font-size:.95rem}
+.pw-sets th{font-size:.78rem;font-weight:600;color:var(--muted);text-align:center;padding:6px 4px;border-bottom:1px solid var(--line)}
+.pw-sets th:first-child,.pw-sets td:first-child{text-align:left;width:48px}
+.pw-sets td{text-align:center;padding:9px 4px;border-bottom:1px solid rgba(255,255,255,.05);font-variant-numeric:tabular-nums}
+.pw-sets tr:last-child td{border-bottom:none}
+.pw-next{display:flex;align-items:center;gap:6px;margin-top:6px;font-size:.78rem;color:var(--gold-2)}
