@@ -692,3 +692,4 @@ button.bs-item{cursor:pointer}
 .bex-link{display:flex;align-items:center;gap:6px;width:100%;margin:6px 0 0;padding:7px 10px;border:1px dashed var(--line);border-radius:8px;background:transparent;color:var(--muted);font:inherit;font-size:.78rem;cursor:pointer;min-height:36px;text-align:left}
 .bex-link:hover{border-color:var(--gold);color:var(--text)}
 .bex-link.on{border-style:solid;border-color:var(--gold);color:var(--gold-2);background:rgba(201,168,76,.08)}
+.pc .grp-pos{left:10px;right:auto}
