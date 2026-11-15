@@ -674,3 +674,21 @@ button.bs-item{cursor:pointer}
 .bs-macros b{display:block;color:var(--text);font-size:1rem}
 .bs-meal{margin-top:12px}.bs-mh{display:flex;justify-content:space-between;color:var(--gold);font-size:.85rem;text-transform:uppercase;letter-spacing:.05em;padding-bottom:4px;border-bottom:1px solid var(--line)}
 .bs-meal .fd-th{margin-right:0;width:44px;height:44px}
+/* supersets, tri-sets and giant sets */
+.grp-head{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;margin:18px 0 -4px;padding:8px 12px;border-radius:10px 10px 0 0;background:rgba(201,168,76,.12);border:1px solid rgba(201,168,76,.45);border-bottom:none}
+.grp-tag{display:inline-flex;align-items:center;gap:6px;font-weight:800;font-size:.78rem;letter-spacing:.06em;text-transform:uppercase;color:var(--gold-2)}
+.grp-head .tk-small{line-height:1.35}
+.ex.in-grp,.pc.in-grp{position:relative;border-left:3px solid var(--gold);margin-top:0;border-top-left-radius:0;border-top-right-radius:0}
+.ex.in-grp:not(.grp-last),.pc.in-grp:not(.grp-last){border-bottom-left-radius:0;border-bottom-right-radius:0;border-bottom-style:dashed}
+.ex.in-grp + .ex.in-grp,.pc.in-grp + .pc.in-grp{margin-top:0;border-top:none}
+.grp-pos{position:absolute;top:10px;right:10px;z-index:2;min-width:28px;height:22px;padding:0 7px;border-radius:999px;background:var(--gold);color:#111;font-weight:800;font-size:.72rem;display:inline-flex;align-items:center;justify-content:center}
+.ex.in-grp .ex-head{padding-right:46px}
+.pl-daynote{margin:6px 0 4px;font-size:.88rem;color:var(--muted);line-height:1.45}
+.bday-note{margin-top:8px;min-height:38px;font-size:.85rem}
+.bex-extra{display:grid;grid-template-columns:1fr 92px;gap:6px;margin-top:4px}
+.bex-extra input{min-height:34px;font-size:.78rem;text-align:left}
+.bex.in-grp{border-left:3px solid var(--gold);padding-left:8px}
+.bgrp-head{display:flex;align-items:center;gap:6px;margin-top:12px;font-size:.72rem;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--gold-2)}
+.bex-link{display:flex;align-items:center;gap:6px;width:100%;margin:6px 0 0;padding:7px 10px;border:1px dashed var(--line);border-radius:8px;background:transparent;color:var(--muted);font:inherit;font-size:.78rem;cursor:pointer;min-height:36px;text-align:left}
+.bex-link:hover{border-color:var(--gold);color:var(--text)}
+.bex-link.on{border-style:solid;border-color:var(--gold);color:var(--gold-2);background:rgba(201,168,76,.08)}
