@@ -500,7 +500,7 @@
         (ed && xi < d.exercises.length - 1 ? '<button type="button" class="tk-icon-btn" data-mvex="' + xi + ':1" aria-label="Move ' + esc(ex.name) + ' down">' + ICON.down + '</button>' : '') +
         (ed || ex.added ? '<button type="button" class="tk-icon-btn" data-rmex="' + xi + '" aria-label="Remove ' + esc(ex.name) + '">' + ICON.trash + '</button>' : '') + '</div></div>';
       h += '<div class="ex-how" id="how' + xi + '" hidden>' + videoBox(ex.name, xi + '|' + ex.name) + (info.how ? '<p>' + esc(info.how) + '</p>' : '') + '</div>';
-      if (ex.type === 'b' && !ed && !ex.added) h += '<div class="ex-mode"><span class="tk-small">Load: <b>' + esc((MODES.filter(function (m) { return m[0] === mode; })[0] || MODES[0])[1]) + '</b> (set by your coach)</span></div>';
+
       if (ex.type === 'b' && (ed || ex.added)) h += '<div class="ex-mode"><label for="mode' + xi + '">Load</label><select class="tk-select" id="mode' + xi + '" data-mode="' + xi + '">' + MODES.map(function (m) { return '<option value="' + m[0] + '"' + (m[0] === mode ? ' selected' : '') + '>' + m[1] + '</option>'; }).join('') + '</select></div>';
       if (ex.target && ex.target.notes) h += '<div class="ex-target">' + esc(ex.target.notes) + '</div>';
       var restTxt = gp && gp.pos < gp.size - 1 ? '–' : fmtRestS((ex.target && ex.target.rest) || (gp ? (d.exercises[gp.start].target || {}).rest : null));
