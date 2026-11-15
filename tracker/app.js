@@ -489,9 +489,11 @@
     h += '<div class="tk-row tk-small" style="margin-top:6px"><span>' + fmtDay(d.date) + '</span><span>· ' + elapsedLabel(d.started) + '</span>' + (viewingOther() ? '<span class="pill gold">Logging for ' + esc(S.target.name || 'client') + '</span>' : '') + '</div>';
     d.exercises.forEach(function (ex, xi) {
       var info = EXMAP[ex.name] || {}, last = lastPerformance(ex.name), mode = ex.type === 'b' ? modeOf(ex) : null, f = fieldsFor(ex.type, mode);
-      var gp = groupAt(d.exercises, xi);
-      if (gp && gp.pos === 0) h += groupHead(gp, d.exercises.slice(gp.start, gp.end + 1).map(function (e) { return e.name; }).join(' → '));
-      h += '<section class="ex' + (gp ? ' in-grp' + (gp.pos === gp.size - 1 ? ' grp-last' : '') : '') + '" aria-label="' + esc(ex.name) + (gp ? ', ' + gp.name + ' ' + gp.letter + ' ' + (gp.pos + 1) + ' of ' + gp.size : '') + '">' + (gp ? '<span class="grp-pos">' + gp.letter + (gp.pos + 1) + '</span>' : '') + '<div class="ex-head"><div><h3>' + esc(ex.name) + '</h3><div class="tk-small">' + esc(info.m || ex.cat || '') + (last ? ' · last ' + daysAgo(last.date) : '') + '</div></div><div class="ex-act">' +
+      var gp = groupAt(d.exercises, xi), thumbW = exThumb(ex.name);
+      if (gp && gp.pos === 0) h += '<div class="wk-grp"><div class="pw-grp-h"><span>' + gp.name + ' ' + gp.letter + '</span><span class="tk-small">' + gp.size + ' exercises back to back, then rest</span></div>';
+      h += '<section class="ex' + (gp ? ' in-grp' : '') + '" aria-label="' + esc(ex.name) + (gp ? ', ' + gp.name + ' ' + gp.letter + ' ' + (gp.pos + 1) + ' of ' + gp.size : '') + '"><div class="ex-head">' +
+        (thumbW ? '<button type="button" class="pw-thumb wk-thumb" data-how="' + xi + '" aria-label="Watch demo of ' + esc(ex.name) + '"><img src="' + thumbW + '" alt="" loading="lazy" decoding="async"><span class="pw-play" aria-hidden="true">' + ICON.play + '</span></button>' : '') +
+        '<div style="flex:1;min-width:0"><h3>' + esc(ex.name) + (gp ? ' <span class="wk-pos">' + gp.letter + (gp.pos + 1) + '</span>' : '') + '</h3><div class="tk-small">' + (ex.target && ex.target.tempo ? 'Tempo · <b style="color:var(--text)">' + esc(fmtTempo(ex.target.tempo)) + '</b>' : esc(info.m || ex.cat || '')) + (last ? ' · last ' + daysAgo(last.date) : '') + '</div></div><div class="ex-act">' +
         (info.how || vidsFor(ex.name).length ? '<button type="button" class="tk-icon-btn' + (vidsFor(ex.name).length ? ' has-vid' : '') + '" data-how="' + xi + '" aria-label="' + (vidsFor(ex.name).length ? 'Watch demo of ' : 'How to do ') + esc(ex.name) + '">' + (vidsFor(ex.name).length ? ICON_PLAY : ICON.info) + '</button>' : '') +
         (ex.type === 'c' ? '<button type="button" class="tk-icon-btn" data-cphoto="' + xi + '" aria-label="Add a photo of the ' + esc(ex.name) + ' machine screen">' + ICON.camera + '</button>' : '') +
         (ed && xi > 0 ? '<button type="button" class="tk-icon-btn" data-mvex="' + xi + ':-1" aria-label="Move ' + esc(ex.name) + ' up">' + ICON.up + '</button>' : '') +
@@ -500,17 +502,19 @@
       h += '<div class="ex-how" id="how' + xi + '" hidden>' + videoBox(ex.name, xi + '|' + ex.name) + (info.how ? '<p>' + esc(info.how) + '</p>' : '') + '</div>';
       if (ex.type === 'b' && !ed && !ex.added) h += '<div class="ex-mode"><span class="tk-small">Load: <b>' + esc((MODES.filter(function (m) { return m[0] === mode; })[0] || MODES[0])[1]) + '</b> (set by your coach)</span></div>';
       if (ex.type === 'b' && (ed || ex.added)) h += '<div class="ex-mode"><label for="mode' + xi + '">Load</label><select class="tk-select" id="mode' + xi + '" data-mode="' + xi + '">' + MODES.map(function (m) { return '<option value="' + m[0] + '"' + (m[0] === mode ? ' selected' : '') + '>' + m[1] + '</option>'; }).join('') + '</select></div>';
-      if (ex.target) h += '<div class="ex-target">Target: ' + esc(ex.target.sets || '') + ' × ' + esc(ex.target.reps || '') + (ex.target.tw ? ' · ' + esc(ex.target.tw) + ' kg' : '') + (ex.target.tempo ? ' · tempo ' + esc(ex.target.tempo) : '') + (gp && gp.pos < gp.size - 1 ? ' · no rest, go straight to ' + esc(d.exercises[xi + 1].name) : ex.target.rest ? ' · rest ' + esc(ex.target.rest) + 's' : '') + (ex.target.notes ? ' · ' + esc(ex.target.notes) : '') + '</div>';
-      h += '<table class="sets"><thead><tr><th scope="col">Set</th><th scope="col">Last</th>' + (f[0] ? '<th scope="col">' + f[0][1] + '</th>' : '') + '<th scope="col">' + f[1][1] + '</th><th scope="col"><span class="sr">Done</span></th></tr></thead><tbody>';
+      if (ex.target && ex.target.notes) h += '<div class="ex-target">' + esc(ex.target.notes) + '</div>';
+      var restTxt = gp && gp.pos < gp.size - 1 ? '–' : fmtRestS((ex.target && ex.target.rest) || (gp ? (d.exercises[gp.start].target || {}).rest : null));
+      h += '<table class="sets"><thead><tr><th scope="col">Set</th>' + (f[0] ? '<th scope="col">' + (f[0][1] === 'Kg' ? 'Weight' : f[0][1]) + '</th>' : (ex.type === 'b' ? '<th scope="col">Bodyweight</th>' : '')) + '<th scope="col">' + f[1][1] + '</th>' + (ex.type !== 'c' ? '<th scope="col">Rest</th>' : '') + '<th scope="col"><span class="sr">Done</span></th></tr></thead><tbody>';
       ex.sets.forEach(function (s, si) {
         var p = last && last.sets[si];
-        h += '<tr class="' + (s.done ? 'done' : '') + '"><td>' + (si + 1) + (s.pr ? '<span class="pr-badge">PR</span>' : '') + '</td><td class="prev">' + (p ? esc(setLabel(p, ex.type)) : '–') + '</td>';
+        h += '<tr class="' + (s.done ? 'done' : '') + '"><td>' + (si + 1) + (s.pr ? '<span class="pr-badge">PR</span>' : '') + '</td>' + (!f[0] && ex.type === 'b' ? '<td class="prev"></td>' : '');
         f.forEach(function (fd) {
           if (!fd) return;
           var ph = p ? (num(p[fd[0]]) != null ? (ex.type === 'b' && fd[0] === 'w' ? Math.abs(num(p.w)) : p[fd[0]]) : '') : '';
           var tv = targetVal(ex, fd[0], si); if (tv !== '') ph = tv;
           h += '<td><input inputmode="decimal" aria-label="Set ' + (si + 1) + ' ' + fd[1] + '" data-x="' + xi + '" data-s="' + si + '" data-f="' + fd[0] + '" value="' + esc(s[fd[0]]) + '" placeholder="' + esc(ph) + '"></td>';
         });
+        if (ex.type !== 'c') h += '<td class="prev">' + restTxt + '</td>';
         h += '<td><button type="button" class="chk" data-done="' + xi + ',' + si + '" aria-pressed="' + (s.done ? 'true' : 'false') + '" aria-label="Mark set ' + (si + 1) + ' done">' + ICON.check + '</button></td></tr>';
       });
       h += '</tbody></table>';
@@ -520,6 +524,8 @@
           ex.photo ? '' : '<button type="button" class="ex-cbtn" data-cphoto="' + xi + '">' + ICON.camera + '<span>Finished? Add a photo of the machine screen and we\'ll fill in the minutes, km and calories.</span></button>') + '</div>';
       }
       h += '<div class="ex-foot"><button type="button" class="tk-btn sm plain" data-addset="' + xi + '">+ Add set</button>' + (ex.sets.length > 1 ? '<button type="button" class="tk-btn sm plain" data-rmset="' + xi + '">Remove last set</button>' : '') + '</div></section>';
+      if (gp && gp.pos < gp.size - 1) h += '<div class="pw-next wk-next">' + ICON.link + 'No rest, straight into ' + esc(d.exercises[xi + 1].name) + '</div>';
+      if (gp && gp.pos === gp.size - 1) h += '</div>';
     });
     h += '<button type="button" class="tk-btn ghost block" id="addEx" style="margin-top:14px">+ Add exercise' + (ed ? '' : ' or cardio') + '</button>';
     h += '<div class="tk-field"><label for="wNotes">Notes (how it felt, energy, anything for your coach)</label><textarea class="tk-textarea" id="wNotes">' + esc(d.notes) + '</textarea></div>';
