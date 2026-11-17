@@ -88,6 +88,7 @@
   }
 
   var ICON = {
+    swap: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 4 3 8l4 4"/><path d="M3 8h13a4 4 0 0 1 4 4"/><path d="m17 20 4-4-4-4"/><path d="M21 16H8a4 4 0 0 1-4-4"/></svg>',
     link: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/></svg>',
     steps: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 16c-1.5 0-2.5-1.3-2.5-3.5S5.6 7 7.5 7 10 9 9.6 11.5 8.5 16 7 16z"/><path d="M5.5 18.5h3"/><path d="M17 12c1.5 0 2.5-1.3 2.5-3.5S18.4 3 16.5 3 14 5 14.4 7.5 15.5 12 17 12z"/><path d="M15.5 14.5h3"/></svg>',
     water: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11z"/></svg>',
@@ -887,11 +888,11 @@
     wrap.close = close; return wrap;
   }
 
-  function openPicker(onPick, onClose) {
+  function openPicker(onPick, onClose, title) {
     var cat = 'All', q = '';
     var body = '<label class="sr" for="pkQ">Search exercises</label><input class="tk-input" id="pkQ" type="search" placeholder="Search ' + EX.length + ' exercises" autocomplete="off">' +
       '<div class="chips" role="group" aria-label="Filter by muscle group"><button type="button" aria-pressed="true" data-c="All">All</button>' + CATS.map(function (c) { return '<button type="button" aria-pressed="false" data-c="' + esc(c) + '">' + esc(c) + '</button>'; }).join('') + '</div><div id="pkList"></div>';
-    var m = modal('Add exercise', body, onClose);
+    var m = modal(title || 'Add exercise', body, onClose);
     function list() {
       var ql = q.toLowerCase().trim();
       var items = EX.filter(function (e) { return (cat === 'All' || e.cat === cat) && (!ql || (e.name + ' ' + e.m + ' ' + e.cat).toLowerCase().indexOf(ql) > -1); });
@@ -1293,7 +1294,7 @@
         d.exercises.forEach(function (e, ei) {
           var bg = groupAt(d.exercises, ei);
           if (bg && bg.pos === 0) h += '<div class="bgrp-head">' + ICON.link + bg.name + ' ' + bg.letter + ' · ' + bg.size + ' exercises back to back, rest after the last one</div>';
-          h += '<div class="bex' + (bg ? ' in-grp' : '') + '"><div class="nm"><div class="bex-top"><span>' + esc(e.name) + '</span><span class="bex-mv">' + (ei > 0 ? '<button type="button" class="tk-icon-btn sm" data-mvx="' + di + ':' + ei + ':-1" aria-label="Move ' + esc(e.name) + ' up">' + ICON.up + '</button>' : '') + (ei < d.exercises.length - 1 ? '<button type="button" class="tk-icon-btn sm" data-mvx="' + di + ':' + ei + ':1" aria-label="Move ' + esc(e.name) + ' down">' + ICON.down + '</button>' : '') + '</span></div>' + (typeOf(e.name) === 'b' ? '<select class="tk-select bex-mode" aria-label="Load for ' + esc(e.name) + '" data-bmode="' + di + ':' + ei + '">' + MODES.map(function (m) { return '<option value="' + m[0] + '"' + ((e.mode || 'bw') === m[0] ? ' selected' : '') + '>' + m[1] + '</option>'; }).join('') + '</select>' : '') + '<input class="tk-input" style="margin-top:4px;text-align:left;font-size:.8rem;min-height:34px" aria-label="Notes for ' + esc(e.name) + '" placeholder="Notes (optional)" data-f="notes" data-d="' + di + '" data-e="' + ei + '" value="' + esc(e.notes || '') + '">' +
+          h += '<div class="bex' + (bg ? ' in-grp' : '') + '"><div class="nm"><div class="bex-top"><span>' + esc(e.name) + '</span><span class="bex-mv"><button type="button" class="tk-icon-btn sm" data-swx="' + di + ':' + ei + '" aria-label="Replace ' + esc(e.name) + ' with another exercise" title="Replace exercise">' + ICON.swap + '</button>' + (ei > 0 ? '<button type="button" class="tk-icon-btn sm" data-mvx="' + di + ':' + ei + ':-1" aria-label="Move ' + esc(e.name) + ' up">' + ICON.up + '</button>' : '') + (ei < d.exercises.length - 1 ? '<button type="button" class="tk-icon-btn sm" data-mvx="' + di + ':' + ei + ':1" aria-label="Move ' + esc(e.name) + ' down">' + ICON.down + '</button>' : '') + '</span></div>' + (typeOf(e.name) === 'b' ? '<select class="tk-select bex-mode" aria-label="Load for ' + esc(e.name) + '" data-bmode="' + di + ':' + ei + '">' + MODES.map(function (m) { return '<option value="' + m[0] + '"' + ((e.mode || 'bw') === m[0] ? ' selected' : '') + '>' + m[1] + '</option>'; }).join('') + '</select>' : '') + '<input class="tk-input" style="margin-top:4px;text-align:left;font-size:.8rem;min-height:34px" aria-label="Notes for ' + esc(e.name) + '" placeholder="Notes (optional)" data-f="notes" data-d="' + di + '" data-e="' + ei + '" value="' + esc(e.notes || '') + '">' +
             '<div class="bex-extra"><input class="tk-input" aria-label="Weight for each set for ' + esc(e.name) + '" placeholder="Kg per set, e.g. 60/80/100" data-f="tw" data-d="' + di + '" data-e="' + ei + '" value="' + esc(e.tw || '') + '"><input class="tk-input" aria-label="Tempo for ' + esc(e.name) + '" placeholder="Tempo e.g. 3010" data-f="tempo" data-d="' + di + '" data-e="' + ei + '" value="' + esc(e.tempo || '') + '"></div></div>' +
             '<input class="tk-input" inputmode="numeric" aria-label="Sets" data-f="sets" data-d="' + di + '" data-e="' + ei + '" value="' + esc(e.sets) + '">' +
             '<input class="tk-input" aria-label="Reps" data-f="reps" data-d="' + di + '" data-e="' + ei + '" value="' + esc(e.reps) + '">' +
@@ -1317,6 +1318,29 @@
       m.querySelectorAll('[data-bmode]').forEach(function (sel) { sel.onchange = function () { var q = sel.dataset.bmode.split(':'); P.days[+q[0]].exercises[+q[1]].mode = sel.value; }; });
       m.querySelectorAll('[data-mvx]').forEach(function (b) { b.onclick = function () { var p = b.dataset.mvx.split(':'), ex = P.days[+p[0]].exercises, i = +p[1], j = i + (+p[2]); if (j < 0 || j >= ex.length) return; var t = ex[i]; ex[i] = ex[j]; ex[j] = t; var lo = Math.min(i, j); [lo - 1, lo, lo + 1].forEach(function (k) { if (ex[k]) ex[k].link = false; }); draw(); }; });
       m.querySelectorAll('[data-rmx]').forEach(function (b) { b.onclick = function () { var p = b.dataset.rmx.split(':'); var exl = P.days[+p[0]].exercises, gone = exl.splice(+p[1], 1)[0]; if (gone && !gone.link && exl[+p[1] - 1]) exl[+p[1] - 1].link = false; if (exl.length) exl[exl.length - 1].link = false; draw(); }; });
+      m.querySelectorAll('[data-swx]').forEach(function (b) {
+        b.onclick = function () {
+          var q = b.dataset.swx.split(':'), di = +q[0], ei = +q[1], old = P.days[di].exercises[ei].name; m.style.display = 'none';
+          openPicker(function (name) {
+            if (name === old) return;
+            function swapOne(e) {
+              var t0 = typeOf(e.name), t = typeOf(name); e.name = name;
+              if (t !== 'b') delete e.mode;
+              if (t === 'c' && t0 !== 'c') { e.sets = 1; e.reps = '20 min'; e.rest = ''; e.tw = ''; }
+              else if (t !== 'c' && t0 === 'c') { e.sets = 3; e.reps = t === 't' ? '30-45s' : '8-12'; e.rest = 90; }
+            }
+            swapOne(P.days[di].exercises[ei]);
+            var others = []; P.days.forEach(function (d, dj) { d.exercises.forEach(function (x, ej) { if (x.name === old) others.push(x); }); });
+            draw();
+            if (!others.length) return toast('Replaced with ' + name + '. Tap Save programme to keep it.');
+            var nd = {}; P.days.forEach(function (d, dj) { if (d.exercises.some(function (x) { return x.name === old; })) nd[dj] = 1; });
+            var cnt = Object.keys(nd).length;
+            var pm = modal('Replace on other days too?', '<p class="tk-muted">' + esc(old) + ' is also on ' + cnt + (cnt === 1 ? ' other day' : ' other days') + ' of this programme.</p><div class="tk-grid2" style="margin-top:14px"><button type="button" class="tk-btn plain" id="swOne">Only this day</button><button type="button" class="tk-btn" id="swAll">Replace everywhere</button></div>', function () { document.body.style.overflow = 'hidden'; });
+            pm.querySelector('#swOne').onclick = function () { pm.close(); toast('Replaced with ' + name + '. Tap Save programme to keep it.'); };
+            pm.querySelector('#swAll').onclick = function () { others.forEach(swapOne); draw(); pm.close(); toast('Replaced on every day. Tap Save programme to keep it.'); };
+          }, function () { m.style.display = ''; document.body.style.overflow = 'hidden'; }, 'Replace ' + old);
+        };
+      });
       m.querySelectorAll('[data-addx]').forEach(function (b) {
         b.onclick = function () {
           var di = +b.dataset.addx; m.style.display = 'none';
