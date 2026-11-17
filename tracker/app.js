@@ -303,6 +303,7 @@
 
   // ---------- rendering shell ----------
   function render() {
+    if (S.draft && S.draft.preview && (S.tab !== 'today' || S.overview)) exitPreview(false);
     var who = S.me;
     $('who').innerHTML = '<button type="button" class="tk-who-btn" id="whoBtn" aria-label="Your profile"><span><b>' + esc(who.name || who.email) + '</b>' + (isCoach() ? 'Coach' : 'Mr &amp; Mrs Lifestyle') + '</span>' + avatarHtml(who, 38) + '</button>'; $('whoBtn').onclick = openProfile;
     var cb = $('coachbar');
@@ -394,6 +395,17 @@
     S.draft = d; S.overview = false; S.tab = 'today'; saveDraft(); ev('tracker_workout_start', { from_programme: !!prog }); render(); window.scrollTo(0, 0);
     notifyCoach('started', d.title, d.exercises.length ? d.exercises.length + (d.exercises.length === 1 ? ' exercise' : ' exercises') : '');
   }
+  // Coach preview: open a programme day exactly as the client sees it. Nothing is saved, synced or sent.
+  function startPreview(prog, dayIdx) {
+    var day = prog.days[dayIdx], d = { preview: true, started: Date.now(), date: today(), title: day.name || prog.name, programId: prog.id, dayIdx: dayIdx, exercises: [], notes: '' };
+    (day.exercises || []).forEach(function (pe) { d.exercises.push(newDraftEx(pe.name, pe)); });
+    S.pvSaved = S.draft; S.pvTab = S.tab; S.draft = d; S.overview = false; S.tab = 'today'; render(); window.scrollTo(0, 0);
+  }
+  function exitPreview(back) {
+    if (!S.draft || !S.draft.preview) return;
+    stopRest(); S.draft = S.pvSaved === undefined ? null : S.pvSaved; S.pvSaved = undefined; S.overview = false;
+    if (back) { S.tab = S.pvTab || 'plan'; render(); window.scrollTo(0, 0); }
+  }
   function newDraftEx(name, target) {
     var info = EXMAP[name] || { cat: 'Custom', type: 'w', how: '' };
     var n = target && parseInt(target.sets, 10) > 0 ? parseInt(target.sets, 10) : 3;
@@ -406,6 +418,7 @@
   // ---------- live shared workout (coach + client see the same open workout) ----------
   var LIVE = { timer: null, chan: null, poll: null, lastRev: 0, uid: null };
   function saveDraft() {
+    if (S.draft && S.draft.preview) return; // coach preview: never stored or synced
     if (S.draft) S.draft.rev = Date.now();
     LIVE.lastRev = S.draft ? S.draft.rev : Date.now();
     lsSet('mm_draft_' + S.target.id, S.draft);
@@ -429,6 +442,7 @@
   }
   async function applyLive(row) {
     if (!row || row.user_id !== S.target.id) return;
+    if (S.draft && S.draft.preview) { if (S.pvSaved !== undefined) S.pvSaved = row.data || null; return; }
     var rev = +row.rev || 0;
     if (rev <= LIVE.lastRev) return;
     if (LIVE.timer && row.updated_by !== S.me.id) { /* our own newer edit is about to be sent */ }
@@ -486,7 +500,8 @@
     var mins = Math.max(0, Math.round((Date.now() - d.started) / 60000)), ed = canEditWorkout(d);
     var h = '<button type="button" class="tk-btn sm plain" id="allDays" style="margin-bottom:10px">← All workouts</button>';
     h += '<div class="tk-row"><div class="grow" style="flex:1"><label class="sr" for="wTitle">Workout name</label><input class="tk-input" id="wTitle" value="' + esc(d.title) + '" style="font-weight:700;font-size:1.1rem"></div></div>';
-    h += '<div class="tk-row tk-small" style="margin-top:6px"><span>' + fmtDay(d.date) + '</span><span>· ' + elapsedLabel(d.started) + '</span>' + (viewingOther() ? '<span class="pill gold">Logging for ' + esc(S.target.name || 'client') + '</span>' : '') + '</div>';
+    h += '<div class="tk-row tk-small" style="margin-top:6px"><span>' + fmtDay(d.date) + '</span><span>· ' + elapsedLabel(d.started) + '</span>' + (viewingOther() && !d.preview ? '<span class="pill gold">Logging for ' + esc(S.target.name || 'client') + '</span>' : '') + '</div>';
+    if (d.preview) h = '<div class="tk-card gold pv-banner"><b>Preview: what ' + esc((S.target.name || 'your client').split(' ')[0]) + ' sees</b><p class="tk-small" style="margin:4px 0 0">Tap the videos, tick sets and try the rest timer. Nothing here is saved or sent to the client.</p></div>' + h;
     d.exercises.forEach(function (ex, xi) {
       var info = EXMAP[ex.name] || {}, last = lastPerformance(ex.name), mode = ex.type === 'b' ? modeOf(ex) : null, f = fieldsFor(ex.type, mode);
       var gp = groupAt(d.exercises, xi), thumbW = exThumb(ex.name);
@@ -530,9 +545,10 @@
     h += '<button type="button" class="tk-btn ghost block" id="addEx" style="margin-top:14px">+ Add exercise' + (ed ? '' : ' or cardio') + '</button>';
     h += '<div class="tk-field"><label for="wNotes">Notes (how it felt, energy, anything for your coach)</label><textarea class="tk-textarea" id="wNotes">' + esc(d.notes) + '</textarea></div>';
     var srcProg = d.programId && S.programs.filter(function (x) { return x.id === d.programId; })[0];
-    if (srcProg && d.dayIdx != null && srcProg.days[d.dayIdx] && canEditProgram(srcProg)) h += '<button type="button" class="tk-btn ghost block" id="saveToProg" style="margin-top:16px">Save these exercises & order to the programme</button><p class="tk-small" style="margin-top:6px">Updates ' + esc(srcProg.days[d.dayIdx].name || 'this day') + ' in ' + esc(srcProg.name) + ' so next time starts the same way. Weights you logged are not affected.</p>';
-    h += '<div class="tk-grid2" style="margin-top:16px"><button type="button" class="tk-btn danger" id="discard">Discard</button><button type="button" class="tk-btn" id="finish">Finish workout</button></div>';
+    if (srcProg && d.dayIdx != null && srcProg.days[d.dayIdx] && canEditProgram(srcProg) && !d.preview) h += '<button type="button" class="tk-btn ghost block" id="saveToProg" style="margin-top:16px">Save these exercises & order to the programme</button><p class="tk-small" style="margin-top:6px">Updates ' + esc(srcProg.days[d.dayIdx].name || 'this day') + ' in ' + esc(srcProg.name) + ' so next time starts the same way. Weights you logged are not affected.</p>';
+    h += d.preview ? '<button type="button" class="tk-btn block" id="pvClose" style="margin-top:16px">Close preview</button>' : '<div class="tk-grid2" style="margin-top:16px"><button type="button" class="tk-btn danger" id="discard">Discard</button><button type="button" class="tk-btn" id="finish">Finish workout</button></div>';
     v.innerHTML = h;
+    if (d.preview) { $('pvClose').onclick = function () { exitPreview(true); }; }
     $('wTitle').oninput = function () { d.title = this.value; saveDraft(); };
     $('wNotes').oninput = function () { d.notes = this.value; saveDraft(); };
     v.querySelectorAll('input[data-x]').forEach(function (inp) {
@@ -552,7 +568,7 @@
     v.querySelectorAll('[data-addset]').forEach(function (b) { b.onclick = function () { var ex = d.exercises[+b.dataset.addset], l = ex.sets[ex.sets.length - 1] || {}; ex.sets.push({ w: l.w || '', r: '', done: false }); saveDraft(); render(); }; });
     v.querySelectorAll('[data-rmset]').forEach(function (b) { b.onclick = function () { d.exercises[+b.dataset.rmset].sets.pop(); saveDraft(); render(); }; });
     if ($('addEx')) $('addEx').onclick = function () { openPicker(function (name) { var nx = newDraftEx(name, null); if (!ed) nx.added = true; d.exercises.push(nx); saveDraft(); render(); setTimeout(function () { var all = document.querySelectorAll('.ex'); if (all.length) all[all.length - 1].scrollIntoView({ block: 'center' }); }, 30); }); };
-    $('allDays').onclick = function () { S.overview = true; render(); window.scrollTo(0, 0); };
+    $('allDays').onclick = function () { if (d.preview) return exitPreview(true); S.overview = true; render(); window.scrollTo(0, 0); };
     if ($('saveToProg')) $('saveToProg').onclick = async function () {
       var btn = this, pr = S.programs.filter(function (x) { return x.id === d.programId; })[0]; if (!pr) return;
       var days = JSON.parse(JSON.stringify(pr.days)), old = days[d.dayIdx].exercises || [];
@@ -570,6 +586,7 @@
       S.programs = S.programs.map(function (x) { return x.id === pr.id ? r.data : x; });
       toast('Programme updated'); ev('tracker_programme_saved_from_workout');
     };
+    if (d.preview) return;
     $('discard').onclick = function () { if (confirmBox('Discard this workout? Nothing will be saved.')) { S.draft = null; saveDraft(); stopRest(); render(); } };
     $('finish').onclick = finishWorkout;
   }
@@ -1102,7 +1119,8 @@
         if (!exs.length) h += '<p class="tk-empty">No exercises on this day yet.</p>';
       }
       if (startIdx != null && !viewingOther()) h += '<div class="pl-start"><button type="button" class="tk-btn block" data-start="' + prog.id + ':' + startIdx + '">' + ICON.play + 'Start workout</button></div>';
-      else if (startIdx != null) h += '<div style="margin-top:14px"><button type="button" class="tk-btn ghost block" data-start="' + prog.id + ':' + startIdx + '">' + ICON.play + 'Start this workout for ' + esc((S.target.name || 'client').split(' ')[0]) + '</button></div>';
+      if (startIdx != null && isCoach()) h += '<div style="margin-top:14px"><button type="button" class="tk-btn block" data-preview="' + prog.id + ':' + startIdx + '">' + ICON.play + 'Preview as client</button></div>';
+      if (startIdx != null && viewingOther()) h += '<div style="margin-top:10px"><button type="button" class="tk-btn ghost block" data-start="' + prog.id + ':' + startIdx + '">' + ICON.play + 'Start this workout for ' + esc((S.target.name || 'client').split(' ')[0]) + '</button></div>';
     }
     // other programmes (and an active one with no days) stay as compact cards
     var others = PROGS.filter(function (p) { return p !== prog; });
@@ -1145,6 +1163,7 @@
     }; });
     v.querySelectorAll('[data-tpl]').forEach(function (b) { b.onclick = function () { saveAsTemplate(S.programs.filter(function (p) { return p.id === b.dataset.tpl; })[0]); }; });
     v.querySelectorAll('[data-edit]').forEach(function (b) { b.onclick = function () { openBuilder(S.programs.filter(function (p) { return p.id === b.dataset.edit; })[0]); }; });
+    v.querySelectorAll('[data-preview]').forEach(function (b) { b.onclick = function (e) { e.preventDefault(); var p = b.dataset.preview.split(':'); startPreview(S.programs.filter(function (x) { return x.id === p[0]; })[0], +p[1]); }; });
     v.querySelectorAll('[data-start]').forEach(function (b) { b.onclick = function (e) { e.preventDefault(); var p = b.dataset.start.split(':'); if (S.draft && !confirmBox('You have a workout in progress. Replace it?')) return; startDraft(S.programs.filter(function (x) { return x.id === p[0]; })[0], +p[1]); }; });
   }
 
