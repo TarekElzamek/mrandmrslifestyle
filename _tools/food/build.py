@@ -482,7 +482,7 @@ META_OVERRIDES = {
 }
 
 def pt_box(f, lang, name):
-    """1-to-1 PT box shown under the calorie numbers: turns calorie readers into gym enquiries."""
+    """1-to-1 PT box shown after the calorie answer, swap and coach tip (kept below the content so Google and readers see the answer first): turns calorie readers into gym enquiries."""
     t = T[lang]
     from urllib.parse import quote
     wa = 'https://wa.me/971507871515?text=' + quote(t['pt_wa'].format(name=name))
@@ -562,7 +562,6 @@ def build_page(f, lang):
   </div>
   {'<div class="fp-main fp-sec">' + extra + '</div>' if extra else ''}
   {teaser(lang)}
-  {pt_box(f, lang, name)}
   <div class="fp-main fp-sec">
     <div class="fp-box">
       <h2 class="fp-h">{t['swap_h']}</h2>
@@ -573,6 +572,7 @@ def build_page(f, lang):
       <p class="fp-p">{coach_take(f, t)}</p>
     </div>
   </div>
+  {pt_box(f, lang, name)}
   <div class="fp-box fp-sec fp-faq">
     <h2 class="fp-h">{t['faq_h']}</h2>
     {''.join(f'<details><summary>{esc(q)}</summary><p>{esc(a)}</p></details>' for q, a in faqs)}
