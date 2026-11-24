@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Arabic translations for pilates-with-chloe.html -> ar/pilates-with-chloe.html
+# Arabic translations for https://thepilatesroombychloe.com/ -> https://thepilatesroombychloe.com/
 # BLOCKS[i] matches the i-th unique block in the English page (see build.py). {a0},{a1}.. = the block's own <a ...> tags.
 # None = keep the English block as is.
 TPR = 'ذا بيلاتس روم'

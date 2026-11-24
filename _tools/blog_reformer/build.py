@@ -1,5 +1,5 @@
 # Builds the "What is reformer Pilates?" beginner guide in English and Arabic,
-# using blog-private-reformer-pilates-dubai.html as the layout template.
+# using https://thepilatesroombychloe.com/private-reformer-pilates-dubai as the layout template.
 # Run from repo root:  python3 _tools/blog_reformer/build.py
 import os, re, sys, json
 from urllib.parse import quote
@@ -10,7 +10,7 @@ import build as fb  # Arabic header/footer/CSS shared with the Arabic calorie pa
 
 SITE = 'https://www.mrandmrslifestyle.com'
 SLUG = 'blog-what-is-reformer-pilates.html'
-TPL = open('blog-private-reformer-pilates-dubai.html', encoding='utf-8').read()
+TPL = open('https://thepilatesroombychloe.com/private-reformer-pilates-dubai', encoding='utf-8').read()
 IMG = 'services-ladies-pilates.jpg'
 
 C = {
@@ -83,7 +83,7 @@ C = {
 <p>Two to three sessions a week is a good target if you want to see changes in strength and posture. Once a week still helps, especially alongside walking or other training. Consistency matters more than intensity.</p>
 
 <h2>Private or group?</h2>
-<p>Many Dubai studios teach the reformer in groups. Private sessions mean every exercise and spring setting is chosen for you, which makes the first weeks much easier. We explain the difference in <a href="/blog-private-reformer-pilates-dubai.html">why we only do private reformer Pilates</a>.</p>
+<p>Many Dubai studios teach the reformer in groups. Private sessions mean every exercise and spring setting is chosen for you, which makes the first weeks much easier. We explain the difference in <a href="https://thepilatesroombychloe.com/private-reformer-pilates-dubai">why we only do private reformer Pilates</a>.</p>
 
 <h2>Frequently Asked Questions</h2>
 {faq}''',
@@ -94,7 +94,7 @@ C = {
       ('Is reformer Pilates the same as Lagree?', 'No. Lagree uses a different machine and a slower, high-intensity style, usually in group classes. Reformer Pilates focuses on control, alignment and core strength.'),
       ('Can I do reformer Pilates while pregnant?', 'Only with your doctor\'s approval and an instructor trained in pre and postnatal exercise, who will adapt the exercises for each stage.')],
  related_h='Keep reading',
- related=[('/pilates-with-chloe.html', 'Private reformer Pilates in Meydan: sessions &amp; packages'), ('/blog-private-reformer-pilates-dubai.html', 'Private Reformer Pilates in Dubai: Why 1-to-1 Beats Group Classes'),
+ related=[('https://thepilatesroombychloe.com/', 'Private reformer Pilates in Meydan: sessions &amp; packages'), ('https://thepilatesroombychloe.com/private-reformer-pilates-dubai', 'Private Reformer Pilates in Dubai: Why 1-to-1 Beats Group Classes'),
           ('/blog-glutes-training-women.html', 'Glute Training for Women: What Actually Works'), ('/chloe-antoniazzi.html', 'Meet Chloe Antoniazzi')],
  cta_h='Try Reformer Pilates <em>With Chloe</em>', cta_p='Ladies only · Private 1-to-1 or with a friend · 50 minutes · Babies welcome · Free parking',
  cta_btn='Message Chloe on WhatsApp', wa='Hi Chloe, I read your guide to reformer Pilates and I\'d like to try a session at The Pilates Room.',
@@ -169,7 +169,7 @@ C = {
 <p>جلستان إلى ثلاث جلسات أسبوعيًا هدف جيد إذا أردتِ رؤية تغيير في القوة والوضعية. وجلسة واحدة أسبوعيًا مفيدة أيضًا، خاصة مع المشي أو تمارين أخرى. الاستمرار أهم من الشدة.</p>
 
 <h2>جلسات خاصة أم جماعية؟</h2>
-<p>كثير من الاستوديوهات في دبي تقدّم البيلاتس على الجهاز في حصص جماعية. أما الجلسة الخاصة فتعني أن كل تمرين وكل ضبط للنوابض يُختار لك أنتِ، وهذا يجعل الأسابيع الأولى أسهل بكثير. تعرّفي على <a href="/ar/pilates-with-chloe.html">جلسات البيلاتس الخاصة للسيدات مع كلوي</a>.</p>
+<p>كثير من الاستوديوهات في دبي تقدّم البيلاتس على الجهاز في حصص جماعية. أما الجلسة الخاصة فتعني أن كل تمرين وكل ضبط للنوابض يُختار لك أنتِ، وهذا يجعل الأسابيع الأولى أسهل بكثير. تعرّفي على <a href="https://thepilatesroombychloe.com/">جلسات البيلاتس الخاصة للسيدات مع كلوي</a>.</p>
 
 <h2>أسئلة شائعة</h2>
 {faq}''',
@@ -180,7 +180,7 @@ C = {
       ('هل البيلاتس على الجهاز هو نفسه اللاغري؟', 'لا. اللاغري يستخدم جهازًا مختلفًا وأسلوبًا أبطأ وعالي الشدة، وغالبًا في حصص جماعية. أما البيلاتس على الجهاز فيركّز على التحكم والمحاذاة وقوة عضلات البطن والظهر.'),
       ('هل يمكنني ممارسة البيلاتس على الجهاز أثناء الحمل؟', 'فقط بموافقة طبيبتك ومع مدربة متخصصة في تمارين الحمل وما بعد الولادة، تكيّف التمارين حسب كل مرحلة.')],
  related_h='اقرئي أيضًا',
- related=[('/ar/pilates-with-chloe.html', 'بيلاتس خاص للسيدات في ميدان: الجلسات والباقات'), ('/ar/calculator.html', 'حاسبة السعرات الحرارية والماكروز'),
+ related=[('https://thepilatesroombychloe.com/', 'بيلاتس خاص للسيدات في ميدان: الجلسات والباقات'), ('/ar/calculator.html', 'حاسبة السعرات الحرارية والماكروز'),
           ('/ar/dubai-food-calories.html', 'سعرات أكلات دبي'), ('/chloe-antoniazzi.html', 'تعرّفي على كلوي (بالإنجليزية)')],
  cta_h='جرّبي البيلاتس على الجهاز <em>مع كلوي</em>', cta_p='للسيدات فقط · جلسة خاصة فردية أو مع صديقة · 50 دقيقة · الأطفال مرحّب بهم · مواقف مجانية',
  cta_btn='راسلي كلوي على واتساب', wa='مرحبًا كلوي، قرأت دليل البيلاتس على الجهاز وأرغب في تجربة جلسة في ذا بيلاتس روم.',
@@ -208,7 +208,7 @@ def page(lang):
         s = re.sub(r'(<meta %s content=")[^"]*' % re.escape(k), lambda m: m.group(1) + c['desc'], s)
     for k in ('property="og:title"', 'name="twitter:title"'):
         s = re.sub(r'(<meta %s content=")[^"]*' % re.escape(k), lambda m: m.group(1) + c['title'], s)
-    s = s.replace(f'{SITE}/blog-private-reformer-pilates-dubai.html', c['url'])
+    s = s.replace(f'{SITE}https://thepilatesroombychloe.com/private-reformer-pilates-dubai', c['url'])
     s = s.replace(f'{SITE}/blog-private-reformer-pilates.jpg', f'{SITE}/{IMG}')
     head_end = s.index('</head>')
     head = s[:head_end]
