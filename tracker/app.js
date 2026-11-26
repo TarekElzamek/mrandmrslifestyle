@@ -668,12 +668,12 @@
       '<button type="button" class="qc-photo" id="qcPhoto">' + ICON.camera + '<span><b>Add photo of the screen</b><small>Take a photo or choose one from your phone</small></span></button>' +
       '<div class="qc-prev" id="qcPrev" hidden><img id="qcImg" alt="Your photo of the machine screen"><button type="button" class="tk-link" id="qcChange">Change photo</button></div>' +
       '<div id="qcAi" class="ai-status" role="status" hidden></div>' +
-      '<div class="tk-field" style="margin-top:14px"><span class="tk-small" id="qcMl">Machine</span><div class="chips qc-chips" role="group" aria-labelledby="qcMl">' + QC_MACHINES.map(function (m) { return '<button type="button" data-qm="' + esc(m[0]) + '" aria-pressed="' + (m[0] === st.machine) + '">' + esc(m[1]) + '</button>'; }).join('') + '</div></div>' +
+      '<div class="tk-field" style="margin-top:14px"><span class="tk-label" id="qcMl">Machine</span><div class="chips qc-chips" role="group" aria-labelledby="qcMl">' + QC_MACHINES.map(function (m) { return '<button type="button" data-qm="' + esc(m[0]) + '" aria-pressed="' + (m[0] === st.machine) + '">' + esc(m[1]) + '</button>'; }).join('') + '</div></div>' +
       '<div class="tk-grid3 qc-nums"><div class="tk-field"><label for="qcMin">Minutes</label><input class="tk-input" id="qcMin" inputmode="decimal" placeholder="min"></div><div class="tk-field"><label for="qcKm">Km</label><input class="tk-input" id="qcKm" inputmode="decimal" placeholder="optional"></div><div class="tk-field"><label for="qcKcal">Calories</label><input class="tk-input" id="qcKcal" inputmode="numeric" placeholder="optional"></div></div>' +
       '<div class="tk-field"><label for="qcDate">Date</label><input class="tk-input" id="qcDate" type="date" value="' + today() + '" max="' + today() + '"></div>' +
       '<div class="tk-field"><label for="qcNote">Note for your coach (optional)</label><input class="tk-input" id="qcNote" maxlength="200" placeholder="e.g. felt strong, incline 10"></div>' +
-      '<button type="button" class="tk-btn block" id="qcSave" style="margin-top:6px">Save cardio</button>';
-    var m = modal('Log cardio', body, function () { st.closed = true; });
+      '<button type="button" class="tk-btn block" id="qcSave">Save cardio</button>';
+    var m = modal('Log cardio', '<div class="fm">' + body + '</div>', function () { st.closed = true; });
     function pickMachine(name) { st.machine = name; m.querySelectorAll('[data-qm]').forEach(function (b) { b.setAttribute('aria-pressed', b.dataset.qm === name ? 'true' : 'false'); }); }
     m.querySelectorAll('[data-qm]').forEach(function (b) { b.onclick = function () { pickMachine(b.dataset.qm); }; });
     function choose() {
@@ -2339,8 +2339,8 @@
   }
   function openAddFood(meal, date, startTab) {
     meal = meal || mealNow(); date = date || today();
-    var m = modal('Add food', '<div class="chips fd-tabs" role="tablist"><button type="button" role="tab" data-ftab="search" aria-pressed="true">' + ICON.search + 'Search</button><button type="button" role="tab" data-ftab="photo" aria-pressed="false">' + ICON.camera + 'Photo</button><button type="button" role="tab" data-ftab="custom" aria-pressed="false">' + ICON.pen + 'My own</button></div>' +
-      '<div class="tk-field" style="margin-top:6px"><label for="fMeal">Meal</label><select class="tk-select" id="fMeal">' + MEALS.map(function (x) { return '<option value="' + x[0] + '"' + (x[0] === meal ? ' selected' : '') + '>' + x[1] + (date !== today() ? ' · ' + fmtDay(date, { weekday: 'short', day: 'numeric' }) : '') + '</option>'; }).join('') + '</select></div><div id="fPane"></div>');
+    var m = modal('Add food', '<div class="fm"><div class="fd-tabs" role="tablist"><button type="button" role="tab" data-ftab="search" aria-pressed="true">' + ICON.search + 'Search</button><button type="button" role="tab" data-ftab="photo" aria-pressed="false">' + ICON.camera + 'Photo</button><button type="button" role="tab" data-ftab="custom" aria-pressed="false">' + ICON.pen + 'My own</button></div>' +
+      '<div class="tk-field" style="margin-top:6px"><label for="fMeal">Meal</label><select class="tk-select" id="fMeal">' + MEALS.map(function (x) { return '<option value="' + x[0] + '"' + (x[0] === meal ? ' selected' : '') + '>' + x[1] + (date !== today() ? ' · ' + fmtDay(date, { weekday: 'short', day: 'numeric' }) : '') + '</option>'; }).join('') + '</select></div><div id="fPane"></div></div>');
     function meal_() { return $('fMeal').value; }
     function base(o) { return { user_id: S.target.id, date: date, meal: meal_(), source: 'db' }; }
     function done() { m.close(); render(); }
@@ -2349,20 +2349,20 @@
 
     function paneSearch() {
       var rec = recentFoods();
-      $('fPane').innerHTML = '<div class="tk-field"><label for="fQ" class="sr">Search foods</label><input class="tk-input" id="fQ" type="search" placeholder="e.g. chicken breast, basmati rice, shawarma" autocomplete="off"></div><div id="fRes" class="fd-res">' +
-        (rec.length ? '<p class="tk-small" style="margin:10px 0 4px">Recent</p>' + rec.map(function (x, i) { return '<button type="button" class="pick-item" data-rec="' + i + '"><div style="min-width:0"><b>' + esc(x.name) + '</b><span>' + (x.amount ? esc(x.amount) + ' · ' : '') + nf(x.kcal) + ' kcal</span></div><span aria-hidden="true">+</span></button>'; }).join('') : '<p class="tk-small" style="margin-top:10px">Type a food to search. Foods marked per 100 g let you enter the exact weight.</p>') + '</div>';
+      $('fPane').innerHTML = '<div class="tk-field fd-q"><label for="fQ" class="sr">Search foods</label>' + ICON.search + '<input class="tk-input" id="fQ" type="search" placeholder="Search foods, e.g. shawarma" autocomplete="off"></div><div id="fRes" class="fd-res">' +
+        (rec.length ? '<p class="tk-label fd-rec">Recent</p>' + rec.map(function (x, i) { var am = String(x.amount || '').replace(/\s*\((photo estimate|photo)\)/i, ''); return '<button type="button" class="pick-item" data-rec="' + i + '" aria-label="Add ' + esc(x.name) + '"><div class="pi-txt"><b>' + esc(x.name) + '</b><span>' + (am ? esc(am) + ' · ' : '') + nf(x.kcal) + ' kcal</span></div><span class="plus" aria-hidden="true">' + ICON.plus + '</span></button>'; }).join('') : '<p class="tk-small" style="margin-top:10px">Type a food to search. Foods marked per 100 g let you enter the exact weight.</p>') + '</div>';
       rec.forEach(function (x, i) { var b = m.querySelector('[data-rec="' + i + '"]'); if (b) b.onclick = async function () { b.disabled = true; var o = base(); ['name', 'amount', 'kcal', 'protein', 'carbs', 'fat', 'source'].forEach(function (k) { o[k] = x[k]; }); o.meal = meal_(); if (await addFoodRows([o])) { toast('Added ' + x.name); done(); } }; });
       var q = $('fQ'); q.focus();
       q.oninput = function () {
         var list = searchFoods(q.value);
-        $('fRes').innerHTML = list.length ? list.map(function (f, i) { return '<button type="button" class="pick-item" data-fi="' + i + '"><div style="min-width:0"><b>' + esc(f.name) + '</b><span>' + esc(f.portion) + ' · ' + nf(f.kcal) + ' kcal · ' + f.p + ' g protein</span></div><span aria-hidden="true">›</span></button>'; }).join('') : (q.value.trim() ? '<p class="tk-small" style="margin-top:10px">Nothing found. Try another word, or add it under ✏️ My own.</p>' : '');
+        $('fRes').innerHTML = list.length ? list.map(function (f, i) { return '<button type="button" class="pick-item" data-fi="' + i + '"><div style="min-width:0"><b>' + esc(f.name) + '</b><span>' + esc(f.portion) + ' · ' + nf(f.kcal) + ' kcal · ' + f.p + ' g protein</span></div><span class="plus" aria-hidden="true">' + ICON.plus + '</span></button>'; }).join('') : (q.value.trim() ? '<p class="tk-small" style="margin-top:10px">Nothing found. Try another word, or add it under ✏️ My own.</p>' : '');
         $('fRes').querySelectorAll('[data-fi]').forEach(function (b) { b.onclick = function () { paneAmount(list[+b.dataset.fi]); }; });
       };
     }
     function paneShake(f) {
       var milkDefault = /milk/i.test(f.name) && !/water/i.test(f.name);
       $('fPane').innerHTML = '<div class="fd-pick"><b>' + esc(f.name) + '</b><span class="tk-small">1 scoop (30 g) = ' + SCOOP.k + ' kcal · ' + SCOOP.p + ' g protein</span></div>' +
-        '<div class="tk-field"><span class="tk-small" id="scL">How many scoops?</span><div class="chips" role="group" aria-labelledby="scL">' + [1, 1.5, 2, 3].map(function (x) { return '<button type="button" data-sc="' + x + '" aria-pressed="' + (x === 1) + '">' + x + '</button>'; }).join('') + '</div></div>' +
+        '<div class="tk-field"><span class="tk-label" id="scL">How many scoops?</span><div class="chips" role="group" aria-labelledby="scL">' + [1, 1.5, 2, 3].map(function (x) { return '<button type="button" data-sc="' + x + '" aria-pressed="' + (x === 1) + '">' + x + '</button>'; }).join('') + '</div></div>' +
         '<div class="tk-grid2"><div class="tk-field"><label for="shMx">Mixed with</label><select class="tk-select" id="shMx"><option value="water"' + (milkDefault ? '' : ' selected') + '>Water</option><option value="low"' + (milkDefault ? ' selected' : '') + '>Low-fat milk</option><option value="full">Full-fat milk</option></select></div>' +
         '<div class="tk-field" id="shMlW"' + (milkDefault ? '' : ' hidden') + '><label for="shMl">Milk</label><select class="tk-select" id="shMl">' + [150, 200, 250, 300, 350, 400, 500].map(function (n) { return '<option value="' + n + '"' + (n === 300 ? ' selected' : '') + '>' + n + ' ml</option>'; }).join('') + '</select></div></div>' +
         '<div class="fd-calc" id="fCalc" aria-live="polite"></div><div class="tk-grid2" style="margin-top:12px"><button type="button" class="tk-btn ghost" id="fBackS">Back</button><button type="button" class="tk-btn" id="fAdd">Add</button></div>';
@@ -2416,8 +2416,8 @@
     }
     function panePhoto() {
       keepPhoto = false;
-      $('fPane').innerHTML = '<p class="tk-small" style="margin-top:8px">Take a clear photo from above with the whole plate in view. We\'ll list each food with an estimated portion; check and adjust before adding.</p><div class="tk-grid2 fd-cams"><label class="tk-btn fd-cam" for="fCam">' + ICON.camera + 'Take a photo</label><label class="tk-btn ghost fd-cam" for="fGal">' + ICON.image + 'From gallery</label></div><input type="file" id="fCam" accept="image/*" capture="environment" class="sr"><input type="file" id="fGal" accept="image/*" class="sr"><div id="fPrev" class="b-prev" hidden></div><div id="fAi" class="ai-status" role="status" hidden></div><div id="fItems"></div>';
-      $('fCam').onchange = $('fGal').onchange = async function () {
+      $('fPane').innerHTML = '<p class="tk-muted fd-intro">Take a clear photo from above with the whole plate in view. We\'ll list each food with an estimated portion for you to check before adding.</p><label class="qc-photo" for="fGal" id="fPick">' + ICON.camera + '<span><b>Add photo of your meal</b><small>Take a photo or choose one from your phone</small></span></label><input type="file" id="fGal" accept="image/*" class="sr"><div id="fPrev" class="b-prev" hidden></div><div id="fAi" class="ai-status" role="status" hidden></div><div id="fItems"></div>';
+      $('fGal').onchange = async function () {
         var file = this.files[0]; if (!file) return; mealFile = file;
         var u = URL.createObjectURL(file), pv = $('fPrev'); pv.innerHTML = '<img src="' + u + '" alt="Your meal">'; pv.hidden = false;
         var st = $('fAi'); st.className = 'ai-status'; st.hidden = false; st.innerHTML = '<span class="ai-spin" aria-hidden="true"></span> Looking at your meal… this usually takes 5 to 20 seconds.'; $('fItems').innerHTML = '';

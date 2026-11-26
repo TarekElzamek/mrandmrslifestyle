@@ -727,3 +727,42 @@ div.pw-thumb{cursor:default}
 .wk-next{padding:0 14px 12px}
 .ex-head .wk-thumb{flex:0 0 60px;width:60px;height:60px}
 .wk-pos{display:inline-flex;vertical-align:middle;margin-left:6px;min-width:26px;height:20px;padding:0 6px;border-radius:999px;background:var(--gold);color:#111;font-weight:800;font-size:.68rem;align-items:center;justify-content:center}
+
+/* ---------- Shared form pop-ups (Log cardio, Add food): one consistent, polished look ---------- */
+.fm{display:flex;flex-direction:column}
+.fm .tk-field{margin-top:16px;gap:8px}
+.fm .tk-field>label,.fm .tk-label{display:block;font-size:.72rem;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);margin:0}
+.fm .tk-input,.fm .tk-select{min-height:50px;font-size:1rem;padding:12px 14px;border-radius:12px;background:#0E0E0F;border:1px solid rgba(255,255,255,.12)}
+.fm .tk-input::placeholder{color:rgba(255,255,255,.32)}
+.fm .qc-nums{gap:10px}
+.fm .qc-nums .tk-input{text-align:left;font-size:1rem}
+.fm .tk-muted{font-size:.92rem;line-height:1.55;margin:0}
+.fm .qc-photo{margin-top:14px;cursor:pointer}
+.fm .qc-prev{margin-top:14px}
+.fm .tk-btn.block{margin-top:20px;min-height:52px;font-size:1rem}
+/* machine / scoop choices */
+.fm .chips{flex-wrap:wrap;overflow:visible;gap:8px;padding:0}
+.fm .chips button{min-height:40px;padding:8px 16px;font-size:.9rem;border-radius:999px}
+/* Search / Photo / My own: a proper tab bar */
+.fm .fd-tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;padding:4px;background:#0E0E0F;border:1px solid rgba(255,255,255,.1);border-radius:14px}
+.fm .fd-tabs button{display:flex;align-items:center;justify-content:center;gap:6px;min-height:42px;border:0;border-radius:10px;background:transparent;color:var(--muted);font-weight:600;font-size:.9rem;cursor:pointer}
+.fm .fd-tabs button svg{margin:0;vertical-align:0}
+.fm .fd-tabs button[aria-pressed="true"]{background:linear-gradient(135deg,#E3C673,var(--gold-3));color:#17120A}
+.fm .fd-tabs+.tk-field{margin-top:16px}
+/* search box with icon */
+.fm .fd-q{position:relative}
+.fm .fd-q>svg{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--muted);pointer-events:none}
+.fm .fd-q .tk-input{padding-left:40px}
+.fm .fd-res{margin-top:6px}
+.fm .fd-rec{margin:16px 0 4px}
+/* food rows: name, details, and a neat add button on the right */
+.fm .pick-item{gap:14px;padding:14px 4px;min-height:64px;border-bottom:1px solid rgba(255,255,255,.07);border-radius:0;cursor:pointer;transition:background .15s}
+.fm .pick-item:hover{background:rgba(255,255,255,.03)}
+.fm .pick-item:last-child{border-bottom:0}
+.fm .pick-item .pi-txt,.fm .pick-item>div{flex:1;min-width:0}
+.fm .pick-item b{font-weight:600;font-size:.98rem;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fm .pick-item b::first-letter{text-transform:uppercase}
+.fm .pick-item div span{display:block;margin-top:3px;font-size:.82rem;color:var(--muted)}
+.fm .pick-item .plus{flex:none;margin-left:auto;width:36px;height:36px;border-radius:50%;display:grid;place-items:center;border:1px solid rgba(201,168,76,.45);background:rgba(201,168,76,.08);color:var(--gold);font-size:0}
+.fm .pick-item:hover .plus{background:var(--gold);color:#17120A;border-color:var(--gold)}
+.fm .fd-intro{margin-top:16px}
