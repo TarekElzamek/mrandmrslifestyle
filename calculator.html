@@ -114,6 +114,7 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; a
 .goal-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: .5rem; }
 .goal-pill { background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.08); border-radius: 8px; padding: .75rem .5rem; text-align: center; cursor: pointer; transition: all .2s; }
 .goal-pill:hover { border-color: rgba(201,168,76,.35); }
+.goal-pill:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
 .goal-pill.selected { background: rgba(201,168,76,.1); border-color: var(--gold); }
 .goal-pill .goal-icon { font-size: 1.4rem; display: block; margin-bottom: .3rem; }
 .goal-pill .goal-label { font-size: .72rem; color: rgba(255,255,255,.7); font-weight: 500; line-height: 1.3; }
@@ -288,11 +289,11 @@ footer a { color: var(--gold); text-decoration: none; }
         <div class="form-section-title">Personal Details</div>
         <div class="form-row">
           <div class="form-group">
-            <label>Age</label>
+            <label for="age">Age</label>
             <input type="number" id="age" placeholder="e.g. 28" min="15" max="80">
           </div>
           <div class="form-group">
-            <label>Gender</label>
+            <label for="gender">Gender</label>
             <select id="gender">
               <option value="" disabled selected>Select</option>
               <option value="male">Male</option>
@@ -302,22 +303,22 @@ footer a { color: var(--gold); text-decoration: none; }
         </div>
         <div class="form-row" style="margin-top:.75rem;">
           <div class="form-group">
-            <label id="weightLabel">Weight (kg)</label>
+            <label id="weightLabel" for="weight">Weight (kg)</label>
             <input type="number" id="weight" placeholder="e.g. 75" min="30" max="300">
           </div>
           <div class="form-group" id="heightGroup">
-            <label id="heightLabel">Height (cm)</label>
+            <label id="heightLabel" for="heightCm">Height (cm)</label>
             <input type="number" id="heightCm" placeholder="e.g. 175" min="100" max="250">
           </div>
         </div>
         <!-- Imperial height (hidden by default) -->
         <div class="form-row" id="heightImperial" style="display:none; margin-top:.75rem;">
           <div class="form-group">
-            <label>Height (ft)</label>
+            <label for="heightFt">Height (ft)</label>
             <input type="number" id="heightFt" placeholder="e.g. 5" min="3" max="8">
           </div>
           <div class="form-group">
-            <label>Height (in)</label>
+            <label for="heightIn">Height (in)</label>
             <input type="number" id="heightIn" placeholder="e.g. 9" min="0" max="11">
           </div>
         </div>
@@ -327,7 +328,7 @@ footer a { color: var(--gold); text-decoration: none; }
       <div class="form-section">
         <div class="form-section-title">Activity Level</div>
         <div class="form-group">
-          <select id="activity">
+          <select id="activity" aria-label="Activity level">
             <option value="" disabled selected>Select your activity level</option>
             <option value="1.2">Sedentary — desk job, little or no exercise</option>
             <option value="1.375">Lightly Active — light exercise 1–3 days/week</option>
@@ -341,28 +342,28 @@ footer a { color: var(--gold); text-decoration: none; }
       <!-- GOAL -->
       <div class="form-section">
         <div class="form-section-title">Your Goal</div>
-        <div class="goal-grid" id="goalGrid">
-          <div class="goal-pill" data-goal="lose-fast" onclick="selectGoal(this)">
+        <div class="goal-grid" id="goalGrid" role="radiogroup" aria-label="Your goal">
+          <div class="goal-pill" data-goal="lose-fast" role="radio" aria-checked="false" tabindex="0" onclick="selectGoal(this)" onkeydown="goalKey(event,this)">
             <span class="goal-icon"><span class="mm-i" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22c4 0 7-2.8 7-6.8 0-3-1.8-5.4-3.4-7.1-.5 1.9-1.6 3-2.8 3.4.6-3.2-.6-6.3-3.3-8.5.2 3.3-1.7 5.5-3.3 7.4C5 12.4 5 13.8 5 15.2 5 19.2 8 22 12 22z"/></svg></span></span>
             <span class="goal-label">Aggressive Fat Loss</span>
           </div>
-          <div class="goal-pill" data-goal="lose" onclick="selectGoal(this)">
+          <div class="goal-pill" data-goal="lose" role="radio" aria-checked="false" tabindex="0" onclick="selectGoal(this)" onkeydown="goalKey(event,this)">
             <span class="goal-icon"><span class="mm-i" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z"/></svg></span></span>
             <span class="goal-label">Fat Loss</span>
           </div>
-          <div class="goal-pill" data-goal="maintain" onclick="selectGoal(this)">
+          <div class="goal-pill" data-goal="maintain" role="radio" aria-checked="false" tabindex="0" onclick="selectGoal(this)" onkeydown="goalKey(event,this)">
             <span class="goal-icon"><span class="mm-i" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v16M5 20h14M5 8h14M7 8l-3 6a3 3 0 0 0 6 0L7 8zM17 8l-3 6a3 3 0 0 0 6 0l-3-6z"/></svg></span></span>
             <span class="goal-label">Maintain Weight</span>
           </div>
-          <div class="goal-pill" data-goal="gain" onclick="selectGoal(this)">
+          <div class="goal-pill" data-goal="gain" role="radio" aria-checked="false" tabindex="0" onclick="selectGoal(this)" onkeydown="goalKey(event,this)">
             <span class="goal-icon"><span class="mm-i" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6.5 6.5v11M17.5 6.5v11M3.5 9v6M20.5 9v6M6.5 12h11"/></svg></span></span>
             <span class="goal-label">Muscle Gain</span>
           </div>
-          <div class="goal-pill" data-goal="gain-fast" onclick="selectGoal(this)">
+          <div class="goal-pill" data-goal="gain-fast" role="radio" aria-checked="false" tabindex="0" onclick="selectGoal(this)" onkeydown="goalKey(event,this)">
             <span class="goal-icon"><span class="mm-i" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 20h18"/><path d="M5 16l5-5 3.5 3.5L20 8"/><path d="M15 8h5v5"/></svg></span></span>
             <span class="goal-label">Aggressive Bulk</span>
           </div>
-          <div class="goal-pill" data-goal="recomp" onclick="selectGoal(this)">
+          <div class="goal-pill" data-goal="recomp" role="radio" aria-checked="false" tabindex="0" onclick="selectGoal(this)" onkeydown="goalKey(event,this)">
             <span class="goal-icon"><span class="mm-i" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11a8 8 0 0 0-14.3-4.3L4 9"/><path d="M4 4v5h5M4 13a8 8 0 0 0 14.3 4.3L20 15"/><path d="M20 20v-5h-5"/></svg></span></span>
             <span class="goal-label">Body Recomp</span>
           </div>
@@ -577,6 +578,19 @@ let unit = 'metric';
 let selectedGoal = '';
 
 function setUnit(u) {
+  if (u === unit) return;
+  // Convert what the visitor already typed so the numbers keep the same meaning
+  const w = document.getElementById('weight');
+  const wv = parseFloat(w.value);
+  if (wv) { const kg = wv * 0.453592; w.value = u === 'imperial' ? Math.round(wv * 2.20462) : (Math.abs(kg - Math.round(kg)) < 0.2 ? Math.round(kg) : Math.round(kg * 10) / 10); }
+  const cmEl = document.getElementById('heightCm'), ftEl = document.getElementById('heightFt'), inEl = document.getElementById('heightIn');
+  if (u === 'imperial') {
+    const cm = parseFloat(cmEl.value);
+    if (cm) { let totalIn = Math.round(cm / 2.54); ftEl.value = Math.floor(totalIn / 12); inEl.value = totalIn % 12; }
+  } else {
+    const ft = parseFloat(ftEl.value) || 0, inch = parseFloat(inEl.value) || 0;
+    if (ft || inch) cmEl.value = Math.round(ft * 30.48 + inch * 2.54);
+  }
   unit = u;
   document.getElementById('btnMetric').classList.toggle('active', u === 'metric');
   document.getElementById('btnImperial').classList.toggle('active', u === 'imperial');
@@ -588,9 +602,18 @@ function setUnit(u) {
 }
 
 function selectGoal(el) {
-  document.querySelectorAll('.goal-pill').forEach(p => p.classList.remove('selected'));
+  document.querySelectorAll('.goal-pill').forEach(p => { p.classList.remove('selected'); p.setAttribute('aria-checked', 'false'); });
   el.classList.add('selected');
+  el.setAttribute('aria-checked', 'true');
   selectedGoal = el.dataset.goal;
+}
+
+function goalKey(e, el) {
+  const pills = [...document.querySelectorAll('.goal-pill')];
+  const i = pills.indexOf(el);
+  if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); selectGoal(el); }
+  else if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { e.preventDefault(); const n = pills[(i + 1) % pills.length]; n.focus(); selectGoal(n); }
+  else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); const n = pills[(i - 1 + pills.length) % pills.length]; n.focus(); selectGoal(n); }
 }
 
 function calculate() {
@@ -629,8 +652,11 @@ function calculate() {
     'lose-fast': -750, 'lose': -400, 'maintain': 0,
     'gain': 300, 'gain-fast': 600, 'recomp': -100
   };
-  const adj = adjustments[selectedGoal];
-  const target = Math.round(tdee + adj);
+  // Never recommend below a safe minimum (1,200 women / 1,500 men), or below maintenance if that is lower
+  const floor = Math.min(gender === 'male' ? 1500 : 1200, tdee);
+  const target = Math.max(Math.round(tdee + adjustments[selectedGoal]), floor);
+  const adj = target - tdee;
+  const floored = target > Math.round(tdee + adjustments[selectedGoal]);
 
   // BMI
   const heightM = heightCm / 100;
@@ -648,11 +674,13 @@ function calculate() {
     proteinG = Math.round(weightKg * 1.8);
     fatPct = 0.3;
   }
+  // Protein never takes more than 40% of the calories, so carbs can't go negative
+  proteinG = Math.min(proteinG, Math.round(target * 0.4 / 4));
   const proteinCals = proteinG * 4;
   const fatCals = Math.round(target * fatPct);
   const fatG = Math.round(fatCals / 9);
   const carbCals = target - proteinCals - fatCals;
-  const carbG = Math.round(carbCals / 4);
+  const carbG = Math.max(0, Math.round(carbCals / 4));
   const maxMacro = Math.max(proteinG, carbG, fatG);
 
   // BMI status
@@ -694,7 +722,9 @@ function calculate() {
   window.mmCalc = { kcal: target, p: proteinG, c: carbG, f: fatG, goal: goalLabels[selectedGoal] };
   try { localStorage.setItem('mmTarget', target); } catch (e) {}
   document.getElementById('calorieNum').textContent = target.toLocaleString();
-  document.getElementById('calorieSub').textContent = `${goalLabels[selectedGoal]} · ${Math.abs(adj)} kcal ${adj < 0 ? 'below' : adj > 0 ? 'above' : 'at'} maintenance`;
+  document.getElementById('calorieSub').textContent = floored
+    ? `${goalLabels[selectedGoal]} · set to a safe minimum. Going lower needs a coach-guided plan`
+    : `${goalLabels[selectedGoal]} · ${Math.abs(adj)} kcal ${adj < 0 ? 'below' : adj > 0 ? 'above' : 'at'} maintenance`;
   document.getElementById('bmrVal').textContent = Math.round(bmr).toLocaleString();
   document.getElementById('tdeeVal').textContent = tdee.toLocaleString();
   document.getElementById('deficitVal').textContent = Math.abs(adj);

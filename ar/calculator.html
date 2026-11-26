@@ -292,14 +292,14 @@ document.getElementById('cxGo').addEventListener('click',function(){
  var age=parseFloat(document.getElementById('cxAge').value),w=parseFloat(document.getElementById('cxW').value),h=parseFloat(document.getElementById('cxH').value),act=parseFloat(document.getElementById('cxAct').value);
  var err=document.getElementById('cxErr');
  if(!age||!w||!h||!act||!sex||!goal){err.style.display='block';return;} err.style.display='none';
- var bmr=10*w+6.25*h-5*age+(sex==='m'?5:-161), tdee=Math.round(bmr*act), adj=ADJ[goal], t=Math.round(tdee+adj);
+ var bmr=10*w+6.25*h-5*age+(sex==='m'?5:-161), tdee=Math.round(bmr*act), raw=Math.round(tdee+ADJ[goal]), t=Math.max(raw,Math.min(sex==='m'?1500:1200,tdee)), adj=t-tdee, floored=t>raw;
  var bmi=(w/Math.pow(h/100,2)).toFixed(1);
- var p=Math.round(w*((goal==='lose'||goal==='lose-fast')?2.2:(goal==='gain'||goal==='gain-fast')?2.0:1.8));
+ var p=Math.min(Math.round(w*((goal==='lose'||goal==='lose-fast')?2.2:(goal==='gain'||goal==='gain-fast')?2.0:1.8)),Math.round(t*0.4/4));
  var fp=(goal==='lose'||goal==='lose-fast')?0.28:(goal==='gain'||goal==='gain-fast')?0.25:0.3;
- var fc=Math.round(t*fp), f=Math.round(fc/9), c=Math.round((t-p*4-fc)/4), mx=Math.max(p,c,f);
+ var fc=Math.round(t*fp), f=Math.round(fc/9), c=Math.max(0,Math.round((t-p*4-fc)/4)), mx=Math.max(p,c,f);
  var bc,bt; if(bmi<18.5){bc='#3498db';bt='نقص في الوزن'}else if(bmi<25){bc='#2ecc71';bt='وزن صحي ✓'}else if(bmi<30){bc='#f39c12';bt='زيادة في الوزن'}else{bc='#e74c3c';bt='سمنة'}
  document.getElementById('cxKcal').textContent=fmt(t);
- document.getElementById('cxSub').textContent=LBL[goal]+' · '+(adj<0?'أقل من سعرات الحفاظ بـ '+Math.abs(adj)+' سعرة':adj>0?'أكثر من سعرات الحفاظ بـ '+adj+' سعرة':'سعرات الحفاظ على وزنك');
+ document.getElementById('cxSub').textContent=floored?LBL[goal]+' · تم ضبطها على الحد الأدنى الآمن. النزول أكثر يحتاج خطة بإشراف مدرب':LBL[goal]+' · '+(adj<0?'أقل من سعرات الحفاظ بـ '+Math.abs(adj)+' سعرة':adj>0?'أكثر من سعرات الحفاظ بـ '+adj+' سعرة':'سعرات الحفاظ على وزنك');
  document.getElementById('cxBmr').textContent=fmt(bmr);document.getElementById('cxTdee').textContent=fmt(tdee);
  document.getElementById('cxAdj').textContent=Math.abs(adj);document.getElementById('cxAdjL').textContent=adj<0?'العجز اليومي':adj>0?'الفائض اليومي':'التوازن';
  document.getElementById('cxBmi').textContent=bmi;document.getElementById('cxBmi').style.color=bc;document.getElementById('cxBmiT').textContent=bt;document.getElementById('cxBmiT').style.color=bc;
