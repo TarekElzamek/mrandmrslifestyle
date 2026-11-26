@@ -58,6 +58,7 @@
   function daysAgo(s) { var d = Math.round((parseDay(today()) - parseDay(s)) / 864e5); return d <= 0 ? 'today' : d === 1 ? 'yesterday' : d + ' days ago'; }
   function num(v) { var n = parseFloat(String(v).replace(',', '.')); return isFinite(n) ? n : null; }
   function r1(n) { return Math.round(n * 10) / 10; }
+  function dayName(x) { var t = today(), y = iso(new Date(Date.now() - 864e5)); return x === t ? 'Today' : x === y ? 'Yesterday' : fmtDay(x, { weekday: 'short', day: 'numeric' }); }
   function nf(n) { return Math.round(n).toLocaleString('en-US'); }
   function lsGet(k, d) { try { var v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch (e) { return d; } }
   function lsSet(k, v) { try { if (v == null) localStorage.removeItem(k); else localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
@@ -2250,7 +2251,7 @@
     MEALS.forEach(function (m) {
       var it = fDay(d).filter(function (x) { return x.meal === m[0]; }), k = it.reduce(function (a, x) { return a + (x.kcal || 0); }, 0);
       h += '<div class="tk-card fd-meal"><div class="hb-head"><h2 class="tk-h2" style="margin:0">' + m[1] + '</h2><span class="tk-small">' + (k ? nf(k) + ' kcal' : '') + '</span></div>';
-      it.forEach(function (x) { h += '<div class="li">' + (x.photo_path ? '<button type="button" class="fd-th" data-fphoto="' + esc(x.photo_path) + '" aria-label="See the photo of ' + esc(x.name) + '"><img data-fthumb="' + esc(x.photo_path) + '" alt=""></button>' : '') + '<div class="grow"><b>' + esc(x.name) + (!x.photo_path && x.source === 'ai' ? ' <span class="pill" title="Estimated from a photo">📷</span>' : '') + '</b><span class="tk-small">' + (x.amount ? esc(x.amount) + ' · ' : '') + nf(x.kcal) + ' kcal' + (x.protein != null ? ' · ' + r1(+x.protein) + ' g protein' : '') + '</span></div><button type="button" class="tk-icon-btn" data-delf="' + x.id + '" aria-label="Remove ' + esc(x.name) + '">' + ICON.trash + '</button></div>'; });
+      it.forEach(function (x) { h += '<div class="li">' + (x.photo_path ? '<button type="button" class="fd-th" data-fphoto="' + esc(x.photo_path) + '" aria-label="See the photo of ' + esc(x.name) + '"><img data-fthumb="' + esc(x.photo_path) + '" alt=""></button>' : '') + '<div class="grow"><b>' + esc(x.name) + (!x.photo_path && x.source === 'ai' ? ' <span class="pill" title="Estimated from a photo">📷</span>' : '') + '</b><span class="tk-small">' + (x.amount ? esc(x.amount) + ' · ' : '') + nf(x.kcal) + ' kcal' + (x.protein != null ? ' · ' + r1(+x.protein) + ' g protein' : '') + '</span></div><button type="button" class="tk-icon-btn" data-editf="' + x.id + '" aria-label="Edit ' + esc(x.name) + '">' + ICON.pen + '</button></div>'; });
       h += '<button type="button" class="tk-btn sm ghost fd-add" data-addmeal="' + m[0] + '">+ Add to ' + m[1].toLowerCase() + '</button></div>';
     });
     var wk = days.map(function (x) { return fTot(x); }).filter(function (t) { return t.n; });
@@ -2268,10 +2269,7 @@
     if ($('fhOlder')) $('fhOlder').onclick = async function () { this.disabled = true; this.textContent = 'Loading…'; var from = parseDay(S.foodFrom); from.setDate(from.getDate() - 90); await loadFoodBack(iso(from)); S.fhShow = 9999; render(); };
     v.querySelectorAll('[data-addmeal]').forEach(function (b) { b.onclick = function () { openAddFood(b.dataset.addmeal, d); }; });
     v.querySelectorAll('[data-fphoto]').forEach(function (b) { b.onclick = function () { showMealPhoto(b.dataset.fphoto); }; });
-    v.querySelectorAll('[data-delf]').forEach(function (b) { b.onclick = async function () {
-      var r = await sb.from('food_logs').delete().eq('id', b.dataset.delf); if (r.error) return toast(r.error.message);
-      S.food = S.food.filter(function (x) { return x.id !== b.dataset.delf; }); toast('Removed'); render();
-    }; });
+    v.querySelectorAll('[data-editf]').forEach(function (b) { b.onclick = function () { var x = (S.food || []).filter(function (y) { return y.id === b.dataset.editf; })[0]; if (x) openEditFood(x); }; });
   }
   // Load food logged before what's already in memory (the app loads the last 60 days at first).
   async function loadFoodBack(date) {
@@ -2331,6 +2329,48 @@
     if (r.error || !r.data) { body.innerHTML = '<p class="tk-muted">This photo isn\'t available any more.</p>'; return; }
     body.innerHTML = '<img src="' + esc(r.data.signedUrl) + '" alt="Photo of the meal" class="fd-photo">';
   }
+  // Edit anything about a logged food: name, amount, numbers, meal, day, photo. Or remove it.
+  function openEditFood(x) {
+    var val = function (v) { return v == null ? '' : esc(String(v)); }, newFile = null;
+    var body = '<div class="fm">' +
+      '<div class="fd-eph" id="eph">' + (x.photo_path ? '<img id="ephImg" alt="Photo of the meal">' : '') + '<label class="qc-photo" for="eFile">' + ICON.camera + '<span><b>' + (x.photo_path ? 'Change photo' : 'Add a photo') + '</b><small>Take a photo or choose one from your phone</small></span></label><input type="file" id="eFile" accept="image/*" class="sr"></div>' +
+      '<div class="tk-field"><label for="eN">Food</label><input class="tk-input" id="eN" maxlength="80" value="' + val(x.name) + '"></div>' +
+      '<div class="tk-field"><label for="eA">Amount</label><input class="tk-input" id="eA" maxlength="60" value="' + val(String(x.amount || '').replace(/\s*\((photo estimate|photo)\)/i, '')) + '" placeholder="e.g. 1 plate, 250 g"></div>' +
+      '<div class="tk-grid2"><div class="tk-field"><label for="eK">Calories</label><input class="tk-input" id="eK" inputmode="numeric" value="' + val(x.kcal) + '"></div><div class="tk-field"><label for="eP">Protein g</label><input class="tk-input" id="eP" inputmode="decimal" value="' + val(x.protein) + '"></div><div class="tk-field"><label for="eC">Carbs g</label><input class="tk-input" id="eC" inputmode="decimal" value="' + val(x.carbs) + '"></div><div class="tk-field"><label for="eF">Fat g</label><input class="tk-input" id="eF" inputmode="decimal" value="' + val(x.fat) + '"></div></div>' +
+      '<div class="tk-grid2"><div class="tk-field"><label for="eM">Meal</label><select class="tk-select" id="eM">' + MEALS.map(function (q) { return '<option value="' + q[0] + '"' + (q[0] === x.meal ? ' selected' : '') + '>' + q[1] + '</option>'; }).join('') + '</select></div><div class="tk-field"><label for="eD">Day</label><input class="tk-input" type="date" id="eD" value="' + x.date + '" max="' + today() + '"></div></div>' +
+      '<button type="button" class="tk-btn block" id="eSave">Save changes</button><button type="button" class="tk-btn ghost block fd-del" id="eDel">' + ICON.trash + 'Remove this food</button></div>';
+    var m = modal('Edit food', body);
+    if (x.photo_path) sb.storage.from('progress-photos').createSignedUrl(x.photo_path, 3600).then(function (r) { if (r.data && $('ephImg')) $('ephImg').src = r.data.signedUrl; });
+    $('eFile').onchange = function () {
+      var f = this.files[0]; if (!f) return; newFile = f;
+      var img = $('ephImg'); if (!img) { $('eph').insertAdjacentHTML('afterbegin', '<img id="ephImg" alt="Photo of the meal">'); img = $('ephImg'); }
+      img.src = URL.createObjectURL(f); m.querySelector('#eph .qc-photo b').textContent = 'Change photo';
+    };
+    $('eSave').onclick = async function () {
+      var n = $('eN').value.trim(), k = parseInt($('eK').value, 10), d = $('eD').value;
+      if (!n) return toast('Enter the food name'); if (!(k >= 0 && k <= 5000)) return toast('Enter the calories');
+      if (!d || d > today()) return toast('Choose a day up to today');
+      var u = { name: n, amount: $('eA').value.trim() || null, kcal: k, meal: $('eM').value, date: d };
+      [['eP', 'protein'], ['eC', 'carbs'], ['eF', 'fat']].forEach(function (q) { var v = num($(q[0]).value); u[q[1]] = v == null ? null : r1(v); });
+      this.disabled = true;
+      if (newFile) {
+        try { var blob = await compress(newFile), path = x.user_id + '/meals/' + d + '-' + Date.now() + '.jpg'; var up = await sb.storage.from('progress-photos').upload(path, blob, { contentType: 'image/jpeg' }); if (up.error) throw up.error; u.photo_path = path; }
+        catch (e) { toast('The photo couldn\'t be saved, the other changes will be.'); }
+      }
+      var r = await sb.from('food_logs').update(u).eq('id', x.id).select().single();
+      if (r.error) { this.disabled = false; return toast('Could not save: ' + r.error.message); }
+      S.food = (S.food || []).map(function (y) { return y.id === x.id ? r.data : y; });
+      if (d !== x.date) S.fDay = d;
+      m.close(); toast('Saved'); render();
+    };
+    $('eDel').onclick = async function () {
+      if (!confirmDel(this)) return;
+      var r = await sb.from('food_logs').delete().eq('id', x.id); if (r.error) return toast(r.error.message);
+      S.food = S.food.filter(function (y) { return y.id !== x.id; }); m.close(); toast('Removed'); render();
+    };
+  }
+  // Two taps to remove: the first turns the button into "Tap again to remove"
+  function confirmDel(b) { if (b.dataset.sure) return true; b.dataset.sure = '1'; b.lastChild.textContent = 'Tap again to remove'; b.classList.add('danger'); setTimeout(function () { if (b.isConnected) { delete b.dataset.sure; b.lastChild.textContent = 'Remove this food'; b.classList.remove('danger'); } }, 4000); return false; }
   async function addFoodRows(rows) {
     var r = await sb.from('food_logs').insert(rows).select();
     if (r.error) { toast('Could not save: ' + r.error.message); return false; }
@@ -2339,11 +2379,20 @@
   }
   function openAddFood(meal, date, startTab) {
     meal = meal || mealNow(); date = date || today();
-    var m = modal('Add food', '<div class="fm"><div class="fd-tabs" role="tablist"><button type="button" role="tab" data-ftab="search" aria-pressed="true">' + ICON.search + 'Search</button><button type="button" role="tab" data-ftab="photo" aria-pressed="false">' + ICON.camera + 'Photo</button><button type="button" role="tab" data-ftab="custom" aria-pressed="false">' + ICON.pen + 'My own</button></div>' +
-      '<div class="tk-field" style="margin-top:6px"><label for="fMeal">Meal</label><select class="tk-select" id="fMeal">' + MEALS.map(function (x) { return '<option value="' + x[0] + '"' + (x[0] === meal ? ' selected' : '') + '>' + x[1] + (date !== today() ? ' · ' + fmtDay(date, { weekday: 'short', day: 'numeric' }) : '') + '</option>'; }).join('') + '</select></div><div id="fPane"></div></div>');
+    var m = modal('Add food', '<div class="fm"><div class="tk-field fd-dayf" style="margin-top:0"><span class="tk-label" id="fDayL">Day</span><div class="chips" role="group" aria-labelledby="fDayL" id="fDays"></div></div><div class="fd-tabs" role="tablist" style="margin-top:16px"><button type="button" role="tab" data-ftab="search" aria-pressed="true">' + ICON.search + 'Search</button><button type="button" role="tab" data-ftab="photo" aria-pressed="false">' + ICON.camera + 'Photo</button><button type="button" role="tab" data-ftab="custom" aria-pressed="false">' + ICON.pen + 'My own</button></div>' +
+      '<div class="tk-field" style="margin-top:6px"><label for="fMeal">Meal</label><select class="tk-select" id="fMeal">' + MEALS.map(function (x) { return '<option value="' + x[0] + '"' + (x[0] === meal ? ' selected' : '') + '>' + x[1] + '</option>'; }).join('') + '</select></div><div id="fPane"></div></div>');
     function meal_() { return $('fMeal').value; }
     function base(o) { return { user_id: S.target.id, date: date, meal: meal_(), source: 'db' }; }
-    function done() { m.close(); render(); }
+    function done() { m.close(); if (date !== today()) { S.fDay = date; toast('Added to ' + dayName(date)); } render(); }
+    // Which day this food is for: today, the last two days as quick choices, or any earlier date
+    function paintDays() {
+      var y1 = iso(new Date(Date.now() - 864e5)), y2 = iso(new Date(Date.now() - 2 * 864e5)), quick = [today(), y1, y2];
+      $('fDays').innerHTML = quick.map(function (x) { return '<button type="button" data-fday="' + x + '" aria-pressed="' + (x === date) + '">' + dayName(x) + '</button>'; }).join('') +
+        '<label class="fd-dpick' + (quick.indexOf(date) < 0 ? ' on' : '') + '">' + ICON.cal + '<span>' + (quick.indexOf(date) < 0 ? fmtDay(date, { day: 'numeric', month: 'short' }) : 'Earlier') + '</span><input type="date" id="fDayIn" value="' + date + '" max="' + today() + '" aria-label="Choose an earlier day"></label>';
+      m.querySelectorAll('[data-fday]').forEach(function (b) { b.onclick = function () { date = b.dataset.fday; paintDays(); }; });
+      $('fDayIn').onchange = async function () { var x = this.value; if (!x || x > today()) return; await loadFoodBack(x); date = x; paintDays(); };
+    }
+    paintDays();
     function tab(t) { m.querySelectorAll('[data-ftab]').forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.ftab === t)); }); ({ search: paneSearch, photo: panePhoto, custom: paneCustom })[t](); }
     m.querySelectorAll('[data-ftab]').forEach(function (b) { b.onclick = function () { tab(b.dataset.ftab); }; });
 

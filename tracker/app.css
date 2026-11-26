@@ -766,3 +766,17 @@ div.pw-thumb{cursor:default}
 .fm .pick-item .plus{flex:none;margin-left:auto;width:36px;height:36px;border-radius:50%;display:grid;place-items:center;border:1px solid rgba(201,168,76,.45);background:rgba(201,168,76,.08);color:var(--gold);font-size:0}
 .fm .pick-item:hover .plus{background:var(--gold);color:#17120A;border-color:var(--gold)}
 .fm .fd-intro{margin-top:16px}
+/* Add food: choose the day */
+.fm .fd-dayf .chips{flex-wrap:wrap}
+.fm .fd-dpick{position:relative;flex:0 0 auto;display:inline-flex;align-items:center;gap:6px;min-height:40px;padding:8px 14px;border-radius:999px;border:1px solid rgba(201,168,76,.28);background:rgba(255,255,255,.02);color:var(--text);font-size:.9rem;cursor:pointer}
+.fm .fd-dpick svg{width:16px;height:16px;color:var(--gold)}
+.fm .fd-dpick.on{background:linear-gradient(135deg,#E3C673,var(--gold-3));border-color:transparent;color:#17120A;font-weight:700}
+.fm .fd-dpick.on svg{color:#17120A}
+.fm .fd-dpick input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer}
+/* Edit food */
+.fm .fd-eph{display:flex;flex-direction:column;gap:12px}
+.fm .fd-eph img{width:100%;max-height:220px;object-fit:cover;border-radius:14px;border:1px solid var(--line)}
+.fm .fd-eph .qc-photo{margin-top:0;min-height:64px}
+.fm .fd-del{margin-top:10px;color:var(--muted);display:flex;align-items:center;justify-content:center;gap:8px}
+.fm .fd-del.danger{color:#fff;background:var(--bad);border-color:var(--bad)}
+.fm .tk-btn.block+.fd-del{margin-top:10px}
