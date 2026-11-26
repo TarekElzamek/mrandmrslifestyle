@@ -117,6 +117,11 @@ module.exports = async (req, res) => {
     const tried = [first];
     const prompt = body.kind === 'cardio' ? CARDIO_PROMPT : PROMPT;
     let { status, ok, j } = await gemini(first, key, img, Math.min(20000, left()), prompt); used = first;
+    // Busy or slow for a moment: try the same model once more before switching
+    if ([500, 502, 503, 504].includes(status) && left() > 30000) {
+      await new Promise(ok => setTimeout(ok, 1500));
+      ({ status, ok, j } = await gemini(first, key, img, Math.min(20000, left()), prompt));
+    }
     const r = () => ({ status, ok });
     // Model retired (404), no free allowance (429), busy (500/503) or too slow (504): try other free Flash models,
     // the main Flash model first.

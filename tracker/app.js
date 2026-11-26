@@ -2405,25 +2405,48 @@
       };
     }
     var mealFile = null; // the meal photo, kept with the food so the coach can see it
+    var keepPhoto = false; // true when the photo reader failed and the client logs the meal by hand
+    async function savePhoto(rows) {
+      try {
+        var blob = await compress(mealFile), path = S.target.id + '/meals/' + date + '-' + Date.now() + '.jpg';
+        var up = await sb.storage.from('progress-photos').upload(path, blob, { contentType: 'image/jpeg' });
+        if (up.error) throw up.error;
+        rows.forEach(function (o) { o.photo_path = path; });
+      } catch (e) { toast('The photo couldn\'t be saved, but your food will be.'); }
+    }
     function panePhoto() {
+      keepPhoto = false;
       $('fPane').innerHTML = '<p class="tk-small" style="margin-top:8px">Take a clear photo from above with the whole plate in view. We\'ll list each food with an estimated portion; check and adjust before adding.</p><div class="tk-grid2 fd-cams"><label class="tk-btn fd-cam" for="fCam">' + ICON.camera + 'Take a photo</label><label class="tk-btn ghost fd-cam" for="fGal">' + ICON.image + 'From gallery</label></div><input type="file" id="fCam" accept="image/*" capture="environment" class="sr"><input type="file" id="fGal" accept="image/*" class="sr"><div id="fPrev" class="b-prev" hidden></div><div id="fAi" class="ai-status" role="status" hidden></div><div id="fItems"></div>';
       $('fCam').onchange = $('fGal').onchange = async function () {
         var file = this.files[0]; if (!file) return; mealFile = file;
         var u = URL.createObjectURL(file), pv = $('fPrev'); pv.innerHTML = '<img src="' + u + '" alt="Your meal">'; pv.hidden = false;
         var st = $('fAi'); st.className = 'ai-status'; st.hidden = false; st.innerHTML = '<span class="ai-spin" aria-hidden="true"></span> Looking at your meal… this usually takes 5 to 20 seconds.'; $('fItems').innerHTML = '';
         try {
-          var data = await photoData(file, 1280, 0.82);
-          var ses = await sb.auth.getSession(), tok = ses.data && ses.data.session && ses.data.session.access_token;
-          var r = await fetch('/api/read-meal', { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + tok }, body: JSON.stringify({ image: data }) });
-          var j = await r.json().catch(function () { return {}; });
+          var data = await photoData(file, 1280, 0.82), r, j;
+          // The free photo reader is sometimes busy for a few seconds: try up to 3 times before giving up.
+          var t0 = Date.now();
+          for (var att = 0; att < 3 && (att === 0 || Date.now() - t0 < 40000); att++) {
+            if (att) { if (!$('fAi')) return; st.innerHTML = '<span class="ai-spin" aria-hidden="true"></span> Still working on it… one moment.'; await new Promise(function (ok) { setTimeout(ok, att * 2500); }); }
+            try {
+              var ses = await sb.auth.getSession(), tok = ses.data && ses.data.session && ses.data.session.access_token;
+              r = await fetch('/api/read-meal', { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + tok }, body: JSON.stringify({ image: data }) });
+              j = await r.json().catch(function () { return {}; });
+            } catch (ne) { r = { ok: false, status: 0 }; j = {}; }
+            if (r.ok || [400, 401, 403, 413].includes(r.status)) break;
+          }
           if (!$('fAi')) return;
-          if (r.status === 429) { st.innerHTML = 'The photo reader is busy right now. Try again in a minute, or use 🔍 Search.'; return; }
           if (!r.ok) throw new Error(j.error || 'failed');
           if (!j.is_food || !(j.items || []).length) { st.innerHTML = 'We couldn\'t see any food in this photo. Try another photo, or use 🔍 Search.'; return; }
           st.className = 'ai-status ok'; st.innerHTML = '✓ Found ' + j.items.length + ' item' + (j.items.length === 1 ? '' : 's') + '. Check the portions, then add.' + (j.note ? '<br><span class="tk-small">' + esc(j.note) + '</span>' : '');
           ev('tracker_meal_photo', { items: j.items.length });
           showItems(j.items);
-        } catch (e) { if ($('fAi')) { st.className = 'ai-status'; st.innerHTML = 'Couldn\'t read the photo. Please try again, or use 🔍 Search.'; } }
+        } catch (e) {
+          if (!$('fAi')) return;
+          st.className = 'ai-status';
+          st.innerHTML = 'The photo reader is busy right now, so we couldn\'t work out the calories. You can still log this meal with your photo.<button type="button" class="tk-btn block" id="fManual" style="margin-top:10px">Log it myself, with this photo</button><button type="button" class="tk-btn ghost block" id="fRetry" style="margin-top:8px">Try the photo reader again</button>';
+          $('fManual').onclick = function () { keepPhoto = true; tab('custom'); };
+          $('fRetry').onclick = function () { var inp = $('fGal'); try { var dt = new DataTransfer(); dt.items.add(file); inp.files = dt.files; } catch (x) {} inp.onchange.call({ files: [file] }); };
+        }
       };
       // Eggs are counted, not weighed: per large egg (about 50 g edible) and per egg white.
       var EGG = { whole: { k: 72, p: 6.3, c: 0.4, f: 4.8, one: 'whole egg', many: 'whole eggs' }, white: { k: 17, p: 3.6, c: 0.2, f: 0.1, one: 'egg white', many: 'egg whites' } };
@@ -2472,14 +2495,7 @@
           var rows = []; items.forEach(function (it, i) { var c = cur(i); if (!c.on) return; var o = base(); o.source = 'ai'; o.name = c.name.slice(0, 80); o.amount = c.amount ? c.amount + ' (photo)' : c.g ? c.g + ' g (photo estimate)' : 'photo estimate'; o.kcal = c.kcal; o.protein = c.p; o.carbs = c.c; o.fat = c.f; rows.push(o); });
           if (!rows.length) return toast('Tick at least one item');
           this.disabled = true;
-          if (mealFile) {
-            try {
-              var blob = await compress(mealFile), path = S.target.id + '/meals/' + date + '-' + Date.now() + '.jpg';
-              var up = await sb.storage.from('progress-photos').upload(path, blob, { contentType: 'image/jpeg' });
-              if (up.error) throw up.error;
-              rows.forEach(function (o) { o.photo_path = path; });
-            } catch (e) { toast('The photo couldn\'t be saved, but your food will be.'); }
-          }
+          if (mealFile) await savePhoto(rows);
           if (await addFoodRows(rows)) { toast('Meal added'); done(); } else this.disabled = false;
         };
       }
@@ -2487,13 +2503,14 @@
     function paneCustom() {
       $('fPane').innerHTML = '<div class="tk-field"><label for="cN">Food</label><input class="tk-input" id="cN" maxlength="80" placeholder="e.g. Mum\'s chicken machboos"></div><div class="tk-field"><label for="cA">Amount (optional)</label><input class="tk-input" id="cA" maxlength="60" placeholder="e.g. 1 plate, 250 g"></div>' +
         '<div class="tk-grid2"><div class="tk-field"><label for="cK">Calories</label><input class="tk-input" id="cK" inputmode="numeric"></div><div class="tk-field"><label for="cP">Protein g</label><input class="tk-input" id="cP" inputmode="decimal"></div><div class="tk-field"><label for="cC">Carbs g</label><input class="tk-input" id="cC" inputmode="decimal"></div><div class="tk-field"><label for="cF">Fat g</label><input class="tk-input" id="cF" inputmode="decimal"></div></div><p class="tk-small">Tip: the label on packaged food shows these numbers.</p><button type="button" class="tk-btn block" id="cAdd" style="margin-top:12px">Add</button>';
+      if (keepPhoto && mealFile) { var pu = URL.createObjectURL(mealFile); $('fPane').insertAdjacentHTML('afterbegin', '<div class="b-prev" style="margin-top:8px"><img src="' + pu + '" alt="Your meal"></div><p class="tk-small">Your photo will be saved with this meal so your coach can see it. Add a name and your best guess of the calories.</p>'); }
       $('cN').focus();
       $('cAdd').onclick = async function () {
         var n = $('cN').value.trim(), k = parseInt($('cK').value, 10);
         if (!n) return toast('Enter the food name'); if (!(k >= 0 && k <= 5000)) return toast('Enter the calories');
         var o = base(); o.source = 'custom'; o.name = n; o.amount = $('cA').value.trim() || null; o.kcal = k;
         [['cP', 'protein'], ['cC', 'carbs'], ['cF', 'fat']].forEach(function (x) { var v = num($(x[0]).value); o[x[1]] = v == null ? null : r1(v); });
-        this.disabled = true; if (await addFoodRows([o])) { toast('Added ' + n); done(); } else this.disabled = false;
+        this.disabled = true; if (keepPhoto && mealFile) await savePhoto([o]); if (await addFoodRows([o])) { toast('Added ' + n); done(); } else this.disabled = false;
       };
     }
     if (startTab) tab(startTab); else paneSearch();
