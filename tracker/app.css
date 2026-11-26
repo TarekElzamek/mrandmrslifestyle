@@ -780,3 +780,14 @@ div.pw-thumb{cursor:default}
 .fm .fd-del{margin-top:10px;color:var(--muted);display:flex;align-items:center;justify-content:center;gap:8px}
 .fm .fd-del.danger{color:#fff;background:var(--bad);border-color:var(--bad)}
 .fm .tk-btn.block+.fd-del{margin-top:10px}
+/* Editable workout time */
+button.wm-tile{width:100%;text-align:left;cursor:pointer;font:inherit;color:inherit;border-color:rgba(201,168,76,.4)}
+button.wm-tile:hover{border-color:var(--gold)}
+.wm-tile span svg{width:13px;height:13px;vertical-align:-2px;margin-left:4px;color:var(--gold)}
+.wm-ed{margin-top:12px;padding:14px;border-radius:16px;border:1px solid rgba(201,168,76,.45);background:rgba(201,168,76,.06);display:flex;flex-direction:column;gap:12px}
+.wm-ed .tk-label{margin:0}
+.wm-warn{margin:0;font-size:.92rem;line-height:1.5;color:var(--text)}
+.wm-row{display:flex;gap:10px;align-items:center}
+.wm-row label{flex:1;display:flex;align-items:center;gap:8px;color:var(--muted);font-size:.9rem}
+.wm-row .tk-input{min-height:48px;text-align:center}
+.wm-row .tk-btn{min-height:48px;padding:0 22px}
